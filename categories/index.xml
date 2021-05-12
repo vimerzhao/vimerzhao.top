@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on V大师在一号线</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on V大师在一号线</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 08 May 2021 19:41:53 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>折腾工具</title>
+      <link>/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Sat, 08 May 2021 19:41:53 +0800</pubDate>
+      
+      <guid>/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android实践</title>
+      <link>/categories/android%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/android%E5%AE%9E%E8%B7%B5/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>疑难杂症</title>
+      <link>/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</link>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

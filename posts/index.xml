@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on V大师在一号线</title>
+    <link>/posts/</link>
+    <description>Recent content in Posts on V大师在一号线</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 08 May 2021 19:41:53 +0800</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Hugo&#43;Asciidoc配置记录</title>
+      <link>/posts/configure-hugo-asciidoc-blog/</link>
+      <pubDate>Sat, 08 May 2021 19:41:53 +0800</pubDate>
+      
+      <guid>/posts/configure-hugo-asciidoc-blog/</guid>
+      <description>【2021-05-08】今天参考几篇文章，完成了Hugo博客的配置，特此记录一下： 搭建教程 Blogging with Asciidoctor and Hugo | Gabriel Arazas Better Hugo/AsciiDoc HTML - ratfactor diguage/www.diguage.com: &amp;#34;地瓜哥&amp;#34;博客网 使用 Hugo 搭建博客 - &amp;#34;地瓜哥&amp;#34;博客网 Mainroad/README.md</description>
+    </item>
+    
+    <item>
+      <title>Android安装包优化</title>
+      <link>/posts/apk-size-opt-summary/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/apk-size-opt-summary/</guid>
+      <description>背景 安装包膨胀的原因 业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如： 使用的资源未经裁剪（如全量字体文件、分辨率过大的图片） 不合理的大资源（如大的视频、音</description>
+    </item>
+    
+    <item>
+      <title>Android安装包极限优化</title>
+      <link>/posts/opt-apk-size-by-remove-debuginfo/</link>
+      <pubDate>Fri, 17 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/opt-apk-size-by-remove-debuginfo/</guid>
+      <description>背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优</description>
+    </item>
+    
+    <item>
+      <title>警惕Proguard内联优化导致Crash堆栈信息丢失</title>
+      <link>/posts/proguard-inline-optimieze-make-stacktrace-loss/</link>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/proguard-inline-optimieze-make-stacktrace-loss/</guid>
+      <description>背景 最近在处理异常时遇到一个诡异的问题：自己的Demo里面混淆一个类后，打印Crash堆栈时这个类里面的调用点直接失踪了！ 下面用测试代码说明。 测试代码 // MainActivity.java public class MainActivity extends AppCompatActivity { @Override protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); new Test().fun1(); } } // Test.java public class Test</description>
+    </item>
+    
+  </channel>
+</rss>

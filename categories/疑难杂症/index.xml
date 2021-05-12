@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>疑难杂症 on V大师在一号线</title>
+    <link>/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</link>
+    <description>Recent content in 疑难杂症 on V大师在一号线</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 13 Jan 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>警惕Proguard内联优化导致Crash堆栈信息丢失</title>
+      <link>/posts/proguard-inline-optimieze-make-stacktrace-loss/</link>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/proguard-inline-optimieze-make-stacktrace-loss/</guid>
+      <description>背景 最近在处理异常时遇到一个诡异的问题：自己的Demo里面混淆一个类后，打印Crash堆栈时这个类里面的调用点直接失踪了！ 下面用测试代码说明。 测试代码 // MainActivity.java public class MainActivity extends AppCompatActivity { @Override protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); new Test().fun1(); } } // Test.java public class Test</description>
+    </item>
+    
+  </channel>
+</rss>

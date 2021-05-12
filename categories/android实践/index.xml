@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Android实践 on V大师在一号线</title>
+    <link>/categories/android%E5%AE%9E%E8%B7%B5/</link>
+    <description>Recent content in Android实践 on V大师在一号线</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 11 Feb 2020 00:00:00 +0000</lastBuildDate><atom:link href="/categories/android%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android安装包优化</title>
+      <link>/posts/apk-size-opt-summary/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/apk-size-opt-summary/</guid>
+      <description>背景 安装包膨胀的原因 业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如： 使用的资源未经裁剪（如全量字体文件、分辨率过大的图片） 不合理的大资源（如大的视频、音</description>
+    </item>
+    
+    <item>
+      <title>Android安装包极限优化</title>
+      <link>/posts/opt-apk-size-by-remove-debuginfo/</link>
+      <pubDate>Fri, 17 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/opt-apk-size-by-remove-debuginfo/</guid>
+      <description>背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优</description>
+    </item>
+    
+  </channel>
+</rss>

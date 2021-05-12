@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android安装包优化 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android安装包优化" />
+<meta property="og:description" content="背景 安装包膨胀的原因 业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如： 使用的资源未经裁剪（如全量字体文件、分辨率过大的图片） 不合理的大资源（如大的视频、音" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/apk-size-opt-summary/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-02-11T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-08T19:50:31&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android安装包优化"/>
+<meta name="twitter:description" content="背景 安装包膨胀的原因 业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如： 使用的资源未经裁剪（如全量字体文件、分辨率过大的图片） 不合理的大资源（如大的视频、音"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android安装包优化</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-02-11T00:00:00Z">2020-02-11</time>
+	<time class="meta__text" datetime="2021-05-08T19:50:31&#43;08:00">(最后修改: 2021-05-08)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/android%E5%AE%9E%E8%B7%B5/" rel="category">Android实践</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_背景">背景</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_安装包膨胀的原因">安装包膨胀的原因</h3>
+<div class="paragraph">
+<p>业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>使用的资源未经裁剪（如全量字体文件、分辨率过大的图片）</p>
+</li>
+<li>
+<p>不合理的大资源（如大的视频、音频可以在线拉取）</p>
+</li>
+<li>
+<p>已下线业务没有及时清理相关代码、资源</p>
+</li>
+<li>
+<p>等等</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>正是由于这些疏忽，安装包有了不必要的增加，这也是我们需要优化的部分。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_安装包优化的价值">安装包优化的价值</h3>
+<div class="paragraph">
+<p>可能有的人觉得，现在基本是4G、WiFi的网络环境，手机设备的性能和存储空间也非常充足，所以用户对安装包大小应该不是十分敏感。但是，这其实是一种错觉，更多的时候应该看自己的目标市场，如果是一二线城市当然没问题，但如果是三四线城市、农村等下沉市场或者印度、巴西等海外市场，上述假设显然不成立了。</p>
+</div>
+<div class="paragraph">
+<p>一般来说，安装包大小会影响以下指标：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>下载转化率</p>
+</li>
+<li>
+<p>安装成功率</p>
+</li>
+<li>
+<p>推广成本</p>
+</li>
+<li>
+<p>运行内存、空间占用</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>综上，对于一个&#34;`有余力`&#34;的团队，安装包大小的优化还是很有必要的。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_安装包优化的套路">安装包优化的套路</h3>
+<div class="paragraph">
+<p>由前面的原因可知，从业务层面来看，安装包大小的优化是&#34;`解铃还须系铃人`&#34;，即：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>压缩资源</p>
+</li>
+<li>
+<p>大资源转成在线拉取</p>
+</li>
+<li>
+<p>排查无用业务并下线</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这些方法都比较常规，更像是对症下药，下面梳理一些技术上<strong>普适的方法</strong>，独立于业务，在上面那些方法都尝试后，还可以使安装包大小&#34;`更下一层楼`&#34;。</p>
+</div>
+<div class="paragraph">
+<p>安装包的主要构成就是代码和资源，所以优化也是从这两个方面着手。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_代码">代码</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_混淆">混淆</h3>
+<div class="paragraph">
+<p>一般是通过<code>ProGuard</code>，但很多用不好，且存在管理问题。最后一看项目，很多类被Keep住了，也不知道历史背景是啥。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dex优化">Dex优化</h3>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>通过工具移除行号信息，带来的问题是无法回溯Crash位置，但可以解决</p>
+</li>
+<li>
+<p>多Dex时，通过重排Dex避免交叉索引，实现起来比较复杂</p>
+</li>
+<li>
+<p>Dex压缩，把实际的Dex压缩，首次启动通过一个壳去加载，会影响启动速度，但是可以解决，也比较复杂</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_so优化">so优化</h3>
+<div class="paragraph">
+<p>so的优化手段和Java代码其实比较类似，核心还是通过机制化的手段去裁剪、压缩。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_资源">资源</h2>
+<div class="sectionbody">
+
+</div>
+</div>
+<div class="sect1">
+<h2 id="_资源本身">资源本身</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>通过工具扫描无用资源，有些由于项目自身原因，可能没有显式引用，但外置的编译脚本会修改项目自身脚本，这就很坑了</p>
+</li>
+<li>
+<p>资源格式的优化，如PNG转JPG（除去alpha通道），转webp格式等</p>
+</li>
+<li>
+<p>字体文件只保留使用的，资源自身的二次优化</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_资源索引">资源索引</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>通过<code>AndResGuard</code>工具压缩资源名称，进而降低索引文件的大小。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_感悟">感悟</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_核心思想">核心思想</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>删除不用的（显而易见）</p>
+</li>
+<li>
+<p>压缩/转移有用的（如图片、字体文件，如大资源的转移，混淆信息的map表也是一种转移）</p>
+</li>
+<li>
+<p>精简系统产生的（dex重排）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>常规的手段很容易到达瓶颈，高深的手段又有复杂、兼容性等诸多问题，但综合来看，还是两点：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>深刻理解<strong>底层</strong>：apk编译流程、dex格式、资源引用、启动流程、加载流程原理等</p>
+</li>
+<li>
+<p>深刻理解<strong>工具</strong>：ProGuard（很多人的ProGuard配置都是Copy修改），ReDex，AndResGuard等</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_权衡之道">权衡之道</h3>
+<div class="paragraph">
+<p>很多时候，优化就是权衡，重要的是取舍：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>压缩了Dex，就增加了启动速度</p>
+</li>
+<li>
+<p>拿掉了行号，就增加了恢复Crash堆栈的难度</p>
+</li>
+<li>
+<p>混淆了代码，就增加了编译脚本的复杂度</p>
+</li>
+<li>
+<p>等等</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_根本出路">根本出路</h3>
+<div class="ulist">
+<ul>
+<li>
+<p><strong>建立监控</strong>：团队每年都会优化一次安装包大小，尤其是删除、压缩资源的时候，总是一头雾水，不明白这个资源引入的目的，也不敢轻举妄动。最后有一套系统，让增量时有记录，让下线时有提醒，及时解决，而不是每到年底还一次技术债。</p>
+</li>
+<li>
+<p><strong>制定标准</strong>：某种意义上上，安装包大小的优化不是某个人的事情，而是团队的事情，最好有相关的实践指南或CodeReview标准。当有人不合理地引入资源，又或者业务下线后对无效逻辑置之不顾时，能有规则来约束这种行为。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考">参考</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://blog.bihe0832.com/android-optimize-why.html">Android安装包精简系列之为什么要优化精简安装包 | 子勰的博客</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/QRIy_apwqAaL2pM8a_lRUQ">Android安装包相关知识汇总</a></p>
+</li>
+<li>
+<p><a href="https://www.jianshu.com/p/97476e095e1a">如何优雅地将你的APK安装包减少20% - 简书</a></p>
+</li>
+<li>
+<p><a href="https://time.geekbang.org/column/article/81202">22 | 包体积优化（上）：如何减少安装包大小？</a></p>
+</li>
+<li>
+<p><a href="https://time.geekbang.org/column/article/81483">23 | 包体积优化（下）：资源优化的进阶实践</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>以上</p>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" rel="tag">安装包精简</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/opt-apk-size-by-remove-debuginfo/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Android安装包极限优化</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/configure-hugo-asciidoc-blog/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Hugo&#43;Asciidoc配置记录</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/apk-size-opt-summary/">Android安装包优化</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/opt-apk-size-by-remove-debuginfo/">Android安装包极限优化</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/proguard-inline-optimieze-make-stacktrace-loss/">警惕Proguard内联优化导致Crash堆栈信息丢失</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
