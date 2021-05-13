@@ -17,6 +17,15 @@
     </item>
     
     <item>
+      <title>category1</title>
+      <link>/categories/category1/</link>
+      <pubDate>Thu, 10 Dec 2020 12:36:32 +0800</pubDate>
+      
+      <guid>/categories/category1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
       <title>Android实践</title>
       <link>/categories/android%E5%AE%9E%E8%B7%B5/</link>
       <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>

@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Flutter源码剖析(四):flutter run流程解析 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Flutter源码剖析(四):flutter run流程解析" />
+<meta property="og:description" content="关于flutter run flutter run负责执行构建一个flutter工程，输出产物到对应设备，并负责提供基本的交互控制，使用效果如下： $ flutter run Launching lib/main.dart on COL AL10 in debug mode... Running Gradle task &#39;assembleDebug&#39;... Running Gradle task &#39;assembleDebug&#39;... Done 23.8s ✓ Built build/app/outputs/flutter-apk/app-debug.apk. Installing build/app/outputs/flutter-apk/app.apk... 13.7s Waiting for COL AL10 to report its views... 7ms Syncing files" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/flutter-source-code-analyze-4/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-11-22T12:23:18&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-13T20:03:14&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flutter源码剖析(四):flutter run流程解析"/>
+<meta name="twitter:description" content="关于flutter run flutter run负责执行构建一个flutter工程，输出产物到对应设备，并负责提供基本的交互控制，使用效果如下： $ flutter run Launching lib/main.dart on COL AL10 in debug mode... Running Gradle task &#39;assembleDebug&#39;... Running Gradle task &#39;assembleDebug&#39;... Done 23.8s ✓ Built build/app/outputs/flutter-apk/app-debug.apk. Installing build/app/outputs/flutter-apk/app.apk... 13.7s Waiting for COL AL10 to report its views... 7ms Syncing files"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Flutter源码剖析(四):flutter run流程解析</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-11-22T12:23:18&#43;08:00">2020-11-22</time>
+	<time class="meta__text" datetime="2021-05-13T20:03:14&#43;08:00">(最后修改: 2021-05-13)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/category1/" rel="category">category1</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_关于flutter_run">关于<code>flutter run</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>flutter run</code>负责执行构建一个flutter工程，输出产物到对应设备，并负责提供基本的交互控制，使用效果如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ flutter run
+Launching lib/main.dart on COL AL10 in debug mode...
+Running Gradle task &#39;assembleDebug&#39;...
+Running Gradle task &#39;assembleDebug&#39;... Done                        23.8s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk.
+Installing build/app/outputs/flutter-apk/app.apk...                13.7s
+Waiting for COL AL10 to report its views...                          7ms
+Syncing files to device COL AL10...                                279ms
+
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h Repeat this help message.
+d Detach (terminate &#34;flutter run&#34; but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+An Observatory debugger and profiler on COL AL10 is available at: http://127.0.0.1:65470/jL7vVcN78XI=/
+D/AwareBitmapCacher(10010): handleInit switch not opened pid=10010</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>下面走读这个命令的执行流程。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_libexecutable_dartmain"><code>lib/executable.dart#main</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>lib/executable.dart#main</code>是所有命令执行的入口：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">Future&lt;void&gt; main(List&lt;String&gt; args) async {
+  ....
+  await runner.run(args, () =&gt; &lt;FlutterCommand&gt;[
+    AssembleCommand(),
+    AttachCommand(verboseHelp: verboseHelp),
+    RunCommand(verboseHelp: verboseHelp),
+    ScreenshotCommand(),
+    ShellCompletionCommand(),
+    ....
+  );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过层层封装转调之后，<code>flutter run</code>这个命令，最终会调用到<code>lib/src/commands/run.dart#RunCommand</code>的<code>runCommand</code>方法。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_runcommandruncommand"><code>RunCommand#runCommand</code></h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>核心代码如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  @override
+  Future&lt;FlutterCommandResult&gt; runCommand() async {
+    // Enable hot mode by default if `--no-hot` was not passed and we are in
+    // debug mode.
+    final bool hotMode = shouldUseHotMode();
+
+    writePidFile(stringArg(&#39;pid-file&#39;));
+
+    ......
+    ResidentRunner runner;
+    final String applicationBinaryPath = stringArg(&#39;use-application-binary&#39;);
+    if (hotMode &amp;&amp; !webMode) {
+      runner = HotRunner(
+        flutterDevices,
+        target: targetFile,
+        debuggingOptions: _createDebuggingOptions(),
+        benchmarkMode: boolArg(&#39;benchmark&#39;),
+        applicationBinary: applicationBinaryPath == null
+            ? null
+            : globals.fs.file(applicationBinaryPath),
+        projectRootPath: stringArg(&#39;project-root&#39;),
+        dillOutputPath: stringArg(&#39;output-dill&#39;),
+        stayResident: stayResident,
+        ipv6: ipv6,
+      );
+    } else if (webMode) {
+      ......
+    } else {
+      ......
+    }
+
+    DateTime appStartedTime;
+    final Completer&lt;void&gt; appStartedTimeRecorder = Completer&lt;void&gt;.sync();
+    // This callback can&#39;t throw.
+    unawaited(appStartedTimeRecorder.future.then&lt;void&gt;(
+      (_) {
+        appStartedTime = globals.systemClock.now();
+        if (stayResident) {
+          TerminalHandler(runner)
+            ..setupTerminal()
+            ..registerSignalHandlers();
+        }
+      }
+    ));
+
+    final int result = await runner.run(
+      appStartedCompleter: appStartedTimeRecorder,
+      route: route,
+    );
+    if (result != 0) {
+      throwToolExit(null, exitCode: result);
+    }
+    ......
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>重要的逻辑有两个：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>创建一个<code>HotRunner</code>，支持后面的热更</p>
+</li>
+<li>
+<p>设定在构建完成后启动命令行程序</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>先看<code>HotRunner</code>的<code>run</code>方法。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_hotrunnerrun"><code>HotRunner#run</code></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  Future&lt;int&gt; run({
+    Completer&lt;DebugConnectionInfo&gt; connectionInfoCompleter,
+    Completer&lt;void&gt; appStartedCompleter,
+    String route,
+  }) async {
+    ......
+
+    final List&lt;Future&lt;bool&gt;&gt; startupTasks = &lt;Future&lt;bool&gt;&gt;[];
+    final PackageConfig packageConfig = await loadPackageConfigWithLogging(
+      globals.fs.file(debuggingOptions.buildInfo.packagesPath),
+      logger: globals.logger,
+    );
+    for (final FlutterDevice device in flutterDevices) {
+      await runSourceGenerators();
+      if (device.generator != null) {
+        startupTasks.add(
+          device.generator.recompile(
+            globals.fs.file(mainPath).uri,
+            &lt;Uri&gt;[],
+            suppressErrors: applicationBinary == null,
+            outputPath: dillOutputPath ??
+              getDefaultApplicationKernelPath(trackWidgetCreation: debuggingOptions.buildInfo.trackWidgetCreation),
+            packageConfig: packageConfig,
+          ).then((CompilerOutput output) =&gt; output?.errorCount == 0)
+        );
+      }
+      startupTasks.add(device.runHot(
+        hotRunner: this,
+        route: route,
+      ).then((int result) =&gt; result == 0));
+    }
+    try {
+      final List&lt;bool&gt; results = await Future.wait(startupTasks);
+      if (!results.every((bool passed) =&gt; passed)) {
+        appFailedToStart();
+        return 1;
+      }
+      cacheInitialDillCompilation();
+    } on Exception catch (err) {
+      globals.printError(err.toString());
+      appFailedToStart();
+      return 1;
+    }
+
+    return attach(
+      connectionInfoCompleter: connectionInfoCompleter,
+      appStartedCompleter: appStartedCompleter,
+    );
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>主要有两件事：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>针对每个设备，进行源码构建，并执行热更</p>
+</li>
+<li>
+<p>全部完成后开始<code>attach</code>设备</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>先看<code>FlutterDevice#runHot</code>这个方法</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutterdevicerunhot"><code>FlutterDevice#runHot</code></h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  Future&lt;int&gt; runHot({
+    HotRunner hotRunner,
+    String route,
+  }) async {
+    .....
+
+    // Start the application.
+    final Future&lt;LaunchResult&gt; futureResult = device.startApp(
+      package,
+      mainPath: hotRunner.mainPath,
+      debuggingOptions: hotRunner.debuggingOptions,
+      platformArgs: platformArgs,
+      route: route,
+      prebuiltApplication: prebuiltMode,
+      ipv6: hotRunner.ipv6,
+      userIdentifier: userIdentifier,
+    );
+
+    final LaunchResult result = await futureResult;
+
+    .....
+    return 0;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>继续追踪<code>startApp</code>方法，这个方法不同平台有不同实现，这里看<code>AndroidDevice</code>的：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  @override
+  Future&lt;LaunchResult&gt; startApp(
+    AndroidApk package, {
+    String mainPath,
+    String route,
+    DebuggingOptions debuggingOptions,
+    Map&lt;String, dynamic&gt; platformArgs,
+    bool prebuiltApplication = false,
+    bool ipv6 = false,
+    String userIdentifier,
+  }) async {
+    ......
+    if (!prebuiltApplication || _androidSdk.licensesAvailable &amp;&amp; _androidSdk.latestVersion == null) {
+      _logger.printTrace(&#39;Building APK&#39;);
+      final FlutterProject project = FlutterProject.current();
+      await androidBuilder.buildApk(
+          project: project,
+          target: mainPath,
+          androidBuildInfo: AndroidBuildInfo(
+            debuggingOptions.buildInfo,
+            targetArchs: &lt;AndroidArch&gt;[androidArch],
+            fastStart: debuggingOptions.fastStart
+          ),
+      );
+      // Package has been built, so we can get the updated application ID and
+      // activity name from the .apk.
+      package = await AndroidApk.fromAndroidProject(project.android);
+    }
+
+    if (!await _installLatestApp(package, userIdentifier)) {
+      return LaunchResult.failed();
+    }
+    .....
+
+    List&lt;String&gt; cmd;
+
+    cmd = &lt;String&gt;[
+      &#39;shell&#39;, &#39;am&#39;, &#39;start&#39;,
+      &#39;-a&#39;, &#39;android.intent.action.RUN&#39;,
+      &#39;-f&#39;, &#39;0x20000000&#39;, // FLAG_ACTIVITY_SINGLE_TOP
+      &#39;--ez&#39;, &#39;enable-background-compilation&#39;, &#39;true&#39;,
+      &#39;--ez&#39;, &#39;enable-dart-profiling&#39;, &#39;true&#39;,
+    ....
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以看到，主要是buildApk，然后<code>_installLatestApp</code>负责安装，最后启动。</p>
+</div>
+<div class="paragraph">
+<p>首先看buildApk过程，在<code>AndroidBuilderImpl#buildApk</code>：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  @override
+  Future&lt;void&gt; buildApk({
+    @required FlutterProject project,
+    @required AndroidBuildInfo androidBuildInfo,
+    @required String target,
+  }) async {
+    try {
+      await buildGradleApp(
+        project: project,
+        androidBuildInfo: androidBuildInfo,
+        target: target,
+        isBuildingBundle: false,
+        localGradleErrors: gradleErrors,
+      );
+    } finally {
+      globals.androidSdk?.reinitialize();
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最后是真正的构建逻辑，还是通过gradle来进行调用的：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">Future&lt;void&gt; buildGradleApp({
+  @required FlutterProject project,
+  @required AndroidBuildInfo androidBuildInfo,
+  @required String target,
+  @required bool isBuildingBundle,
+  @required List&lt;GradleHandledError&gt; localGradleErrors,
+  bool shouldBuildPluginAsAar = false,
+  int retries = 1,
+}) async {
+  ......
+
+  final BuildInfo buildInfo = androidBuildInfo.buildInfo;
+  final String assembleTask = isBuildingBundle
+    ? getBundleTaskFor(buildInfo)
+    : getAssembleTaskFor(buildInfo);
+
+  ......
+  final List&lt;String&gt; command = &lt;String&gt;[
+    gradleUtils.getExecutable(project),
+  ];
+  if (globals.logger.isVerbose) {
+    command.add(&#39;-Pverbose=true&#39;);
+  } else {
+    command.add(&#39;-q&#39;);
+  }
+  .....
+  if (target != null) {
+    command.add(&#39;-Ptarget=$target&#39;);
+  }
+  assert(buildInfo.trackWidgetCreation != null);
+  command.add(&#39;-Ptrack-widget-creation=${buildInfo.trackWidgetCreation}&#39;);
+
+  if (buildInfo.extraFrontEndOptions != null) {
+    command.add(&#39;-Pextra-front-end-options=${encodeDartDefines(buildInfo.extraFrontEndOptions)}&#39;);
+  }
+  if (buildInfo.extraGenSnapshotOptions != null) {
+    command.add(&#39;-Pextra-gen-snapshot-options=${encodeDartDefines(buildInfo.extraGenSnapshotOptions)}&#39;);
+  }
+  if (buildInfo.fileSystemRoots != null &amp;&amp; buildInfo.fileSystemRoots.isNotEmpty) {
+    command.add(&#39;-Pfilesystem-roots=${buildInfo.fileSystemRoots.join(&#39;|&#39;)}&#39;);
+  }
+  if (buildInfo.fileSystemScheme != null) {
+    command.add(&#39;-Pfilesystem-scheme=${buildInfo.fileSystemScheme}&#39;);
+  }
+  if (androidBuildInfo.splitPerAbi) {
+    command.add(&#39;-Psplit-per-abi=true&#39;);
+  }
+  .....
+  command.add(assembleTask);
+  .....
+
+  }
+  .....
+  try {
+    exitCode = await processUtils.stream(
+      command,
+      workingDirectory: project.android.hostAppGradleRoot.path,
+      allowReentrantFlutter: true,
+      environment: gradleEnvironment,
+      mapFunction: consumeLog,
+    );
+  } on ProcessException catch(exception) {
+  .....
+  // Gradle produced an APK.
+  final Iterable&lt;String&gt; apkFilesPaths = project.isModule
+    ? findApkFilesModule(project, androidBuildInfo)
+    : listApkPaths(androidBuildInfo);
+  final Directory apkDirectory = getApkDirectory(project);
+  final File apkFile = apkDirectory.childFile(apkFilesPaths.first);
+
+  .....
+  final String appSize = (buildInfo.mode == BuildMode.debug)
+    ? &#39;&#39; // Don&#39;t display the size when building a debug variant.
+    : &#39; (${getSizeAsMB(apkFile.lengthSync())})&#39;;
+  globals.printStatus(
+    &#39;$successMark Built ${globals.fs.path.relative(apkFile.path)}$appSize.&#39;,
+    color: TerminalColor.green,
+  );
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里会创建gradle所需的全部参数，然后通过<code>processUtils</code>启动执行，执行后APK文件就会出现在构建目录了。</p>
+</div>
+<div class="paragraph">
+<p>此时<code>androidBuilder.buildApk</code>就执行完了，后面的<code>_installLatestApp</code>负责apk文件的安装工作：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  Future&lt;bool&gt; _installLatestApp(AndroidApk package, String userIdentifier) async {
+    final bool wasInstalled = await isAppInstalled(package, userIdentifier: userIdentifier);
+    if (wasInstalled) {
+      if (await isLatestBuildInstalled(package)) {
+        _logger.printTrace(&#39;Latest build already installed.&#39;);
+        return true;
+      }
+    }
+    _logger.printTrace(&#39;Installing APK.&#39;);
+    if (!await installApp(package, userIdentifier: userIdentifier)) {
+    .....</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>真正的安装工作：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  @override
+  Future&lt;bool&gt; installApp(
+    AndroidApk app, {
+    String userIdentifier,
+  }) async {
+    .....
+
+    final Status status = _logger.startProgress(
+      &#39;Installing ${_fileSystem.path.relative(app.file.path)}...&#39;,
+      timeout: _timeoutConfiguration.slowOperation,
+    );
+    final RunResult installResult = await _processUtils.run(
+      adbCommandForDevice(&lt;String&gt;[
+        &#39;install&#39;,
+        &#39;-t&#39;,
+        &#39;-r&#39;,
+        if (userIdentifier != null)
+          ...&lt;String&gt;[&#39;--user&#39;, userIdentifier],
+        app.file.path
+      ]));
+    status.stop();
+    .....
+    return true;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以看出，本质还是通过adb命令进行安装。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_attach">attach</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>安装启动之后，会初始化交互式命令行，在之前的<code>setupTerminal</code>里面：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  void setupTerminal() {
+    if (!globals.logger.quiet) {
+      globals.printStatus(&#39;&#39;);
+      residentRunner.printHelp(details: false);
+    }
+    globals.terminal.singleCharMode = true;
+    subscription = globals.terminal.keystrokes.listen(processTerminalInput);
+  }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>processTerminalInput</code>负责处理用户输入</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-dart" data-lang="dart">  Future&lt;void&gt; processTerminalInput(String command) async {
+    ......
+    try {
+      lastReceivedCommand = command;
+      await _commonTerminalInputHandler(command);
+    // Catch all exception since this is doing cleanup and rethrowing.
+    } catch (error, st) { // ignore: avoid_catches_without_on_clauses
+    ....
+
+
+
+  Future&lt;bool&gt; _commonTerminalInputHandler(String character) async {
+    globals.printStatus(&#39;&#39;); // the key the user tapped might be on this line
+    switch(character) {
+      ....
+      case &#39;r&#39;:
+        if (!residentRunner.canHotReload) {
+          return false;
+        }
+        final OperationResult result = await residentRunner.restart(fullRestart: false);
+        if (result.fatal) {
+          throwToolExit(result.message);
+        }
+        if (!result.isOk) {
+          globals.printStatus(&#39;Try again after fixing the above error(s).&#39;, emphasis: true);
+        }
+        return true;
+      case &#39;R&#39;:
+        // If hot restart is not supported for all devices, ignore the command.
+        if (!residentRunner.canHotRestart || !residentRunner.hotMode) {
+          return false;
+        }
+        final OperationResult result = await residentRunner.restart(fullRestart: true);
+        if (result.fatal) {
+          throwToolExit(result.message);
+        }
+        if (!result.isOk) {
+          globals.printStatus(&#39;Try again after fixing the above error(s).&#39;, emphasis: true);
+        }
+        return true;
+      ....
+    }
+    return false;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里只是初始化了命令行环境，还需要建立像设备发送命令的通道（等同于<code>flutter attach</code>），这里涉及到和DartVM的远程通信，有机会留到<code>flutter attach</code>再做分析。</p>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag1/" rel="tag">tag1</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag2/" rel="tag">tag2</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/flutter-source-code-analyze-3/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/android-profile-tool-bug-record/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">AndroidStudio-Profile工具导致的一个奇怪问题</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-1/">Flutter源码剖析(一):源码获取与构建</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-system-service-cache-analyze/">Android系统服务的注册缓存机制分析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-remote-debug-method/">Android客户端远程调试方法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/evolution-of-plugin-framework/">插件化技术的演进之路</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-make-debuggable/">设置Android全局可调试</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

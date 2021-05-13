@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android系统服务的注册缓存机制分析 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android系统服务的注册缓存机制分析" />
+<meta property="og:description" content="本文说明 本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/android-system-service-cache-analyze/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2020-08-21T12:18:22&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-13T20:03:14&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android系统服务的注册缓存机制分析"/>
+<meta name="twitter:description" content="本文说明 本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android系统服务的注册缓存机制分析</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-08-21T12:18:22&#43;08:00">2020-08-21</time>
+	<time class="meta__text" datetime="2021-05-13T20:03:14&#43;08:00">(最后修改: 2021-05-13)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/category1/" rel="category">category1</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_本文说明">本文说明</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解。所以，本文的核心是<code>getSystemService</code>这个系统函数背后的复杂机制。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题背景">问题背景</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>最近基于DroidPlugin做了一个Demo，测试的时候发现，在几款小米手机（Mix 2、Mix 2s、小米5）的Android 8版本上都会出现插件加载闪退的情况，抓取到的日志如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/2020-08-21-02.png" alt="2020 08 21 02"/>
+</div>
+</div>
+<div class="paragraph">
+<p>基于这个信息，我找到了对应的系统源码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    /**
+     * Do a quick check to validate if a package name belongs to a UID.
+     *
+     * @throws SecurityException if the package name doesn&#39;t belong to the given
+     *             UID, or if ownership cannot be verified.
+     */
+    public void checkPackage(int uid, String packageName) {
+        try {
+            if (mService.checkPackage(uid, packageName) != MODE_ALLOWED) {
+                throw new SecurityException(
+                        &#34;Package &#34; + packageName + &#34; does not belong to &#34; + uid);
+            }
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>结合错误信息可知，是由于<code>checkPackage</code>方法使用了插件的包名给系统做校验，而log中的uid（<code>10525</code>）对应的是宿主的包名，所以报了这个错误。</p>
+</div>
+<div class="paragraph">
+<p>于是我直接写了一个Demo，核心代码如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">AppOpsManager mAppOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+Log.i(&#34;vimerr&#34;, &#34;--&gt;&#34; + Process.myUid() + &#34;/&#34; + getPackageName());
+mAppOps.checkPackage(Process.myUid(), getPackageName());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>将其直接在DroidPlugin的源码中加载，可以在<strong>任意机型</strong>得到了类似的错误：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/2020-08-21-03.jpg" alt="2020 08 21 03"/>
+</div>
+</div>
+<div class="paragraph">
+<p>至此，可以得出第一个结论：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>这是一个DroidPlugin固有的错误，它不能正确地处理插件对<code>checkPackage</code>的调用。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>基于此，下文将主要围绕DroidPlugin的代码分析这个问题。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_缩小范围">缩小范围</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>通过代码，可以发现DroidPlugin其实做了这个调用的处理：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/2020-08-21-04.jpg" alt="2020 08 21 04"/>
+</div>
+</div>
+<div class="paragraph">
+<p>那么为什么还是不行呢？难道是<code>installHook</code>这个逻辑失败了？于是我扩展了上面的测试用例：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">ClipboardManager clipboardManager = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
+AppOpsManager mAppOps = (AppOpsManager) getSystemService(Context.APP_OPS_SERVICE);
+UserManager manager = (UserManager)  getSystemService(Context.USER_SERVICE);
+
+Log.i(&#34;vimerr&#34;, &#34;clip --&gt;&#34; + clipboardManager.getPrimaryClip());
+Log.i(&#34;vimerr&#34;, &#34;--&gt;&#34; + Process.myUid() + &#34;/&#34; + getPackageName());
+mAppOps.checkPackage(Process.myUid(), getPackageName());</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>并在<code>ServiceManagerCacheBinderHook#invoke</code>的入口加上日志：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Override
+public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+    try {
+        Log.d(&#34;vimerr&#34;, method + &#34;/&#34; + mServiceName);
+        IBinder originService = MyServiceManager.getOriginService(mServiceName);
+        ......
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>结果越来奇怪了：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/2020-08-21-05.jpg" alt="2020 08 21 05"/>
+</div>
+</div>
+<div class="paragraph">
+<p>剪切板服务和<code>appops</code>这个服务走了相同的<code>installHook</code>逻辑，为什么一个hook成功了（能在<code>invoke</code>被拦截），另一个却失败了？</p>
+</div>
+<div class="paragraph">
+<p>通过很多次尝试之后，我把目标聚集到了一个方法上(类名：<code>PluginProcessManager</code>)：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    //这里为了解决某些插件调用系统服务时，系统服务必须要求要以host包名的身份去调用的问题。
+    public static void fakeSystemService(Context hostContext, Context targetContext) {
+        if (VERSION.SDK_INT &gt;= VERSION_CODES.ICE_CREAM_SANDWICH_MR1 &amp;&amp; !TextUtils.equals(hostContext.getPackageName(), targetContext.getPackageName())) {
+            long b = System.currentTimeMillis();
+            fakeSystemServiceInner(hostContext, targetContext);
+            Log.i(TAG, &#34;Fake SystemService for originContext=%s context=%s,cost %s ms&#34;, targetContext.getPackageName(), targetContext.getPackageName(), (System.currentTimeMillis() - b));
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过注释来看，该方法是解决我这个问题的（内心窃喜）！！但是为啥还是崩了呢？怀着懵逼的想法，我注释了<code>fakeSystemServiceInner</code>这个调用，结果竟然OK了。</p>
+</div>
+<div class="paragraph">
+<p>此刻的我信仰有点崩塌，说好的解决问题呢？冷静一下，我决定看下<code>fakeSystemServiceInner</code>源码（核心部分）：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    private static void fakeSystemServiceInner(Context hostContext, Context targetContext) {
+        try {
+            Context baseContext = getBaseContext(targetContext);
+            if (mFakedContext.containsValue(baseContext)) {
+                return;
+            } else if (mServiceCache != null) {
+                ......
+            }
+            Object SYSTEM_SERVICE_MAP = null;
+            try {
+                SYSTEM_SERVICE_MAP = FieldUtils.readStaticField(baseContext.getClass(), &#34;SYSTEM_SERVICE_MAP&#34;);
+            } catch (Exception e) {
+                Log.w(TAG, &#34;readStaticField(SYSTEM_SERVICE_MAP) from %s fail&#34;, e, baseContext.getClass());
+            }
+            if (SYSTEM_SERVICE_MAP == null) {
+                try {
+                    SYSTEM_SERVICE_MAP = FieldUtils.readStaticField(Class.forName(&#34;android.app.SystemServiceRegistry&#34;), &#34;SYSTEM_SERVICE_FETCHERS&#34;);
+                } catch (Exception e) {
+                    Log.e(TAG, &#34;readStaticField(SYSTEM_SERVICE_FETCHERS) from android.app.SystemServiceRegistry fail&#34;, e);
+                }
+            }
+
+            if (SYSTEM_SERVICE_MAP != null &amp;&amp; (SYSTEM_SERVICE_MAP instanceof Map)) {
+                //如没有，则创建一个新的。
+                Map&lt;?, ?&gt; sSYSTEM_SERVICE_MAP = (Map&lt;?, ?&gt;) SYSTEM_SERVICE_MAP;
+                Context originContext = getBaseContext(hostContext);
+
+                Object mServiceCache = FieldUtils.readField(originContext, &#34;mServiceCache&#34;);
+                if (mServiceCache instanceof List) {
+                    ((List) mServiceCache).clear();
+                }
+
+                for (Object key : sSYSTEM_SERVICE_MAP.keySet()) {
+                    if (sSkipService.contains(key)) {
+                        continue;
+                    }
+                    Object serviceFetcher = sSYSTEM_SERVICE_MAP.get(key);
+
+                    try {
+                        Method getService = serviceFetcher.getClass().getMethod(&#34;getService&#34;, baseContext.getClass());
+                        getService.invoke(serviceFetcher, originContext);
+                    } catch (InvocationTargetException e) {
+                        Throwable cause = e.getCause();
+                        if (cause != null) {
+                            Log.w(TAG, &#34;Fake system service faile&#34;, e);
+                        } else {
+                            Log.w(TAG, &#34;Fake system service faile&#34;, e);
+                        }
+                    } catch (Exception e) {
+                        Log.w(TAG, &#34;Fake system service faile&#34;, e);
+                    }
+                }
+                mServiceCache = FieldUtils.readField(originContext, &#34;mServiceCache&#34;);
+                FieldUtils.writeField(baseContext, &#34;mServiceCache&#34;, mServiceCache);
+
+                //for context ContentResolver
+                ContentResolver cr = baseContext.getContentResolver();
+                if (cr != null) {
+                    Object crctx = FieldUtils.readField(cr, &#34;mContext&#34;);
+                    if (crctx != null) {
+                        FieldUtils.writeField(crctx, &#34;mServiceCache&#34;, mServiceCache);
+                    }
+                }
+            }
+            if (!mFakedContext.containsValue(baseContext)) {
+                mFakedContext.put(baseContext.hashCode(), baseContext);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, &#34;fakeSystemServiceOldAPI&#34;, e);
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>发现这个逻辑十分绕，<code>hostContext</code>和<code>targetContext</code>各自什么意思，反射读取的一些字段又是干嘛的？</p>
+</div>
+<div class="paragraph">
+<p>看来只有弄清楚这段代码的目的，才能进一步解决问题了。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_分析源码">分析源码</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>首先从我们的Demo入手，以Android 9的代码为例，<code>getSystemService</code> 这个方法最终的调用逻辑如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Override
+public Object getSystemService(String name) {
+    return SystemServiceRegistry.getSystemService(this, name);
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>继续追踪：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Manages all of the system services that can be returned by {@link Context#getSystemService}.
+ * Used by {@link ContextImpl}.
+ */
+final class SystemServiceRegistry {
+    ......
+    private static final HashMap&lt;String, ServiceFetcher&lt;?&gt;&gt; SYSTEM_SERVICE_FETCHERS =
+            new HashMap&lt;String, ServiceFetcher&lt;?&gt;&gt;();
+    ......
+     * Gets a system service from a given context.
+     */
+    public static Object getSystemService(ContextImpl ctx, String name) {
+        ServiceFetcher&lt;?&gt; fetcher = SYSTEM_SERVICE_FETCHERS.get(name);
+        return fetcher != null ? fetcher.getService(ctx) : null;
+
+    }
+    ......
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>也就是说，每个服务都会对应一个<code>ServiceFetcher</code>的对象，它的创建过程是静态的，如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">static {
+    ......
+    //剪切板服务
+   registerService(Context.CLIPBOARD_SERVICE, ClipboardManager.class,
+            new CachedServiceFetcher&lt;ClipboardManager&gt;() {
+        @Override
+        public ClipboardManager createService(ContextImpl ctx) throws ServiceNotFoundException {
+            return new ClipboardManager(ctx.getOuterContext(),
+                    ctx.mMainThread.getHandler());
+        }});
+    ......
+    //appops服务
+   registerService(Context.APP_OPS_SERVICE, AppOpsManager.class,
+           new CachedServiceFetcher&lt;AppOpsManager&gt;() {
+       @Override
+       public AppOpsManager createService(ContextImpl ctx) throws ServiceNotFoundException {
+           IBinder b = ServiceManager.getServiceOrThrow(Context.APP_OPS_SERVICE);
+           IAppOpsService service = IAppOpsService.Stub.asInterface(b);
+           return new AppOpsManager(ctx, service);
+       }});
+    ......
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>那么，这个<code>CachedServiceFetcher</code>又具体是什么东西呢？它的定义也在<code>SystemServiceRegistry</code>中：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    /**
+     * Override this class when the system service constructor needs a
+     * ContextImpl and should be cached and retained by that context.
+     */
+    static abstract class CachedServiceFetcher&lt;T&gt; implements ServiceFetcher&lt;T&gt; {
+        private final int mCacheIndex;
+
+        CachedServiceFetcher() {
+            // Note this class must be instantiated only by the static initializer of the
+            // outer class (SystemServiceRegistry), which already does the synchronization,
+            // so bare access to sServiceCacheSize is okay here.
+            mCacheIndex = sServiceCacheSize++;
+        }
+
+        @Override
+        @SuppressWarnings(&#34;unchecked&#34;)
+        public final T getService(ContextImpl ctx) {
+            final Object[] cache = ctx.mServiceCache;
+            final int[] gates = ctx.mServiceInitializationStateArray;
+
+            for (;;) {
+                boolean doInitialize = false;
+                synchronized (cache) {
+                    // Return it if we already have a cached instance.
+                    T service = (T) cache[mCacheIndex];
+                    if (service != null || gates[mCacheIndex] == ContextImpl.STATE_NOT_FOUND) {
+                        return service;
+                    }
+
+                    // If we get here, there&#39;s no cached instance.
+
+                    // Grr... if gate is STATE_READY, then this means we initialized the service
+                    // once but someone cleared it.
+                    // We start over from STATE_UNINITIALIZED.
+                    if (gates[mCacheIndex] == ContextImpl.STATE_READY) {
+                        gates[mCacheIndex] = ContextImpl.STATE_UNINITIALIZED;
+                    }
+
+                    // It&#39;s possible for multiple threads to get here at the same time, so
+                    // use the &#34;gate&#34; to make sure only the first thread will call createService().
+
+                    // At this point, the gate must be either UNINITIALIZED or INITIALIZING.
+                    if (gates[mCacheIndex] == ContextImpl.STATE_UNINITIALIZED) {
+                        doInitialize = true;
+                        gates[mCacheIndex] = ContextImpl.STATE_INITIALIZING;
+                    }
+                }
+
+                if (doInitialize) {
+                    // Only the first thread gets here.
+
+                    T service = null;
+                    @ServiceInitializationState int newState = ContextImpl.STATE_NOT_FOUND;
+                    try {
+                        // This thread is the first one to get here. Instantiate the service
+                        // *without* the cache lock held.
+                        service = createService(ctx);
+                        newState = ContextImpl.STATE_READY;
+
+                    } catch (ServiceNotFoundException e) {
+                        onServiceNotFound(e);
+
+                    } finally {
+                        synchronized (cache) {
+                            cache[mCacheIndex] = service;
+                            gates[mCacheIndex] = newState;
+                            cache.notifyAll();
+                        }
+                    }
+                    return service;
+                }
+                // The other threads will wait for the first thread to call notifyAll(),
+                // and go back to the top and retry.
+                synchronized (cache) {
+                    while (gates[mCacheIndex] &lt; ContextImpl.STATE_READY) {
+                        try {
+                            cache.wait();
+                        } catch (InterruptedException e) {
+                            Log.w(TAG, &#34;getService() interrupted&#34;);
+                            Thread.currentThread().interrupt();
+                            return null;
+                        }
+                    }
+                }
+            }
+        }
+
+        public abstract T createService(ContextImpl ctx) throws ServiceNotFoundException;
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过分析<code>getService</code>的逻辑可知：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如果是首次创建，则会缓存一份</p>
+</li>
+<li>
+<p>如果非首次创建，直接读取缓存，缓存是<code>ctx.mServiceCache</code></p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>缓存是在<code>ContextImpl</code>这个类中的：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Common implementation of Context API, which provides the base
+ * context object for Activity and other application components.
+ */
+class ContextImpl extends Context {
+    ......
+    // The system service cache for the system services that are cached per-ContextImpl.
+    final Object[] mServiceCache = SystemServiceRegistry.createServiceCache();
+    ......
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>由此，我们得出了<code>getSystemService</code>背后发生的事情：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>每个<code>ContextImpl</code>创建的时候会持有一个<code>mServiceCache</code>字段，缓存这些服务的fetcher</p>
+</li>
+<li>
+<p>每个服务对应一个fetcher，服务的创建是在<code>createService</code>里面的，<strong>一开始并没有执行</strong></p>
+</li>
+<li>
+<p>每个服务第一次实际调用，也就是fetcher的<code>getService</code>触发的时候会执行<code>createService</code>的逻辑，并缓存起来</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>简单来说，这个一个<strong>懒加载+缓存</strong>的经典设计，对于Google工程师来说应该是常规操作了。但是至迟也没看出剪切板服务和<code>appops</code>服务有任何的不同！那么：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>为什么在这两个服务demo中调用之后会产生不同的效果呢？</p>
+</li>
+<li>
+<p>为什么去掉<code>fakeSystemService</code>就能正确执行呢？</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>是时候重新看下刚才的代码了。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_回到droidplugin">回到DroidPlugin</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果掌握了系统服务的注册缓存机制，那么刚才的代码就比较容易读懂了，以下是注释版：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">    /**
+     * @param hostContext 宿主的context
+     * @param targetContext 插件的context
+     */
+    private static void fakeSystemServiceInner(Context hostContext, Context targetContext) {
+        try {
+            // 获取插件的 mBase，即 ContextImpl对象
+            Context baseContext = getBaseContext(targetContext);
+            if (mFakedContext.containsValue(baseContext)) {
+                return;
+            } else if (mServiceCache != null) {
+                ......
+            }
+            Object SYSTEM_SERVICE_MAP = null;
+            // 获取插件的SYSTEM_SERVICE_MAP字段，它的Key包含了所有的系统服务
+            try {
+                // 低版本的位置
+                SYSTEM_SERVICE_MAP = FieldUtils.readStaticField(baseContext.getClass(), &#34;SYSTEM_SERVICE_MAP&#34;);
+            } catch (Exception e) {
+                Log.w(TAG, &#34;readStaticField(SYSTEM_SERVICE_MAP) from %s fail&#34;, e, baseContext.getClass());
+            }
+            if (SYSTEM_SERVICE_MAP == null) {
+                try {
+                    SYSTEM_SERVICE_MAP = FieldUtils.readStaticField(Class.forName(&#34;android.app.SystemServiceRegistry&#34;), &#34;SYSTEM_SERVICE_FETCHERS&#34;);
+                } catch (Exception e) {
+                    Log.e(TAG, &#34;readStaticField(SYSTEM_SERVICE_FETCHERS) from android.app.SystemServiceRegistry fail&#34;, e);
+                }
+            }
+
+            if (SYSTEM_SERVICE_MAP != null &amp;&amp; (SYSTEM_SERVICE_MAP instanceof Map)) {
+                //如没有，则创建一个新的。
+                Map&lt;?, ?&gt; sSYSTEM_SERVICE_MAP = (Map&lt;?, ?&gt;) SYSTEM_SERVICE_MAP;
+                // 获取插件的 mBase，即 ContextImpl对象
+                Context originContext = getBaseContext(hostContext);
+
+                // 获取宿主ContextImpl的mServiceCache，也就是系统服务的fetcher缓存
+                Object mServiceCache = FieldUtils.readField(originContext, &#34;mServiceCache&#34;);
+                // 清空缓存
+                if (mServiceCache instanceof List) {
+                    ((List) mServiceCache).clear();
+                }
+
+                for (Object key : sSYSTEM_SERVICE_MAP.keySet()) {
+                    // 不需要替换包名的跳过，显然appops是需要的
+                    if (sSkipService.contains(key)) {
+                        continue;
+                    }
+                    Object serviceFetcher = sSYSTEM_SERVICE_MAP.get(key);
+
+                    try {
+                        // 调用插件的 getService，导致插件的ContextImpl缓存全部赋值,从后面看这一句貌似没有必要
+                        Method getService = serviceFetcher.getClass().getMethod(&#34;getService&#34;, baseContext.getClass());
+                        getService.invoke(serviceFetcher, originContext);
+                    } catch (InvocationTargetException e) {
+                        Throwable cause = e.getCause();
+                        if (cause != null) {
+                            Log.w(TAG, &#34;Fake system service faile&#34;, e);
+                        } else {
+                            Log.w(TAG, &#34;Fake system service faile&#34;, e);
+                        }
+                    } catch (Exception e) {
+                        Log.w(TAG, &#34;Fake system service faile&#34;, e);
+                    }
+                }
+                // 读取宿主的ContextImpl的缓存
+                mServiceCache = FieldUtils.readField(originContext, &#34;mServiceCache&#34;);
+                // 用宿主的覆盖插件的，注意宿主的前面已经clear了
+                FieldUtils.writeField(baseContext, &#34;mServiceCache&#34;, mServiceCache);
+
+                //for context ContentResolver
+                ContentResolver cr = baseContext.getContentResolver();
+                if (cr != null) {
+                    Object crctx = FieldUtils.readField(cr, &#34;mContext&#34;);
+                    if (crctx != null) {
+                        FieldUtils.writeField(crctx, &#34;mServiceCache&#34;, mServiceCache);
+                    }
+                }
+            }
+            if (!mFakedContext.containsValue(baseContext)) {
+                mFakedContext.put(baseContext.hashCode(), baseContext);
+            }
+        } catch (Exception e) {
+            Log.e(TAG, &#34;fakeSystemServiceOldAPI&#34;, e);
+        }
+    }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>简单来说，这个方法把宿主和插件的ContextImpl对象的<code>mServiceCache</code>字段全部清空重置了，为什么要这么做的呢？</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>我们知道DroidPlugin的核心是通过Hook Binder来拦截系统服务，但是有些服务启动的很早，在我们Hook之前就已经创建并且缓存了，那么我们就需要通过这个逻辑清除缓存，<strong>让下一次调用重新创建，而此时创建的就是我们Hook过的代理对象了</strong>。</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_得出结论">得出结论</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果仔细阅读了上面的分析，可能你已经发现了问题的原因。可以看到，DroidPlugin认为<code>mServiceCache</code>字段是一个<code>List</code>，但是9.0的代码却是<code>Object []</code>类型，这就是问题所在了：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>由于类型判断错误，导致这个缓存根本没有清理掉，甚至还用宿主的缓存覆盖了插件的缓存。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>而在Android 5.0上，它确实是一个<code>List</code>：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// The system service cache for the system services that are
+// cached per-ContextImpl.  Package-scoped to avoid accessor
+// methods.
+final ArrayList&lt;Object&gt; mServiceCache = new ArrayList&lt;Object&gt;();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>那么为什么我注释了这个方法也能正确运行呢？</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>那是因为插件的ContextImpl在这个场景确实是没有初始化的，纯粹是因为宿主（已经初始化并缓存）覆盖导致的，如果直接注释，也就不会被覆盖了。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>所以解法就是新增一个判断：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">......
+if (mServiceCache instanceof List) {
+    ((List) mServiceCache).clear();
+}
+// For 高版本
+if (mServiceCache instanceof Object[]) {
+    int len = ((Object[])mServiceCache).length;
+    mServiceCache = new Object[len];
+    FieldUtils.writeField(originContext, &#34;mServiceCache&#34;, mServiceCache);
+}
+......</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_回到问题">回到问题</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>解决这个问题后我重试了小米/Android8.0的机型，发现这个问题在我的工程依然存在，但是DroidPlugin竟然好了！陷入新一轮懵逼，经过一番测试后，发现是我在初始化这个之前先初始化了灯塔SDK，如果将其调整在后面就不会有这个问题！</p>
+</div>
+<div class="paragraph">
+<p>大胆的猜测，可能是这个SDK导致了AppOps在attach之后、<code>fakeSystemService</code>之前创建了，而此时是没有Hook的。只可惜这个SDK和MIUI对于我来说都是黑盒系统，对于<code>checkPackage</code>的探究已经让我收获颇丰，至少在其他常规时机调用这个方法已经不会有问题了，这个小米+Android8的问题也可以通过调整初始化顺序解决，再去深究一个没有源码的问题恐怕也收益不大，于是就此收手吧。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_文末总结">文末总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>这个问题算是一个典型的DroidPlugin式问题了：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>由于Hook了系统，就要不断的去兼容系统，最可怕的是你不能一下子知道下一个版本你需要兼容哪些改动。</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag1/" rel="tag">tag1</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag2/" rel="tag">tag2</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/android-remote-debug-method/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Android客户端远程调试方法</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/flutter-source-code-analyze-1/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Flutter源码剖析(一):源码获取与构建</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-1/">Flutter源码剖析(一):源码获取与构建</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-system-service-cache-analyze/">Android系统服务的注册缓存机制分析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-remote-debug-method/">Android客户端远程调试方法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/evolution-of-plugin-framework/">插件化技术的演进之路</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-make-debuggable/">设置Android全局可调试</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

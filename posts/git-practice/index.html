@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Git工程化最佳实践 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Git工程化最佳实践" />
+<meta property="og:description" content="本文导读 本文对应的 git-standardize 项目地址 https://github.com/vimerzhao/git-standardize 问题背景 大部分程序员对于Git的理解还停留在 git add . git commit -m &#34;update&#34; git pull git push 的阶段，但这在实际项目开发中是远远不够的。 &#43; 举一个简单的例子，现在我们需要过滤所有修复bug的提交，该怎" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/git-practice/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-12-13T12:32:25&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-13T20:03:14&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Git工程化最佳实践"/>
+<meta name="twitter:description" content="本文导读 本文对应的 git-standardize 项目地址 https://github.com/vimerzhao/git-standardize 问题背景 大部分程序员对于Git的理解还停留在 git add . git commit -m &#34;update&#34; git pull git push 的阶段，但这在实际项目开发中是远远不够的。 &#43; 举一个简单的例子，现在我们需要过滤所有修复bug的提交，该怎"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Git工程化最佳实践</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-12-13T12:32:25&#43;08:00">2019-12-13</time>
+	<time class="meta__text" datetime="2021-05-13T20:03:14&#43;08:00">(最后修改: 2021-05-13)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/category1/" rel="category">category1</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_本文导读">本文导读</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本文对应的 git-standardize 项目地址 <a href="https://github.com/vimerzhao/git-standardize" class="bare">https://github.com/vimerzhao/git-standardize</a></p>
+</div>
+<div class="sect2">
+<h3 id="_问题背景">问题背景</h3>
+<div class="paragraph">
+<p>大部分程序员对于Git的理解还停留在</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>git add .
+git commit -m &#34;update&#34;
+git pull
+git push</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>的阶段，但这在实际项目开发中是远远不够的。 + 举一个简单的例子，现在我们需要过滤所有修复bug的提交，该怎么做？显然是无法做到的，因为无法从commit信息获知。但是，如果我们在每次commit信息里面都注明提交的类型，是不是就可以通过过滤指定类型来达到目的了。 + 再举一个例子，如果我们的分支命名都是</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>master-01
+master-02
+feature-add_sd_card_permission
+bugfix-id-342141
+bugfix-authorize-error</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这种格式，我们是不是很不方便去做 <strong>定位分支的负责人，过滤指定分支</strong> 等操作，更不用说视觉上的混乱所造成的困扰了。 + 再比如，笔者近来发现某个仓库有大量构建产生的中间文件，究其原因，发现是因为管理人员设置的 <code>.gitignore</code> 配置如下</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>....
+/build
+....</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>显然，这种写法无法忽略子模块的 build 目录。</p>
+</div>
+<div class="paragraph">
+<p>基于以上三个例子，Git使用的工程化、标准化是十分必要的。 + 我们所谓的造轮子，亦不仅仅存在于编程中，日常工作中常有大量的重复工作，亦是一种轮子，本文即 <strong>希望规范化、流程化Git的使用</strong> ，以期提高开发者的效率。 + 本文基于作者工作中的教训和思考积淀而成，虽曰&#34;`最佳`&#34;，但也只是现阶段我心中的最佳实践，仅供参考。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_阅读须知">阅读须知</h3>
+<div class="paragraph">
+<p>Git的作者Linus也是Linux的作者，Git最初也是Linux内核开发者在使用，所以其本身的配置和使用也是充满了类Unix的味道，诸如别名、命令、配置文件等等，都是Unix/Linux开发者习以为常的东西，但对于客户端、大前端的开发者可能相对陌生，所以，继续阅读本文之前，希望你对以下知识至少是有了解的</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>基本的Shell命令： <code>alias</code> / <code>source</code> / <code>grep</code> 等</p>
+</li>
+<li>
+<p>终端的基本使用，如通过 <code>Tab</code> 键可以自动补全命令</p>
+</li>
+<li>
+<p>配置文件的使用，如Bash的 <code>.bashrc</code> / <code>.bash_profile</code> ， zsh 的 <code>.zshrc</code> ，Git 的 <code>.gitconfig</code> ，他们的原理都是相似的</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_仓库创建">仓库创建</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>无论是Github还是工蜂，我们新建一个Git仓库后，往往会出现以下提示：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/Snipaste_2019-11-05_19-38-20.png" alt="Snipaste 2019 11 05 19 38 20"/>
+</div>
+</div>
+<div class="paragraph">
+<p>某种意义上，这幅图会带来很多误解，我们在创建一个Git仓库后还有很多事情要做，一开始，我们或许习惯于渐进式的改进，但我们应该意识到这种工作是可以 <strong>流程化、自动化</strong> 的，即不要等到发现问题再去解决，而应该一开始就建立有效、可复用的机制。</p>
+</div>
+<div class="sect2">
+<h3 id="_信息配置">信息配置</h3>
+<div class="paragraph">
+<p>使用 <code>git config</code> 配置必须要的用户信息</p>
+</div>
+<div class="paragraph">
+<p>反面案例：</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>腾讯内部每个员工有自己的英文名和tencent邮箱，但是部分开发人员未注意，导致诸如
+name(中文名)
+name@gmail.com
+的信息进入了提交历史</pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gitignore">gitignore</h3>
+<div class="paragraph">
+<p><a href="https://github.com/github/gitignore">github-gitignore</a> 提供了各类型项目的 <code>.gitignore</code> 模版，基本可以直接使用，如需定制，参考 <a href="https://git-scm.com/docs/gitignore">Git - gitignore Documentation</a> ，确保自己理解了语法规则。一般而言，本地的配置、编译生成的中间文件是需要在项目建立之初就添加 <code>.gitignore</code> 的。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_分支规范">分支规范</h3>
+<div class="paragraph">
+<p>只允许使用以下分支命名项目</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>master</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>主分支，也是用于部署生产环境的分支，确保 <code>master</code> 分支稳定性，任何时间都不能直接修改代码</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>release</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p><code>release</code> 为预上线分支，发布提测阶段，会以 <code>release</code> 分支代码为基准提测</p>
+</li>
+<li>
+<p>分支命名细则: <code>release-version</code></p>
+</li>
+<li>
+<p>当有一组 <code>feature</code> 开发完成，首先会合并到 <code>master</code> 分支，进入提测时，会创建 <code>release</code> 分支</p>
+</li>
+<li>
+<p>如果测试过程中若存在bug需要修复，则直接由开发者在 <code>release</code> 分支修复并提交</p>
+</li>
+<li>
+<p>当测试完成，经过一个周期的灰度之后，合并 <code>release</code> 分支到 <code>master</code> 分支</p>
+</li>
+<li>
+<p><code>release</code> 分支的最终状态是每个线上版本的归档镜像</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>hotfix</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>线上出现紧急问题时，需要及时修复，以 <code>master</code> 分支为基线，创建 <code>hotfix</code> 分支，修复完成后，需要合并到 <code>master</code> 分支和处于待发布的 <code>release</code> 分支</p>
+</li>
+<li>
+<p>分支命名细则: <code>hotfix-creator-description</code></p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>feature</code></p>
+<div class="ulist">
+<ul>
+<li>
+<p>开发新功能时，以 <code>master</code> 为基础创建 <code>feature</code> 分支</p>
+</li>
+<li>
+<p>分支命名细则: <code>feature-creator-description</code></p>
+</li>
+</ul>
+</div>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Warning</strong> 是否需要引入 <code>develop</code> 分支以维持 <code>master</code> 分支的稳定性（上述机制的不足之处）有待商榷，过于复杂也不是一件好事，保证 <strong>合入分支自身的质量</strong> 看起来是更好的解决方案</p>
+</div>
+<div class="paragraph">
+<p>推荐一篇参考文章 <a href="https://nvie.com/posts/a-successful-git-branching-model/">A successful Git branching model » nvie.com</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_commit规范">commit规范</h3>
+<div class="paragraph">
+<p>参考 <a href="https://github.com/angular/angular.js/blob/master/DEVELOPERS.md#-git-commit-guidelines">angular.js commit规范</a> + 针对客户端的每次提交限制格式如下</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">&lt;type&gt;(&lt;scope&gt;):&lt;subject&gt;
+&lt;BLANK LINE&gt;
+&lt;body&gt;
+&lt;BLANK LINE&gt;
+&lt;footer&gt;</code></pre>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>type</code>:本次改动的类型</p>
+<div class="ulist">
+<ul>
+<li>
+<p>feat: 添加新特性</p>
+</li>
+<li>
+<p>fix: 修复bug</p>
+</li>
+<li>
+<p>docs: 仅仅修改了文档</p>
+</li>
+<li>
+<p>style: 仅仅修改了空格、格式缩进等，不改变代码逻辑</p>
+</li>
+<li>
+<p>refactor: 代码重构，没有加新功能或者修复bug</p>
+</li>
+<li>
+<p>perf: 增加代码进行性能测试</p>
+</li>
+<li>
+<p>test: 增加测试用例</p>
+</li>
+<li>
+<p>chore: 改变构建流程、或者增加依赖库、工具等</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><code>scope</code>:本次改动影响的范围，建议每个工程划分好自己的模块，方便填写</p>
+</li>
+<li>
+<p><code>subject</code>:本次改动的简要描述，一般写这个就够了</p>
+</li>
+<li>
+<p><code>body</code>:更详细的改动说明，一般不使用，因为不推荐这么大的改动</p>
+</li>
+<li>
+<p><code>footer</code>:描述下与之关联的 issue 或 break change，一般不使用</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>Note</strong></p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>建议每次commit的粒度不要太大，方便CodeReview</p>
+</li>
+<li>
+<p><code>fix</code> 类型的提交最好附带上bug链接之类的信息</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_githook">GitHook</h3>
+<div class="paragraph">
+<p>GitHook应该在仓库创建之后尽早设置，为了避免重复工作，笔者以及针对上文提到的信息配置、分支规范和commit规范等提供了 <strong>强制检查</strong> 的能力，引入方式如下</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">cd ..
+git clone http://git.code.oa.com/vimerzhao/git-standardize.git
+cd -
+cp -R ../git-standardize/.githooks ./
+cd .githooks
+chmod +x *[^rule]
+cd ..
+git config core.hooksPath .githooks
+cd ..
+rm -rf git-standardize
+cd -</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果管理员配置好了hook并完成了服务器端的push，那么对于其他开发者，只需要</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">git pull --rebase
+git config core.hooksPath .githooks</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>使用效果如下：</p>
+</div>
+<div class="paragraph">
+<p><strong>非法分支命名.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/Snipaste_2019-10-24_15-17-33.png" alt="Demo"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>非法commit信息.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/Snipaste_2019-10-24_15-13-58.png" alt="Demo"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_仓库使用">仓库使用</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_gitconfig">gitconfig</h3>
+<div class="paragraph">
+<p>参考 <a href="https://git-scm.com/book/en/v2/Customizing-Git-Git-Configuration">Git - Git Configuration</a></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_githook_2">GitHook</h3>
+<div class="paragraph">
+<p>如上所述，使用者clone下仓库后应该配置本地GitHook，避免不小心提交脏信息</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell" data-lang="shell">git clone ****
+git config core.hooksPath .githooks</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_别名设置">别名设置</h3>
+<div class="paragraph">
+<p>下文会专门论述为什么推荐你在命令行而不是GUI工具中使用Git，本章主要讲述如何使用别名。别名在类Unix系统中普遍存在，即将我们最常用的命令设置一个更短更容易记住的别名，以提高使用效率。</p>
+</div>
+<div class="sect3">
+<h4 id="_oh_my_zsh">oh-my-zsh</h4>
+<div class="paragraph">
+<p>zsh是一款类似于 GitBash 的终端软件，而 oh-my-zsh 则是基于 zsh 深度定制的版本，其 <code>git</code> 插件提供了一套别名，推荐使用，避免重复造轮子。 + 文档位置： <a href="https://github.com/robbyrussell/oh-my-zsh/wiki/Cheatsheet#git">git-cheatsheet</a> + 配置位置： <a href="https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh">git.plugin.zsh</a></p>
+</div>
+<div class="paragraph">
+<p>使用这套别名可以有以下好处</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>省力省心，开源社区长期优化的配置大概率比我们自己折腾的更加科学和健壮</p>
+</li>
+<li>
+<p>通用性强，任何一个使用 oh-my-zsh 的用户和你的别名习惯都是一致的，便于交流</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gitbash">GitBash</h4>
+<div class="paragraph">
+<p>如果开发环境是 Mac/Linux ，强烈推荐使用 oh-my-zsh，如果是 Windows，目前看来还是使用 GitBash 最佳，推荐将 <a href="https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh">git.plugin.zsh</a> 的别名规则平移到 GitBash 下，这样也符合上文提到的通用性原则。移植方法很简单，如下</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>## 大意如此，视具体情况可能需要稍作修改
+move path/to/oh-my-zsh/plugins/git/git.plugin.zsh ~/.git.plugin.zsh
+echo `source ~/.git.plugin.zsh &gt;&gt; .bash_profile`</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gitalias">GitAlias</h4>
+<div class="paragraph">
+<p>GitBash 使用 <strong>Linux别名</strong> 时有一个不太友好的问题，就是不支持自动补全，对于像 <code>git checkout</code> 这样的命令，非常需要自动补全，否则很容易拼错分支名称。 + 所以推荐配置 <strong>Git别名</strong> ，为了提高通用性，Git别名同样推荐基于 oh-my-zsh 的别名规则进行移植，下面是一段 <a href="https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh">git.plugin.zsh</a> 的Linux别名配置</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>...
+alias gbr=&#39;git branch --remote&#39;
+alias gbs=&#39;git bisect&#39;
+alias gbsb=&#39;git bisect bad&#39;
+alias gbsg=&#39;git bisect good&#39;
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>很容易发现，每个别名均以 <code>g</code> 开头以区分其他命令，而 GitAlias 均以 <code>git</code> 开头，所以对应的Git别名配置可以是</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>...
+git config --global alias.br    &#39;branch --remote&#39;
+git config --global alias.bs    &#39;bisect&#39;
+git config --global alias.bsb   &#39;bisect bad&#39;
+git config --global alias.bsg   &#39;bisect good&#39;
+...</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如此一来， <code>git branch --remote</code> 这个命令在 Mac/Windows/Linux 均可以通过 <code>gbr</code> 或者 <code>git br</code> 访问到。</p>
+</div>
+<div class="paragraph">
+<p><strong>Note</strong></p>
+</div>
+<div class="paragraph">
+<p>Linux别名： 通过bash命令 <code>alias</code> 设置。</p>
+</div>
+<div class="paragraph">
+<p>Git别名：通过 <code>git config --global alias</code> 设置。</p>
+</div>
+<div class="paragraph">
+<p><strong>Note</strong></p>
+</div>
+<div class="paragraph">
+<p>如何移植 <a href="https://github.com/robbyrussell/oh-my-zsh/blob/master/plugins/git/git.plugin.zsh">git.plugin.zsh</a>？一行一行的修改 <code>alias</code> 语法为 <code>git config alias</code> 语法吗？笔者的解决方法</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>## 提取所有关于别名的配置，并暂存
+grep -E &#34;alias g[a-zA-Z]+=.*&#34; path/to/git.plugin.zsh &gt; temp1.sh
+## 改成GitAlias风格的别名
+sed &#34;s/^alias g/git config --global alias./g&#34; temp1.sh &gt; temp2.sh
+## 去掉命令里面的 `git`，符合 GitAlias 语法
+sed &#34;s/git //g&#34; temp2.sh &gt; git.alias.config.sh
+## 进行配置，运行后会注册到 .gitconfig
+source git.alias.config.sh
+## 删除中间文件
+rm temp*</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_命令封装">命令封装</h3>
+<div class="paragraph">
+<p>所有的辅助命令均以 <code>gs_</code> 开头，这样的好处是可以利用 <code>Tab</code> 键的补全机制自动选择命令，避免冗长难记的输入</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/ezgif-1-2df9ac477e34.gif" alt="Demo"/>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gs_clear_local_barnch">gs_clear_local_barnch</h4>
+<div class="paragraph">
+<p>清理本地存在但是服务器端不存在的分支</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gs_branch_last_commit">gs_branch_last_commit</h4>
+<div class="paragraph">
+<p>查看分支最后提交人和存活周期，辅助删除过期分支</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_gs_past_commit_statistic">gs_past_commit_statistic</h4>
+<div class="paragraph">
+<p>统计过去一段时间内的代码提交数量，参数</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>$1 : 时间段或者起始时间，如 <code>7.days</code> 、<code>2019-10-10</code></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_总结">总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以上是笔者近期的思考总结，后面有新的想法和实践都会在此更新，欢迎关注 <a href="https://github.com/vimerzhao/git-standardize">git-standardize</a>。另外推荐阅读： <a href="https://github.com/vimerzhao/vimerzhao.github.io/blob/master/dev-tools/2019-11-26-git-internals.adoc">Git内部原理剖析</a></p>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag1/" rel="tag">tag1</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag2/" rel="tag">tag2</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/git-internals/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Git内部原理剖析</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/proguard-inline-optimieze-make-stacktrace-loss/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">警惕Proguard内联优化导致Crash堆栈信息丢失</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-1/">Flutter源码剖析(一):源码获取与构建</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-system-service-cache-analyze/">Android系统服务的注册缓存机制分析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-remote-debug-method/">Android客户端远程调试方法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/evolution-of-plugin-framework/">插件化技术的演进之路</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-make-debuggable/">设置Android全局可调试</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

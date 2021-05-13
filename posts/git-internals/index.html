@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Git内部原理剖析 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Git内部原理剖析" />
+<meta property="og:description" content="导读 为什么写这篇文章 写这篇文章的本意有二: 工作安排原因，常有同事询问我一些关于 Git 的问题，总觉得自己解释的不够透彻，因此觉得有必要深入了解一下。 目前中文的 Git 教程往往本末倒置， 一味从版本管理工具的角度去堆" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/git-internals/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-11-26T12:31:51&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-13T20:03:14&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Git内部原理剖析"/>
+<meta name="twitter:description" content="导读 为什么写这篇文章 写这篇文章的本意有二: 工作安排原因，常有同事询问我一些关于 Git 的问题，总觉得自己解释的不够透彻，因此觉得有必要深入了解一下。 目前中文的 Git 教程往往本末倒置， 一味从版本管理工具的角度去堆"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Git内部原理剖析</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-11-26T12:31:51&#43;08:00">2019-11-26</time>
+	<time class="meta__text" datetime="2021-05-13T20:03:14&#43;08:00">(最后修改: 2021-05-13)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/category1/" rel="category">category1</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_导读">导读</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_为什么写这篇文章">为什么写这篇文章</h3>
+<div class="paragraph">
+<p>写这篇文章的本意有二:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>工作安排原因，常有同事询问我一些关于 Git 的问题，总觉得自己解释的不够透彻，因此觉得有必要深入了解一下。</p>
+</li>
+<li>
+<p>目前中文的 Git 教程往往本末倒置， <strong>一味从版本管理工具的角度去堆砌命令</strong> ，而没有把握住Git的本质，导致读者知道的命令愈多，愈觉得 Git 复杂不友好。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>本文中，笔者会通过实例演示+原理解释的方式进行剖析，并提出一些平时我们不易察觉的问题。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_git产生的背景">Git产生的背景</h3>
+<div class="paragraph">
+<p>Git 诞生于2005年，当时 Linux 内核开发者可以免费使用 BitKeeper 作为源码管理工具，但是其作者认为部分开发者对 BitKeeper 进行逆向工程有悖原则，因而收回了使用权限，在这种危机时刻， Linus 再一次将个人英雄主义发挥到了极致，以主导设计开发了 Git 。根据这段背景我们需要意识到这么几个问题:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Git 最早用来解决 Linux 内核的开发，因而其功能特点都是面向这种 <strong>参与者庞大且分散的协作开发模式设计的，企业的小团队可能体会不到 Git 的真正强大之处</strong> 。</p>
+</li>
+<li>
+<p>Git 的设计者和最早的使用者都是 Linux 内核开发者，比起 GUI 界面， <strong>他们更喜欢命令行，更认同 Unix 的设计哲学</strong> ，因而对于习惯了 GUI 界面的开发者(前端、移动端等)Git会显得十分&#34;`笨拙`&#34;。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>理解这些背景对于我们认识 Git 十分重要，举一个例子，我们希望看到所有代码分支的最后提交时间和提交者，这种功能是高度定制的，如果 GUI 工具没有提供，那我们便无能为力，但是 Git 可以，通过 <strong>灵活的参数和 Linux 强大的工具集( <code>grep</code> 、 <code>awk</code> )</strong> ，我们可以自动封装出这个命令并使用:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>gs_branch_last_commit() {
+    git fetch --prune
+    git for-each-ref --sort=&#39;-committerdate&#39; --format=&#34;%(refname:short) %09 %(authorname) %09 %(committerdate:relative)&#34;  \
+        | grep  --line-buffered &#34;origin&#34; \
+        | awk &#39;{printf &#34;%-50s%-25s%s %s %s\n&#34;,$1,$2,$3,$4,$5}&#39;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最后需要强调的是， <strong>Git本意不是做一个版本管理工具，而是文件管理系统(Git is a content-addressable filesystem)</strong> ，正如Linux在早期的邮件中所述:</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>In many ways you can just see git as a filesystem - it’s content- addressable, and it has a notion of versioning, but I really really designed it coming at the problem from the viewpoint of a <em>filesystem</em> person (hey, kernels is what I do), and I actually have absolutely <em>zero</em> interest in creating a traditional SCM system.</p>
+</div>
+</blockquote>
+<div class="attribution">
+— Linus Torvalds
+</div>
+</div>
+<div class="paragraph">
+<p>在读完本文后，相信读者能更深刻地理解这段话。</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><strong>Note</strong></p>
+</div>
+<div class="paragraph">
+<p>SCM(即 <a href="https://en.wikipedia.org/wiki/Software_configuration_management">Software configuration management</a>)是一种更广义的版本管理， Linus 更愿意直接将其解释为 Source Code Management。</p>
+</div>
+</blockquote>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_scm的三个问题">SCM的三个问题</h3>
+<div class="paragraph">
+<p><em>The Architecture of Open Source Applications (Volume 2)</em> 中提到任何一个SCM软件都需要解决三个问题， <strong>以保证软件在开发过程中任一时间的内容都可以被追溯，并使得不同开发者可以协作开发</strong> 。这三个问题是:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>存储内容(Storing content)</p>
+</li>
+<li>
+<p>追踪内容的变更(Tracking changes to the content (history including merge metadata))</p>
+</li>
+<li>
+<p>向其他开发者分发内容及其变更(Distributing the content and history with collaborators)</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>Git也不例外，接下来本文将围绕这三个问题，并结合Git自身的一些特点，进行剖析。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_术语">术语</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>由于读者可能对于Git的内部原理不甚熟悉，所以这里把专业词汇先列出来:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>.git Directory &amp; Working Directory</code>: .git 目录是 Git 存储信息和操作信息的目录， Working Directory 是我们实际操作的目录。</p>
+</li>
+<li>
+<p><code>Git Object</code>: Git 对象，我们的文件、目录和提交记录都会以 Git Object 的格式存储在 .git 目录中。</p>
+</li>
+<li>
+<p><code>Git Reference</code>: Git 引用，我们的分支、远程分支、tag的索引都是已 Git Reference 的形式存储，本质是一个包含 SHA1 值的40个字符的16进制字符串。</p>
+</li>
+<li>
+<p><code>SHA1</code>: 所有的文件的内容都会通过该算法计算出其(其实还有一个header) SHA1值作为Git 对象的文件名(其实就是数据库中的Key)。</p>
+</li>
+<li>
+<p><code>plumbing &amp; porcelain</code>: Git的命令分类方式，前者是晦涩的底层命令，直接操作文件，后者是面向版本管理的高级命令。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_git_对象">Git 对象</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_git目录">.git目录</h3>
+<div class="paragraph">
+<p>当我们在某个目录下执行 <code>git init</code> 命令时，该目录就会成为 Git 的一个工作目录(Working Directory)，而该目录下面的 .git 目录则是 <strong>工作目录的全部历史在 Git 内的表示</strong> 。 + 在开始Git内部原理的探索之旅前，我们有必要认识一下 .git 目录，我们在命令行或者 GUI 界面的各种操作，本质都是操作 .git 目录下的文件。现在我们通过 <code>git init</code> 创建一个仓库，并通过 <code>tree</code> 命令查看 .git 目录的结构:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">$ tree .git
+.git
+├── HEAD
+├── branches
+├── config
+├── description
+├── hooks
+│   ├── applypatch-msg.sample
+│   ├── commit-msg.sample
+│   ├── fsmonitor-watchman.sample
+│   ├── post-update.sample
+│   ├── pre-applypatch.sample
+│   ├── pre-commit.sample
+│   ├── pre-push.sample
+│   ├── pre-rebase.sample
+│   ├── pre-receive.sample
+│   ├── prepare-commit-msg.sample
+│   └── update.sample
+├── info
+│   └── exclude
+├── objects
+│   ├── info
+│   └── pack
+└── refs
+    ├── heads
+    └── tags
+
+9 directories, 15 files</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>各个目录/文件的作用如下</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>HEAD</code> : 当前分支</p>
+</li>
+<li>
+<p><code>config</code> : 仓库级的配置信息</p>
+</li>
+<li>
+<p><code>description</code> : 只会被Git的网络程序(如Github)使用，无需关注</p>
+</li>
+<li>
+<p><code>index</code> : 暂存区(staging area)</p>
+</li>
+</ol>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>hooks</code> : Git Hook 的示例脚本</p>
+</li>
+<li>
+<p><code>info/exclude</code> : 保存了一些你不想在 .gitignore 中配置的忽略文件的信息</p>
+</li>
+<li>
+<p><code>objects</code> : 所有工作目录的内容(content)会以 Git 对象(objects)的形式存放在这个目录</p>
+</li>
+<li>
+<p><code>refs</code> : 存放分支、tag的信息</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>其中 <code>objects</code> <code>refs</code> 将是本文剖析的重点，也是Git的核心。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_plumbing_和_porcelain">plumbing 和 porcelain</h3>
+<div class="paragraph">
+<p>在Git中，存在两种命令: plumbing 和 porcelain ，前者将Git作为一个文件管理系统，所有的命令都十分的底层、抽象，例如上文使用的 <code>git for-each-ref</code> 就是一个 <code>plumbing</code> 命令；对应的,后者将Git作为一个版本管理系统，所有的命令都更加抽象和直白，例如我们常见的 <code>git add</code> / <code>git commit</code> / <code>git push</code> 三兄弟。 本文将基于常用的 porcelain 命令进行剖析，以揭示其背后的真实操作，并在某些时刻使用一些 plumbing 命令，以帮助读者从文件的角度进行更深刻的理解。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_git对象类型">Git对象类型</h3>
+<div class="paragraph">
+<p>前面说过，Git的本质是一个 <code>content-addressable filesystem</code> (基于内容寻址的文件系统) + 既然是一个文件管理系统，那么文件有哪些类型呢？一般来说有 <strong>目录和文件</strong> 。对于 Git 来说，还需要记录变更，这也可以认为是一种特殊的文件类型。最后，Git还提供了一种tag类型的文件，它为某次提交提供了一个永久索引，因为对于一个SCM系统来说，记录某次重大改动(如版本发布)是十分有必要的。 + 在Git中，可以用一个有向无环图来表示Git对象的组织方式:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-004.png" alt="git internal 004"/>
+</div>
+</div>
+<div class="paragraph">
+<p>所以Git对象一共有四种类型:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><code>blob</code> : 表示一个内容(注意不是文件)</p>
+</li>
+<li>
+<p><code>tree</code> : 表示一个目录</p>
+</li>
+<li>
+<p><code>commit</code> : 表示一次提交</p>
+</li>
+<li>
+<p><code>tag</code> : 比较特殊，即是引用也有对象(可以人为是分支在某一时刻的快照)</p>
+</li>
+</ol>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_git对象操作">Git对象操作</h3>
+<div class="paragraph">
+<p>那么这四种文件类型具体长什么样呢？这就不得不提Git的对象模型了，在Git中，所有的对象都会通过 <code>zlib</code> 压缩成一个文件名为其 SHA1 值的文件，为了更具体解释这句话，我们开始实验。 首先为了方便后面的表示，我设计了一个命令，借助了两个 plumbing 命令: <code>rev-list</code> <code>cat-file</code> ，用来打印所有Git对象的内容:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>print_all_object() {
+    for object in `git rev-list --objects --all | cut -d &#39; &#39; -f 1`; do
+        echo &#39;SHA1: &#39;$object
+        git cat-file -p $object
+        echo &#39;^&#39;
+    done
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>第一步，初始化一个仓库并添加文件(为了模拟真实场景，这里用了多级目录):</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>echo &#34;first file&#34; &gt; first.txt
+mkdir -p second/third
+echo &#34;second file&#34; &gt; second/second.txt
+echo &#34;third file&#34; &gt; second/third/third.txt
+git add first.txt
+git add second
+git commit -m &#34;first commit&#34;
+echo &#39;~~~~&#39;
+tree
+print_all_object</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>此时工作目录如下:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>.
+├── first.txt
+└── second
+    ├── second.txt
+    └── third
+        └── third.txt
+
+2 directories, 3 files</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Git对象的内容如下:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>SHA1: b8a7759d225d7ca4952c57c9ba785a6692a075a9
+tree 12f38251f4b5858269b7b95b8b655c88bb4185d8
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091820 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091820 +0800
+
+first commit
+^
+SHA1: 12f38251f4b5858269b7b95b8b655c88bb4185d8
+100644 blob 303ff981c488b812b6215f7db7920dedb3b59d9a    first.txt
+040000 tree be554e60137e97e1e1e8e443552e0abd17db1450    second
+^
+SHA1: 303ff981c488b812b6215f7db7920dedb3b59d9a
+first file
+^
+SHA1: be554e60137e97e1e1e8e443552e0abd17db1450
+100644 blob 1c59427adc4b205a270d8f810310394962e79a8b    second.txt
+040000 tree d2895a749b806d7647a9622c71a03e0e3eace8dc    third
+^
+SHA1: 1c59427adc4b205a270d8f810310394962e79a8b
+second file
+^
+SHA1: d2895a749b806d7647a9622c71a03e0e3eace8dc
+100644 blob 667bb3858a056cc96e79c0c3b1edfb60135c2359    third.txt
+^
+SHA1: 667bb3858a056cc96e79c0c3b1edfb60135c2359
+third file
+^</pre>
+</div>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>commit 类型的 Git 对象，记录了 commit 指向的 tree 对象，以及提交者(author/committer)的信息</p>
+</li>
+<li>
+<p>tree 类型的 Git 对象，该对象包含一个名为 first.txt 的文件和一个名为 second 的目录</p>
+</li>
+<li>
+<p>blob 类型的 Git 对象，该对象的内容为 <code>first file</code></p>
+</li>
+<li>
+<p>同2</p>
+</li>
+<li>
+<p>同3</p>
+</li>
+<li>
+<p>同2</p>
+</li>
+<li>
+<p>同3</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>可以看出， Git 的 commit 对象可以通过 SHA1 找到 tree 对象，tree 对象可以通过 SHA1 找到其他 tree 和 blob ，在Git中， <strong>SHA1就是Git对象的指针</strong> 。此外，Git 使用这种文本化的表示方式也符合Unix 一切皆文本的哲学。为了便于理解，上面的信息可以按照上文的模型画出对应的有向无环图(暂时省略了Git引用):</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-1.png" alt="git internal 1"/>
+</div>
+</div>
+<div class="paragraph">
+<p>接下来我们修改一个文件，再次提交</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>echo &#34;first file modified&#34; &gt; first.txt
+git add first.txt
+git commit -m &#34;second commit&#34;
+echo &#39;~~~~&#39;
+print_all_object</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>内容如下:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>SHA1: 67f9d83a9ef370c057accf103e6502d3c8a56048
+tree 7b1fc0ae095fcadbd565737c2a957bdbeb9c4ee3
+parent b8a7759d225d7ca4952c57c9ba785a6692a075a9
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091920 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091920 +0800
+
+second commit
+^
+SHA1: b8a7759d225d7ca4952c57c9ba785a6692a075a9
+tree 12f38251f4b5858269b7b95b8b655c88bb4185d8
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091820 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091820 +0800
+
+first commit
+^
+SHA1: 7b1fc0ae095fcadbd565737c2a957bdbeb9c4ee3
+100644 blob 491a7bb2dd1a1e5ba9e00440ba9f7dd25fa17336    first.txt
+040000 tree be554e60137e97e1e1e8e443552e0abd17db1450    second
+^
+SHA1: 491a7bb2dd1a1e5ba9e00440ba9f7dd25fa17336
+first file modified
+^
+SHA1: be554e60137e97e1e1e8e443552e0abd17db1450
+100644 blob 1c59427adc4b205a270d8f810310394962e79a8b    second.txt
+040000 tree d2895a749b806d7647a9622c71a03e0e3eace8dc    third
+^
+SHA1: 1c59427adc4b205a270d8f810310394962e79a8b
+second file
+^
+SHA1: d2895a749b806d7647a9622c71a03e0e3eace8dc
+100644 blob 667bb3858a056cc96e79c0c3b1edfb60135c2359    third.txt
+^
+SHA1: 667bb3858a056cc96e79c0c3b1edfb60135c2359
+third file
+^
+SHA1: 12f38251f4b5858269b7b95b8b655c88bb4185d8
+100644 blob 303ff981c488b812b6215f7db7920dedb3b59d9a    first.txt
+040000 tree be554e60137e97e1e1e8e443552e0abd17db1450    second
+^
+SHA1: 303ff981c488b812b6215f7db7920dedb3b59d9a
+first file
+^</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>注意commit增加了一个parent字段，此时图变成了:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-2.png" alt="git internal 2"/>
+</div>
+</div>
+<div class="paragraph">
+<p>接下来我们再删除一个文件，再次提交</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>rm second/second.txt
+git add second
+git commit -m &#34;third commit&#34;
+git tag -a v3 -m &#34;tag third commit&#34;
+echo &#39;~~~~&#39;
+print_all_object</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>内容如下:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>SHA1: 78913509ce663ff1e58e47043b015283856779dc
+tree 6ac7a28caaf73725fc3383b916447e839e3c2d50
+parent 67f9d83a9ef370c057accf103e6502d3c8a56048
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+
+third commit
+^
+SHA1: 67f9d83a9ef370c057accf103e6502d3c8a56048
+tree 7b1fc0ae095fcadbd565737c2a957bdbeb9c4ee3
+parent b8a7759d225d7ca4952c57c9ba785a6692a075a9
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091920 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091920 +0800
+
+second commit
+^
+SHA1: b8a7759d225d7ca4952c57c9ba785a6692a075a9
+tree 12f38251f4b5858269b7b95b8b655c88bb4185d8
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091820 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091820 +0800
+
+first commit
+^
+SHA1: 825133937ceb744ad49a71883f70237a4a1dfc1d
+object 78913509ce663ff1e58e47043b015283856779dc
+type commit
+tag v3
+tagger vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+
+tag third commit
+^
+SHA1: 6ac7a28caaf73725fc3383b916447e839e3c2d50
+100644 blob 491a7bb2dd1a1e5ba9e00440ba9f7dd25fa17336    first.txt
+040000 tree d4046dced1e51bbc931b845cfea1c529fec7256c    second
+^
+SHA1: 491a7bb2dd1a1e5ba9e00440ba9f7dd25fa17336
+first file modified
+^
+SHA1: d4046dced1e51bbc931b845cfea1c529fec7256c
+040000 tree d2895a749b806d7647a9622c71a03e0e3eace8dc    third
+^
+SHA1: d2895a749b806d7647a9622c71a03e0e3eace8dc
+100644 blob 667bb3858a056cc96e79c0c3b1edfb60135c2359    third.txt
+^
+SHA1: 667bb3858a056cc96e79c0c3b1edfb60135c2359
+third file
+^
+SHA1: 7b1fc0ae095fcadbd565737c2a957bdbeb9c4ee3
+100644 blob 491a7bb2dd1a1e5ba9e00440ba9f7dd25fa17336    first.txt
+040000 tree be554e60137e97e1e1e8e443552e0abd17db1450    second
+^
+SHA1: be554e60137e97e1e1e8e443552e0abd17db1450
+100644 blob 1c59427adc4b205a270d8f810310394962e79a8b    second.txt
+040000 tree d2895a749b806d7647a9622c71a03e0e3eace8dc    third
+^
+SHA1: 1c59427adc4b205a270d8f810310394962e79a8b
+second file
+^
+SHA1: 12f38251f4b5858269b7b95b8b655c88bb4185d8
+100644 blob 303ff981c488b812b6215f7db7920dedb3b59d9a    first.txt
+040000 tree be554e60137e97e1e1e8e443552e0abd17db1450    second
+^
+SHA1: 303ff981c488b812b6215f7db7920dedb3b59d9a
+first file
+^</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>注意多了一个tag类型的Git对象，指向第三次提交，此时图变成了:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-3-fix.png" alt="git internal 3 fix"/>
+</div>
+</div>
+<div class="paragraph">
+<p>以上，我们演示了Git在进行常见的增删改的时候，背后发生的事情。</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p><strong>Note</strong></p>
+</div>
+<div class="paragraph">
+<p>读者在刚才是否思考过一个问题:为什么每一个Git对象的前两位要作为一个目录呢？</p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_git_引用">Git 引用</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Git 创建分支的成本及其低廉。</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Creating a branch is nothing more than just writing 40 characters to a file.</p>
+</div>
+</blockquote>
+<div class="attribution">
+— Linus Torvalds
+</div>
+</div>
+<div class="sect2">
+<h3 id="_分支">分支</h3>
+<div class="paragraph">
+<p>对于上面的仓库，我们此时看一下 HEAD 文件和 refs 目录下的内容，然后创建两个新的分支并提交一些内容:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>cat .git/HEAD
+cat .git/refs/heads/master
+git branch feature1
+git checkout -b feature2 ## 创建两个新的分支
+echo &#34;new feature2&#34; &gt; feature.txt
+git add feature.txt &amp;&amp; git commit -m &#34;add feature&#34;
+git checkout master
+cat .git/refs/heads/master ## 查看每个分支指向的提交
+cat .git/refs/heads/feature1
+cat .git/refs/heads/feature2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>得到输出</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>78913509ce663ff1e58e47043b015283856779dc
+78913509ce663ff1e58e47043b015283856779dc
+a5596a09a7e83f83bf713e81e7653fa652906090</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>(为了节省篇幅，后面不会贴出 print_all_object 的全部执行结果) + 由此可以更新一下我们的有向无环图(为了突出重点，本章节不画出 Git 对象):</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-4.png" alt="git internal 4"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_合并">合并</h3>
+<div class="paragraph">
+<p>现在master分支做一次commit，执行一次merge</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>echo &#34;anothre feature&#34; &gt; feature.txt
+git add feature.txt &amp;&amp; git commit -m &#34;add another feature&#34;
+git merge feature2</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>解冲突，然后提交</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>vim feature.txt
+git add feature.txt &amp;&amp; git commit -m &#34;handle conflict&#34;
+cat feature.txt
+print_all_object</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>部分结果如下:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>anothre feature
+new feature2
+SHA1: 9c6eb61ba181a070e06d8c5767ea3bdca5f40558
+tree da90387f4018255a3a37ff2933a8810cf3eccc1f
+parent 8a1105568902f643a60165f3aa8067e8f16b9ce0
+parent a5596a09a7e83f83bf713e81e7653fa652906090
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092878 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092946 +0800
+
+handle conflict
+^
+SHA1: 8a1105568902f643a60165f3aa8067e8f16b9ce0
+tree c1ba2f6bb8f4412460347c204714a580155a1180
+parent 78913509ce663ff1e58e47043b015283856779dc
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092846 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092846 +0800
+
+add another feature
+^
+SHA1: a5596a09a7e83f83bf713e81e7653fa652906090
+tree 715230bf7c2800c4e745151ce19859127ebbb4b0
+parent 78913509ce663ff1e58e47043b015283856779dc
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092660 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092660 +0800
+
+add feature
+^
+SHA1: 78913509ce663ff1e58e47043b015283856779dc
+tree 6ac7a28caaf73725fc3383b916447e839e3c2d50
+parent 67f9d83a9ef370c057accf103e6502d3c8a56048
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+
+third commit
+^</pre>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>注意，最后一次提交有两个 parent commit</strong> 。此时，有向无环图变为:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-5.png" alt="git internal 5"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_变基">变基</h3>
+<div class="paragraph">
+<p>现在在分支feature1做一次提交，然后使用rebase的方式同步主干:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>git checkout -b feature1
+echo &#34;add feature1&#34; &gt; feature1.txt
+git add feature1.txt &amp;&amp; git commit -m &#34;add feature1&#34;
+git rebase master
+cat .git/refs/heads/master
+cat .git/refs/heads/feature1
+cat .git/refs/heads/feature2
+git checkout master
+tree
+print_all_object</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>部分输出为:</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>9c6eb61ba181a070e06d8c5767ea3bdca5f40558
+ce72867669c6f5ece8f2aef71476a458e502485d
+a5596a09a7e83f83bf713e81e7653fa652906090
+.
+├── feature.txt
+├── feature1.txt
+├── first.txt
+└── second
+    └── third
+        └── third.txt
+
+2 directories, 4 files
+SHA1: ce72867669c6f5ece8f2aef71476a458e502485d
+tree 9a004023f848b224cc79c7aa069738d24dfc8c27
+parent 9c6eb61ba181a070e06d8c5767ea3bdca5f40558
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575093789 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575093789 +0800
+
+add feature1
+^
+SHA1: 9c6eb61ba181a070e06d8c5767ea3bdca5f40558
+tree da90387f4018255a3a37ff2933a8810cf3eccc1f
+parent 8a1105568902f643a60165f3aa8067e8f16b9ce0
+parent a5596a09a7e83f83bf713e81e7653fa652906090
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092878 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092946 +0800
+
+handle conflict
+^
+SHA1: 8a1105568902f643a60165f3aa8067e8f16b9ce0
+tree c1ba2f6bb8f4412460347c204714a580155a1180
+parent 78913509ce663ff1e58e47043b015283856779dc
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092846 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092846 +0800
+
+add another feature
+^
+SHA1: a5596a09a7e83f83bf713e81e7653fa652906090
+tree 715230bf7c2800c4e745151ce19859127ebbb4b0
+parent 78913509ce663ff1e58e47043b015283856779dc
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092660 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575092660 +0800
+
+add feature
+^
+SHA1: 78913509ce663ff1e58e47043b015283856779dc
+tree 6ac7a28caaf73725fc3383b916447e839e3c2d50
+parent 67f9d83a9ef370c057accf103e6502d3c8a56048
+author vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+committer vimerzhao &lt;vimerzhao@tencent.com&gt; 1575091990 +0800
+
+third commit
+^</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>需要注意的是，由于执行了rebase操作，commit <code>ce7286</code> 的 parent commit 并不是发生提交时的 commit(<code>789135</code>)了，而是master分支的最新commit(<code>9c6eb6</code>)此时有向无环图变为:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/git-internal-6.png" alt="git internal 6"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_更多问题">更多问题</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以上就是本文的核心内容，但是关于Git的细节远远不止于此，比如以下问题:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>为什么取SHA1的前两位作为目录，后38位作为文件名？</p>
+</li>
+<li>
+<p>Git 为什么使用blob的形式存储内容？</p>
+</li>
+<li>
+<p>plumbing 和 porcelain 命名的含义是什么</p>
+</li>
+<li>
+<p>Git 如何提高存储效率(比如大文件A稍作修改，其实就会有另外一个及其相似的备份，十分浪费空间)?</p>
+</li>
+<li>
+<p>Git如何处理分布式协作开发?</p>
+</li>
+<li>
+<p>Git 在实际项目中的最佳实践是什么？</p>
+</li>
+<li>
+<p>ETC</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>欢迎 star 本博客 <a href="https://github.com/vimerzhao/vimerzhao.github.io，关注后续更新。" class="bare">https://github.com/vimerzhao/vimerzhao.github.io，关注后续更新。</a> + 也可以扫码关注笔者公众号:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/common/ad-2.jpg" alt="ad 2"/>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考">参考</h2>
+<div class="sectionbody">
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><a href="https://marc.info/?l=linux-kernel&amp;m=111314792424707">&#39;Re: more git updates..&#39; - MARC</a></p>
+</li>
+<li>
+<p><a href="https://www.aosabook.org/en/git.html">The Architecture of Open Source Applications (Volume 2): Git</a></p>
+</li>
+<li>
+<p><a href="https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain">Git Pro(Chaper 10: Git Internals)</a></p>
+</li>
+<li>
+<p><a href="https://github.com/pluralsight/git-internals-pdf">pluralsight/git-internals-pdf: PDF on Git Internals</a></p>
+</li>
+<li>
+<p><a href="https://www.youtube.com/watch?v=4XpnKHJAok8">Tech Talk: Linus Torvalds on git - YouTube</a></p>
+</li>
+<li>
+<p><a href="https://www.linuxfoundation.org/blog/2015/04/10-years-of-git-an-interview-with-git-creator-linus-torvalds/">10 Years of Git: An Interview with Git Creator Linus Torvalds - The Linux Foundation</a></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag1/" rel="tag">tag1</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag2/" rel="tag">tag2</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/introduction-of-youglish/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">YouGlish介绍</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/git-practice/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Git工程化最佳实践</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-1/">Flutter源码剖析(一):源码获取与构建</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-system-service-cache-analyze/">Android系统服务的注册缓存机制分析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-remote-debug-method/">Android客户端远程调试方法</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/evolution-of-plugin-framework/">插件化技术的演进之路</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-make-debuggable/">设置Android全局可调试</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (19)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

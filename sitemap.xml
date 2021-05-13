@@ -15,7 +15,7 @@
     <lastmod>2021-05-12T21:05:27+08:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2021-05-12T21:05:27+08:00</lastmod>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
   </url><url>
     <loc>/tags/hugo/</loc>
     <lastmod>2021-05-12T21:05:27+08:00</lastmod>
@@ -24,16 +24,70 @@
     <lastmod>2021-05-12T21:05:27+08:00</lastmod>
   </url><url>
     <loc>/posts/</loc>
-    <lastmod>2021-05-12T21:05:27+08:00</lastmod>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
   </url><url>
     <loc>/tags/</loc>
-    <lastmod>2021-05-12T21:05:27+08:00</lastmod>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
   </url><url>
     <loc>/</loc>
-    <lastmod>2021-05-12T21:05:27+08:00</lastmod>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
   </url><url>
     <loc>/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/</loc>
     <lastmod>2021-05-12T21:05:27+08:00</lastmod>
+  </url><url>
+    <loc>/posts/android-profile-tool-bug-record/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/categories/category1/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/tags/tag1/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/tags/tag2/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/flutter-source-code-analyze-4/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/flutter-source-code-analyze-3/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/flutter-source-code-analyze-2/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/flutter-source-code-analyze-1/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/android-system-service-cache-analyze/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/android-remote-debug-method/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/evolution-of-plugin-framework/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/android-make-debuggable/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/mac-osx-config-record/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/android-p-source-code-build/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/software-similarity-tester/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/my-tmux-manual/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/zen-of-android-debug-log/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/secure-file-transfer-base-on-android-signature/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
   </url><url>
     <loc>/posts/apk-size-opt-summary/</loc>
     <lastmod>2021-05-08T19:50:31+08:00</lastmod>
@@ -58,5 +112,17 @@
   </url><url>
     <loc>/posts/proguard-inline-optimieze-make-stacktrace-loss/</loc>
     <lastmod>2021-05-08T19:50:31+08:00</lastmod>
+  </url><url>
+    <loc>/posts/git-practice/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/git-internals/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/introduction-of-youglish/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
+  </url><url>
+    <loc>/posts/cross-platform-mobile-ui-development-evolution/</loc>
+    <lastmod>2021-05-13T20:03:14+08:00</lastmod>
   </url>
 </urlset>
