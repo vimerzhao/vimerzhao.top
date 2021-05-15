@@ -1,0 +1,760 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>修改遗留代码的艺术 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="修改遗留代码的艺术" />
+<meta property="og:description" content="导语 之前内部的一次技术分享，为了防止PPT弄丢，特意整理成了文章，由于我的PPT风格比较简洁，所以额外加了一些批注。 &#43; 注意这里图片缩小了，可以 新标签页打开图片 查看高清图。 正文 1. 2. 3. 4. 5. 6. 7 这页其实还内" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/working-effectively-with-legacy-code/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2019-12-02T19:35:55&#43;08:00" />
+<meta property="article:modified_time" content="2021-05-15T20:21:31&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="修改遗留代码的艺术"/>
+<meta name="twitter:description" content="导语 之前内部的一次技术分享，为了防止PPT弄丢，特意整理成了文章，由于我的PPT风格比较简洁，所以额外加了一些批注。 &#43; 注意这里图片缩小了，可以 新标签页打开图片 查看高清图。 正文 1. 2. 3. 4. 5. 6. 7 这页其实还内"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">修改遗留代码的艺术</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-12-02T19:35:55&#43;08:00">2019-12-02</time>
+	<time class="meta__text" datetime="2021-05-15T20:21:31&#43;08:00">(最后修改: 2021-05-15)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/category1/" rel="category">category1</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_导语">导语</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>之前内部的一次技术分享，为了防止PPT弄丢，特意整理成了文章，由于我的PPT风格比较简洁，所以额外加了一些批注。 + 注意这里图片缩小了，可以 <strong>新标签页打开图片</strong> 查看高清图。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_正文">正文</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>1.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-01.jpg" alt="modify legacy code 01"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>2.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-02.jpg" alt="modify legacy code 02"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>3.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-03.jpg" alt="modify legacy code 03"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>4.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-04.jpg" alt="modify legacy code 04"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>5.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-05.jpg" alt="modify legacy code 05"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>6.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-06.jpg" alt="modify legacy code 06"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>7 这页其实还内嵌了一个网页，是&#34;`奥卡姆剃刀`&#34;的维基百科页.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-07.jpg" alt="modify legacy code 07"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>8.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-08.jpg" alt="modify legacy code 08"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>9.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-09.jpg" alt="modify legacy code 09"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>10.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-10.jpg" alt="modify legacy code 10"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>11 实际项目的一个例子，图片可放大查看。某个变量恒为0，导致某个条件恒为false，因此可以删除。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-11.jpg" alt="modify legacy code 11"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>12 实际项目中的例子，根据上报量确定某个历史逻辑的用户数及成功率，用以辅助决策代码是否可以删除。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-12.jpg" alt="modify legacy code 12"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>13 这个例子代码没有显示完整，实际PPT中是可以滚动的，这段代码有个逻辑是截取字符串的前三段，这个逻辑让人迷惑，可以询问熟悉历史逻辑的人，如果过时了可以删除。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-13.jpg" alt="modify legacy code 13"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>14 这里有一个动图，展示了一个线上存量Bug，动图已丢失。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-14.jpg" alt="modify legacy code 14"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>15.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-15.jpg" alt="modify legacy code 15"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>16 这句话摘自《重构》一书.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-16.jpg" alt="modify legacy code 16"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>17.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-17.jpg" alt="modify legacy code 17"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>18.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-18.jpg" alt="modify legacy code 18"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>19 对应如何确保&#34;`不改变软件可观察行为`&#34;.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-19.jpg" alt="modify legacy code 19"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>20 这是一个关于修改的反面例子，开发者修改时删除了一个转小写的操作，导致历史代码中一些大小写混合的上报逻辑失效了。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-20.jpg" alt="modify legacy code 20"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>21.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-21.jpg" alt="modify legacy code 21"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>22.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-22.jpg" alt="modify legacy code 22"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>23 这页是干嘛的？.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-23.jpg" alt="modify legacy code 23"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>24 这两张图展示了横滑嵌套卡由于组件自身的缓存机制，需要对上报做到特殊处理。可以看到，十分繁琐。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-24.jpg" alt="modify legacy code 24"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>25.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-25.jpg" alt="modify legacy code 25"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>26 这是一段对话，同样由于滚动没有显示完全，大意是有时间需要优化下这里的逻辑。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-26.jpg" alt="modify legacy code 26"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>27 这两张图展示了第一次优化后的写法，代码要减少了一下，单依然存在lua的样板代码.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-27.jpg" alt="modify legacy code 27"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>28.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-28.jpg" alt="modify legacy code 28"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>29 这张图是我最后优化后的写法，只需要一行代码就可以处理90%的Case。其他特殊情况依然用上面的上报即可。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-29.jpg" alt="modify legacy code 29"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>30 这事当时的提交记录，由于滚动显示，所以截图时只有一部分。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-30.jpg" alt="modify legacy code 30"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>31.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-31.jpg" alt="modify legacy code 31"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>32 两张动图，是两个闪屏（启动页）的存量Bug，意在说明原来的代卖缺乏维护，导致质量问题。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-32.jpg" alt="modify legacy code 32"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>33 下面三张图集中展示了一些逻辑和代码风格上的问题。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-33.jpg" alt="modify legacy code 33"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>34.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-34.jpg" alt="modify legacy code 34"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>35.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-35.jpg" alt="modify legacy code 35"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>36 修改后的逻辑。由于PPT里面是滚动显示的，所以生产截图时代码都是显示不全的。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-36.jpg" alt="modify legacy code 36"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>37.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-37.jpg" alt="modify legacy code 37"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>38 本来打算谈论一下测试和修改代码的关系的，时间仓促，没有准备。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-38.jpg" alt="modify legacy code 38"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>39 引入了一个新的概念。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-39.jpg" alt="modify legacy code 39"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>40 给出定义。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-40.jpg" alt="modify legacy code 40"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>41 这一部分讨论了工具对于提高修改代码效率的帮助，大家的讨论比较多。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-41.jpg" alt="modify legacy code 41"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>42 Larry Wall是Perl语言的发明人，这里引用了一句他的经典名言作为引子。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-42.jpg" alt="modify legacy code 42"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>43.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-43.jpg" alt="modify legacy code 43"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>44 这里是一个案例：如何提醒开发者及时删除过期分支。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-44.jpg" alt="modify legacy code 44"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>45 最早期，是负责人检查每一个分支的最后提交时间，并逐个提醒，效率比较低。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-45.jpg" alt="modify legacy code 45"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>46 后来我在本地实现了一个命令，可以自动计算最后提交时间，不需要人工Check。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-46.jpg" alt="modify legacy code 46"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>47 最后，我又把这个能力接入了CI，可以每天定时执行这个命令并发送结果到项目群，实现了全自动化，这是一个降低反馈时滞的例子。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-47.jpg" alt="modify legacy code 47"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>48.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-48.jpg" alt="modify legacy code 48"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>49 这里展示了最原始了使用光子开发的流程，十分繁琐耗时。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-49.jpg" alt="modify legacy code 49"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>50 这里基于Vim定制了快捷命令，如保存时自动Push等，自动化了一些功能。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-50.jpg" alt="modify legacy code 50"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>51 同样由于截图原因，代码显示不完整。这里是一个脚本，展示了自动打包光子代码的生产zip包的能力，自动化了发布流程。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-51.jpg" alt="modify legacy code 51"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>52 定制了一些代码片段（Code Snippet），提高开发效率。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-52.jpg" alt="modify legacy code 52"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>53 这是一个动图，通过ADB实现了微下载（进程一开始不存在）类似场景的自动化操作能力，避免开发者手动操作，提高效率。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-53.jpg" alt="modify legacy code 53"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>54.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-54.jpg" alt="modify legacy code 54"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>55 这里介绍了一些我自己的工具，并探讨了无鼠标操作，因为这就是我的风格，大家并不太能适应，但是比较感兴趣。这个主题比大，因此没有展开来讲，知识简单介绍了一下。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-55.jpg" alt="modify legacy code 55"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>56 注意这个键盘的Control键的位置，这里探讨了工具使用的一些本源思想。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-56.jpg" alt="modify legacy code 56"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>57 举了几个例子，展示了极客写文档、PPT的方式（自吹自擂）。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-57.jpg" alt="modify legacy code 57"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>58 修改代码的另外一个注意事项：持续监控修改带来的反馈，及时发现问题。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-58.jpg" alt="modify legacy code 58"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>59.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-59.jpg" alt="modify legacy code 59"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>60 这个例子中，灰度期间分析了数据，发现了一个预期外的结果，分析了原因，及时同步给了产品，避免了被动局面，是个正向的例子。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-60.jpg" alt="modify legacy code 60"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>61 总结。.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-61.jpg" alt="modify legacy code 61"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>62.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-12/modify-legacy-code-62.jpg" alt="modify legacy code 62"/>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_总结">总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本次技术分享是我基于最近半年工作的一个沉淀和复盘反思，从形而上的角度讨论了现阶段对于修改代码（我们每天的工作）的一些浅薄的理解，欢迎批评指正（Github Issues区）。</p>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag1/" rel="tag">tag1</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/tag2/" rel="tag">tag2</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/git-internals/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Git内部原理剖析</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/git-practice/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Git工程化最佳实践</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-1/">Flutter源码剖析(一):源码获取与构建</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/self-struggle-and-historical-itinerary/">自我奋斗与历史进程</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (39)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (39)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
