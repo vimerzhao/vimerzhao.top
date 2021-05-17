@@ -62,6 +62,24 @@
     </item>
     
     <item>
+      <title>gitbook安装中的一些问题</title>
+      <link>/posts/gitbook-install-record/</link>
+      <pubDate>Fri, 13 Nov 2020 15:50:24 +0800</pubDate>
+      
+      <guid>/posts/gitbook-install-record/</guid>
+      <description>在新的iMac上安装gitbook后，一直无法使用，提示错误如下： Installing GitBook 3.2.3 if (cb) cb.apply(this, arguments) TypeError: cb.apply is not a function at /usr/local/lib/node_modules/gitbook-cli/node_modules/npmi/node_modules/npm/node_modules/graceful-fs/polyfills.js:267:18 at FSReqCallback.oncomplete (fs.js:169:5) 查找诸多问题后，最终确定是新版本的问题，可以通过nvm这个工具控制node的版本，npm不需要关心</description>
+    </item>
+    
+    <item>
+      <title>最好的Android投屏工具</title>
+      <link>/posts/best-android-projector/</link>
+      <pubDate>Thu, 12 Nov 2020 15:48:51 +0800</pubDate>
+      
+      <guid>/posts/best-android-projector/</guid>
+      <description>背景 之前一直用Chrome的Vysor插件做投屏，最近这个插件无法使用了 手机连着USB，放在桌子里面，拿起来操作很不方便，胳膊肘疼 于是调研了下可选的投屏方案 AirDroid过于庞大，还要收费，而且公司</description>
+    </item>
+    
+    <item>
       <title>Flutter源码剖析(二):源码的阅读与调试环境配置</title>
       <link>/posts/flutter-source-code-analyze-2/</link>
       <pubDate>Thu, 05 Nov 2020 12:23:13 +0800</pubDate>
@@ -71,12 +89,39 @@
     </item>
     
     <item>
+      <title>Mac外接显示器问题处理记录</title>
+      <link>/posts/macbook-external-display/</link>
+      <pubDate>Thu, 29 Oct 2020 15:46:57 +0800</pubDate>
+      
+      <guid>/posts/macbook-external-display/</guid>
+      <description>背景 最近双十一，买了一台AOC的外接显示器，4K分辨率。为了达到最大的使用体验，处理了一些问题，在此记录。 睡眠唤醒 一开始用type-c的线连接，发现每次电脑睡眠后，重新唤醒时外接屏幕无法唤醒，打开显示</description>
+    </item>
+    
+    <item>
       <title>Flutter源码剖析(一):源码获取与构建</title>
       <link>/posts/flutter-source-code-analyze-1/</link>
       <pubDate>Thu, 29 Oct 2020 12:23:10 +0800</pubDate>
       
       <guid>/posts/flutter-source-code-analyze-1/</guid>
       <description>概述 本文介绍了Flutter源码的获取与构建，后面会另有文章介绍Flutter源码的版本管理、开发环境搭建等主题。 准备工作 Flutter源码分为两个部分： flutter/flutter是框架层，为开发</description>
+    </item>
+    
+    <item>
+      <title>毛选精读（一）内核：《实践论》与《矛盾论》</title>
+      <link>/posts/maoxuan-kernel/</link>
+      <pubDate>Sat, 17 Oct 2020 23:44:11 +0800</pubDate>
+      
+      <guid>/posts/maoxuan-kernel/</guid>
+      <description>概述 个人认为，读毛选应该先读《实践论》和《矛盾论》，这两篇发表于1937年下旬的文章，上承土地革命战争（1927～1937），下启启抗日战争和解放战争。在过往的十年里，共产党先后经历了右倾机会主义和左</description>
+    </item>
+    
+    <item>
+      <title>为什么读毛选以及怎么读毛选</title>
+      <link>/posts/why-and-how-read-maoxuan/</link>
+      <pubDate>Sat, 10 Oct 2020 23:41:01 +0800</pubDate>
+      
+      <guid>/posts/why-and-how-read-maoxuan/</guid>
+      <description>为什么读 领袖发家史、中国近代史 首先，《毛选》可以说是领袖的一本自传，也从侧面反映了近代中国从第一次国内革命战争时期到文化大革命时期，70年波澜壮阔的历史。 领袖曾在17岁作诗： 《七绝·改诗赠父亲》 孩儿立</description>
     </item>
     
     <item>
@@ -107,12 +152,39 @@
     </item>
     
     <item>
+      <title>读书:《吃掉那只青蛙》</title>
+      <link>/posts/eat-that-frog/</link>
+      <pubDate>Sat, 20 Jun 2020 09:44:18 +0800</pubDate>
+      
+      <guid>/posts/eat-that-frog/</guid>
+      <description>笔记 C01 明确目标 第一步：明确你究竟想要什么 第二步：把你的目标写下来 第三步：为你的目标设定一个完成的最后期限 第四步：为了实现目标，把你所能想到的、所有要完成的事项都列在一个清单上 第五步：进一步梳理整个清单</description>
+    </item>
+    
+    <item>
       <title>Android客户端远程调试方法</title>
       <link>/posts/android-remote-debug-method/</link>
       <pubDate>Mon, 25 May 2020 12:16:13 +0800</pubDate>
       
       <guid>/posts/android-remote-debug-method/</guid>
       <description>在最近的需求开发中，会遇到一些兼容性问题，经常只能在特定ROM和Android版本上复现。由于测试和开发不在同一区域办公，往往需要通过物资穿梭车送手机。由此带来两点不便： 使用成本大，调试效率低，因为物</description>
+    </item>
+    
+    <item>
+      <title>读书:《时间管理：如何充分利用你的24小时》</title>
+      <link>/posts/the-skinny-on-time-management/</link>
+      <pubDate>Sat, 23 May 2020 09:43:08 +0800</pubDate>
+      
+      <guid>/posts/the-skinny-on-time-management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>解决MacBook2018过热问题</title>
+      <link>/posts/macbook-over-hot/</link>
+      <pubDate>Tue, 19 May 2020 10:21:13 +0800</pubDate>
+      
+      <guid>/posts/macbook-over-hot/</guid>
+      <description>最近搬工位后给MacBook接了一个外接显示器，放在正中间，但是发现发热很严重。在查阅资料和尝试之后，发现把充电口和显示器接口放在右边比较好。左边好像有个Bug，能不用还是不要用了。 参考： Mac过热降</description>
     </item>
     
     <item>
@@ -161,6 +233,15 @@
     </item>
     
     <item>
+      <title>记一个博客刷新的Bug</title>
+      <link>/posts/blog-refresh-bugfix/</link>
+      <pubDate>Thu, 30 Apr 2020 10:20:44 +0800</pubDate>
+      
+      <guid>/posts/blog-refresh-bugfix/</guid>
+      <description>之前通过教程草草建立了一个博客，后来申请到了备案号，于是更新了代码，但是Gunicorn操作不是很熟悉，导致重启服务后出现了如下问题： 备案号时有时无，今天又要添加公安备案号，于是打算查查这个问题，发现</description>
+    </item>
+    
+    <item>
       <title>Android P源码构建记录</title>
       <link>/posts/android-p-source-code-build/</link>
       <pubDate>Wed, 29 Apr 2020 12:11:29 +0800</pubDate>
@@ -179,6 +260,24 @@
     </item>
     
     <item>
+      <title>Android P内联优化导致的一个诡异Bug</title>
+      <link>/posts/solve-of-android-p-inline-opt/</link>
+      <pubDate>Fri, 24 Apr 2020 23:51:25 +0800</pubDate>
+      
+      <guid>/posts/solve-of-android-p-inline-opt/</guid>
+      <description>问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------</description>
+    </item>
+    
+    <item>
+      <title>Windows10下VirtualBox不支持64位</title>
+      <link>/posts/virtualbox-lose-64-bit/</link>
+      <pubDate>Mon, 20 Apr 2020 10:20:21 +0800</pubDate>
+      
+      <guid>/posts/virtualbox-lose-64-bit/</guid>
+      <description>参考https://www.4spaces.org/windows-10-virtualbox-no-64bit/[解决Windows10中Virtualbox安装虚拟机没有64位选项(N种情形盘点)</description>
+    </item>
+    
+    <item>
       <title>代码相似性检测工具</title>
       <link>/posts/software-similarity-tester/</link>
       <pubDate>Tue, 14 Apr 2020 12:33:16 +0800</pubDate>
@@ -188,12 +287,93 @@
     </item>
     
     <item>
+      <title>记一次诡异的Bug</title>
+      <link>/posts/a-weird-bug-record/</link>
+      <pubDate>Mon, 13 Apr 2020 10:01:17 +0800</pubDate>
+      
+      <guid>/posts/a-weird-bug-record/</guid>
+      <description>背景 上周四的时候，发了一个maven，结果报ExceptionInInitializerError错误： java.lang.ExceptionInInitializerError at repackage.aw.̍(ProGuard:43) at com.tencent.sandbox.PluginHelper.applicationAttachBaseContext(ProGuard:160) ...... Caused by: java.lang.IllegalArgumentException: Illegal pattern character &amp;#39;V&amp;#39; at java.text.SimpleDateFormat.compile(SimpleDateFormat.java:870) at java.text.SimpleDateFormat.initialize(SimpleDateFormat.java:684) at java.text.SimpleDateFormat.&amp;lt;init&amp;gt;(SimpleDateFormat.java:623) at java.text.SimpleDateFormat.&amp;lt;init&amp;gt;(SimpleDateFormat.java:598) at</description>
+    </item>
+    
+    <item>
+      <title>twint源码阅读笔记</title>
+      <link>/posts/read-twint/</link>
+      <pubDate>Sun, 05 Apr 2020 23:48:26 +0800</pubDate>
+      
+      <guid>/posts/read-twint/</guid>
+      <description>介绍 twint全称Twitter Intelligence Tool，是一个twitter爬虫工具。官方介绍如下： Twint is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles without using Twitter’s API. Twint utilizes Twitter’s search operators to let you scrape Tweets from specific users, scrape Tweets relating to certain</description>
+    </item>
+    
+    <item>
       <title>我的tmux使用手册</title>
       <link>/posts/my-tmux-manual/</link>
       <pubDate>Sun, 05 Apr 2020 12:33:00 +0800</pubDate>
       
       <guid>/posts/my-tmux-manual/</guid>
       <description>基础概念 Session：用来概括一个任务，是一组窗口的集合。通过在任务开始前创建一个Session，在该Session中进行任务，之后通过断开Session来暂时中断任务，此时与任务相关的状态都会保存</description>
+    </item>
+    
+    <item>
+      <title>读书:《演说之禅》</title>
+      <link>/posts/presentation-zen/</link>
+      <pubDate>Sun, 05 Apr 2020 09:32:45 +0800</pubDate>
+      
+      <guid>/posts/presentation-zen/</guid>
+      <description>概览 这本书的副标题叫做&amp;#34;`职场必知的幻灯片秘技`&amp;#34;，但感觉有点不合适，在我看来，书里提倡的思想只有真正的大师才能用，但是在职场，很多时候还是要按照规矩来。如果不是绝对的权利压制，还是不</description>
+    </item>
+    
+    <item>
+      <title>给DroidPlugin添加概览屏幕</title>
+      <link>/posts/add-recent-task-for-droidplugin/</link>
+      <pubDate>Thu, 02 Apr 2020 09:59:32 +0800</pubDate>
+      
+      <guid>/posts/add-recent-task-for-droidplugin/</guid>
+      <description>背景 DroidPlugin默认不支持多任务： VirtualApp是支持的： 方案 其实参考的就是VirtualApp的实现，它的核心代码是： // com.lody.virtual.client.hook.proxies.am.HCallbackStub IBinder token = ActivityThread.ActivityClientRecord.token.get(r); ...... int taskId = IActivityManager.getTaskForActivity.call( ActivityManagerNative.getDefault.call(), token, false); 其实就是反射调用ActivityMa</description>
+    </item>
+    
+    <item>
+      <title>读书:《运动饮食1:9》</title>
+      <link>/posts/sports-and-diet/</link>
+      <pubDate>Sun, 29 Mar 2020 09:31:36 +0800</pubDate>
+      
+      <guid>/posts/sports-and-diet/</guid>
+      <description>疫情期间基本荒废了之前的锻炼成果，最近要开始恢复锻炼了，所以选了一本书温习下基本知识。 纯运动无法减肥 胖的本质是吃的太多，摄入&amp;gt;消耗 有氧运动会促进食欲，影响减肥效果 不要神化基础代谢 运动如果以减肥为</description>
+    </item>
+    
+    <item>
+      <title>Android混淆问题一则</title>
+      <link>/posts/android-proguard-problem/</link>
+      <pubDate>Tue, 24 Mar 2020 09:56:45 +0800</pubDate>
+      
+      <guid>/posts/android-proguard-problem/</guid>
+      <description>问题 dex包里面的build.gradle通过api引用了一个包，同事主工程调用dex包里面的方法抛出ClassNotFoundException。 分析 使用AS的Analyze APK发现该类其实是存在</description>
+    </item>
+    
+    <item>
+      <title>记一次AbstractMethodError</title>
+      <link>/posts/abstractmethoderror-solve/</link>
+      <pubDate>Tue, 24 Mar 2020 09:55:46 +0800</pubDate>
+      
+      <guid>/posts/abstractmethoderror-solve/</guid>
+      <description>最近在灰度的时候发现了一个Error： 详细信息如下： 结合机型分布，可以判断是部分ROM自己的修改导致的问题(因为已经走到系统Api里面了)。 最后直接catch住了，因为触发的机型其实很少，灰度15w，</description>
+    </item>
+    
+    <item>
+      <title>读书:《俞军产品方法论》</title>
+      <link>/posts/yujun-product-methodology/</link>
+      <pubDate>Sun, 22 Mar 2020 09:30:19 +0800</pubDate>
+      
+      <guid>/posts/yujun-product-methodology/</guid>
+      <description>正文 这两周利用零散时间粗读了《俞军产品方法论》一书，在查阅资料的时候发现这本书的豆瓣评分从一开始的8.8(2019-12-24)变成了现在(2020-03-22)的7.9，也是比较符合我自己的阅读感受</description>
+    </item>
+    
+    <item>
+      <title>Proguard导致的NoSuchMethodException问题排查</title>
+      <link>/posts/proguard-result-in-nosuchmethodexception/</link>
+      <pubDate>Mon, 16 Mar 2020 09:54:14 +0800</pubDate>
+      
+      <guid>/posts/proguard-result-in-nosuchmethodexception/</guid>
+      <description>背景 之前项目的混淆配置一直没开启Proguard的优化选项 -dontoptimize 最近为了做安装包优化，把这行注释掉了 #-dontoptimize 问题 于是项目里的各种优化配置开始生效了，但是测试反馈了一个Bug：悬浮窗的搜索框点击之后没有反应了。 排</description>
     </item>
     
     <item>
@@ -233,6 +413,33 @@
     </item>
     
     <item>
+      <title>UnsatisfiedLinkError...is32-bit instead of 64-bit问题解决</title>
+      <link>/posts/solve-unsatisfiedlinkerror-is-32-bit-instead-of-64-bit/</link>
+      <pubDate>Fri, 28 Feb 2020 09:52:52 +0800</pubDate>
+      
+      <guid>/posts/solve-unsatisfiedlinkerror-is-32-bit-instead-of-64-bit/</guid>
+      <description>背景 在做沙箱动态化时遇到一个问题： 请假其他同事之后发现是因为Android高版本上，默认是64-bit的方式运行，而某些游戏是32-bit的，所以出现了冲突，解决办法就是强制使用32-bit的，而不是</description>
+    </item>
+    
+    <item>
+      <title>读书:《小岛经济学》</title>
+      <link>/posts/how-an-economy-grows-and-why-it-crashes/</link>
+      <pubDate>Sun, 16 Feb 2020 09:27:34 +0800</pubDate>
+      
+      <guid>/posts/how-an-economy-grows-and-why-it-crashes/</guid>
+      <description>如果将这本书仅仅看作经济学的入门读物，我觉得有失公允，因为这本书对于当下的很多经济现象做了深刻的剖析，且非常鲜明的表达了自己的观点。 + From:推荐序 概览 一开始以为这本书是入门读物，读完有三点感受： 前</description>
+    </item>
+    
+    <item>
+      <title>防止WebView因为GC被回收</title>
+      <link>/posts/keep-webview-from-gc/</link>
+      <pubDate>Tue, 11 Feb 2020 09:47:55 +0800</pubDate>
+      
+      <guid>/posts/keep-webview-from-gc/</guid>
+      <description>今天遇到一个问题，前端反映说我们共同约定的一个隐藏WebView无法调试，现象如下： 可以看到，小测试这个Tab一出现就消失了，但是同样的代码放在测试Demo里面就没问题，分析之后发现是实际工程里面产生</description>
+    </item>
+    
+    <item>
       <title>红利永远都在的</title>
       <link>/posts/there-are-chances-somewhere/</link>
       <pubDate>Mon, 10 Feb 2020 20:12:59 +0800</pubDate>
@@ -248,6 +455,24 @@
       
       <guid>/posts/base-ability/</guid>
       <description>引言 本文是笔者的一些自我反思，工作一年半以来，不足之处的复盘。整理成文，以告过往，以警将来，希望对别人亦有所帮助。 本文将一个完整的社会人应该具备的能力分成了两大类：必修和选修。和大学里面的课程类似，必</description>
+    </item>
+    
+    <item>
+      <title>读书:《娱乐至死》</title>
+      <link>/posts/amusing-ourselves-to-death/</link>
+      <pubDate>Sat, 01 Feb 2020 09:24:31 +0800</pubDate>
+      
+      <guid>/posts/amusing-ourselves-to-death/</guid>
+      <description>今天要和大家分享的书是尼尔·波兹曼的《娱乐至死》。娱乐至死，这个词我们或多或少都有耳闻，虽然这本书出版于1985年，并且讨论的目标主要是电视机娱乐，但直到互联网时代，这个观念才逐渐为人所熟知。用书中的</description>
+    </item>
+    
+    <item>
+      <title>读书:《学会写作》</title>
+      <link>/posts/learn-writing-by-zhouzuoluo/</link>
+      <pubDate>Thu, 16 Jan 2020 09:21:10 +0800</pubDate>
+      
+      <guid>/posts/learn-writing-by-zhouzuoluo/</guid>
+      <description>最近利用两个周末的时间读完了一本书，叫《学会写作》，豆瓣信息如下： 作者: 粥左罗 + 出版社: 人民邮电出版社 + 出品方: 智元微库 OPEN MIND + 副标题: 自我进阶的高效方法 + 出版年: 2019-5 + 页数: 280 + 定价: 59元 + 装帧: 平装</description>
     </item>
     
     <item>
@@ -275,6 +500,24 @@
       
       <guid>/posts/2019-end/</guid>
       <description>水逆的上半年 上半年其实是相当平淡的，回头想想，有很多事情可以去做，只是当时囿于那个环境和心态，不能下定决心去做。工作上经历了很多变动，很多老同事离开了团队，甚至组织架构也发生了变动，自己也在一次次的动</description>
+    </item>
+    
+    <item>
+      <title>读书:《刻意练习》</title>
+      <link>/posts/pead/</link>
+      <pubDate>Sat, 28 Dec 2019 09:19:39 +0800</pubDate>
+      
+      <guid>/posts/pead/</guid>
+      <description>这本书豆瓣评分7.9，最大的问题就是信息密度太低，大概就是一篇几千字的公众号文章能讲明白的事情，作者却用了大量篇幅去举例，导致这个命题的信息量膨胀成了一本书。此外，这本的结构划分也不是很合理，导致很多</description>
+    </item>
+    
+    <item>
+      <title>读书:《乡土中国》</title>
+      <link>/posts/earthbound-china/</link>
+      <pubDate>Sun, 22 Dec 2019 09:18:06 +0800</pubDate>
+      
+      <guid>/posts/earthbound-china/</guid>
+      <description>概览 本书是费孝通1937年在云南教书时，从《乡村社会学》这门课的讲义中整理而来，书中的观点都是作者实地考察和教学思考的结果，充分分析了乡村社会的特点及其成因，豆瓣评分9.2，当之无愧的大师之作。不同于</description>
     </item>
     
     <item>
@@ -347,6 +590,15 @@
       
       <guid>/posts/cross-platform-mobile-ui-development-evolution/</guid>
       <description>导读 本文约4688字，阅读可能需要15分钟。 最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著). 从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上</description>
+    </item>
+    
+    <item>
+      <title>小白的理财入门课</title>
+      <link>/posts/financing-introduction/</link>
+      <pubDate>Sat, 02 Nov 2019 09:16:19 +0800</pubDate>
+      
+      <guid>/posts/financing-introduction/</guid>
+      <description>发刊词:未来穷人更穷,富人更富 钱背后的含义?贫富差距(基尼系数) 教育 寒门再难出贵子 概率学显示,85%状元都是城镇户口 父母的资源决定了子女的眼界等 医疗 有钱能让人获得更多的&amp;#34;`隐形福利`&amp;#34;</description>
     </item>
     
     <item>

@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android划词翻译 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android划词翻译" />
+<meta property="og:description" content="Android划词翻译 通过复制实现单词查找，更加节省时间。 问题背景 个人经常用BCC News这个APP看新闻，但是遇到陌生词汇时总需要在APP内复制单词，再到另外一个词典应用内查找，如下： 十分不方便。 在" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/androidhua-ci-fan-yi/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-10-10T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android划词翻译"/>
+<meta name="twitter:description" content="Android划词翻译 通过复制实现单词查找，更加节省时间。 问题背景 个人经常用BCC News这个APP看新闻，但是遇到陌生词汇时总需要在APP内复制单词，再到另外一个词典应用内查找，如下： 十分不方便。 在"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android划词翻译</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-10-10T00:00:00Z">2017-10-10</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="android划词翻译">Android划词翻译</h1>
+<p>通过复制实现单词查找，更加节省时间。</p>
+<h2 id="问题背景">问题背景</h2>
+<p>个人经常用BCC News这个APP看新闻，但是遇到陌生词汇时总需要在APP内复制单词，再到另外一个词典应用内查找，如下：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtranslator-demo-1.gif" alt=""></p>
+<p>十分不方便。
+在试用过金山词霸、微软必应以及有道翻译之后，发现有道翻译提供了跨软件査词，正是我想要的功能：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtranslator-demo-2.gif" alt=""></p>
+<p>但是问题又来了，我需要的只是这个一个简单的功能，但为了用这个功能，我需要安装整个有道词典，并分出很多资源让其在后台运行。如下：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtranslator-demo-5.jpg" alt=""></p>
+<p>占用了整整258M内存，这主要是因为有道词典本身就是一个庞大的APP，包含了众多功能。
+作为一个追求效率的程序员，自然不能忍受一个功能带来如此多的资源消耗；作为一个爱偷懒的程序员，自然不能忍受每次切换APP的麻烦，因此，最好的办法就是将这个复制査词的功能独立出来。</p>
+<h2 id="关键技术">关键技术</h2>
+<p>当有了一个想法之后，不要急于动手，先评估一下可行性。首先，必须要要监听到用户复制了单词，通过查阅文档，发现系统已经提供了相关的API；其次，获取到用户复制的内容之后需要用代码进行查找，并返回结果，这一部分可以在网上找到免费的API。</p>
+<h3 id="监听剪贴板">监听剪贴板</h3>
+<p>监听剪贴板本来是很简单的事情，系统提供了<code>ClipboardManager</code>这个类，通过其<code>addPrimaryClipChangedListener</code>方法可以添加监听事件。可是实际测试发现，在某些APP复制时这个监听事件会被触发一次，有些APP内复制会触发两次，而BBC News内复制则会触发三次，在监听代码中加入<code>System.out.println(System.currentTimeMillis());</code>能找到如下输出：</p>
+<pre><code>...
+10-10 16:30:17.494 12915-12915/com.vimerzhao.javatest I/System.out: 1507624217494
+10-10 16:30:17.498 12915-12915/com.vimerzhao.javatest I/System.out: 1507624217498
+10-10 16:30:17.500 12915-12915/com.vimerzhao.javatest I/System.out: 1507624217500
+...
+</code></pre><p>暂时的解决办法是在监听事件中使用如下代码：</p>
+<pre><code>....
+    mHandler.removeCallbacks(runnable);
+    mHandler.postDelayed(runnable, 200);
+....
+</code></pre><p>因为连续触发时间隔很短，这样就可以保证无论触发几次，只执行其中的最后一次。</p>
+<h3 id="翻译api">翻译API</h3>
+<p>一开始使用的是有道智云API，但发现这个API有几个问题：</p>
+<ol>
+<li>接入复杂，需要添加Jar包，So依赖，这会使得APP相对更庞大，不便于维护</li>
+<li>虽然提供了Android SDK，但是后台（自动缓存、生成目录等）做的事情我无法知道</li>
+<li>收费</li>
+</ol>
+<p>基于以上几个原因，我最后选择了金山词霸的API，在浏览器输入：</p>
+<pre><code>http://dict-co.iciba.com/api/dictionary.php?w=要查的词&amp;key=密钥
+</code></pre><p>就可以使用，在Android上无非就是封装一个GET请求，几十行代码即可以实现，便于维护。</p>
+<h2 id="代码实现">代码实现</h2>
+<p>代码量也不是很大，主界面判断服务是否开启，并提供一个控制按钮：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> Button translator<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> String SERVICE_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.vimerzhao.translator.QueryService&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> isServiceWork<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_main</span><span style="color:#f92672">);</span>
+        translator <span style="color:#f92672">=</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">btn_translator</span><span style="color:#f92672">);</span>
+        isServiceWork <span style="color:#f92672">=</span> isServiceWork<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> SERVICE_NAME<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isServiceWork<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            translator<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;关闭划词翻译&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            translator<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;开启划词翻译&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        translator<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Intent intent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Intent<span style="color:#f92672">(</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> QueryService<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isServiceWork<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    translator<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;划词翻译已开启&#34;</span><span style="color:#f92672">);</span>
+                    startService<span style="color:#f92672">(</span>intent<span style="color:#f92672">);</span>
+                    isServiceWork <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isServiceWork</span><span style="color:#f92672">(</span>Context mContext<span style="color:#f92672">,</span> String serviceName<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">boolean</span> isWork <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        ActivityManager myAM <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>ActivityManager<span style="color:#f92672">)</span> mContext
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">getSystemService</span><span style="color:#f92672">(</span>Context<span style="color:#f92672">.</span><span style="color:#a6e22e">ACTIVITY_SERVICE</span><span style="color:#f92672">);</span>
+        List<span style="color:#f92672">&lt;</span>ActivityManager<span style="color:#f92672">.</span><span style="color:#a6e22e">RunningServiceInfo</span><span style="color:#f92672">&gt;</span> myList <span style="color:#f92672">=</span> myAM<span style="color:#f92672">.</span><span style="color:#a6e22e">getRunningServices</span><span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>myList<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> myList<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            String mName <span style="color:#f92672">=</span> myList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">).</span><span style="color:#a6e22e">service</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getClassName</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mName<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>serviceName<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                isWork <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> isWork<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>开启一个后台服务，用于查找：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueryService</span> <span style="color:#66d9ef">extends</span> Service <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Handler mHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> ClipboardManager cm <span style="color:#f92672">=(</span>ClipboardManager<span style="color:#f92672">)</span> MyApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">getApplication</span><span style="color:#f92672">().</span>
+            getSystemService<span style="color:#f92672">(</span>Context<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIPBOARD_SERVICE</span><span style="color:#f92672">);</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">();</span>
+
+
+        <span style="color:#75715e">//获取剪贴板管理服务
+</span><span style="color:#75715e"></span>        cm<span style="color:#f92672">.</span><span style="color:#a6e22e">addPrimaryClipChangedListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ClipboardManager<span style="color:#f92672">.</span><span style="color:#a6e22e">OnPrimaryClipChangedListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onPrimaryClipChanged</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                mHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">removeCallbacks</span><span style="color:#f92672">(</span>runnable<span style="color:#f92672">);</span>
+                mHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">postDelayed</span><span style="color:#f92672">(</span>runnable<span style="color:#f92672">,</span> 200<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+    <span style="color:#f92672">}</span>
+
+    Runnable runnable <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Runnable<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cm<span style="color:#f92672">.</span><span style="color:#a6e22e">hasPrimaryClip</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                String input <span style="color:#f92672">=</span> cm<span style="color:#f92672">.</span><span style="color:#a6e22e">getPrimaryClip</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getItemAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">getText</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>cm<span style="color:#f92672">.</span><span style="color:#a6e22e">getPrimaryClip</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>input<span style="color:#f92672">);</span>
+                <span style="color:#75715e">// 考虑到API能力有限，这里消去大小写和空格
+</span><span style="color:#75715e"></span>                QueryUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>input<span style="color:#f92672">.</span><span style="color:#a6e22e">toLowerCase</span><span style="color:#f92672">().</span><span style="color:#a6e22e">trim</span><span style="color:#f92672">());</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">};</span>
+
+    <span style="color:#a6e22e">@Nullable</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> IBinder <span style="color:#a6e22e">onBind</span><span style="color:#f92672">(</span>Intent intent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>最后通过一个封装的类发送要查找的词并解析返回的JSON数据：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueryUtils</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String API_URL <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://dict-co.iciba.com/api/dictionary.php?w=&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String API_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&amp;type=json&amp;key=你的密钥&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TOAST_FLAG <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Handler mHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">.</span><span style="color:#a6e22e">Callback</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">handleMessage</span><span style="color:#f92672">(</span>Message msg<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">switch</span> <span style="color:#f92672">(</span>msg<span style="color:#f92672">.</span><span style="color:#a6e22e">what</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">case</span> TOAST_FLAG<span style="color:#f92672">:</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>msg<span style="color:#f92672">.</span><span style="color:#a6e22e">obj</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">makeText</span><span style="color:#f92672">(</span>MyApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">getApplication</span><span style="color:#f92672">(),</span> msg<span style="color:#f92672">.</span><span style="color:#a6e22e">obj</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(),</span> Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">LENGTH_LONG</span><span style="color:#f92672">).</span><span style="color:#a6e22e">show</span><span style="color:#f92672">();</span>
+
+                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                    Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">makeText</span><span style="color:#f92672">(</span>MyApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">getApplication</span><span style="color:#f92672">(),</span> <span style="color:#e6db74">&#34;无内容&#34;</span><span style="color:#f92672">,</span>Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">LENGTH_LONG</span><span style="color:#f92672">).</span><span style="color:#a6e22e">show</span><span style="color:#f92672">();</span>
+                    <span style="color:#f92672">}</span>
+                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">default</span><span style="color:#f92672">:</span>
+                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">});</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">query</span><span style="color:#f92672">(</span><span style="color:#66d9ef">final</span> String input<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+                Message msg <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Message<span style="color:#f92672">();</span>
+                msg<span style="color:#f92672">.</span><span style="color:#a6e22e">what</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+                msg<span style="color:#f92672">.</span><span style="color:#a6e22e">obj</span> <span style="color:#f92672">=</span> getTranslation<span style="color:#f92672">(</span>API_URL <span style="color:#f92672">+</span> input <span style="color:#f92672">+</span> API_KEY<span style="color:#f92672">);</span>
+                mHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">sendMessage</span><span style="color:#f92672">(</span>msg<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">getTranslation</span><span style="color:#f92672">(</span>String url<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        BufferedReader in <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            URL realUrl <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span>url<span style="color:#f92672">);</span>
+            URLConnection connection <span style="color:#f92672">=</span> realUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">openConnection</span><span style="color:#f92672">();</span>
+            connection<span style="color:#f92672">.</span><span style="color:#a6e22e">setRequestProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;accept&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;*/*&#34;</span><span style="color:#f92672">);</span>
+            connection<span style="color:#f92672">.</span><span style="color:#a6e22e">setRequestProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;connection&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Keep-Alive&#34;</span><span style="color:#f92672">);</span>
+            connection<span style="color:#f92672">.</span><span style="color:#a6e22e">setRequestProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;user-agent&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)&#34;</span><span style="color:#f92672">);</span>
+            connection<span style="color:#f92672">.</span><span style="color:#a6e22e">setConnectTimeout</span><span style="color:#f92672">(</span>5000<span style="color:#f92672">);</span>
+            connection<span style="color:#f92672">.</span><span style="color:#a6e22e">setReadTimeout</span><span style="color:#f92672">(</span>5000<span style="color:#f92672">);</span>
+            <span style="color:#75715e">// 建立实际的连接
+</span><span style="color:#75715e"></span>            connection<span style="color:#f92672">.</span><span style="color:#a6e22e">connect</span><span style="color:#f92672">();</span>
+            <span style="color:#75715e">// 定义 BufferedReader输入流来读取URL的响应
+</span><span style="color:#75715e"></span>            in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>connection<span style="color:#f92672">.</span><span style="color:#a6e22e">getInputStream</span><span style="color:#f92672">()));</span>
+            StringBuffer sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">();</span>
+            String line<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>line <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>line<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#66d9ef">return</span> analyze<span style="color:#f92672">(</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>in <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    in<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                e2<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">analyze</span><span style="color:#f92672">(</span>String in<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        StringBuilder res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            JSONObject response<span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> JSONObject<span style="color:#f92672">(</span>in<span style="color:#f92672">);</span>
+            JSONArray symbols <span style="color:#f92672">=</span> response<span style="color:#f92672">.</span><span style="color:#a6e22e">getJSONArray</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;symbols&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>symbols <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;</span> symbols<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> <span style="color:#f92672">++</span>k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                JSONArray parts <span style="color:#f92672">=</span>  symbols<span style="color:#f92672">.</span><span style="color:#a6e22e">getJSONObject</span><span style="color:#f92672">(</span>k<span style="color:#f92672">).</span><span style="color:#a6e22e">getJSONArray</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;parts&#34;</span><span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> parts<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    JSONObject part <span style="color:#f92672">=</span> parts<span style="color:#f92672">.</span><span style="color:#a6e22e">getJSONObject</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+                    res<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>part<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;part&#34;</span><span style="color:#f92672">));</span>
+                    res<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>part<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;means&#34;</span><span style="color:#f92672">));</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> parts<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()-</span>1<span style="color:#f92672">)</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\n&#34;</span><span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>JSONException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><p>其他：自定一个Application并开启网络权限即可。</p>
+<h2 id="效果演示">效果演示</h2>
+<p><img src="http://ond7j4cnz.bkt.clouddn.com/blogtranslator-demo-3.gif" alt=""></p>
+<p>占用内存仅为17M（这还是未优化），远低于有道词典：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtranslator-demo-4.jpg" alt=""></p>
+<h2 id="后续工作">后续工作</h2>
+<p>虽然功能勉强实现，但是开发过程中也发现了很多问题，作为一名准Android开发，感觉自己还有许多事情要做。</p>
+<h3 id="android剪贴板机制">Android剪贴板机制</h3>
+<p>这一次被剪贴板奇怪的多次响应浪费了不少时间，有必要深究下此部分代码，发现问题所在，避免以后再次踩坑。</p>
+<h3 id="更灵活的api">更灵活的API</h3>
+<p>目前的API比较简陋，不能查找“The White House”这样带大写、空格但又确实十分常见的词，由于墙的原因基本没考虑google翻译，有道智云收费也不会考虑，有时间也可以留意一下是否有更好的翻译API。</p>
+<h3 id="线程及其他知识">线程及其他知识</h3>
+<p>目前是每次查找开启一个线程，查找完成自动销毁。开启并维持一个线程是否更好？写线程相关代码的时候，包括异步更新UI等，感觉对Android的线程机制还是一知半解，今后也要从源码深度好好学习Android的线程机制。</p>
+<h3 id="后台服务">后台服务</h3>
+<p>理想情况时我关掉APP之后，这个翻译Service仍然在运行，但实际测试发现只有在Nexus4上可以，在魅蓝Note2和小米6都失败了，说明厂商修改了ROM，要实现此功能还需进一步研究。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://www.jianshu.com/p/ed4637bfeb05">Android 剪贴板监听注册一次 onPrimaryClipChanged调用两次浅析</a></li>
+<li><a href="http://open.iciba.com/?c=api">金山词霸开放平台-api</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/linuxmint-matezhong-wifizi-dong-guan-bi-wen-ti/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">LinuxMint Mate中WiFi自动关闭问题</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-er-mvpmo-shi-shi-jian/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Android音视频播放器开发（二）：MVP模式实践</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

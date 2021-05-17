@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>自己动手写事件总线(EventBus) - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="自己动手写事件总线(EventBus)" />
+<meta property="og:description" content="自己动手写事件总线(EventBus) 事件总线核心逻辑的实现。 EventBus的作用 Android中存在各种通信场景，如Activity之间的跳转，Activity与Fragment以及其他组件之间的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-23T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="自己动手写事件总线(EventBus)"/>
+<meta name="twitter:description" content="自己动手写事件总线(EventBus) 事件总线核心逻辑的实现。 EventBus的作用 Android中存在各种通信场景，如Activity之间的跳转，Activity与Fragment以及其他组件之间的"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">自己动手写事件总线(EventBus)</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-12-23T00:00:00Z">2018-12-23</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="自己动手写事件总线eventbus">自己动手写事件总线(EventBus)</h1>
+<p>事件总线核心逻辑的实现。</p>
+<h2 id="eventbus的作用">EventBus的作用</h2>
+<p>Android中存在各种通信场景，如<code>Activity</code>之间的跳转，<code>Activity</code>与<code>Fragment</code>以及其他组件之间的交互，以及在某个耗时操作（如请求网络）之后的callback回调等，互相之之间往往需要持有对方的引用，每个场景的写法也有差异，导致耦合性较高且不便维护。以<code>Activity</code>和<code>Fragment</code>的通信为例，官方做法是实现一个接口，然后持有对方的引用，再强行转成接口类型，导致耦合度偏高。再以<code>Activity</code>的返回为例，一方需要设置<code>setResult</code>，而另一方需要在<code>onActivityResult</code>做对应处理，如果有多个返回路径，代码就会十分臃肿。而<code>SimpleEventBus</code>（本文最终实现的简化版事件总线）的写法如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    TextView mTextView<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_main</span><span style="color:#f92672">);</span>
+        mTextView <span style="color:#f92672">=</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tv_demo</span><span style="color:#f92672">);</span>
+        mTextView<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MainActivity&#34;</span><span style="color:#f92672">);</span>
+        mTextView<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View view<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Intent intent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Intent<span style="color:#f92672">(</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> SecondActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+                startActivity<span style="color:#f92672">(</span>intent<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+
+        EventBus<span style="color:#f92672">.</span><span style="color:#a6e22e">getDefault</span><span style="color:#f92672">().</span><span style="color:#a6e22e">register</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Subscribe</span><span style="color:#f92672">(</span>threadMode <span style="color:#f92672">=</span> ThreadMode<span style="color:#f92672">.</span><span style="color:#a6e22e">MAIN</span><span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onReturn</span><span style="color:#f92672">(</span>Message message<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        mTextView<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span>message<span style="color:#f92672">.</span><span style="color:#a6e22e">mContent</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onDestroy</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onDestroy</span><span style="color:#f92672">();</span>
+        EventBus<span style="color:#f92672">.</span><span style="color:#a6e22e">getDefault</span><span style="color:#f92672">().</span><span style="color:#a6e22e">unregister</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>来源<code>Activity</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SecondActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    TextView mTextView<span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_main</span><span style="color:#f92672">);</span>
+        mTextView <span style="color:#f92672">=</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tv_demo</span><span style="color:#f92672">);</span>
+        mTextView<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;SecondActivity,点击返回&#34;</span><span style="color:#f92672">);</span>
+        mTextView<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View view<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Message message <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Message<span style="color:#f92672">();</span>
+                message<span style="color:#f92672">.</span><span style="color:#a6e22e">mContent</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;从SecondActivity返回&#34;</span><span style="color:#f92672">;</span>
+                EventBus<span style="color:#f92672">.</span><span style="color:#a6e22e">getDefault</span><span style="color:#f92672">().</span><span style="color:#a6e22e">post</span><span style="color:#f92672">(</span>message<span style="color:#f92672">);</span>
+                finish<span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+    <span style="color:#f92672">}</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><p>效果如下：
+<img src="https://github.com/vimerzhao/images/raw/master/2018-12/eventbus-demo.gif" alt=""></p>
+<p>似乎只是换了一种写法，但在场景愈加复杂后，<code>EventBus</code>能够体现出更好的解耦能力。</p>
+<h2 id="背景知识">背景知识</h2>
+<p>主要涉及三方面的知识：</p>
+<ol>
+<li>观察者模式(or 发布-订阅模式)</li>
+<li>Android消息机制</li>
+<li>Java并发编程</li>
+</ol>
+<p>本文可以认为是<a href="https://github.com/greenrobot/EventBus">greenrobot/EventBus</a>这个开源库的源码阅读指南，笔者在看设计模式相关书籍的时候了解到这个库，觉得有必要实现一下核心功能以加深理解。</p>
+<h2 id="实现过程">实现过程</h2>
+<p><code>EventBus</code>的使用分三个步骤：注册监听、发送事件和取消监听，相应本文也将分这三步来实现。</p>
+<h3 id="注册监听">注册监听</h3>
+<p>定义一个注解：</p>
+<pre><code>@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface Subscribe {
+    ThreadMode threadMode() default ThreadMode.POST;
+}
+</code></pre><p><code>greenrobot/EventBus</code>还支持优先级和粘性事件，这里只支持最基本的能力：区分线程，因为如更新UI的操作必须放在主线程。<code>ThreadMode</code>如下：</p>
+<pre><code>public enum ThreadMode {
+    MAIN, // 主线程
+    POST, // 发送消息的线程
+    ASYNC // 新开一个线程发送
+}
+</code></pre><p>在对象初始化的时候，使用<code>register</code>方法注册，该方法会解析被注册对象的所有方法，并解析声明了注解的方法（即观察者），核心代码如下：</p>
+<pre><code>public class EventBus {
+    ...
+
+    public void register(Object subscriber) {
+        if (subscriber == null) {
+            return;
+        }
+        synchronized (this) {
+            subscribe(subscriber);
+        }
+    }
+
+    ...
+    private void subscribe(Object subscriber) {
+        if (subscriber == null) {
+            return;
+        }
+
+        // TODO 巨踏马难看的缩进
+        Class&lt;?&gt; clazz = subscriber.getClass();
+        while (clazz != null &amp;&amp; !isSystemClass(clazz.getName())) {
+            final Method[] methods = clazz.getDeclaredMethods();
+            for (Method method : methods) {
+                Subscribe annotation = method.getAnnotation(Subscribe.class);
+                if (annotation != null) {
+                    Class&lt;?&gt;[] paramClassArray = method.getParameterTypes();
+                    if (paramClassArray != null &amp;&amp; paramClassArray.length == 1) {
+                        Class&lt;?&gt; paramType = convertType(paramClassArray[0]);
+                        EventType eventType = new EventType(paramType);
+                        SubscriberMethod subscriberMethod = new SubscriberMethod(method, annotation.threadMode(), paramType);
+                        realSubscribe(subscriber, subscriberMethod, eventType);
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+    }
+
+    ...
+    private void realSubscribe(Object subscriber, SubscriberMethod method, EventType eventType) {
+        CopyOnWriteArrayList&lt;Subscription&gt; subscriptions = mSubscriptionsByEventtype.get(subscriber);
+        if (subscriptions == null) {
+            subscriptions = new CopyOnWriteArrayList&lt;&gt;();
+        }
+        Subscription subscription = new Subscription(subscriber, method);
+        if (subscriptions.contains(subscription)) {
+            return;
+        }
+        subscriptions.add(subscription);
+        mSubscriptionsByEventtype.put(eventType, subscriptions);
+    }
+
+    ...
+}
+
+</code></pre><p>执行过这些逻辑后，该对象所有的观察者方法都会被存在一个Map中，其Key是<code>EventType</code>，即观察事件的类型，Value是订阅了该类型事件的所有方法（即观察者）的一个列表，每个方法和对象一起封装成了一个<code>Subscription</code>类：</p>
+<pre><code>public class Subscription {
+    public final Reference&lt;Object&gt; subscriber;
+    public final SubscriberMethod subscriberMethod;
+
+    public Subscription(Object subscriber, 
+                        SubscriberMethod subscriberMethod) {
+        this.subscriber = new WeakReference&lt;&gt;(subscriber);// EventBus3 没用弱引用?
+        this.subscriberMethod = subscriberMethod;
+    }
+
+    @Override
+    public int hashCode() {
+        return subscriber.hashCode() + subscriberMethod.methodString.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Subscription) {
+            Subscription other = (Subscription) obj;
+            return subscriber == other.subscriber
+                    &amp;&amp; subscriberMethod.equals(other.subscriberMethod);
+        } else {
+            return false;
+        }
+    }
+}
+</code></pre><p>如此，便是注册监听方法的核心逻辑了。</p>
+<h3 id="消息发送">消息发送</h3>
+<p>消息的发送代码很简单：</p>
+<pre><code>public class EventBus {
+    ...
+    private EventDispatcher mEventDispatcher = new EventDispatcher();
+    private ThreadLocal&lt;Queue&lt;EventType&gt;&gt; mThreadLocalEvents = new ThreadLocal&lt;Queue&lt;EventType&gt;&gt;() {
+        @Override
+        protected Queue&lt;EventType&gt; initialValue() {
+            return new ConcurrentLinkedQueue&lt;&gt;();
+        }
+    };
+    ...
+    public void post(Object message) {
+        if (message == null) {
+            return;
+        }
+
+        mThreadLocalEvents.get().offer(new EventType(message.getClass()));
+        mEventDispatcher.dispatchEvents(message);
+    }
+
+    ...
+}
+</code></pre><p>比较复杂一点的是需要根据注解声明的线程模式在对应的线程进行发布：</p>
+<pre><code>public class EventBus {
+
+    ...
+    private class EventDispatcher {
+        private IEventHandler mMainEventHandler = new MainEventHandler();
+        private IEventHandler mPostEventHandler = new DefaultEventHandler();
+        private IEventHandler mAsyncEventHandler = new AsyncEventHandler();
+
+        void dispatchEvents(Object message) {
+            Queue&lt;EventType&gt; eventQueue = mThreadLocalEvents.get();
+            while (eventQueue.size() &gt; 0) {
+                handleEvent(eventQueue.poll(), message);
+            }
+        }
+
+        private void handleEvent(EventType eventType, Object message) {
+            List&lt;Subscription&gt; subscriptions = mSubscriptionsByEventtype.get(eventType);
+            if (subscriptions == null) {
+                return;
+            }
+            for (Subscription subscription : subscriptions) {
+                IEventHandler eventHandler =  getEventHandler(subscription.subscriberMethod.threadMode);
+                eventHandler.handleEvent(subscription, message);
+            }
+        }
+
+        private IEventHandler getEventHandler(ThreadMode mode) {
+            if (mode == ThreadMode.ASYNC) {
+                return mAsyncEventHandler;
+            }
+            if (mode == ThreadMode.POST) {
+                return mPostEventHandler;
+            }
+            return mMainEventHandler;
+        }
+    }// end of the class
+
+    ...
+}
+</code></pre><p>三种线程模式分别如下，<code>DefaultEventHandler</code>（在发布线程执行观察者放方法）：</p>
+<pre><code>public class DefaultEventHandler implements IEventHandler {
+    @Override
+    public void handleEvent(Subscription subscription, Object message) {
+        if (subscription == null || subscription.subscriber.get() == null) {
+            return;
+        }
+        try {
+            subscription.subscriberMethod.method.invoke(subscription.subscriber.get(), message);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><p><code>MainEventHandler</code>（在主线程执行）：</p>
+<pre><code>public class MainEventHandler implements IEventHandler {
+    private Handler mMainHandler = new Handler(Looper.getMainLooper());
+    DefaultEventHandler hanlder = new DefaultEventHandler();
+
+    @Override
+    public void handleEvent(final Subscription subscription, final Object message) {
+        mMainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                hanlder.handleEvent(subscription, message);
+            }
+        });
+
+    }
+}
+</code></pre><p><code>AsyncEventHandler</code>（新开一个线程执行）：</p>
+<pre><code>public class AsyncEventHandler implements IEventHandler {
+    private DispatcherThread mDispatcherThread;
+    private IEventHandler mEventHandler = new DefaultEventHandler();
+
+    public AsyncEventHandler() {
+        mDispatcherThread = new DispatcherThread(AsyncEventHandler.class.getSimpleName());
+        mDispatcherThread.start();
+    }
+
+    @Override
+    public void handleEvent(final Subscription subscription, final Object message) {
+        mDispatcherThread.post(new Runnable() {
+            @Override
+            public void run() {
+                mEventHandler.handleEvent(subscription, message);
+            }
+        });
+
+    }
+
+    private class DispatcherThread extends HandlerThread {
+
+        // 关联了AsyncExecutor消息队列的Handler
+        Handler mAsyncHandler;
+
+        DispatcherThread(String name) {
+            super(name);
+        }
+
+        public void post(Runnable runnable) {
+            if (mAsyncHandler == null) {
+                throw new NullPointerException(&quot;mAsyncHandler == null, please call start() first.&quot;);
+            }
+            mAsyncHandler.post(runnable);
+        }
+
+        @Override
+        public synchronized void start() {
+            super.start();
+            mAsyncHandler = new Handler(this.getLooper());
+        }
+
+    }
+
+}
+</code></pre><p>以上便是发布消息的代码。</p>
+<h3 id="注销监听">注销监听</h3>
+<p>最后一个对象被销毁还要注销监听，否则容易导致内存泄露，目前<code>SimpleEventBus</code>用的是<code>WeakReference</code>，能够通过GC自动回收，但不知道<code>greenrobot/EventBus</code>为什么没这样实现，待研究。注销监听其实就是遍历Map，拿掉该对象的订阅即可：</p>
+<pre><code>public class EventBus {
+
+    ...
+    public void unregister(Object subscriber) {
+        if (subscriber == null) {
+            return;
+        }
+        Iterator&lt;CopyOnWriteArrayList&lt;Subscription&gt;&gt; iterator = mSubscriptionsByEventtype.values().iterator();
+        while (iterator.hasNext()) {
+            CopyOnWriteArrayList&lt;Subscription&gt; subscriptions = iterator.next();
+            if (subscriptions != null) {
+                List&lt;Subscription&gt; foundSubscriptions = new LinkedList&lt;&gt;();
+                for (Subscription subscription : subscriptions) {
+                    Object cacheObject = subscription.subscriber.get();
+                    if (cacheObject == null || cacheObject.equals(subscriber)) {
+                        foundSubscriptions.add(subscription);
+                    }
+                }
+                subscriptions.removeAll(foundSubscriptions);
+            }
+            // 如果针对某个Event的订阅者数量为空了,那么需要从map中清除
+            if (subscriptions == null || subscriptions.size() == 0) {
+                iterator.remove();
+            }
+        }
+    }
+    ...
+}
+</code></pre><p>以上便是事件总线最核心部分的代码实现，完整代码见<a href="https://github.com/vimerzhao/SimpleEventBus">vimerzhao/SimpleEventBus</a>，后面发现问题更新或者进行升级也只会改动仓库的代码。</p>
+<h2 id="局限性">局限性</h2>
+<p>由于时间关系，目前只研究了<code>EventBus</code>的核心部分，还有几个值得深入研究的点，在此记录一下，也欢迎路过的大牛指点一二。</p>
+<h3 id="性能问题">性能问题</h3>
+<p>实际使用时，注解和反射会导致性能问题，但<code>EventBus3</code>已经通过<code>Subscriber Index</code>基本解决了这一问题，实现也非常有意思，是通过注解处理器（<code>Annotation Processor</code>）把耗时的逻辑从运行期提前到了编译期，通过编译期生成的索引来给运行期提速，这也是这个名字的由来。</p>
+<h3 id="可用性问题">可用性问题</h3>
+<p>如果订阅者很多会不会影响体验，毕竟原始的方法是点对点的消息传递，不会有这种问题，如果部分订阅者尚未初始化怎么办。等等。目前<code>EventBus3</code>提供了优先级和粘性事件的属性来进一步满足开发需求。但是否彻底解决问题了还有待验证。</p>
+<h3 id="跨进程问题">跨进程问题</h3>
+<p><code>EventBus</code>是进程内的消息管理机制，并且从开源社区的反馈来看这个项目是非常成功的，但稍微有点体量的APP都做了进程拆分，所以是否有必要支持多进程，能否在保证性能的情况下提供同等的代码解耦能力，也值得继续挖掘。目前有<a href="https://github.com/lsxiao/Apollo">lsxiao/Apollo</a>和<a href="https://github.com/Xiaofei-it/HermesEventBus">Xiaofei-it/HermesEventBus</a>等可供参考。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://github.com/greenrobot/EventBus">greenrobot/EventBus</a></li>
+<li><a href="https://github.com/hehonghui/AndroidEventBus">hehonghui/AndroidEventBus</a></li>
+<li>《Android开发艺术探索》第十章</li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/xiao-cheng-xu-yun-kai-fa-shi-zhan-yi-tian-da-jian-xiao-xing-lun-tan/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">【小程序&#43;云开发】实战：一天搭建小型论坛</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/android-excludefromrecentscai-keng-zhi-nan/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">&#39;android:excludeFromRecents踩坑指南&#39;</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

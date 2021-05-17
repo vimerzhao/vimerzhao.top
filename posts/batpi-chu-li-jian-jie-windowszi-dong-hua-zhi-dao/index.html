@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>bat批处理简介：Windows自动化之道 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="bat批处理简介：Windows自动化之道" />
+<meta property="og:description" content="bat批处理简介：Windows自动化之道 重复的工作交给代码。 导语 最近在工作中遇到一些纯粹重复的工作，最终都通过脚本方式达到了自动化，大大提高效率。比如之前每次发布zip包都需要手动编译lua文件、替" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/batpi-chu-li-jian-jie-windowszi-dong-hua-zhi-dao/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-09-09T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="bat批处理简介：Windows自动化之道"/>
+<meta name="twitter:description" content="bat批处理简介：Windows自动化之道 重复的工作交给代码。 导语 最近在工作中遇到一些纯粹重复的工作，最终都通过脚本方式达到了自动化，大大提高效率。比如之前每次发布zip包都需要手动编译lua文件、替"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">bat批处理简介：Windows自动化之道</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-09-09T00:00:00Z">2018-09-09</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="bat批处理简介windows自动化之道">bat批处理简介：Windows自动化之道</h1>
+<p>重复的工作交给代码。</p>
+<h2 id="导语">导语</h2>
+<p>最近在工作中遇到一些纯粹重复的工作，最终都通过脚本方式达到了自动化，大大提高效率。比如之前每次发布zip包都需要手动编译lua文件、替换lua引用为二进制文件的引用，选择对应文件打zip包，每次都需要几分钟，还容易出错、遗漏，很不geek，通过脚本后实现了完全自动化：</p>
+<p><img src="http://p2pe8gnn5.bkt.clouddn.com/archive_demo.gif" alt=""></p>
+<p>再比如Android项目中用到了插件，由于正式打包和本地编译的gradle脚本不同，以及Android Studio对模块的编译支持不够，导致每次都需要手动修改文件名（如本地开发时<code>build.gradle</code>修改为<code>build.gradle.tmp</code>、<code>build.gradle.local</code>修改为<code>build.gradle</code>，正式编包时再修改回去），再copy插件目录出去单独开发调试，最后在把改动合入工程，终端也需要一个按钮来启动插件，十分繁琐且容易造成代码不同步，通过脚本可以实现工程内一键编译运行：</p>
+<p><img src="http://p2pe8gnn5.bkt.clouddn.com/plugin_run_demo.gif" alt=""></p>
+<p>由于之前没有用过bat脚本，所以做自动化时速度不是很快，因此花了一天时间整理一下bat脚本的使用要点，只是一个纲领，没有深入讲解，因为我觉得需要的时候去学习细节才是最高效的，但必须了解整体框架才能快速定位到需求对应的命令，因此整理了这篇文章。
+此外，Windows7已经支持了powershell，其语法更接近bash，比bat不知道灵活到哪里去了，我为什么不用powershell呢？主要是目前powershell速度远没有cmd快，正好我的自动化任务都比较简单，如果用powershell可能启动时间比运行时间还长。
+为什么不用python、perl等脚本语言？这些脚本需要环境配置，考虑到这些脚本工具可能被其他人使用，所以希望开箱即用，而且bat足够简单，足够满足需求。</p>
+<h2 id="part-1运行环境">PART 1：运行环境</h2>
+<p>类似于编程语言库，这些命令是Windows内置的，可以作为脚本的基本元素，可以在cmd运行，也可以写入cmd运行。首先介绍最重要的两个命令：<code>help</code>,<code>/?</code>，利用<code>help</code>可以查看当前内置的命令：</p>
+<pre><code>F:\BatchFileProgramming&gt;help
+有关某个命令的详细信息，请键入 HELP 命令名
+ASSOC          显示或修改文件扩展名关联。
+ATTRIB         显示或更改文件属性。
+BREAK          设置或清除扩展式 CTRL+C 检查。
+BCDEDIT        设置启动数据库中的属性以控制启动加载。
+CACLS          显示或修改文件的访问控制列表(ACL)。
+CALL           从另一个批处理程序调用这一个。
+CD             显示当前目录的名称或将其更改。
+CHCP           显示或设置活动代码页数。
+CHDIR          显示当前目录的名称或将其更改。
+CHKDSK         检查磁盘并显示状态报告。
+CHKNTFS        显示或修改启动时间磁盘检查。
+CLS            清除屏幕。
+CMD            打开另一个 Windows 命令解释程序窗口。
+COLOR          设置默认控制台前景和背景颜色。
+......
+</code></pre><p>利用<code>/?</code>可以详细的了解某个命令：</p>
+<pre><code>F:\BatchFileProgramming&gt;call /?
+从批处理程序调用另一个批处理程序。
+
+CALL [drive:][path]filename [batch-parameters]
+
+  batch-parameters   指定批处理程序所需的命令行信息。
+
+如果命令扩展被启用，CALL 会如下改变:
+
+CALL 命令现在将卷标当作 CALL 的目标接受。语法是:
+
+    CALL:label arguments
+
+一个新的批文件上下文由指定的参数所创建，控制在卷标被指定
+后传递到语句。您必须通过达到批脚本文件末两次来 &quot;exit&quot; 两次。
+第一次读到文件末时，控制会回到 CALL 语句的紧后面。第二次
+会退出批脚本。键入 GOTO /?，参看 GOTO :EOF 扩展的描述，
+此描述允许您从一个批脚本返回。
+
+另外，批脚本文本参数参照(%0、%1、等等)已如下改变:
+......
+</code></pre><p>有了这两个命令，我也就不需要像网上那些文章一样详细解释每个命令了，查阅文档即可。这里列一些常用的，建议优先掌握，较为生僻的在需要时详细学习即可。
+常用命令：</p>
+<pre><code>REM,echo,color,title,prompt,cls,date,time,start,exit,call,tree,type,pause,shutdown,at
+</code></pre><p>常用环境变量（Environment variables are special variables that contain its values set by the operating system itself, other applications or by manual）：</p>
+<pre><code>%CD%,%PATH%,%RANDOM%
+</code></pre><p>文件和文件夹相关的命令：</p>
+<pre><code>dir,mkdir,rmdir,chdir,ren,replace,copy,xcopy,del,pushd,popd,move
+</code></pre><p>网络：</p>
+<pre><code>net,ping,telnet,tlntadmn,tracert,ipconfig,hostname,ftp,netstat,nbtstat,arp
+</code></pre><p>如果遇到需要但自己又不知道的，google即可。</p>
+<h2 id="part-2语法">PART 2：语法</h2>
+<p>如果只有这些命令，那么运行bat和在命令行执行没什么区别，最多把命令保存下来了方便以后运行。bat也支持一些编程语言的特性，虽然简陋且不够优雅，但应付简单的自动化任务基本够用。我觉得Dennis Ritchie和Brian Kernighan的<em>The C Programming Language</em>，是介绍一门语言的模板，所以这里也按照该书的结构安排。</p>
+<h3 id="类型变量操作符">类型、变量、操作符</h3>
+<p>bat没有类型。<code>set</code>命令很重要，用于赋值，通过<code>%name%</code>引用变量，且变量赋值的<code>=</code>两边不能有空格：</p>
+<pre><code>C:\Users\vimerzhao\Desktop&gt;set a=1
+C:\Users\vimerzhao\Desktop&gt;echo a
+a
+C:\Users\vimerzhao\Desktop&gt;echo %a%
+1
+</code></pre><p>bat对运算符的支持和其他语言大同小异：</p>
+<table>
+<thead>
+<tr>
+<th>operators</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>()</td>
+<td>grouping</td>
+</tr>
+<tr>
+<td>!、~、-</td>
+<td>unary operators</td>
+</tr>
+<tr>
+<td>*、/、%、+、-</td>
+<td>arithmetic operators</td>
+</tr>
+<tr>
+<td>&laquo;、&raquo;、&lt;、&gt;</td>
+<td>logical shift and re directional operators</td>
+</tr>
+<tr>
+<td>&amp;</td>
+<td>bitwise and</td>
+</tr>
+<tr>
+<td>^</td>
+<td>bitwise exclusive or</td>
+</tr>
+<tr>
+<td>|</td>
+<td>bitwise or</td>
+</tr>
+<tr>
+<td>=、*=、/=、%=、+=、-=、&amp;=、^=、|=、&laquo;=、&raquo;=</td>
+<td>assignment operators</td>
+</tr>
+<tr>
+<td>,</td>
+<td>separator</td>
+</tr>
+<tr>
+<td>&amp;&amp;</td>
+<td>for using multiple commands</td>
+</tr>
+<tr>
+<td>||</td>
+<td>for executing one from many commands</td>
+</tr>
+</tbody>
+</table>
+<h3 id="流程控制">流程控制</h3>
+<p>bat可以通过for和goto实现循环，通过if实现条件语句。bat通过switch的概念支持不同类型的遍历，switch和Linux命令的option很像，就是选项，常见的有四个：</p>
+<table>
+<thead>
+<tr>
+<th>switch</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>for /d</code></td>
+<td>the &lsquo;/d&rsquo; switch along with the ‘for’ command is used for looping through several directories</td>
+</tr>
+<tr>
+<td><code>for /r</code></td>
+<td>the &lsquo;/r&rsquo; switch along with the ‘for’ command is used for looping through directories and sub directories</td>
+</tr>
+<tr>
+<td><code>for /l</code></td>
+<td>the &lsquo;/l&rsquo; switch along with the ‘for’ command is used for looping through a range of specified numbers</td>
+</tr>
+<tr>
+<td><code>for /f</code></td>
+<td>the ‘/f’ switch along with the ‘for’ command is used for looping through a wide variety of files, command and strings</td>
+</tr>
+</tbody>
+</table>
+<p>for循环最常见的应用就是遍历文件夹：</p>
+<pre><code>C:\Users\vimerzhao\Desktop&gt;@echo off
+C:\Users\vimerzhao\Desktop&gt;echo 显示全部文件
+C:\Users\vimerzhao\Desktop&gt;for %a in (*) do echo %a
+001.PNG
+002.PNG
+...
+</code></pre><p>在bat脚本中由于%与变量引用冲突，要写成</p>
+<pre><code>for %%a in (*) do echo %%a
+</code></pre><p>此外，可以通过内置的语法对文件做处理（如显示完整路径、文件名、后缀名等）：</p>
+<table>
+<thead>
+<tr>
+<th>command</th>
+<th>description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>%~I</td>
+<td>expands %I removing any surrounding quotes (&quot;)</td>
+</tr>
+<tr>
+<td>%~fI</td>
+<td>expands %I to a fully qualified path name</td>
+</tr>
+<tr>
+<td>%~dI</td>
+<td>expands %I to a drive letter only</td>
+</tr>
+<tr>
+<td>%~pI</td>
+<td>expands %I to a path only</td>
+</tr>
+<tr>
+<td>%~nI</td>
+<td>expands %I to a file name only</td>
+</tr>
+<tr>
+<td>%~xI</td>
+<td>expands %I to a file extension only</td>
+</tr>
+<tr>
+<td>%~sI</td>
+<td>expanded path contains short names only</td>
+</tr>
+<tr>
+<td>%~aI</td>
+<td>expands %I to file attributes of file</td>
+</tr>
+<tr>
+<td>%~tI</td>
+<td>expands %I to date/time of file</td>
+</tr>
+<tr>
+<td>%~zI</td>
+<td>expands %I to size of file</td>
+</tr>
+<tr>
+<td>%~$PATH:I</td>
+<td>searches the directories listed in the PATH environment variable and expands %I to the fully qualified name of the first one found. If the environment variable name is not defined or the file is not found by the search, then this modifier expands to the empty string.</td>
+</tr>
+<tr>
+<td>%~dpI</td>
+<td>expands %I to a drive letter and path only</td>
+</tr>
+<tr>
+<td>%~nxI</td>
+<td>expands %I to a file name and extension only</td>
+</tr>
+<tr>
+<td>%~fsI</td>
+<td>expands %I to a full path name with short names only</td>
+</tr>
+<tr>
+<td>%~dp$PATH:I</td>
+<td>searches the directories listed in the PATH environment variable for %I and expands to thedrive letter and path of the first one found</td>
+</tr>
+<tr>
+<td>%~ftzaI</td>
+<td>expands %I to a DIR like output line</td>
+</tr>
+</tbody>
+</table>
+<p>if语句除了支持操作符还支持几个自定义的关键字：</p>
+<table>
+<thead>
+<tr>
+<th>operators</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>equ</td>
+<td>equal</td>
+</tr>
+<tr>
+<td>neq</td>
+<td>not equal</td>
+</tr>
+<tr>
+<td>lss</td>
+<td>less than</td>
+</tr>
+<tr>
+<td>leq</td>
+<td>less than or equal</td>
+</tr>
+<tr>
+<td>gtr</td>
+<td>greater than</td>
+</tr>
+<tr>
+<td>geq</td>
+<td>greater than or equal</td>
+</tr>
+</tbody>
+</table>
+<h3 id="子程序">子程序</h3>
+<p>最后，bat也支持简单的子程序调用，和汇编很像，通过%n可以获取参数，从1开始，如以下代码：</p>
+<pre><code>REM filename: test.bat
+@echo off
+call :procedure &quot;argument 1&quot;
+
+goto:eof
+:procedure
+    echo repeat part or modular code
+    echo %1
+goto:eof
+</code></pre><p>输出为：</p>
+<pre><code>F:\BatchFileProgramming&gt;test.bat
+repeat part or modular code
+&quot;argument 1&quot;
+</code></pre><h2 id="总结">总结</h2>
+<p>以上基本都是一些提纲挈领的概述，自己也不算精通每个细节，相信只要心中有整体框架，再加上一点自动化的意识，久而久之自会得心应手。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://www.bathome.net/index.php">批处理之家</a></li>
+<li><a href="https://www.jb51.net/list/list_106_1.htm">DOS_BAT-脚本之家</a></li>
+<li><em>Batch File Programming</em>，Premkumar.S</li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/xin-shou-cheng-xu-yuan-de-e-xi-bu-liao-jie-zi-ji-diao-yong-de-api/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">新手程序员的恶习：不了解自己调用的API</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/yuan-ma-yue-du-huan-jing-opengrokda-jian/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">源码阅读环境OpenGrok搭建</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

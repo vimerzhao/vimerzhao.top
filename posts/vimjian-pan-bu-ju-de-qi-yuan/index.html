@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Vim键盘布局的起源 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Vim键盘布局的起源" />
+<meta property="og:description" content="Vim键盘布局的起源 谈了一些关于键盘布局的东西。 Vim的键盘布局 用过Vim编辑器的人都知道，要从插入模式转到正常模式需要用Esc键，并且两种模式的切换在编辑文本时大量存在。但奇怪的是，Esc的位置在键" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/vimjian-pan-bu-ju-de-qi-yuan/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-06-25T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Vim键盘布局的起源"/>
+<meta name="twitter:description" content="Vim键盘布局的起源 谈了一些关于键盘布局的东西。 Vim的键盘布局 用过Vim编辑器的人都知道，要从插入模式转到正常模式需要用Esc键，并且两种模式的切换在编辑文本时大量存在。但奇怪的是，Esc的位置在键"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Vim键盘布局的起源</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-06-25T00:00:00Z">2017-06-25</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="vim键盘布局的起源">Vim键盘布局的起源</h1>
+<p>谈了一些关于键盘布局的东西。</p>
+<h2 id="vim的键盘布局">Vim的键盘布局</h2>
+<p>用过Vim编辑器的人都知道，要从插入模式转到正常模式需要用<code>Esc</code>键，并且两种模式的切换在编辑文本时大量存在。但奇怪的是，<code>Esc</code>的位置在键盘的左上角：一个手指很难够到的地方。
+不免要问，一个号称<code>编辑器之神</code>的东西为何有如此不科学的设计。
+追本溯源，还要归结到<code>vim</code>最初的作者Bill Joy使用的机器<code>ADM-3A</code>终端机的键盘。下图是<code>ADM-3A</code>：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogadm-3a.png" alt=""></p>
+<p>再放大看看它的键盘：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogadm-3a-01.jpg" alt="">
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogadm-3a-2.jpg" alt="">
+放大：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogadm-3a-detail.png" alt=""></p>
+<p>可以看到<code>Esc</code>和<code>Ctrl</code>的位置都合现在的键盘有所不同。而且，<code>h</code>、<code>j</code>、<code>k</code>、<code>l</code>上都有箭头。所以，现在看来这种诡异的按键设计其实在当时是非常合理的。但键盘生产厂商面向的不可能只是程序员（更准确的说是使用Vim的程序员），为了标准统一，现在的键盘生产基本使用如下的按键布局。
+<img src="http://p2pe8gnn5.bkt.clouddn.com/keyboard.png" alt="">
+从程序员的角度来说，这个设计就很不合理。比如<code>CapsLock</code>，占据了一个非常好的位置，但基本不会被使用。现在Vim程序员普遍的做法就是修改键盘映射，比如我，就会把<code>CapsLock</code>映射成<code>Ctrl</code>，<code>Ctrl</code>映射成<code>Esc</code>，<code>Esc</code>映射成最少使用的<code>CapsLock</code>。其实这种修改也符合<em>哈夫曼编码</em>的原则：最常使用的离手指最近，最少使用的离手指最远。
+Windows修改脚本:</p>
+<pre><code>Windows Registry Editor Version 5.00
+
+[HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
+&quot;Scancode Map&quot;=hex:00,00,00,00,00,00,00,00,04,00,00,00,3a,00,01,00,1D,00,3a,00,01,00,1D,00,00,00,00,00
+</code></pre><p>Linux修改脚本:</p>
+<pre><code>remove Lock = Caps_Lock
+remove Control = Control_L
+keycode 9 = Caps_Lock NoSymbol Caps_Lock
+keycode 66 = Control_L NoSymbol Control_L
+keycode  37 = Escape NoSymbol Escape
+add Lock = Caps_Lock
+add Control = Control_L
+</code></pre><h2 id="emacs的键盘">Emacs的键盘</h2>
+<p>关于Emacs有一个有趣的梗：Emacs程序员敲代码都需要一个脚踏板。因为Emacs里面有大量三键组合，一般是<code>Ctrl</code>+<code>Alt</code>+<code>X</code>组合，因为同时按三个按键很不方便，所以只好加个脚踏板了。而且，键盘上空格键特别占地方，导致<code>Alt</code>键不容易被手指够到。但是曾经看到过一款键盘，空格键很短，感觉很适合Emacs啊：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogkana.jpg" alt=""></p>
+<h2 id="键盘的历史遗留问题">键盘的历史遗留问题</h2>
+<p>一个广为人知的事实：早期打字机的速度比打字员的速度还慢，为了匹配二者速度，打字机设计者将那些经常使用的按键安排在一些手指不容易够到的地方以降低打字员的输入速度。几十年后，这反而成了累赘，就算是普通键盘也能承受很高的击键频率，但那种不合理的按键布局却再也改不会来了。更有意思的是，人们只是知道盲打很难掌握，却丝毫没发现不合理的按键布局大大降低了他们的输入速度。</p>
+<h2 id="插曲谷歌搜图vs百度搜图">插曲：谷歌搜图VS百度搜图</h2>
+<p>写这篇博客的起源是电脑上存留的一张图片：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogkeyboard.png" alt=""></p>
+<p>我很想知道这张图片的来源（因为我已经忘了从哪里获得的），于是先用了百度搜图：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogbaidu-search.png" alt=""></p>
+<p>发现只是出现了一些键盘，而且只是很普通的键盘，说明百度大概只识别出这是一张键盘的图片吧。
+我再用谷歌搜了一下，竟然直接搜出了键盘型号：
+<img src="http://ond7j4cnz.bkt.clouddn.com/bloggoogle-search-1.png" alt=""></p>
+<p>还搜出了包含这张图的文章，我正是从其中一篇文章里面保存下来的。
+<img src="http://ond7j4cnz.bkt.clouddn.com/bloggoogle-search-2.png" alt=""></p>
+<p>不得不承认，洋人的技术比我们不知道高到哪里去了，我们还有很长的路要走啊！</p>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/virtualboxxia-debianzeng-qiang-gong-neng-de-an-zhuang/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">VirtualBox下Debian增强功能的安装</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/pythonpa-chong-shi-zhan-mei-zi-tu/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">&#39;Python爬虫实战:妹子图&#39;</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

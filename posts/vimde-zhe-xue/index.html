@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Vim的哲学 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Vim的哲学" />
+<meta property="og:description" content="Vim的哲学 本文记录了我在现阶段对Vim的一些思考。 我用过的开发工具 回想起来，我大概是在大一的寒假快要结束的时候接触了编程语言，我还记得自己按照教程，用gcc编译并输出了HelloWorld。当时，我" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/vimde-zhe-xue/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-04-13T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Vim的哲学"/>
+<meta name="twitter:description" content="Vim的哲学 本文记录了我在现阶段对Vim的一些思考。 我用过的开发工具 回想起来，我大概是在大一的寒假快要结束的时候接触了编程语言，我还记得自己按照教程，用gcc编译并输出了HelloWorld。当时，我"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Vim的哲学</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-04-13T00:00:00Z">2017-04-13</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="vim的哲学">Vim的哲学</h1>
+<p>本文记录了我在现阶段对Vim的一些思考。</p>
+<h2 id="我用过的开发工具">我用过的开发工具</h2>
+<p>回想起来，我大概是在大一的寒假快要结束的时候接触了编程语言，我还记得自己按照教程，用<code>gcc</code>编译并输出了<code>HelloWorld</code>。当时，我用的是Notepad++。后来很长一段时间内我都在用。
+但后来，我又知道了sublime，它比Notepad++更容易出现乱码，但是主题更好看，有更高的可定制性。于是，在某次重装系统之后，我的电脑上就只有sublime了。
+期间，我也曾安装过ultraedit，但纯粹处于猎奇心理。偶尔，我也会看一些所谓程序员十大编辑器的讨论，无非就是那么几个编辑器。包括著名的Emacs VS Vim。</p>
+<h2 id="我对编辑器的思考">我对编辑器的思考</h2>
+<p>出于好奇，我开始向编辑器的顶点开进，大概上个学期，我用了一段时间Emacs，跟同学开玩笑说，自从用了Emacs，效率降了不止一倍，或许是自己不够耐心，但Emacs经常需要三个按键同时按下去真让我的手指吃不消。
+其实Emacs和Vim在编辑器这一层次我认为是殊途同归，都是为了通过键盘实现尽可能多的功能，但是键盘上的按键是有限的，那么怎么办？Emacs决定，通过按键组合来拓展，比如原来有64个按键，那么只能对应64个效果，但是增减了Ctrl-C之类的组合键之后，效果则增加了$C_{64}^2$种(不精确地说)，那么功能一下子就丰富了；Vim也要解决这个问题，但却另辟蹊径，引入了模式的概念，比如，INSERT模式下x就是字符x，但在NORMAL模式下x则是删除一个字符，这样效果便有$64\times2$种。
+可以看到，两种策略都达到了同样的目的，但这样的代价就是用户必须非常熟练，要记住具体功能对应的按键或则其组合，对于大多数人来说，由于很少用到某些功能，所以熟练掌握是不可能的。于是像Word或者sublime这样的编辑器由于其易于入门，开始大受欢迎。
+今天，程序员的数量远远超过的30年前，大多数人更愿意用sublime这样美观而开箱即用的编辑器，而Emacs和Vim则被误解、淡忘。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-04-13%2022-42-37%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="">
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-04-13%2022-42-57%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="">
+实际上，完全视情况而定。如果每天都需要使用编辑器，那么花一些时间来学习Emacs或者Vim绝对是值得的。
+一直以来，Emacs和Vim孰优孰劣一直争论不下，有如圣战。但我看来，其实很简单。Emacs被誉为“神之编辑器”，即神用的编辑器，因为其功能强大，远远不止于编辑器，甚至被戏称为伪装成编辑器的操作系统；而Vim被誉为“编辑器之神”，说明仅仅就编辑文本而言，Vim是强于Emacs的。我自己也深有体会。</p>
+<h2 id="vim是一种哲学">Vim是一种哲学</h2>
+<p>Vim与其说是一个编辑器，不如说是一种哲学。最简单的例子，vim使用<code>h</code>、<code>j</code>、<code>k</code>、<code>l</code>来控制方向，虽然方向键也可以，但是方向键不在主键盘区，这意味这需要手指做更多的移动，这有悖于Vim的哲学，所以不推荐。
+而著名的pdf阅读器Okular就支持这种模式，通过这些快捷键而不是鼠标滚轮来控制pdf。
+另一个例子是chrome上的一款插件Vimium。以下是我使用Vimium的一个截图，我将不借助鼠标（注意我鼠标的位置）打开搜索“Vim”第二页的第二条结果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/bloguse-vimium-demo.gif" alt="">
+**天下武功，唯快不破。**而这就是Vim，这就是Vim的哲学。</p>
+<h2 id="未来">未来</h2>
+<p>经过一段过渡期，我正式进入了Vim的世界，也深刻的理解了那句话，用过Vim你就再也不会用其他编辑器了，sublime能做的，Vim都能做，而且做的更快，更好。
+IDEA同样也有支持Vim的插件。花时间，重拾这门古老的艺术！
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogeditor-learning-curve.jpg-origin.webp" alt=""></p>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/bi-shi-zong-jie-xi-cheng-2018shi-xi-sheng-an-zhuo-kai-fa-gong-cheng-shi/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">笔试总结：携程2018实习生（安卓开发工程师）</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/bi-shi-zong-jie-line2018shi-xi-sheng-ruan-jian-gong-cheng-shi/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">笔试总结：LINE2018实习生（软件工程师）</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

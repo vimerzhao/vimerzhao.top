@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>&#39;android:excludeFromRecents踩坑指南&#39; - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="&#39;android:excludeFromRecents踩坑指南&#39;" />
+<meta property="og:description" content="&lsquo;android:excludeFromRecents踩坑指南&rsquo; 工作中遇到的一个小问题，记录一下。 现象 从Activity A跳转到B，B的launchMode设置为singleI" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/android-excludefromrecentscai-keng-zhi-nan/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-12-30T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="&#39;android:excludeFromRecents踩坑指南&#39;"/>
+<meta name="twitter:description" content="&lsquo;android:excludeFromRecents踩坑指南&rsquo; 工作中遇到的一个小问题，记录一下。 现象 从Activity A跳转到B，B的launchMode设置为singleI"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">&#39;android:excludeFromRecents踩坑指南&#39;</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-12-30T00:00:00Z">2018-12-30</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="androidexcludefromrecents踩坑指南">&lsquo;android:excludeFromRecents踩坑指南&rsquo;</h1>
+<p>工作中遇到的一个小问题，记录一下。</p>
+<h2 id="现象">现象</h2>
+<p>从Activity <code>A</code>跳转到<code>B</code>，<code>B</code>的<code>launchMode</code>设置为<code>singleInstance</code>，并通过<code>excludeFromRecents</code>属性保证<code>B</code>不出现在最近任务列表中。<code>MainActivity</code>：</p>
+<pre><code>public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        TextView textView = findViewById(R.id.text);
+        textView.setText(MainActivity.class.getSimpleName());
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
+                startActivity(intent);
+            }
+        });
+    }
+</code></pre><p><code>SecondActivity</code>：</p>
+<pre><code>public class SecondActivity extends Activity {
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        TextView textView = findViewById(R.id.text);
+        textView.setText(SecondActivity.class.getSimpleName());
+    }
+}
+</code></pre><p><code>AndroidManifest.xml</code>：</p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
+    package=&quot;top.vimerzhao.recenttasks&quot;&gt;
+
+    &lt;application
+        android:allowBackup=&quot;true&quot;
+        android:icon=&quot;@mipmap/ic_launcher&quot;
+        android:label=&quot;@string/app_name&quot;
+        android:roundIcon=&quot;@mipmap/ic_launcher_round&quot;
+        android:supportsRtl=&quot;true&quot;
+        android:theme=&quot;@style/AppTheme&quot;&gt;
+        &lt;activity android:name=&quot;.MainActivity&quot;&gt;
+            &lt;intent-filter&gt;
+                &lt;action android:name=&quot;android.intent.action.MAIN&quot; /&gt;
+
+                &lt;category android:name=&quot;android.intent.category.LAUNCHER&quot; /&gt;
+            &lt;/intent-filter&gt;
+        &lt;/activity&gt;
+        &lt;activity android:name=&quot;.SecondActivity&quot;
+            android:taskAffinity=&quot;.SecondActivity&quot;
+            android:excludeFromRecents=&quot;true&quot;
+            android:launchMode=&quot;singleInstance&quot;/&gt;
+    &lt;/application&gt;
+
+&lt;/manifest&gt;
+</code></pre><p>结果如下：
+<img src="https://github.com/vimerzhao/images/raw/master/2018-12/recents-task-demo.gif" alt=""></p>
+<p>可以看到：</p>
+<ol>
+<li>跳转到<code>B</code>后，Call起多任务显示两个Task，不符合预期</li>
+<li>返回主界面后，Call起多任务显示一个Task，符合预期</li>
+</ol>
+<h2 id="分析">分析</h2>
+<p>查阅官方文档，属性解释如下：</p>
+<blockquote>
+<p>android:excludeFromRecents
+Whether or not the task initiated by this activity should be excluded from the list of recently used applications, the overview screen. That is, when this activity is the root activity of a new task, this attribute determines whether the task should not appear in the list of recent apps. Set &ldquo;true&rdquo; if the task should be excluded from the list; set &ldquo;false&rdquo; if it should be included. The default value is &ldquo;false&rdquo;.</p>
+</blockquote>
+<p>中文版本如下：</p>
+<blockquote>
+<p>android:excludeFromRecents
+是否应将该 Activity 启动的任务排除在最近使用的应用列表（即概览屏幕）之外。 也就是说，当该 Activity 是新任务的根 Activity 时，此属性确定任务是否应出现在最近使用的应用列表中。 如果应将任务排除在列表之外，请设置“true”；如果应将其包括在内，则设置“false”。 默认值为“false”。</p>
+</blockquote>
+<p>按照这个解释，<code>现象1</code>还是说不通。继续检索，发现StackOverflow上有一个类似问题<a href="https://stackoverflow.com/questions/20516832/exclude-current-activity-from-recent-tasks">Exclude current activity from Recent Tasks</a>，其中<code>Ricardo Lage</code>解释如下：</p>
+<blockquote>
+<p>I just tested on my app and the same thing happens. If I press the &ldquo;recent tasks&rdquo; button while having my activity in the foreground, it appears listed there. The moment I move out of it to another activity or to my phone&rsquo;s main screen, the activity is not listed anymore.
+I also tested this on the built-in DeskClock app that comes with recent Android versions and the same behavior is present there when a new alarm is triggered. Note that the AlarmAlertFullscreen activity of that app has the same parameters you mentioned in your question.</p>
+</blockquote>
+<p>也就是说，即使设置了<code>excludeFromRecents</code>属性，如果该Task在前台还是会显示在最近任务中，想想这样设计也是合理的，如果某个设置了该属性的<code>Activity</code>正在前台，此时Call多任务如果不显示该<code>Activity</code>那么用户怎么返回，所以说这个设计还是很合理的。<strong>如果确实如此，只能说明官方文档在此处表述存在纰漏了。</strong>
+接下来从源码层面证实这个猜测。一开始我是从<code>RecentsActivity</code>入手，逐步分析，但是Android源码过于复杂，一直没找到重点，后面转变思路，直接搜索<code>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</code>属性，虽然总共有36个结果，但是通过命名很快定位到<code>./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/</code>目录下的可疑类，最终定位到<code>SystemServicesProxy.java</code>的218行：</p>
+<pre><code>...
+/** Returns a list of the recents tasks */
+public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTasks, int userId,
+        boolean isTopTaskHome) {
+    if (mAm == null) return null;
+
+    ...
+
+    Iterator&lt;ActivityManager.RecentTaskInfo&gt; iter = tasks.iterator();
+    while (iter.hasNext()) {
+        ActivityManager.RecentTaskInfo t = iter.next();
+
+        // NOTE: The order of these checks happens in the expected order of the traversal of the
+        // tasks
+
+        // Check the first non-recents task, include this task even if it is marked as excluded
+        // from recents if we are currently in the app.  In other words, only remove excluded
+        // tasks if it is not the first active task.
+        boolean isExcluded = (t.baseIntent.getFlags() &amp; Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
+                == Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS;
+        if (isExcluded &amp;&amp; (isTopTaskHome || !isFirstValidTask)) {
+            iter.remove();
+            continue;
+        }
+        isFirstValidTask = false;
+    }
+
+    return tasks.subList(0, Math.min(tasks.size(), numLatestTasks));
+}
+...
+</code></pre><p>结合注释和代码可知前面的猜测是正确的的。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://stackoverflow.com/questions/20516832/exclude-current-activity-from-recent-tasks">Exclude current activity from Recent Tasks</a></li>
+<li><a href="https://developer.android.com/guide/components/activities/recents#java">Recents Screen  |  Android Developers</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">自己动手写事件总线(EventBus)</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/cheng-xu-yuan-jian-shen-zhi-nan/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">程序员健身指南</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

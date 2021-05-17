@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android音视频播放器开发（一）：功能实现 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android音视频播放器开发（一）：功能实现" />
+<meta property="og:description" content="Android音视频播放器开发（一）：功能实现 本文主要介绍了一个简单的Android音视频播放器的功能模块实现。 概述 本文主要介绍开发一个Android音视频播放器的功能实现，包括4个模块：音乐列表，视" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-10-16T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android音视频播放器开发（一）：功能实现"/>
+<meta name="twitter:description" content="Android音视频播放器开发（一）：功能实现 本文主要介绍了一个简单的Android音视频播放器的功能模块实现。 概述 本文主要介绍开发一个Android音视频播放器的功能实现，包括4个模块：音乐列表，视"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android音视频播放器开发（一）：功能实现</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-10-16T00:00:00Z">2017-10-16</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="android音视频播放器开发一功能实现">Android音视频播放器开发（一）：功能实现</h1>
+<p>本文主要介绍了一个简单的Android音视频播放器的功能模块实现。</p>
+<h2 id="概述">概述</h2>
+<p>本文主要介绍开发一个Android音视频播放器的功能实现，包括4个模块：音乐列表，视频列表，音乐播放，视频播放。其中列表共用布局，所以其实是4个问题：</p>
+<ul>
+<li>如何获取音视频列表？</li>
+<li>如何显示列表？</li>
+<li>如何播放音乐？</li>
+<li>如何播放视频？</li>
+</ul>
+<p>当然了，还有很多细节问题，比如实现上一曲、下一曲，列表循化、单曲循环，播放、暂停等，但都是细枝末节，下文都会提到。</p>
+<h2 id="获取本地音视频">获取本地音视频</h2>
+<p>获取音视频列表有两种思路：</p>
+<ul>
+<li>递归遍历文件夹，获取目标文件</li>
+<li>读取系统数据库</li>
+</ul>
+<p>这里我采用了第二种，需要注意的是如果遍历所有目录，最好在一个子线程执行，否则可能出现ANR。以下相关代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicUtils</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> List<span style="color:#f92672">&lt;</span>MusicBean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">scan</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>MusicBean<span style="color:#f92672">&gt;</span> musicList <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+        Cursor cursor <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getContentResolver</span><span style="color:#f92672">().</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">EXTERNAL_CONTENT_URI</span><span style="color:#f92672">,</span>
+                <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AudioColumns</span><span style="color:#f92672">.</span><span style="color:#a6e22e">IS_MUSIC</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cursor <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">moveToNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                MusicBean musicBean <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MusicBean<span style="color:#f92672">();</span>
+                musicBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">DISPLAY_NAME</span><span style="color:#f92672">)));</span>
+                musicBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setSinger</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ARTIST</span><span style="color:#f92672">)));</span>
+                musicBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setPath</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">DATA</span><span style="color:#f92672">)));</span>
+                musicBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setDuration</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getInt</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">DURATION</span><span style="color:#f92672">)));</span>
+                musicBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setSize</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getLong</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Audio</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SIZE</span><span style="color:#f92672">)));</span>
+                musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>musicBean<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> musicList<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>视频列表的读取基本相同：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VideoUtils</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> List<span style="color:#f92672">&lt;</span>VideoBean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">scan</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>VideoBean<span style="color:#f92672">&gt;</span> videoList <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+        Cursor cursor <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getContentResolver</span><span style="color:#f92672">().</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Video</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">EXTERNAL_CONTENT_URI</span><span style="color:#f92672">,</span>
+                <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>cursor <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">moveToNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                VideoBean videoBean <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> VideoBean<span style="color:#f92672">();</span>
+                videoBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setName</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Video</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">DISPLAY_NAME</span><span style="color:#f92672">)));</span>
+                videoBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setPath</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Video</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">DATA</span><span style="color:#f92672">)));</span>
+                videoBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setDuration</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getInt</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Video</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">DURATION</span><span style="color:#f92672">)));</span>
+                videoBean<span style="color:#f92672">.</span><span style="color:#a6e22e">setSize</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getLong</span><span style="color:#f92672">(</span>cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">getColumnIndexOrThrow</span><span style="color:#f92672">(</span>MediaStore<span style="color:#f92672">.</span><span style="color:#a6e22e">Video</span><span style="color:#f92672">.</span><span style="color:#a6e22e">Media</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SIZE</span><span style="color:#f92672">)));</span>
+                videoList<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>videoBean<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        cursor<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> videoList<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>这里的<code>MusicBean</code>和<code>VideoBean</code>都是表示单个音乐/视频文件信息的类，如下（<code>get</code>和<code>set</code>方法省略）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicBean</span> <span style="color:#66d9ef">implements</span> Parcelable <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> String name<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String singer<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> String path<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> duration<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> size<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VideoBean</span> <span style="color:#66d9ef">implements</span> Parcelable <span style="color:#f92672">{</span>
+    String name<span style="color:#f92672">;</span>
+    String path<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> duration<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">long</span> size<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>可以看到这里实现了一个<code>Parcelable</code>接口，主要是用来通过<code>Intent</code>在不同对象之间传递。显示文件列表的界面不关心数据是数据库得到的还是遍历目录得到的，他只需要一个<code>List</code>集合就可以，同时这个<code>List</code>集合需要传递给播放音乐的那个界面（这里以音乐为例，视频同理）。而为了传递这个<code>List</code>就需要实现<code>Parcelable</code>接口，具体实现代码省略了，可以参考后文给出的源码。</p>
+<h2 id="显示文件列表">显示文件列表</h2>
+<p>显示原理相同，这里以音乐列表界面为例讲解。为了显示一个列表可以用<code>ListView</code>也可以用<code>RecyclerView</code>，这里以<code>RecyclerView</code>为例（其实用<code>ListView</code>更简单）。
+需要注意的是点击某一项应调转到对应的音乐播放的界面，所以需要添加监听事件，<code>RecyclerView</code>添加监听事件比<code>ListView</code>稍复杂。在XML中添加一个<code>RecyclerView</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;</span>
+<span style="color:#f92672">&lt;RelativeLayout</span> <span style="color:#a6e22e">xmlns:android=</span><span style="color:#e6db74">&#34;http://schemas.android.com/apk/res/android&#34;</span>
+    <span style="color:#a6e22e">android:layout_width=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+    <span style="color:#a6e22e">android:layout_height=</span><span style="color:#e6db74">&#34;match_parent&#34;</span><span style="color:#f92672">&gt;</span>
+    <span style="color:#f92672">&lt;android.support.v7.widget.RecyclerView</span>
+        <span style="color:#a6e22e">android:id=</span><span style="color:#e6db74">&#34;@+id/rv_music_list&#34;</span>
+        <span style="color:#a6e22e">android:layout_width=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+        <span style="color:#a6e22e">android:layout_height=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+        <span style="color:#a6e22e">android:layout_centerInParent=</span><span style="color:#e6db74">&#34;true&#34;</span>
+        <span style="color:#a6e22e">android:visibility=</span><span style="color:#e6db74">&#34;invisible&#34;</span><span style="color:#f92672">/&gt;</span>
+
+    <span style="color:#f92672">&lt;Button</span>
+        <span style="color:#a6e22e">android:id=</span><span style="color:#e6db74">&#34;@+id/btn_scan_music&#34;</span>
+        <span style="color:#a6e22e">android:layout_width=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+        <span style="color:#a6e22e">android:layout_height=</span><span style="color:#e6db74">&#34;wrap_content&#34;</span>
+        <span style="color:#a6e22e">android:layout_centerInParent=</span><span style="color:#e6db74">&#34;true&#34;</span>
+        <span style="color:#a6e22e">android:text=</span><span style="color:#e6db74">&#34;扫描本地音乐&#34;</span>
+        <span style="color:#a6e22e">android:layout_margin=</span><span style="color:#e6db74">&#34;40dp&#34;</span><span style="color:#f92672">/&gt;</span>
+<span style="color:#f92672">&lt;/RelativeLayout&gt;</span>
+</code></pre></div><p>对应的<code>Fragment</code>代码为（添加了一些注释）：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicListFragment</span> <span style="color:#66d9ef">extends</span> Fragment <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> RecyclerView mMusicListView<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>MusicBean<span style="color:#f92672">&gt;</span> mMusicList<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> MusicAdapter mAdapter<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> Button mScanMusicButton<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String CUR_MUSIC <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;CurrentMusic&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String MUSIC_LIST<span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;MusicList&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Nullable</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> View <span style="color:#a6e22e">onCreateView</span><span style="color:#f92672">(</span>LayoutInflater inflater<span style="color:#f92672">,</span> <span style="color:#a6e22e">@Nullable</span> ViewGroup container<span style="color:#f92672">,</span> <span style="color:#a6e22e">@Nullable</span> Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        View rootView <span style="color:#f92672">=</span> inflater<span style="color:#f92672">.</span><span style="color:#a6e22e">inflate</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">fragment_music_list</span><span style="color:#f92672">,</span> container<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+        mMusicListView <span style="color:#f92672">=</span> rootView<span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">rv_music_list</span><span style="color:#f92672">);</span>
+        LinearLayoutManager manager <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinearLayoutManager<span style="color:#f92672">(</span>getActivity<span style="color:#f92672">());</span>
+        manager<span style="color:#f92672">.</span><span style="color:#a6e22e">setOrientation</span><span style="color:#f92672">(</span>OrientationHelper<span style="color:#f92672">.</span><span style="color:#a6e22e">VERTICAL</span><span style="color:#f92672">);</span>
+        mMusicListView<span style="color:#f92672">.</span><span style="color:#a6e22e">setLayoutManager</span><span style="color:#f92672">(</span>manager<span style="color:#f92672">);</span>
+        mMusicListView<span style="color:#f92672">.</span><span style="color:#a6e22e">setItemAnimator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> DefaultItemAnimator<span style="color:#f92672">());</span>
+        mScanMusicButton <span style="color:#f92672">=</span> rootView<span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">btn_scan_music</span><span style="color:#f92672">);</span>
+        mScanMusicButton<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">// 获取音乐列表
+</span><span style="color:#75715e"></span>                mMusicList <span style="color:#f92672">=</span> MusicUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">scan</span><span style="color:#f92672">(</span>getActivity<span style="color:#f92672">());</span>
+                <span style="color:#75715e">// 设置列表对应的适配器
+</span><span style="color:#75715e"></span>                mAdapter <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MusicAdapter<span style="color:#f92672">(</span>mMusicList<span style="color:#f92672">,</span> getActivity<span style="color:#f92672">());</span>
+                mMusicListView<span style="color:#f92672">.</span><span style="color:#a6e22e">setAdapter</span><span style="color:#f92672">(</span>mAdapter<span style="color:#f92672">);</span>
+                mScanMusicButton<span style="color:#f92672">.</span><span style="color:#a6e22e">setVisibility</span><span style="color:#f92672">(</span>View<span style="color:#f92672">.</span><span style="color:#a6e22e">GONE</span><span style="color:#f92672">);</span>
+                mMusicListView<span style="color:#f92672">.</span><span style="color:#a6e22e">setVisibility</span><span style="color:#f92672">(</span>View<span style="color:#f92672">.</span><span style="color:#a6e22e">VISIBLE</span><span style="color:#f92672">);</span>
+
+                mAdapter<span style="color:#f92672">.</span><span style="color:#a6e22e">setListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> MusicAdapter<span style="color:#f92672">.</span><span style="color:#a6e22e">OnItemClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                    <span style="color:#a6e22e">@Override</span>
+                    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onItemClick</span><span style="color:#f92672">(</span>View view<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> position<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        Bundle bundle <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bundle<span style="color:#f92672">();</span>
+                        bundle<span style="color:#f92672">.</span><span style="color:#a6e22e">putParcelableArrayList</span><span style="color:#f92672">(</span>MUSIC_LIST<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>ArrayList<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Parcelable<span style="color:#f92672">&gt;)</span> mMusicList<span style="color:#f92672">);</span>
+                        bundle<span style="color:#f92672">.</span><span style="color:#a6e22e">putInt</span><span style="color:#f92672">(</span>CUR_MUSIC<span style="color:#f92672">,</span> position<span style="color:#f92672">);</span>
+                        Intent intent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Intent<span style="color:#f92672">(</span>getActivity<span style="color:#f92672">(),</span> MusicPlayActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+                        intent<span style="color:#f92672">.</span><span style="color:#a6e22e">putExtras</span><span style="color:#f92672">(</span>bundle<span style="color:#f92672">);</span>
+                        startActivity<span style="color:#f92672">(</span>intent<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">});</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+
+        <span style="color:#66d9ef">return</span> rootView<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>比较难理解是<code>setAdapter</code>这个方法，Android里面的列表都是使用了适配器模式，具体可自行查阅。以下是<code>MusicAdapter</code>的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicAdapter</span> <span style="color:#66d9ef">extends</span> RecyclerView<span style="color:#f92672">.</span><span style="color:#a6e22e">Adapter</span><span style="color:#f92672">&lt;</span>MusicAdapter<span style="color:#f92672">.</span><span style="color:#a6e22e">MusicItemHolder</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">implements</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>MusicBean<span style="color:#f92672">&gt;</span> musicList<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> Context context<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> OnItemClickListener listener<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> LayoutInflater layoutInflater<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MusicAdapter</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>MusicBean<span style="color:#f92672">&gt;</span> musicList<span style="color:#f92672">,</span> Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">musicList</span> <span style="color:#f92672">=</span> musicList<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">context</span> <span style="color:#f92672">=</span> context<span style="color:#f92672">;</span>
+        layoutInflater <span style="color:#f92672">=</span> LayoutInflater<span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">(</span>context<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> MusicItemHolder <span style="color:#a6e22e">onCreateViewHolder</span><span style="color:#f92672">(</span>ViewGroup parent<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> viewType<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        View view <span style="color:#f92672">=</span> layoutInflater<span style="color:#f92672">.</span><span style="color:#a6e22e">inflate</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">item_music_list</span><span style="color:#f92672">,</span> parent<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+        MusicItemHolder holder <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MusicItemHolder<span style="color:#f92672">(</span>view<span style="color:#f92672">);</span>
+        view<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> holder<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onBindViewHolder</span><span style="color:#f92672">(</span>MusicItemHolder holder<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> position<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        holder<span style="color:#f92672">.</span><span style="color:#a6e22e">number</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span>String<span style="color:#f92672">.</span><span style="color:#a6e22e">valueOf</span><span style="color:#f92672">(</span>position<span style="color:#f92672">+</span>1<span style="color:#f92672">));</span>
+        holder<span style="color:#f92672">.</span><span style="color:#a6e22e">name</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span>musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>position<span style="color:#f92672">).</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">());</span>
+        <span style="color:#66d9ef">long</span> size <span style="color:#f92672">=</span> musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>position<span style="color:#f92672">).</span><span style="color:#a6e22e">getSize</span><span style="color:#f92672">()/</span>1024<span style="color:#f92672">/</span>1024<span style="color:#f92672">;</span>
+        <span style="color:#75715e">//考虑边界情况，需要单独出来处理
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">int</span> minute <span style="color:#f92672">=</span> musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>position<span style="color:#f92672">).</span><span style="color:#a6e22e">getDuration</span><span style="color:#f92672">()/</span>1000<span style="color:#f92672">/</span>60<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> second <span style="color:#f92672">=</span> musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>position<span style="color:#f92672">).</span><span style="color:#a6e22e">getDuration</span><span style="color:#f92672">()/</span>1000<span style="color:#f92672">%</span>60<span style="color:#f92672">;</span>
+        holder<span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;歌手: &#34;</span> <span style="color:#f92672">+</span> musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>position<span style="color:#f92672">).</span><span style="color:#a6e22e">getSinger</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span>
+                <span style="color:#e6db74">&#34;, 时长: &#34;</span> <span style="color:#f92672">+</span> minute <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;:&#34;</span> <span style="color:#f92672">+</span> second <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;,大小：&#34;</span> <span style="color:#f92672">+</span> size <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;M&#34;</span><span style="color:#f92672">);</span>
+
+        holder<span style="color:#f92672">.</span><span style="color:#a6e22e">itemView</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setTag</span><span style="color:#f92672">(</span>position<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getItemCount</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> musicList<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>listener <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            listener<span style="color:#f92672">.</span><span style="color:#a6e22e">onItemClick</span><span style="color:#f92672">(</span>v<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>Integer<span style="color:#f92672">)</span> v<span style="color:#f92672">.</span><span style="color:#a6e22e">getTag</span><span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicItemHolder</span>  <span style="color:#66d9ef">extends</span> RecyclerView<span style="color:#f92672">.</span><span style="color:#a6e22e">ViewHolder</span><span style="color:#f92672">{</span>
+        TextView number<span style="color:#f92672">;</span>
+        TextView name<span style="color:#f92672">;</span>
+        TextView info<span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MusicItemHolder</span><span style="color:#f92672">(</span>View itemView<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>itemView<span style="color:#f92672">);</span>
+            number <span style="color:#f92672">=</span> itemView<span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tv_number</span><span style="color:#f92672">);</span>
+            name <span style="color:#f92672">=</span> itemView<span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tv_name</span><span style="color:#f92672">);</span>
+            info <span style="color:#f92672">=</span> itemView<span style="color:#f92672">.</span><span style="color:#a6e22e">findViewById</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">tv_info</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">interface</span> <span style="color:#a6e22e">OnItemClickListener</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onItemClick</span><span style="color:#f92672">(</span>View view<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> position<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setListener</span><span style="color:#f92672">(</span>OnItemClickListener listener<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">listener</span> <span style="color:#f92672">=</span> listener<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>视频列表的显示同理，此时的效果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmedia-player-4.gif" alt=""></p>
+<h2 id="播放音频">播放音频</h2>
+<p>由于音频界面可以切换歌曲，所以点击调转时不能传递点击项的歌曲路径，而是全部歌曲的列表。即上面代码的：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">....</span>
+                mAdapter<span style="color:#f92672">.</span><span style="color:#a6e22e">setListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> MusicAdapter<span style="color:#f92672">.</span><span style="color:#a6e22e">OnItemClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                    <span style="color:#a6e22e">@Override</span>
+                    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onItemClick</span><span style="color:#f92672">(</span>View view<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> position<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        Bundle bundle <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Bundle<span style="color:#f92672">();</span>
+                        bundle<span style="color:#f92672">.</span><span style="color:#a6e22e">putParcelableArrayList</span><span style="color:#f92672">(</span>MUSIC_LIST<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>ArrayList<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Parcelable<span style="color:#f92672">&gt;)</span> mMusicList<span style="color:#f92672">);</span>
+                        bundle<span style="color:#f92672">.</span><span style="color:#a6e22e">putInt</span><span style="color:#f92672">(</span>CUR_MUSIC<span style="color:#f92672">,</span> position<span style="color:#f92672">);</span>
+                        Intent intent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Intent<span style="color:#f92672">(</span>getActivity<span style="color:#f92672">(),</span> MusicPlayActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+                        intent<span style="color:#f92672">.</span><span style="color:#a6e22e">putExtras</span><span style="color:#f92672">(</span>bundle<span style="color:#f92672">);</span>
+                        startActivity<span style="color:#f92672">(</span>intent<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+<span style="color:#f92672">....</span>
+</code></pre></div><p>由于歌曲界面支持各种按钮操作，所以代码比较复杂，不贴出来，但核心代码就是使用<code>MediaPlayer</code>这个类，如下时播放音乐的代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MusicPlayService</span> <span style="color:#66d9ef">extends</span> Service <span style="color:#f92672">{</span>
+    <span style="color:#f92672">......</span>
+
+    <span style="color:#66d9ef">private</span> MediaPlayer player<span style="color:#f92672">;</span>
+
+    <span style="color:#f92672">......</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">prepare</span><span style="color:#f92672">(</span>String path<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            player<span style="color:#f92672">.</span><span style="color:#a6e22e">reset</span><span style="color:#f92672">();</span>
+            player<span style="color:#f92672">.</span><span style="color:#a6e22e">setDataSource</span><span style="color:#f92672">(</span>path<span style="color:#f92672">);</span>
+            player<span style="color:#f92672">.</span><span style="color:#a6e22e">prepare</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        player<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnCompletionListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> MediaPlayer<span style="color:#f92672">.</span><span style="color:#a6e22e">OnCompletionListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCompletion</span><span style="color:#f92672">(</span>MediaPlayer mp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                updateIndex<span style="color:#f92672">(</span>1<span style="color:#f92672">);</span>
+                init<span style="color:#f92672">();</span>
+                play<span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        player<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+
+    <span style="color:#f92672">}</span>
+    <span style="color:#f92672">......</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="播放视频">播放视频</h2>
+<p>播放视频和音乐很类似，其实核心就是<code>VideoView</code>这个类，以下是布局代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-xml" data-lang="xml"><span style="color:#75715e">&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;</span>
+<span style="color:#f92672">&lt;RelativeLayout</span> <span style="color:#a6e22e">xmlns:android=</span><span style="color:#e6db74">&#34;http://schemas.android.com/apk/res/android&#34;</span>
+    <span style="color:#a6e22e">android:background=</span><span style="color:#e6db74">&#34;#000&#34;</span>
+    <span style="color:#a6e22e">android:layout_width=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+    <span style="color:#a6e22e">android:layout_height=</span><span style="color:#e6db74">&#34;match_parent&#34;</span><span style="color:#f92672">&gt;</span>
+
+    <span style="color:#f92672">&lt;VideoView</span>
+        <span style="color:#a6e22e">android:id=</span><span style="color:#e6db74">&#34;@+id/vv_video_play&#34;</span>
+        <span style="color:#a6e22e">android:layout_width=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+        <span style="color:#a6e22e">android:layout_height=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+        <span style="color:#a6e22e">android:layout_centerInParent=</span><span style="color:#e6db74">&#34;true&#34;</span><span style="color:#f92672">/&gt;</span>
+    <span style="color:#f92672">&lt;FrameLayout</span>
+        <span style="color:#a6e22e">android:layout_width=</span><span style="color:#e6db74">&#34;match_parent&#34;</span>
+        <span style="color:#a6e22e">android:layout_height=</span><span style="color:#e6db74">&#34;wrap_content&#34;</span>
+        <span style="color:#a6e22e">android:layout_alignParentBottom=</span><span style="color:#e6db74">&#34;true&#34;</span>
+        <span style="color:#a6e22e">android:background=</span><span style="color:#e6db74">&#34;#4FFF&#34;</span><span style="color:#f92672">&gt;</span>
+        <span style="color:#f92672">&lt;include</span> <span style="color:#a6e22e">layout=</span><span style="color:#e6db74">&#34;@layout/common_play_bar&#34;</span> <span style="color:#f92672">/&gt;</span>
+    <span style="color:#f92672">&lt;/FrameLayout&gt;</span>
+<span style="color:#f92672">&lt;/RelativeLayout&gt;</span>
+</code></pre></div><p>以下是视频播放代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VideoPlayActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> VideoView mVideoView<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> ArrayList<span style="color:#f92672">&lt;</span>VideoBean<span style="color:#f92672">&gt;</span> mPlayList<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mCurIndex<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mCurMode<span style="color:#f92672">;</span><span style="color:#75715e">//Single,Loop,random
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> ImageButton mLoopModeBtn<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> ImageButton mPreviousBtn<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> ImageButton mPlayPauseBtn<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> ImageButton mNextBtn<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> ImageButton mVideoListBtn<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> LOOP_MODE <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> SINGLE_MODE <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> RANDOM_MODE <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">int</span> MODE_COUNT <span style="color:#f92672">=</span> 3<span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_video_play</span><span style="color:#f92672">);</span>
+        initViews<span style="color:#f92672">();</span>
+        mCurMode <span style="color:#f92672">=</span> LOOP_MODE<span style="color:#f92672">;</span>
+        Bundle bundle <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getIntent</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getExtras</span><span style="color:#f92672">();</span>
+        mPlayList <span style="color:#f92672">=</span> bundle<span style="color:#f92672">.</span><span style="color:#a6e22e">getParcelableArrayList</span><span style="color:#f92672">(</span>VideoListFragment<span style="color:#f92672">.</span><span style="color:#a6e22e">VIDEO_LIST</span><span style="color:#f92672">);</span>
+        mCurIndex <span style="color:#f92672">=</span> bundle<span style="color:#f92672">.</span><span style="color:#a6e22e">getInt</span><span style="color:#f92672">(</span>VideoListFragment<span style="color:#f92672">.</span><span style="color:#a6e22e">CUR_VIDEO</span><span style="color:#f92672">);</span>
+        play<span style="color:#f92672">();</span>
+        mPlayPauseBtn<span style="color:#f92672">.</span><span style="color:#a6e22e">setImageResource</span><span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">mipmap</span><span style="color:#f92672">.</span><span style="color:#a6e22e">btn_media_pause</span><span style="color:#f92672">);</span>
+
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">play</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        mVideoView<span style="color:#f92672">.</span><span style="color:#a6e22e">requestFocus</span><span style="color:#f92672">();</span>
+        mVideoView<span style="color:#f92672">.</span><span style="color:#a6e22e">setVideoURI</span><span style="color:#f92672">(</span>Uri<span style="color:#f92672">.</span><span style="color:#a6e22e">parse</span><span style="color:#f92672">(</span>mPlayList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>mCurIndex<span style="color:#f92672">).</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">()));</span>
+        mVideoView<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#f92672">.....</span>
+
+<span style="color:#f92672">}</span>
+</code></pre></div><p>使用其实非常简单，但是需要加上不同的循环模式，暂停效果，播放切换就需要一点代码代码，具体请阅读源码。音乐和视频播放效果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmedia-player-5.gif" alt=""></p>
+<h2 id="自定义view">自定义View</h2>
+<p>所谓自定义View就是使用非Android提供的控件，能够提高视觉效果。</p>
+<h3 id="方形textview">方形TextView</h3>
+<p>Android的<code>TextView</code>不是正方形，如果直接写死宽高可能带来兼容性问题，所以需要自定义一个<code>SquareTextView</code>，如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SquareTextView</span> <span style="color:#66d9ef">extends</span> android<span style="color:#f92672">.</span><span style="color:#a6e22e">support</span><span style="color:#f92672">.</span><span style="color:#a6e22e">v7</span><span style="color:#f92672">.</span><span style="color:#a6e22e">widget</span><span style="color:#f92672">.</span><span style="color:#a6e22e">AppCompatTextView</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SquareTextView</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>context<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SquareTextView</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> AttributeSet attrs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> attrs<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">SquareTextView</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> AttributeSet attrs<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> defStyleAttr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> attrs<span style="color:#f92672">,</span> defStyleAttr<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onMeasure</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> widthMeasureSpec<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> heightMeasureSpec<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        setMeasuredDimension<span style="color:#f92672">(</span>getDefaultSize<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> widthMeasureSpec<span style="color:#f92672">),</span>
+                getDefaultSize<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> heightMeasureSpec<span style="color:#f92672">));</span>
+        <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> getMeasuredHeight<span style="color:#f92672">();</span>
+        heightMeasureSpec <span style="color:#f92672">=</span> widthMeasureSpec <span style="color:#f92672">=</span> MeasureSpec<span style="color:#f92672">.</span><span style="color:#a6e22e">makeMeasureSpec</span><span style="color:#f92672">(</span>length<span style="color:#f92672">,</span> MeasureSpec<span style="color:#f92672">.</span><span style="color:#a6e22e">EXACTLY</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onMeasure</span><span style="color:#f92672">(</span>widthMeasureSpec<span style="color:#f92672">,</span> heightMeasureSpec<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>使用系统<code>TextView</code>的效果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmedia-player-1.jpg" alt=""></p>
+<p>使用自定义<code>TextView</code>的效果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmedia-player-3.jpg" alt=""></p>
+<p>这个想法来自网易云音乐：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmedia-player-2.jpg" alt=""></p>
+<h3 id="音乐频谱">音乐频谱</h3>
+<p>添加一个随音乐跳动的频谱可以使APP更加美观，其核心也是自定义View并重写<code>onDraw</code>方法，在播放音乐时监听频率变化：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#f92672">......</span>
+            mVisualizer <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Visualizer<span style="color:#f92672">(</span>playService<span style="color:#f92672">.</span><span style="color:#a6e22e">getPlayer</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getAudioSessionId</span><span style="color:#f92672">());</span>
+            mVisualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">setEnabled</span><span style="color:#f92672">(</span><span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+            mVisualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">setCaptureSize</span><span style="color:#f92672">(</span>Visualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">getCaptureSizeRange</span><span style="color:#f92672">()[</span>0<span style="color:#f92672">]);</span>
+            mVisualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">setDataCaptureListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Visualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">OnDataCaptureListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                <span style="color:#a6e22e">@Override</span>
+                <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onWaveFormDataCapture</span><span style="color:#f92672">(</span>Visualizer visualizer<span style="color:#f92672">,</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> waveform<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> samplingRate<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#75715e">// 这里添加获得数据的处理 byte[] 数组 更新出去，并画图。这里可以把这个
+</span><span style="color:#75715e"></span>                    <span style="color:#75715e">// 数组传到RunOnMusic里去
+</span><span style="color:#75715e"></span>                    mVisualizerView<span style="color:#f92672">.</span><span style="color:#a6e22e">updateVisualizer</span><span style="color:#f92672">(</span>waveform<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+
+                <span style="color:#a6e22e">@Override</span>
+                <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onFftDataCapture</span><span style="color:#f92672">(</span>Visualizer visualizer<span style="color:#f92672">,</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> fft<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> samplingRate<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    mVisualizerView<span style="color:#f92672">.</span><span style="color:#a6e22e">updateVisualizer</span><span style="color:#f92672">(</span>fft<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">},</span> Visualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">getMaxCaptureRate</span><span style="color:#f92672">()</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            mVisualizer<span style="color:#f92672">.</span><span style="color:#a6e22e">setEnabled</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+
+    <span style="color:#f92672">......</span>
+</code></pre></div><p>其中<code>updateVisualizer</code>方法就是在自定义View实现的：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">VisualizerView</span> <span style="color:#66d9ef">extends</span> View <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> mBytes<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">[]</span> mPoints<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> Rect mRect <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Rect<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">private</span> Paint mForePaint <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Paint<span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> mSpectrumNum <span style="color:#f92672">=</span> 24<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">VisualizerView</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>context<span style="color:#f92672">);</span>
+        init<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">VisualizerView</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> <span style="color:#a6e22e">@Nullable</span> AttributeSet attrs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> attrs<span style="color:#f92672">);</span>
+        init<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 初始化
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        mBytes <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        DisplayMetrics dm <span style="color:#f92672">=</span>getResources<span style="color:#f92672">().</span><span style="color:#a6e22e">getDisplayMetrics</span><span style="color:#f92672">();</span>
+        mForePaint<span style="color:#f92672">.</span><span style="color:#a6e22e">setStrokeWidth</span><span style="color:#f92672">((</span><span style="color:#66d9ef">float</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>dm<span style="color:#f92672">.</span><span style="color:#a6e22e">widthPixels</span><span style="color:#f92672">*</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">/</span>mSpectrumNum<span style="color:#f92672">)-</span>1<span style="color:#f92672">);</span>
+        mForePaint<span style="color:#f92672">.</span><span style="color:#a6e22e">setAntiAlias</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+        mForePaint<span style="color:#f92672">.</span><span style="color:#a6e22e">setColor</span><span style="color:#f92672">(</span>Color<span style="color:#f92672">.</span><span style="color:#a6e22e">rgb</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 128<span style="color:#f92672">,</span> 255<span style="color:#f92672">));</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">updateVisualizer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> fft<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> model <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>fft<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+        model<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>fft<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 2<span style="color:#f92672">,</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> mSpectrumNum<span style="color:#f92672">;)</span>
+        <span style="color:#f92672">{</span>
+            model<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">byte</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">hypot</span><span style="color:#f92672">(</span>fft<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> fft<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]);</span>
+            i <span style="color:#f92672">+=</span> 2<span style="color:#f92672">;</span>
+            j<span style="color:#f92672">++;</span>
+        <span style="color:#f92672">}</span>
+        mBytes <span style="color:#f92672">=</span> model<span style="color:#f92672">;</span>
+        invalidate<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onDraw</span><span style="color:#f92672">(</span>Canvas canvas<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onDraw</span><span style="color:#f92672">(</span>canvas<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mBytes <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mPoints <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> mPoints<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> mBytes<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">*</span> 4<span style="color:#f92672">)</span>
+        <span style="color:#f92672">{</span>
+            mPoints <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">float</span><span style="color:#f92672">[</span>mBytes<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">*</span> 4<span style="color:#f92672">];</span>
+        <span style="color:#f92672">}</span>
+        mRect<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> getWidth<span style="color:#f92672">(),</span> getHeight<span style="color:#f92672">());</span>
+        <span style="color:#75715e">//绘制频谱
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> baseX <span style="color:#f92672">=</span> mRect<span style="color:#f92672">.</span><span style="color:#a6e22e">width</span><span style="color:#f92672">()/</span>mSpectrumNum<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> height <span style="color:#f92672">=</span> mRect<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> mSpectrumNum <span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span>
+        <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mBytes<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span>
+            <span style="color:#f92672">{</span>
+                mBytes<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 127<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> xi <span style="color:#f92672">=</span> baseX<span style="color:#f92672">*</span>i <span style="color:#f92672">+</span> baseX<span style="color:#f92672">/</span>2<span style="color:#f92672">;</span>
+            mPoints<span style="color:#f92672">[</span>i <span style="color:#f92672">*</span> 4<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> xi<span style="color:#f92672">;</span>
+            mPoints<span style="color:#f92672">[</span>i <span style="color:#f92672">*</span> 4 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> height<span style="color:#f92672">;</span>
+            mPoints<span style="color:#f92672">[</span>i <span style="color:#f92672">*</span> 4 <span style="color:#f92672">+</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> xi<span style="color:#f92672">;</span>
+            mPoints<span style="color:#f92672">[</span>i <span style="color:#f92672">*</span> 4 <span style="color:#f92672">+</span> 3<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> height <span style="color:#f92672">-</span> mBytes<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+        <span style="color:#f92672">}</span>
+        canvas<span style="color:#f92672">.</span><span style="color:#a6e22e">drawLines</span><span style="color:#f92672">(</span>mPoints<span style="color:#f92672">,</span> mForePaint<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="源码">源码</h2>
+<p><a href="https://github.com/vimerzhao/SimpleMediaPlayer/commit/c9a9d9a40b46433c91cd66336b698901a920c55b">click Here</a></p>
+<h2 id="备注">备注</h2>
+<p>图片分辨率还是大了点，下次图片应该再调小一点。</p>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-er-mvpmo-shi-shi-jian/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Android音视频播放器开发（二）：MVP模式实践</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/linuxmintxiu-gai-cheng-xu-tu-biao-fen-lei/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">LinuxMint修改程序图标分类</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

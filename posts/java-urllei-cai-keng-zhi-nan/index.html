@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Java URL类踩坑指南 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Java URL类踩坑指南" />
+<meta property="og:description" content="Java URL类踩坑指南 java.net.URL类的几个细节问题。 背景介绍 最近再做一个RSS阅读工具给自己用，其中一个环节是从服务器端获取一个包含了RSS源列表的json文件，再根据这个json文件下载、解" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/java-urllei-cai-keng-zhi-nan/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-11-26T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Java URL类踩坑指南"/>
+<meta name="twitter:description" content="Java URL类踩坑指南 java.net.URL类的几个细节问题。 背景介绍 最近再做一个RSS阅读工具给自己用，其中一个环节是从服务器端获取一个包含了RSS源列表的json文件，再根据这个json文件下载、解"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Java URL类踩坑指南</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-11-26T00:00:00Z">2017-11-26</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="java-url类踩坑指南">Java URL类踩坑指南</h1>
+<p><code>java.net.URL</code>类的几个细节问题。</p>
+<h2 id="背景介绍">背景介绍</h2>
+<p>最近再做一个RSS阅读工具给自己用，其中一个环节是从服务器端获取一个包含了RSS源列表的json文件，再根据这个json文件下载、解析RSS内容。核心代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PresenterImpl</span>(<span style="color:#66d9ef">val</span> context: Context, <span style="color:#66d9ef">val</span> activity: MainActivity) : IPresenter {
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">val</span> URL_API = <span style="color:#e6db74">&#34;https://vimerzhao.github.io/others/rssreader/RSS.json&#34;</span>
+
+    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">getRssResource</span>(): RssSource {
+        <span style="color:#66d9ef">val</span> gson = GsonBuilder().create()
+        <span style="color:#66d9ef">return</span> gson.fromJson(getFromNet(URL_API), RssSource<span style="color:#f92672">::</span><span style="color:#66d9ef">class</span>.java)
+    }
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">getFromNet</span>(url: String): String {
+        <span style="color:#66d9ef">val</span> result = URL(url).readText()
+        <span style="color:#66d9ef">return</span> result
+    }
+
+    <span style="color:#f92672">......</span>
+}
+</code></pre></div><p>之前一直执行地很好，直到前两天我购买了一个<code>vimerzhao.top</code>的域名，并将原来的域名<code>vimerzhao.github.io</code>重定向到了<code>vimerzhao.top</code>。这个工具就无法使用了，但在浏览器输入<code>URL_API</code>却能得到数据：
+<img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-26java_url_01.gif" alt=""></p>
+<p>那为什么<code>URL.readText()</code>没有拿到数据呢？</p>
+<h2 id="不支持重定向">不支持重定向</h2>
+<p>可以通过下面代码测试：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> java.net.*<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.*<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestRedirect</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            URL url1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://vimerzhao.github.io/others/rssreader/RSS.json&#34;</span><span style="color:#f92672">);</span>
+            URL url2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://vimerzhao.top/others/rssreader/RSS.json&#34;</span><span style="color:#f92672">);</span>
+            read<span style="color:#f92672">(</span>url1<span style="color:#f92672">);</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;=--------------------------------=&#34;</span><span style="color:#f92672">);</span>
+            read<span style="color:#f92672">(</span>url2<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>URL url<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            BufferedReader in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span>
+                    <span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>url<span style="color:#f92672">.</span><span style="color:#a6e22e">openStream</span><span style="color:#f92672">()));</span>
+
+            String inputLine<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>inputLine <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>inputLine<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            in<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><p>得到结果如下：</p>
+<pre><code>&lt;html&gt;
+&lt;head&gt;&lt;title&gt;301 Moved Permanently&lt;/title&gt;&lt;/head&gt;
+&lt;body bgcolor=&quot;white&quot;&gt;
+&lt;center&gt;&lt;h1&gt;301 Moved Permanently&lt;/h1&gt;&lt;/center&gt;
+&lt;hr&gt;&lt;center&gt;nginx&lt;/center&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+=--------------------------------=
+{&quot;theme&quot;:&quot;tech&quot;,&quot;author&quot;:&quot;zhaoyu&quot;,&quot;email&quot;:&quot;dutzhaoyu@gmail.com&quot;,&quot;version&quot;:&quot;0.01&quot;,&quot;contents&quot;:[{&quot;category&quot;:&quot;综合版块&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;门户网站&quot;,&quot;url&quot;:[&quot;http://geek.csdn.net/admin/news_service/rss&quot;,&quot;http://blog.jobbole.com/feed/&quot;,&quot;http://feed.cnblogs.com/blog/sitehome/rss&quot;,&quot;https://segmentfault.com/feeds&quot;,&quot;http://www.codeceo.com/article/category/pick/feed&quot;]},{&quot;tag&quot;:&quot;知名社区&quot;,&quot;url&quot;:[&quot;https://stackoverflow.com/feeds&quot;,&quot;https://www.v2ex.com/index.xml&quot;]},{&quot;tag&quot;:&quot;官方博客&quot;,&quot;url&quot;:[&quot;https://www.blog.google/rss/&quot;,&quot;https://blog.jetbrains.com/feed/&quot;]},{&quot;tag&quot;:&quot;个人博客-行业&quot;,&quot;url&quot;:[&quot;http://feed.williamlong.info/&quot;,&quot;https://www.liaoxuefeng.com/feed/articles&quot;]},{&quot;tag&quot;:&quot;个人博客-学术&quot;,&quot;url&quot;:[&quot;http://www.norvig.com/rss-feed.xml&quot;]}]},{&quot;category&quot;:&quot;编程语言&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;Kotlin&quot;,&quot;url&quot;:[&quot;https://kotliner.cn/api/rss/latest&quot;]},{&quot;tag&quot;:&quot;Python&quot;,&quot;url&quot;:[&quot;https://www.python.org/dev/peps/peps.rss/&quot;]},{&quot;tag&quot;:&quot;Java&quot;,&quot;url&quot;:[&quot;http://www.codeceo.com/article/category/develop/java/feed&quot;]}]},{&quot;category&quot;:&quot;行业动态&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;Android&quot;,&quot;url&quot;:[&quot;http://www.codeceo.com/article/category/develop/android/feed&quot;]}]},{&quot;category&quot;:&quot;乱七八遭&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;Linux-综合&quot;,&quot;url&quot;:[&quot;https://linux.cn/rss.xml&quot;,&quot;http://www.linuxidc.com/rssFeed.aspx&quot;,&quot;http://www.codeceo.com/article/tag/linux/feed&quot;]},{&quot;tag&quot;:&quot;Linux-发行版&quot;,&quot;url&quot;:[&quot;https://blog.linuxmint.com/?feed=rss2&quot;,&quot;https://manjaro.github.io/feed.xml&quot;]}]}]}
+</code></pre><p>HTTP返回码301，即发生了重定向。可在浏览器上这个过程太快以至于我们看不到这个301界面的出现。这里需要说明的是<code>URL.readText()</code>是Kotlin中一个<code>扩展函数</code>，本质还是调用了<code>URL</code>类的<code>openStream</code>方法，部分源码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#f92672">....</span>.
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Reads the entire content of this URL as a String using UTF-8 or the specified [charset].
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * This method is not recommended on huge files.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param charset a character set to use.
+</span><span style="color:#75715e"> * @return a string with this URL entire content.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#a6e22e">@kotlin</span>.<span style="color:#66d9ef">internal</span>.InlineOnly
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">URL</span>.readText(charset: Charset = Charsets.UTF_8): String = readBytes().toString(charset)
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Reads the entire content of the URL as byte array.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * This method is not recommended on huge files.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @return a byte array with this URL entire content.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">URL</span>.readBytes(): ByteArray = openStream().use { <span style="color:#66d9ef">it</span>.readBytes() }
+
+</code></pre></div><p>所以上面的测试代码即说明了<code>URL.readText()</code>失败的原因。
+不过<code>URL</code>不支持重定向是否合理？为什么不支持？还有待探究。</p>
+<h2 id="不稳定的equals方法">不稳定的<code>equals</code>方法</h2>
+<p>首先看下<code>equals</code>的说明(<a href="https://docs.oracle.com/javase/7/docs/api/">URL (Java Platform SE 7 )</a>)：</p>
+<blockquote>
+<p>Compares this URL for equality with another object.
+If the given object is not a URL then this method immediately returns false.
+Two URL objects are equal if they have the same protocol, reference equivalent hosts, have the same port number on the host, and the same file and fragment of the file.
+Two hosts are considered equivalent if both host names can be resolved into the same IP addresses; else if either host name can&rsquo;t be resolved, the host names must be equal without regard to case; or both host names equal to null.
+Since hosts comparison requires name resolution, this operation is a blocking operation.
+Note: The defined behavior for equals is known to be inconsistent with virtual hosting in HTTP.</p>
+</blockquote>
+<p>接下来再看一段代码：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> java.net.*<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestEquals</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// vimerzhao的博客主页
+</span><span style="color:#75715e"></span>            URL url1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://vimerzhao.github.io/&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#75715e">// zhanglanqing的博客主页
+</span><span style="color:#75715e"></span>            URL url2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://zhanglanqing.github.io/&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#75715e">// vimerzhao博客主页重定向后的域名
+</span><span style="color:#75715e"></span>            URL url3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://vimerzhao.top/&#34;</span><span style="color:#f92672">);</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>url1<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>url2<span style="color:#f92672">));</span>
+            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>url1<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>url3<span style="color:#f92672">));</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><p>根据定义输出结果是什么呢？运行之后是这样：</p>
+<pre><code>true
+false
+</code></pre><p>你可能猜对了，但如果我把电脑<strong>断网</strong>之后再次执行，结果却是：</p>
+<pre><code>false
+false
+</code></pre><p>但其实3个域名的IP地址都是相同的，可以<code>ping</code>一下：</p>
+<pre><code>zhaoyu@Inspiron ~/Project $ ping vimerzhao.github.io
+PING sni.github.map.fastly.net (151.101.77.147) 56(84) bytes of data.
+64 bytes from 151.101.77.147: icmp_seq=1 ttl=44 time=396 ms
+^C
+2 packets transmitted, 1 received, 50% packet loss, time 1000ms
+rtt min/avg/max/mdev = 396.009/396.009/396.009/0.000 ms
+zhaoyu@Inspiron ~/Project $ ping vimerzhao.top
+ping: unknown host vimerzhao.top
+zhaoyu@Inspiron ~/Project $ ping vimerzhao.top
+PING sni.github.map.fastly.net (151.101.77.147) 56(84) bytes of data.
+64 bytes from 151.101.77.147: icmp_seq=1 ttl=44 time=409 ms
+^C
+null
+/
+vimerzhao.github.io
+null
+
+vimerzhao.github.io
+</code></pre>
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/android-rssyue-du-qi-kai-fa-ji-lu/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Android RSS阅读器开发记录</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/2017nian-zhong-zong-jie/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">2017年终总结</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

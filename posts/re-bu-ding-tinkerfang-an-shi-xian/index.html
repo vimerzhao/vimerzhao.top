@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>热补丁：Tinker方案实现 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="热补丁：Tinker方案实现" />
+<meta property="og:description" content="热补丁：Tinker方案实现 本文简单分析了Tinker的实现原理并对dex文件更新做了演示Demo。 Qzone方案与Tinker 在之前的博客里简单介绍了Qzone超级热补丁的原理与实现，本文介绍了腾讯" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/re-bu-ding-tinkerfang-an-shi-xian/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-08-03T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="热补丁：Tinker方案实现"/>
+<meta name="twitter:description" content="热补丁：Tinker方案实现 本文简单分析了Tinker的实现原理并对dex文件更新做了演示Demo。 Qzone方案与Tinker 在之前的博客里简单介绍了Qzone超级热补丁的原理与实现，本文介绍了腾讯"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">热补丁：Tinker方案实现</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-08-03T00:00:00Z">2017-08-03</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="热补丁tinker方案实现">热补丁：Tinker方案实现</h1>
+<p>本文简单分析了Tinker的实现原理并对dex文件更新做了演示Demo。</p>
+<h2 id="qzone方案与tinker">Qzone方案与Tinker</h2>
+<p>在之前的博客里简单介绍了Qzone超级热补丁的原理与实现，本文介绍了腾讯系最著名的热补丁方案Tinker。关于Tinker的特点以及其与Qzone方案的差别，参见文末链接。
+本文演示的Demo包含五个类：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtinker-class.PNG" alt="">
+其中，修改<code>BugClass.java</code>以生成补丁文件。修改前</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BugClass</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">sayHello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Before Hotfix&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>修改后</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BugClass</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">sayHello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;After Hotfix&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>生成补丁，并发送至手机
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtinker-patch.PNG" alt=""></p>
+<h2 id="bsdiffbspatch算法">Bsdiff/Bspatch算法</h2>
+<p>Tinker一大特点就是在dex文件合成的时候采用了微信的自研算法，能以更高的效率和更适合dex文件格式的算法完成补丁生成。本文主要用于演示、实践Tinker的原理，所以采用Bsdiff/Bspatch算法，其实Tinker早期的Demo也是用的这个算法，后期优化时才使用了自研的算法。
+正常来说，我们需要在后台生存patch文件，发送到手机进行合成，即服务器端执行Bsdiff算法，移动端执行Bspatch算法，各个平台上的可执行文件很容易找到，这里不提供资源。
+如何在移动端合成？需要在源代码中引入实现了Bspatch算法的文件，如下：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtinker-cpp.PNG" alt="">
+其中，<code>bzip2</code>是为<code>bspatch.c</code>提供支持，如何在AS中引入C/C++代码参见官方文档。
+最后写一个调用此算法的Java类：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> android.content.Context<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.content.pm.ApplicationInfo<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.content.pm.PackageManager<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BsPatch</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * 获取已安装Apk文件的源Apk文件
+</span><span style="color:#75715e">     * @param context
+</span><span style="color:#75715e">     * @param packageName
+</span><span style="color:#75715e">     * @return
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> String <span style="color:#a6e22e">getSourceApkPath</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> String packageName<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            ApplicationInfo info <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getPackageManager</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getApplicationInfo</span><span style="color:#f92672">(</span>packageName<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">return</span> info<span style="color:#f92672">.</span><span style="color:#a6e22e">sourceDir</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>PackageManager<span style="color:#f92672">.</span><span style="color:#a6e22e">NameNotFoundException</span> e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">static</span> <span style="color:#f92672">{</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">loadLibrary</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bspatch&#34;</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">native</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">startPatch</span><span style="color:#f92672">(</span>String oldfile<span style="color:#f92672">,</span>String newfile <span style="color:#f92672">,</span>String patchfile<span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="提取dex文件">提取dex文件</h2>
+<p>通过前面的代码，已经生成了新的zip文件（其实就是apk文件），现在需要提取其中的dex文件。其实就是解压缩一个zip文件，这里直接用Java提供的工具类：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.io.BufferedOutputStream<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.File<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.FileInputStream<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.FileOutputStream<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.io.InputStream<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.zip.ZipEntry<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.zip.ZipFile<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.util.zip.ZipInputStream<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ZipUtil</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unzip</span><span style="color:#f92672">(</span>String path<span style="color:#f92672">,</span> String fileName<span style="color:#f92672">,</span> String dirName<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+        File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>path <span style="color:#f92672">+</span>  fileName<span style="color:#f92672">);</span>
+        ZipFile zipFile <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ZipFile<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
+        ZipInputStream zipInputStream <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ZipInputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileInputStream<span style="color:#f92672">(</span>file<span style="color:#f92672">));</span>
+        ZipEntry zipEntry<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>zipEntry <span style="color:#f92672">=</span> zipInputStream<span style="color:#f92672">.</span><span style="color:#a6e22e">getNextEntry</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            String newFileName <span style="color:#f92672">=</span> zipEntry<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+            File temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>path <span style="color:#f92672">+</span> dirName <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#f92672">+</span> newFileName<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">getParentFile</span><span style="color:#f92672">().</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span>
+                temp<span style="color:#f92672">.</span><span style="color:#a6e22e">getParentFile</span><span style="color:#f92672">().</span><span style="color:#a6e22e">mkdirs</span><span style="color:#f92672">();</span>
+            BufferedOutputStream os <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedOutputStream<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileOutputStream<span style="color:#f92672">(</span>temp<span style="color:#f92672">));</span><span style="color:#75715e">//文件缓冲区
+</span><span style="color:#75715e"></span>            InputStream is <span style="color:#f92672">=</span> zipFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getInputStream</span><span style="color:#f92672">(</span>zipEntry<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">byte</span><span style="color:#f92672">[]</span> datas <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">byte</span><span style="color:#f92672">[</span>2048<span style="color:#f92672">];</span>
+            <span style="color:#66d9ef">int</span> len<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>len <span style="color:#f92672">=</span> is<span style="color:#f92672">.</span><span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>datas<span style="color:#f92672">))</span> <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                os<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>datas<span style="color:#f92672">,</span>0<span style="color:#f92672">,</span>len<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            os<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+            is<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        zipInputStream<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="反射注入补丁">反射注入补丁</h2>
+<p>注入补丁和Qzone的方案很像，都是利用反射，但这里需要做的是全量替换，本Demo中只有一个<code>classes.dex</code>文件，如果后面有<code>classes2.dex</code>&hellip;的话应该全部替换，而不是像Qzone方案一样插入，这样可以避免在dalvik虚拟机上需要进行插桩的问题，代码和之前Qzone的注入类似：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> android.app.Application<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.os.Environment<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.util.Log<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.io.File<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> java.lang.reflect.Field<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> dalvik.system.DexClassLoader<span style="color:#f92672">;</span>
+
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TinkerApplication</span> <span style="color:#66d9ef">extends</span> Application <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String CLASS_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;TinkerApplication&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String DEX_ELEMENTS <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dexElements&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String PATH_LIST <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pathList&#34;</span><span style="color:#f92672">;</span>
+
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">();</span>
+        String dexPath <span style="color:#f92672">=</span> Environment<span style="color:#f92672">.</span><span style="color:#a6e22e">getExternalStorageDirectory</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">().</span><span style="color:#a6e22e">concat</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">+</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">UNZIP_PATH</span><span style="color:#f92672">+</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">);</span>
+        dexPath <span style="color:#f92672">=</span> dexPath <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;classes.dex&#34;</span><span style="color:#f92672">;</span>
+        File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>dexPath<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            inject<span style="color:#f92672">(</span>dexPath<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>CLASS_NAME<span style="color:#f92672">,</span> dexPath <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;don&#39;t exist!&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inject</span><span style="color:#f92672">(</span>String dexPath<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 获取classes的dexElements
+</span><span style="color:#75715e"></span>            Class<span style="color:#f92672">&lt;?&gt;</span> cl <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;dalvik.system.BaseDexClassLoader&#34;</span><span style="color:#f92672">);</span>
+            Object pathList <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>cl<span style="color:#f92672">,</span> PATH_LIST<span style="color:#f92672">,</span> getClassLoader<span style="color:#f92672">());</span>
+
+            <span style="color:#75715e">// 获取patch_dex的dexElements（需要先加载dex）
+</span><span style="color:#75715e"></span>            String dexopt <span style="color:#f92672">=</span> getDir<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;dexopt&#34;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">).</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">();</span>
+            DexClassLoader dexClassLoader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DexClassLoader<span style="color:#f92672">(</span>dexPath<span style="color:#f92672">,</span> dexopt<span style="color:#f92672">,</span> dexopt<span style="color:#f92672">,</span> getClassLoader<span style="color:#f92672">());</span>
+            Object obj <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>cl<span style="color:#f92672">,</span> PATH_LIST<span style="color:#f92672">,</span> dexClassLoader<span style="color:#f92672">);</span>
+            Object dexElements <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>obj<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">(),</span> DEX_ELEMENTS<span style="color:#f92672">,</span> obj<span style="color:#f92672">);</span>
+
+            setField<span style="color:#f92672">(</span>pathList<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">(),</span> DEX_ELEMENTS<span style="color:#f92672">,</span> pathList<span style="color:#f92672">,</span> dexElements<span style="color:#f92672">);</span>
+
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ClassNotFoundException <span style="color:#f92672">|</span> NoSuchFieldException <span style="color:#f92672">|</span> IllegalAccessException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">private</span> Object <span style="color:#a6e22e">getField</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?&gt;</span> cl<span style="color:#f92672">,</span> String fieldName<span style="color:#f92672">,</span> Object object<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> NoSuchFieldException<span style="color:#f92672">,</span> IllegalAccessException <span style="color:#f92672">{</span>
+        Field field <span style="color:#f92672">=</span> cl<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span>fieldName<span style="color:#f92672">);</span>
+        field<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> field<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>object<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setField</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?&gt;</span> cl<span style="color:#f92672">,</span> String fieldName<span style="color:#f92672">,</span> Object object<span style="color:#f92672">,</span> Object value<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> NoSuchFieldException<span style="color:#f92672">,</span> IllegalAccessException <span style="color:#f92672">{</span>
+        Field field <span style="color:#f92672">=</span> cl<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span>fieldName<span style="color:#f92672">);</span>
+        field<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+        field<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>object<span style="color:#f92672">,</span> value<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h2 id="补丁效果">补丁效果</h2>
+<p>在启动时进行合成（注意，这里没有做检查，实际应该检查是否有patch文件）。在<code>MainActivity.java</code>中设置一个生成补丁的线程：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> android.os.Environment<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.support.v7.app.AppCompatActivity<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.os.Bundle<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.view.View<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.widget.TextView<span style="color:#f92672">;</span>
+<span style="color:#f92672">import</span> android.widget.Toast<span style="color:#f92672">;</span>
+
+<span style="color:#f92672">import</span> java.io.IOException<span style="color:#f92672">;</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String NEW_APK_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;bugfix.zip&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String PACKAGE_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;vimerzhao.tinker&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String PATCH_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;update.patch&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String UNZIP_PATH <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;tinker-test&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_main</span><span style="color:#f92672">);</span>
+        TextView tv <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>TextView<span style="color:#f92672">)</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">sample_text</span><span style="color:#f92672">);</span>
+        tv<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> BugClass<span style="color:#f92672">().</span><span style="color:#a6e22e">sayHello</span><span style="color:#f92672">());</span>
+        tv<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(){</span>
+                    <span style="color:#a6e22e">@Override</span>
+                    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+                        String oldfile <span style="color:#f92672">=</span> BsPatch<span style="color:#f92672">.</span><span style="color:#a6e22e">getSourceApkPath</span><span style="color:#f92672">(</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> PACKAGE_NAME<span style="color:#f92672">);</span>
+                        String newfile <span style="color:#f92672">=</span> Environment<span style="color:#f92672">.</span><span style="color:#a6e22e">getExternalStorageDirectory</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">().</span><span style="color:#a6e22e">concat</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#f92672">+</span> NEW_APK_NAME<span style="color:#f92672">);</span>
+                        String pathfile <span style="color:#f92672">=</span> Environment<span style="color:#f92672">.</span><span style="color:#a6e22e">getExternalStorageDirectory</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">().</span><span style="color:#a6e22e">concat</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span> <span style="color:#f92672">+</span> PATCH_NAME<span style="color:#f92672">);</span>
+                        BsPatch<span style="color:#f92672">.</span><span style="color:#a6e22e">startPatch</span><span style="color:#f92672">(</span>oldfile<span style="color:#f92672">,</span> newfile<span style="color:#f92672">,</span> pathfile<span style="color:#f92672">);</span>
+                        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                            String path <span style="color:#f92672">=</span> Environment<span style="color:#f92672">.</span><span style="color:#a6e22e">getExternalStorageDirectory</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">().</span><span style="color:#a6e22e">concat</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">);</span>
+                            ZipUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">unzip</span><span style="color:#f92672">(</span>path<span style="color:#f92672">,</span> NEW_APK_NAME<span style="color:#f92672">,</span> UNZIP_PATH<span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+                        <span style="color:#f92672">}</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+                Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">makeText</span><span style="color:#f92672">(</span>MainActivity<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;热更新中...&#34;</span><span style="color:#f92672">,</span> Toast<span style="color:#f92672">.</span><span style="color:#a6e22e">LENGTH_SHORT</span><span style="color:#f92672">).</span><span style="color:#a6e22e">show</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">});</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>效果（注意<code>Before Hotfix</code>和<code>After Hotfix</code>）：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtinker-demo.gif" alt=""></p>
+<h2 id="增量更新">增量更新</h2>
+<p>在使用Bsdiff/Bspatch算法后，我们就可以生成新的Apk文件了（把代码中文件名的后缀改一下即可），在添加一段安装Apk的代码，即可实现所谓的增量更新，即只需要发布一个较小的patch文件，在移动端合成然后Apk文件进行安装，可以大大减少用户更新时需要消耗的下载流量，用户只会关心更新消耗了多少流量而不会关心是下载patch文件合成Apk还是直接下载新的安装包，所以通过前一种方式可以提高用户体验。</p>
+<h2 id="其他">其他</h2>
+<p>本文只是做了一个简单的演示Demo，实际情景下应用通过后台分发patch文件，进行合成、更新时也应该做诸多安全性的检查，具体可以参考Tinker源码。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://www.daemonology.net/bsdiff/">Binary diff/patch utility</a></li>
+<li><a href="https://github.com/Tencent/tinker">Tencent/tinker</a></li>
+<li><a href="https://juejin.im/entry/57eb3ec60bd1d0005b1e32ca">微信热修复框架 Tinker 的源码分析 &ndash; 上</a></li>
+<li><a href="https://dev.qq.com/topic/57ad7a70eaed47bb2699e68e">【Dev Club 分享第六期】微信热补丁 Tinker 的实践演进之路</a></li>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzAwNDY1ODY2OQ==&amp;mid=2649286306&amp;idx=1&amp;sn=d6b2865e033a99de60b2d4314c6e0a25&amp;scene=1&amp;srcid=0811AOttpqUnh1Wu5PYcXbnZ#rd">微信Android热补丁实践演进之路</a></li>
+<li><a href="https://mp.weixin.qq.com/s/uY5N_PSny7_CHOgUA99UjA?spm=a3c0d.7629140.0.0.4XnKJk">Android热修复技术选型——三大流派解析</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/ru-he-guan-bi-wang-ye-xuan-fu-chuang/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">如何关闭网页悬浮窗</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/20xing-dai-ma-da-jian-wei-xin-liao-tian-ji-qi-ren/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">20行代码搭建微信聊天机器人</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

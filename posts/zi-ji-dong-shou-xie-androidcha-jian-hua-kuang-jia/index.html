@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>自己动手写Android插件化框架 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="自己动手写Android插件化框架" />
+<meta property="og:description" content="自己动手写Android插件化框架 最近在工作中接触到了Android插件内的开发，发现自己这种技术还缺乏最基本的了解，以至于在一些基本问题上浪费不少时间，如插件Context和主工程Context的区" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/zi-ji-dong-shou-xie-androidcha-jian-hua-kuang-jia/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2018-10-04T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="自己动手写Android插件化框架"/>
+<meta name="twitter:description" content="自己动手写Android插件化框架 最近在工作中接触到了Android插件内的开发，发现自己这种技术还缺乏最基本的了解，以至于在一些基本问题上浪费不少时间，如插件Context和主工程Context的区"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">自己动手写Android插件化框架</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-10-04T00:00:00Z">2018-10-04</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="自己动手写android插件化框架">自己动手写Android插件化框架</h1>
+<p>最近在工作中接触到了Android插件内的开发，发现自己这种技术还缺乏最基本的了解，以至于在一些基本问题上浪费不少时间，如插件Context和主工程Context的区别，权限必须在主工程申明等，因此花了点时间了解了一下插件的历史，并写了两个Demo作为总结。本文旨在通过两个实例直观的说明插件的实现原理以加深对插件内开发的理解，因此不会深入探讨背景和原理，代码也尽量专注于核心逻辑。</p>
+<h2 id="原理与背景">原理与背景</h2>
+<p>Android插件化从技术上来说就是如何启动未安装的apk（主要是四大组件）里面的类，主要问题涉及如何加载类、如何加载资源、如何管理组件生命周期。</p>
+<h3 id="类加载">类加载</h3>
+<p>Android对于外部的dex文件，主要通过<code>DexClassLoader</code>类加载，因此，只需要给定插件的路径，就可以构造对应的类加载器：</p>
+<pre><code>private DexClassLoader createDexClassLoader(String apkPath) {
+    File dexOutputDir = mContext.getDir(&quot;dex&quot;, Context.MODE_PRIVATE);
+    DexClassLoader loader = new DexClassLoader(apkPath, dexOutputDir.getAbsolutePath(),
+            null, mContext.getClassLoader());
+    return loader;
+}
+</code></pre><h3 id="资源加载">资源加载</h3>
+<p>Android系统通过Resource对象加载资源,因此只需要添加资源（即apk文件）所在路径到<code>AssetManager</code>中，即可实现对插件资源的访问。</p>
+<pre><code>  AssetManager assetManager = AssetManager.class.newInstance();
+  Method addAssetPath = assetManager.getClass().getMethod(addAssetPathMethod, String.class);
+  addAssetPath.invoke(assetManager, apkPath);
+  Resources pluginRes = new Resources(assetManager,
+          mContext.getResources().getDisplayMetrics(),
+          mContext.getResources().getConfiguration());
+  pluginApk = new PluginApk(pluginRes);
+  pluginApk.classLoader = createDexClassLoader(apkPath);
+</code></pre><h3 id="生命周期">生命周期</h3>
+<p>插件化中较为复杂的是对生命周期的管理，其中以Activity最为复杂。早期的dynamic-load-apk采用的是代理的方式，通过一个空壳Activity作为代理（Proxy），系统对该Activity的回调都会映射到插件Activity，如此便可以实现通过系统来管理插件的生命周期。这种方式十分直观，但是需要所有的插件Activity都继承这个用作代理的<code>PluginActivity</code>（Demo中的命名），侵入性强，可结合后面的例子加深理解。因此，如何避免这种侵入性成了第二代插件化框架的目标，VirtualApk通过Hook少量系统类达到了这个目标，插件的开发和普通工程无异，接入成本极低。
+了解了这些原理往往还不够，知识往往需要经过推导和实践才能变成自己的，因此，接下来我们结合这些原理来实现一个插件化框架，不考虑兼容性和健壮性，纯粹来实践上面提及的原理。</p>
+<h2 id="代理实现">代理实现</h2>
+<p>首先建立一个<code>PluginManager</code>类来实现插件的加载：</p>
+<pre><code>public class PluginManager {
+    static class PluginMgrHolder {
+        static PluginManager sManager = new PluginManager();
+    }
+
+    private static Context mContext;
+
+    Map&lt;String, PluginApk&gt; sMap = new HashMap&lt;&gt;();
+
+    public static PluginManager getInstance() {
+        return PluginMgrHolder.sManager;
+    }
+    public PluginApk getPluginApk(String packageName) {
+        return sMap.get(packageName);
+    }
+
+    public static void init(Context context) {
+        mContext = context.getApplicationContext();
+    }
+
+    public final void loadApk(String apkPath) {
+        PackageInfo packageInfo = queryPackageInfo(apkPath);
+        if (packageInfo == null || TextUtils.isEmpty(packageInfo.packageName)) {
+            return;
+        }
+        // check cache
+        PluginApk pluginApk = sMap.get(packageInfo.packageName);
+
+        if (pluginApk == null) {
+            pluginApk = createApk(apkPath);
+            if (pluginApk != null) {
+                pluginApk.packageInfo = packageInfo;
+                sMap.put(packageInfo.packageName, pluginApk);
+            } else {
+                throw new NullPointerException(&quot;PluginApk is null&quot;);
+            }
+        }
+    }
+
+    private PluginApk createApk(String apkPath) {
+        String addAssetPathMethod = &quot;addAssetPath&quot;;
+        PluginApk pluginApk = null;
+        try {
+            AssetManager assetManager = AssetManager.class.newInstance();
+            Method addAssetPath = assetManager.getClass().getMethod(addAssetPathMethod, String.class);
+            addAssetPath.invoke(assetManager, apkPath);
+            Resources pluginRes = new Resources(assetManager,
+                    mContext.getResources().getDisplayMetrics(),
+                    mContext.getResources().getConfiguration());
+            pluginApk = new PluginApk(pluginRes);
+            pluginApk.classLoader = createDexClassLoader(apkPath);
+        } catch (IllegalAccessException
+                | InstantiationException
+                | NoSuchMethodException
+                | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return pluginApk;
+    }
+    private PackageInfo queryPackageInfo(String apkPath) {
+        PackageInfo packageInfo = mContext.getPackageManager().getPackageArchiveInfo(apkPath,
+                PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES);
+        if (packageInfo == null) {
+            return null;
+        }
+        return packageInfo;
+    }
+
+    private DexClassLoader createDexClassLoader(String apkPath) {
+        File dexOutputDir = mContext.getDir(&quot;dex&quot;, Context.MODE_PRIVATE);
+        DexClassLoader loader = new DexClassLoader(apkPath, dexOutputDir.getAbsolutePath(),
+                null, mContext.getClassLoader());
+        return loader;
+    }
+
+    public void startActivity(Intent intent) {
+        Intent pluginIntent = new Intent(mContext, ProxyActivity.class);
+        Bundle extra = intent.getExtras();
+        // complicate if statement
+        if (extra == null || !extra.containsKey(Constants.PLUGIN_CLASS_NAME) &amp;&amp; !extra.containsKey(Constants.PACKAGE_NAME)) {
+            try {
+                throw new IllegalAccessException(&quot;lack class of plugin and package name&quot;);
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        pluginIntent.putExtras(intent);
+        pluginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        mContext.startActivity(pluginIntent);
+    }
+}
+
+</code></pre><p><code>PluginApk</code>表示一个Apk文件：</p>
+<pre><code>public class PluginApk {
+    public PackageInfo packageInfo;
+    public DexClassLoader classLoader;
+    public Resources pluginRes;
+
+    public PluginApk(Resources pluginRes) {
+        this.pluginRes = pluginRes;
+    }
+
+}
+</code></pre><p>所有插件Activity都要继承一个父类<code>PluginActivity</code>:</p>
+<pre><code>public abstract class PluginActivity extends Activity implements Pluginable, Attachable&lt;Activity&gt; {
+    public final static String TAG = PluginActivity.class.getSimpleName();
+    protected Activity mProxyActivity;
+    private Resources mResources;
+    PluginApk mPluginApk;
+
+    @Override
+    public void attach(Activity proxy, PluginApk apk) {
+        mProxyActivity = proxy;
+        mPluginApk = apk;
+        mResources = apk.pluginRes;
+    }
+
+    @Override
+    public void setContentView(int layoutResID) {
+        mProxyActivity.setContentView(layoutResID);
+    }
+
+    @Override
+    public void setContentView(View view) {
+        mProxyActivity.setContentView(view);
+    }
+
+    @Override
+    public void setContentView(View view, ViewGroup.LayoutParams params) {
+        mProxyActivity.setContentView(view, params);
+    }
+
+
+    @Override
+    public View findViewById(int id) {
+        return mProxyActivity.findViewById(id);
+    }
+
+    @Override
+    public Resources getResources() {
+        return mResources;
+    }
+
+    @Override
+    public WindowManager getWindowManager() {
+        return mProxyActivity.getWindowManager();
+    }
+
+    @Override
+    public ClassLoader getClassLoader() {
+        return mProxyActivity.getClassLoader();
+    }
+
+    @Override
+    public Context getApplicationContext() {
+        return mProxyActivity.getApplicationContext();
+    }
+
+    @Override
+    public MenuInflater getMenuInflater() {
+        return mProxyActivity.getMenuInflater();
+    }
+
+
+    @Override
+    public Window getWindow() {
+        return mProxyActivity.getWindow();
+    }
+
+    @Override
+    public Intent getIntent() {
+        return mProxyActivity.getIntent();
+    }
+
+    @Override
+    public LayoutInflater getLayoutInflater() {
+        return mProxyActivity.getLayoutInflater();
+    }
+
+    @Override
+    public String getPackageName() {
+        return mPluginApk.packageInfo.packageName;
+    }
+
+
+    @Override
+    public void onCreate(Bundle bundle) {
+        // DO NOT CALL super.onCreate(bundle)
+        // following same
+        VLog.log(TAG + &quot;: onCreate&quot;);
+    }
+
+    @Override
+    public void onStart() {
+
+    }
+
+    @Override
+    public void onResume() {
+
+    }
+
+    @Override
+    public void onStop() {
+
+    }
+
+    @Override
+    public void onPause() {
+
+    }
+
+    @Override
+    public void onDestroy() {
+    }
+}
+
+</code></pre><p>这个类只是一个壳，系统会通过<code>ProxyActivity</code>触发对应的方法的具体实现：</p>
+<pre><code>public class ProxyActivity extends Activity {
+    LifeCircleController mPluginController = new LifeCircleController(this);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mPluginController.onCreate(getIntent().getExtras());
+    }
+
+    @Override
+    public Resources getResources() {
+        // construct when loading apk
+        Resources resources = mPluginController.getResources();
+        return resources == null ? super.getResources() : resources;
+    }
+
+    @Override
+    public Resources.Theme getTheme() {
+        Resources.Theme theme = mPluginController.getTheme();
+        return theme == null ? super.getTheme() : theme;
+    }
+
+    @Override
+    public AssetManager getAssets() {
+        return mPluginController.getAssets();
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPluginController.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mPluginController.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPluginController.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mPluginController.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPluginController.onDestroy();
+    }
+}
+</code></pre><p>这个类是系统实际启动的类，其主要逻辑由<code>LifeCircleController</code>负责：</p>
+<pre><code>public class LifeCircleController implements Pluginable {
+    Activity mProxy;
+    PluginActivity mPlugin;
+    Resources mResources;
+    Resources.Theme mTheme;
+    PluginApk mPluginApk;
+    String mPluginClazz;
+
+    public LifeCircleController(Activity activity) {
+        mProxy = activity;
+    }
+
+    public void onCreate(Bundle bundle) {
+        mPluginClazz = bundle.getString(Constants.PLUGIN_CLASS_NAME);
+        String packageName = bundle.getString(Constants.PACKAGE_NAME);
+        mPluginApk = PluginManager.getInstance().getPluginApk(packageName);
+        try {
+            mPlugin = (PluginActivity) loadPluginable(mPluginApk.classLoader, mPluginClazz);
+            mPlugin.attach(mProxy, mPluginApk);
+            mResources = mPluginApk.pluginRes;
+            mPlugin.onCreate(bundle);
+        } catch (Exception e) {
+            VLog.log(&quot;Fail in LifeCircleController onCreate&quot;);
+            VLog.log(e.getMessage());
+            e.printStackTrace();
+        }
+
+    }
+    private Object loadPluginable(ClassLoader classLoader, String pluginActivityClass)
+            throws Exception {
+        Class&lt;?&gt; pluginClz = classLoader.loadClass(pluginActivityClass);
+        Constructor&lt;?&gt; constructor = pluginClz.getConstructor(new Class[] {});
+        constructor.setAccessible(true);
+        return constructor.newInstance(new Object[] {});
+    }
+
+    @Override
+    public void onStart() {
+        if (mPlugin != null) {
+            mPlugin.onStart();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        if (mPlugin != null) {
+            mPlugin.onResume();
+        }
+    }
+
+    @Override
+    public void onStop() {
+        mPlugin.onStop();
+    }
+
+    @Override
+    public void onPause() {
+        mPlugin.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        mPlugin.onDestroy();
+    }
+
+    public Resources getResources() {
+        return mResources;
+    }
+
+    public Resources.Theme getTheme() {
+        return mTheme;
+    }
+
+    public AssetManager getAssets() {
+        return mResources.getAssets();
+    }
+
+}
+
+</code></pre><p>有点像Activity源码的外观模式，内部的分工和职责划分对于使用者是不可见的。
+最后在主工程启动插件：</p>
+<pre><code>Intent intent = new Intent();
+intent.putExtra(Constants.PACKAGE_NAME, PLUGIN_PACKAGE_NAME);
+intent.putExtra(Constants.PLUGIN_CLASS_NAME, PLUGIN_CLAZZ_NAME);
+mPluginManager.startActivity(intent);
+</code></pre><p>插件Activity如下：</p>
+<pre><code>public class MainActivity extends PluginActivity {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        setTitle(&quot;Plugin App&quot;);
+        ((ImageView) findViewById(R.id.iv_logo)).setImageResource(R.drawable.android);
+    }
+}
+</code></pre><p>效果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/plugin_demo.gif" alt=""></p>
+<h2 id="hook实现">Hook实现</h2>
+<p>Hook的方式需要基本了解系统启动一个Activity的过程，一般来说系统会先检查Activity是否注册，然后再去生成该Activity，那么我们只需要在检查的时候用一个已经注册的Activity（桩，通常表示为StubActivity）来给系统检查，检查通过后在生成的时候再替换成插件的就可以了。
+首先要自己实现一个<code>Instrumentation</code>，在里面做一些替换工作，然后去Hook掉系统持有的对象：</p>
+<pre><code>public class HookedInstrumentation extends Instrumentation implements Handler.Callback {
+    public static final String TAG = &quot;HookedInstrumentation&quot;;
+    protected Instrumentation mBase;
+    private PluginManager mPluginManager;
+
+    public HookedInstrumentation(Instrumentation base, PluginManager pluginManager) {
+        mBase = base;
+        mPluginManager = pluginManager;
+    }
+
+    /**
+     * 覆盖掉原始Instrumentation类的对应方法,用于插件内部跳转Activity时适配
+     *
+     * @Override
+     */
+    public ActivityResult execStartActivity(
+            Context who, IBinder contextThread, IBinder token, Activity target,
+            Intent intent, int requestCode, Bundle options) {
+
+        if (Constants.DEBUG) Log.e(TAG, &quot;execStartActivity&quot;);
+        mPluginManager.hookToStubActivity(intent);
+
+        try {
+            Method execStartActivity = Instrumentation.class.getDeclaredMethod(
+                    &quot;execStartActivity&quot;, Context.class, IBinder.class, IBinder.class,
+                    Activity.class, Intent.class, int.class, Bundle.class);
+            execStartActivity.setAccessible(true);
+            return (ActivityResult) execStartActivity.invoke(mBase, who,
+                    contextThread, token, target, intent, requestCode, options);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(&quot;do not support!!!&quot; + e.getMessage());
+        }
+    }
+
+    @Override
+    public Activity newActivity(ClassLoader cl, String className, Intent intent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        if (Constants.DEBUG) Log.e(TAG, &quot;newActivity&quot;);
+
+        if (mPluginManager.hookToPluginActivity(intent)) {
+            String targetClassName = intent.getComponent().getClassName();
+            PluginApp pluginApp = mPluginManager.getLoadedPluginApk();
+            Activity activity = mBase.newActivity(pluginApp.mClassLoader, targetClassName, intent);
+            activity.setIntent(intent);
+            ReflectUtil.setField(ContextThemeWrapper.class, activity, Constants.FIELD_RESOURCES, pluginApp.mResources);
+            return activity;
+        }
+
+        if (Constants.DEBUG) Log.e(TAG, &quot;super.newActivity(...)&quot;);
+        return super.newActivity(cl, className, intent);
+    }
+
+    @Override
+    public boolean handleMessage(Message message) {
+        if (Constants.DEBUG) Log.e(TAG, &quot;handleMessage&quot;);
+        return false;
+    }
+
+
+    @Override
+    public void callActivityOnCreate(Activity activity, Bundle icicle) {
+        if (Constants.DEBUG) Log.e(TAG, &quot;callActivityOnCreate&quot;);
+        super.callActivityOnCreate(activity, icicle);
+    }
+}
+
+</code></pre><p>在负责启动的<code>execStartActivity</code>设置为启动已注册的Activity，再在<code>newActivity</code>设置为实际要启动的插件的Activity。然后去Hook系统持有的该字段：</p>
+<pre><code>public class ReflectUtil {
+    public static final String METHOD_currentActivityThread = &quot;currentActivityThread&quot;;
+    public static final String CLASS_ActivityThread = &quot;android.app.ActivityThread&quot;;
+    public static final String FIELD_mInstrumentation = &quot;mInstrumentation&quot;;
+    public static final String TAG = &quot;ReflectUtil&quot;;
+
+
+    private static Instrumentation sInstrumentation;
+    private static Instrumentation sActivityInstrumentation;
+    private static Field sActivityThreadInstrumentationField;
+    private static Field sActivityInstrumentationField;
+    private static Object sActivityThread;
+
+    public static boolean init() {
+        //获取当前的ActivityThread对象
+        Class&lt;?&gt; activityThreadClass = null;
+        try {
+            activityThreadClass = Class.forName(CLASS_ActivityThread);
+            Method currentActivityThreadMethod = activityThreadClass.getDeclaredMethod(METHOD_currentActivityThread);
+            currentActivityThreadMethod.setAccessible(true);
+            Object currentActivityThread = currentActivityThreadMethod.invoke(null);
+
+
+            //拿到在ActivityThread类里面的原始mInstrumentation对象
+            Field instrumentationField = activityThreadClass.getDeclaredField(FIELD_mInstrumentation);
+            instrumentationField.setAccessible(true);
+            sActivityThreadInstrumentationField = instrumentationField;
+
+            sInstrumentation = (Instrumentation) instrumentationField.get(currentActivityThread);
+            sActivityThread = currentActivityThread;
+
+
+            sActivityInstrumentationField =  Activity.class.getDeclaredField(FIELD_mInstrumentation);
+            sActivityInstrumentationField.setAccessible(true);
+            return true;
+        } catch (ClassNotFoundException
+                | NoSuchMethodException
+                | IllegalAccessException
+                | InvocationTargetException
+                | NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+
+        return false;
+    }
+
+    public static Instrumentation getInstrumentation() {
+        return sInstrumentation;
+    }
+
+    public static Object getActivityThread() {
+        return sActivityThread;
+    }
+
+    public static void setInstrumentation(Object activityThread, HookedInstrumentation hookedInstrumentation) {
+        try {
+            sActivityThreadInstrumentationField.set(activityThread, hookedInstrumentation);
+            if (Constants.DEBUG) Log.e(TAG, &quot;set hooked instrumentation&quot;);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setActivityInstrumentation(Activity activity, PluginManager manager) {
+        try {
+            sActivityInstrumentation = (Instrumentation) sActivityInstrumentationField.get(activity);
+            HookedInstrumentation instrumentation = new HookedInstrumentation(sActivityInstrumentation, manager);
+            sActivityInstrumentationField.set(activity, instrumentation);
+            if (Constants.DEBUG) Log.e(TAG, &quot;set activity hooked instrumentation&quot;);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public static void setField(Class clazz, Object target, String field, Object object) {
+        try {
+            Field f = clazz.getDeclaredField(field);
+            f.setAccessible(true);
+            f.set(target, object);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+}
+
+</code></pre><p><code>PluginManager</code>同样负责加载插件的类和资源等：</p>
+<pre><code>public class PluginManager {
+    private final static String TAG = &quot;PluginManager&quot;;
+    private static PluginManager sInstance;
+    private Context mContext;
+    private PluginApp mPluginApp;
+
+
+    public static PluginManager getInstance(Context context) {
+        if (sInstance == null &amp;&amp; context != null) {
+            sInstance = new PluginManager(context);
+        }
+        return sInstance;
+    }
+
+    private PluginManager(Context context) {
+        mContext = context;
+    }
+
+
+    public void hookInstrumentation() {
+        try {
+            Instrumentation baseInstrumentation = ReflectUtil.getInstrumentation();
+
+            final HookedInstrumentation instrumentation = new HookedInstrumentation(baseInstrumentation, this);
+
+            Object activityThread = ReflectUtil.getActivityThread();
+            ReflectUtil.setInstrumentation(activityThread, instrumentation);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void hookCurrentActivityInstrumentation(Activity activity) {
+        ReflectUtil.setActivityInstrumentation(activity, sInstance);
+    }
+
+
+    public void hookToStubActivity(Intent intent) {
+        if (Constants.DEBUG) Log.e(TAG, &quot;hookToStubActivity&quot;);
+
+        if (intent == null || intent.getComponent() == null) {
+            return;
+        }
+        String targetPackageName = intent.getComponent().getPackageName();
+        String targetClassName = intent.getComponent().getClassName();
+
+        if (mContext != null
+                &amp;&amp; !mContext.getPackageName().equals(targetPackageName)
+                &amp;&amp; isPluginLoaded(targetPackageName)) {
+            if (Constants.DEBUG) Log.e(TAG, &quot;hook &quot; +  targetClassName + &quot; to &quot; + Constants.STUB_ACTIVITY);
+
+            intent.setClassName(Constants.STUB_PACKAGE, Constants.STUB_ACTIVITY);
+            intent.putExtra(Constants.KEY_IS_PLUGIN, true);
+            intent.putExtra(Constants.KEY_PACKAGE, targetPackageName);
+            intent.putExtra(Constants.KEY_ACTIVITY, targetClassName);
+        }
+    }
+
+    public boolean hookToPluginActivity(Intent intent) {
+        if (Constants.DEBUG) Log.e(TAG, &quot;hookToPluginActivity&quot;);
+        if (intent.getBooleanExtra(Constants.KEY_IS_PLUGIN, false)) {
+            String pkg = intent.getStringExtra(Constants.KEY_PACKAGE);
+            String activity = intent.getStringExtra(Constants.KEY_ACTIVITY);
+            if (Constants.DEBUG) Log.e(TAG, &quot;hook &quot; + intent.getComponent().getClassName() + &quot; to &quot; + activity);
+            intent.setClassName(pkg, activity);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean isPluginLoaded(String packageName) {
+        // TODO 检查packageNmae是否匹配
+        return mPluginApp != null;
+    }
+
+
+
+    public PluginApp loadPluginApk(String apkPath) {
+        String addAssetPathMethod = &quot;addAssetPath&quot;;
+        PluginApp pluginApp = null;
+        try {
+            AssetManager assetManager = AssetManager.class.newInstance();
+            Method addAssetPath = assetManager.getClass().getMethod(addAssetPathMethod, String.class);
+            addAssetPath.invoke(assetManager, apkPath);
+            Resources pluginRes = new Resources(assetManager,
+                    mContext.getResources().getDisplayMetrics(),
+                    mContext.getResources().getConfiguration());
+            pluginApp = new PluginApp(pluginRes);
+            pluginApp.mClassLoader = createDexClassLoader(apkPath);
+        } catch (IllegalAccessException
+                | InstantiationException
+                | NoSuchMethodException
+                | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return pluginApp;
+    }
+
+    private DexClassLoader createDexClassLoader(String apkPath) {
+        File dexOutputDir = mContext.getDir(&quot;dex&quot;, Context.MODE_PRIVATE);
+        return new DexClassLoader(apkPath, dexOutputDir.getAbsolutePath(),
+                null, mContext.getClassLoader());
+
+    }
+
+    public boolean loadPlugin(String apkPath) {
+        File apk = new File(apkPath);
+        if (!apk.exists()) {
+            return false;
+        }
+        mPluginApp = loadPluginApk(apkPath);
+        return mPluginApp != null;
+    }
+
+    public PluginApp getLoadedPluginApk() {
+        return mPluginApp;
+    }
+}
+</code></pre><p>在MainActivity中初始化，注意Hook的时机：</p>
+<pre><code>public class MainActivity extends Activity implements View.OnClickListener {
+    // https://zhuanlan.zhihu.com/p/33017826
+
+    public static final boolean DEBUG = true;
+    public static final String TAG = &quot;MainActivity&quot;;
+
+    private String mPluginPackageName = &quot;top.vimerzhao.image&quot;;
+    private String mPluginClassName = &quot;top.vimerzhao.image.MainActivity&quot;;
+
+    //读写权限
+    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    //请求状态码
+    private static int REQUEST_PERMISSION_CODE = 1;
+
+    private PluginManager mPluginManager;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        initData();
+        initView();
+        initPlugin();
+    }
+
+
+    private void initPlugin() {
+        // !! must first
+        ReflectUtil.init();
+
+        mPluginManager = PluginManager.getInstance(getApplicationContext());
+        mPluginManager.hookInstrumentation();
+        mPluginManager.hookCurrentActivityInstrumentation(this);
+    }
+
+    private void initData() {
+        if (Build.VERSION.SDK_INT &gt; Build.VERSION_CODES.LOLLIPOP) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE, REQUEST_PERMISSION_CODE);
+            }
+        }
+    }
+
+    private void initView() {
+        (findViewById(R.id.tv_launch)).setOnClickListener(this);
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(newBase);
+        // !!! 不要在此Hook,看源码发现mInstrumentaion会在此方法后初始化
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (Constants.DEBUG) Log.e(TAG, &quot;click view id: &quot; + view.getId());
+        if (view.getId() == R.id.tv_launch) {
+            // TODO launch plugin app
+            if (mPluginManager.loadPlugin(Constants.PLUGIN_PATH)) {
+                Intent intent = new Intent();
+                intent.setClassName(mPluginPackageName, mPluginClassName);
+                startActivity(intent);
+            }
+        }
+
+    }
+}
+</code></pre><p>现在插件Activity不会有任何限制：</p>
+<pre><code>public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
+}
+</code></pre><p>效果和上图类似。</p>
+<h2 id="demo地址">Demo地址</h2>
+<p>部分源码无关核心逻辑，没有给到，目录结构也没有说明，详见Demo源码。
+<a href="https://github.com/vimerzhao/PluginDemo">PluginDemo</a></p>
+<h2 id="总结">总结</h2>
+<p>看着理论感觉似懂非懂，实战发现问题其实挺多的，尤其是Hook的时机，照搬网上的文章发现根本不可行。插件化也不是一蹴而就的，而是在已有成果的基础上一次一次的小创新积累起来的，跟着插件化发展的路径自己动手实践一遍还是能发现很多自己理解不够深刻的地方的。
+以上。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li>《Android源码设计模式解析与实战》</li>
+<li><a href="https://zhuanlan.zhihu.com/p/33017826">深入理解Android插件化技术</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/yuan-ma-yue-du-huan-jing-opengrokda-jian/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">源码阅读环境OpenGrok搭建</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/xiao-cheng-xu-yun-kai-fa-shi-zhan-yi-tian-da-jian-xiao-xing-lun-tan/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">【小程序&#43;云开发】实战：一天搭建小型论坛</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>热补丁：Qzone方案在Art虚拟机上的实现 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="热补丁：Qzone方案在Art虚拟机上的实现" />
+<meta property="og:description" content="热补丁：Qzone方案在Art虚拟机上的实现 本文对Qzone的超级热补丁方案做了一个简单实现。 引子 当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/re-bu-ding-qzonefang-an-zai-artxu-ni-ji-shang-de-shi-xian/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-07-30T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="热补丁：Qzone方案在Art虚拟机上的实现"/>
+<meta name="twitter:description" content="热补丁：Qzone方案在Art虚拟机上的实现 本文对Qzone的超级热补丁方案做了一个简单实现。 引子 当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">热补丁：Qzone方案在Art虚拟机上的实现</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-07-30T00:00:00Z">2017-07-30</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="热补丁qzone方案在art虚拟机上的实现">热补丁：Qzone方案在Art虚拟机上的实现</h1>
+<p>本文对Qzone的超级热补丁方案做了一个简单实现。</p>
+<h2 id="引子">引子</h2>
+<blockquote>
+<p>当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打包App、测试、向各个应用市场和渠道换包、提示用户升级、用户下载、覆盖安装。有时候仅仅是为了修改了一行代码，也要付出巨大的成本进行换包和重新发布。
+这时候就提出一个问题：有没有办法以补丁的方式动态修复紧急Bug，不再需要重新发布App，不再需要用户重新下载，覆盖安装？</p>
+</blockquote>
+<p>以上是QQ空间某篇技术推送的开头，也就是这篇推送之后安卓热补丁技术开始流行，腾讯系的Qzone超级热补丁、Tinker以及阿里系的Andfix以及最近推出的Sophix，性能和适用范围各不相同，并且都在已有方案的基础上取得了很大进步。
+本文将着眼于Qzone的超级热补丁方案做一个简单实现。为什么选择Qzone？主要有以下几点：</p>
+<ol>
+<li>Qzone方案没有实际开源，而Tinker有官方源码可供研究。</li>
+<li>Qzone方案比较简单，易于实现。</li>
+<li>Qzone方案是热补丁的开端，动手实现有利于理解其他更复杂的热补丁技术。</li>
+</ol>
+<h2 id="资料">资料</h2>
+<p>本文专注于实现，理论部分可参考QQ空间技术团队的<a href="https://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&amp;mid=400118620&amp;idx=1&amp;sn=b4fdd5055731290eef12ad0d17f39d4a&amp;scene=0#wechat_redirect">安卓App热补丁动态修复技术介绍</a>，同时强烈建议读者自己去查阅Android源码，进行求证。下载一份完整Android源码并不是一件简单的事情，在此推荐一个网站<a href="http://androidxref.com/">androidxref</a>可以十分方便地在线阅读源码。
+此外，开源项目<a href="https://github.com/jasonross/Nuwa">Nuwa</a>就是Qzone超级热补丁的完整实现，虽然作者已经不再更新，其代码也已经无法在最新版的AndroidStudio上运行通过，但仍然值得借鉴。</p>
+<h2 id="实现">实现</h2>
+<h3 id="准备补丁">准备补丁</h3>
+<p>我们建立一个简单的Android工程，<code>MainActivity.java</code>代码如下：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_main</span><span style="color:#f92672">);</span>
+        <span style="color:#75715e">// &gt;= 2.0.0 则是ART
+</span><span style="color:#75715e"></span>        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;MainActivity&#34;</span><span style="color:#f92672">,</span>  System<span style="color:#f92672">.</span><span style="color:#a6e22e">getProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;java.vm.version&#34;</span><span style="color:#f92672">));</span>
+        <span style="color:#f92672">((</span>TextView<span style="color:#f92672">)</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">info</span><span style="color:#f92672">)).</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> BugClass<span style="color:#f92672">().</span><span style="color:#a6e22e">sayHello</span><span style="color:#f92672">());</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+<span style="color:#960050;background-color:#1e0010">```</span>java
+
+<span style="color:#960050;background-color:#1e0010">`</span>BugClass<span style="color:#f92672">.</span><span style="color:#a6e22e">java</span><span style="color:#960050;background-color:#1e0010">`</span>代码如下<span style="color:#960050;background-color:#1e0010">：</span>
+<span style="color:#960050;background-color:#1e0010">```</span>java
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BugClass</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">sayHello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;Before Hotfix&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>运行之后显示&quot;Before Hotfix&quot;，现在我们发现本来打算写的是&quot;After Hotfix&quot;，怎么办？首先，修改<code>BugClass.java</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BugClass</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">sayHello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;After Hotfix&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>传统办法是重新编译，重新安装。那么可不可以不重新安装就修复错误呢？这就是热补丁技术！
+首先，重新编译项目但不要运行，在工程项目下找到生成的class文件，连同包名目录一起复制出来：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogqzone-find-class.png" alt="">
+通过如下两个命令生成补丁文件：
+<img src="http://ond7j4cnz.bkt.clouddn.com/bloguse-dx-command.PNG" alt=""></p>
+<h3 id="加载补丁">加载补丁</h3>
+<p>通过<code>adb push</code>可以把补丁发送到手机，需要注意的是实际应用中热补丁文件往往是通过网络下载，具体参见文末给出的参考。
+结合源码已经知道，关键是在加载原有class文件之前加载补丁，而这是一个动态过程，需要借助Java中的<strong>反射</strong>来实现，之前没认真研究过，这次终于知道反射的应用场合了！！
+具体实现见代码，把这个指定为应用的<code>Application</code>：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PatchApplication</span> <span style="color:#66d9ef">extends</span> Application <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String CLASS_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;PatchApplication&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String DEX_ELEMENTS <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;dexElements&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">static</span> String PATH_LIST <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;pathList&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">();</span>
+        <span style="color:#75715e">// 获取补丁
+</span><span style="color:#75715e"></span>        String dexPath <span style="color:#f92672">=</span> Environment<span style="color:#f92672">.</span><span style="color:#a6e22e">getExternalStorageDirectory</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">().</span><span style="color:#a6e22e">concat</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/patch_dex_qzone.jar&#34;</span><span style="color:#f92672">);</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>dexPath<span style="color:#f92672">);</span>
+        File file <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>dexPath<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            inject<span style="color:#f92672">(</span>dexPath<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>CLASS_NAME<span style="color:#f92672">,</span> dexPath<span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;不存在&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inject</span><span style="color:#f92672">(</span>String path<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 获取classes的dexElements
+</span><span style="color:#75715e"></span>            Class<span style="color:#f92672">&lt;?&gt;</span> cl <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;dalvik.system.BaseDexClassLoader&#34;</span><span style="color:#f92672">);</span>
+            Object pathList <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>cl<span style="color:#f92672">,</span> PATH_LIST<span style="color:#f92672">,</span> getClassLoader<span style="color:#f92672">());</span>
+            Object baseElements <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>pathList<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">(),</span> DEX_ELEMENTS<span style="color:#f92672">,</span> pathList<span style="color:#f92672">);</span>
+
+            <span style="color:#75715e">// 获取patch_dex的dexElements（需要先加载dex）
+</span><span style="color:#75715e"></span>            String dexopt <span style="color:#f92672">=</span> getDir<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;dexopt&#34;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">).</span><span style="color:#a6e22e">getAbsolutePath</span><span style="color:#f92672">();</span>
+            DexClassLoader dexClassLoader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DexClassLoader<span style="color:#f92672">(</span>path<span style="color:#f92672">,</span> dexopt<span style="color:#f92672">,</span> dexopt<span style="color:#f92672">,</span> getClassLoader<span style="color:#f92672">());</span>
+            Object obj <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>cl<span style="color:#f92672">,</span> PATH_LIST<span style="color:#f92672">,</span> dexClassLoader<span style="color:#f92672">);</span>
+            Object dexElements <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>obj<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">(),</span> DEX_ELEMENTS<span style="color:#f92672">,</span> obj<span style="color:#f92672">);</span>
+
+            <span style="color:#75715e">// 合并两个Elements
+</span><span style="color:#75715e"></span>            Object combineElements <span style="color:#f92672">=</span> combineArray<span style="color:#f92672">(</span>dexElements<span style="color:#f92672">,</span> baseElements<span style="color:#f92672">);</span>
+
+            <span style="color:#75715e">// 将合并后的Element数组重新赋值给app的classLoader
+</span><span style="color:#75715e"></span>            setField<span style="color:#f92672">(</span>pathList<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">(),</span> DEX_ELEMENTS<span style="color:#f92672">,</span> pathList<span style="color:#f92672">,</span> combineElements<span style="color:#f92672">);</span>
+
+            Object object <span style="color:#f92672">=</span> getField<span style="color:#f92672">(</span>pathList<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">(),</span> DEX_ELEMENTS<span style="color:#f92672">,</span> pathList<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> Array<span style="color:#f92672">.</span><span style="color:#a6e22e">getLength</span><span style="color:#f92672">(</span>object<span style="color:#f92672">);</span>
+            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;totalLength&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span> <span style="color:#f92672">+</span> length<span style="color:#f92672">);</span>
+
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ClassNotFoundException <span style="color:#f92672">|</span> IllegalAccessException <span style="color:#f92672">|</span> NoSuchFieldException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">/* 通过反射获取对象的属性值 */</span>
+    <span style="color:#66d9ef">private</span> Object <span style="color:#a6e22e">getField</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?&gt;</span> cl<span style="color:#f92672">,</span> String fieldName<span style="color:#f92672">,</span> Object object<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> NoSuchFieldException<span style="color:#f92672">,</span> IllegalAccessException <span style="color:#f92672">{</span>
+        Field field <span style="color:#f92672">=</span> cl<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span>fieldName<span style="color:#f92672">);</span>
+        field<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> field<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>object<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/* 通过反射设置对象的属性值 */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setField</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?&gt;</span> cl<span style="color:#f92672">,</span> String fieldName<span style="color:#f92672">,</span> Object object<span style="color:#f92672">,</span> Object value<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> NoSuchFieldException<span style="color:#f92672">,</span> IllegalAccessException <span style="color:#f92672">{</span>
+        Field field <span style="color:#f92672">=</span> cl<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span>fieldName<span style="color:#f92672">);</span>
+        field<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+        field<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>object<span style="color:#f92672">,</span> value<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/* 通过反射合并两个数组 */</span>
+    <span style="color:#66d9ef">private</span> Object <span style="color:#a6e22e">combineArray</span><span style="color:#f92672">(</span>Object firstArr<span style="color:#f92672">,</span> Object secondArr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> firstLength <span style="color:#f92672">=</span> Array<span style="color:#f92672">.</span><span style="color:#a6e22e">getLength</span><span style="color:#f92672">(</span>firstArr<span style="color:#f92672">);</span>
+        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;firstLength&#34;</span><span style="color:#f92672">,</span> firstLength <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> secondLength <span style="color:#f92672">=</span> Array<span style="color:#f92672">.</span><span style="color:#a6e22e">getLength</span><span style="color:#f92672">(</span>secondArr<span style="color:#f92672">);</span>
+        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;secondLength&#34;</span><span style="color:#f92672">,</span> secondLength <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> firstLength <span style="color:#f92672">+</span> secondLength<span style="color:#f92672">;</span>
+
+        Class<span style="color:#f92672">&lt;?&gt;</span> componentType <span style="color:#f92672">=</span> firstArr<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getComponentType</span><span style="color:#f92672">();</span>
+        Object newArr <span style="color:#f92672">=</span> Array<span style="color:#f92672">.</span><span style="color:#a6e22e">newInstance</span><span style="color:#f92672">(</span>componentType<span style="color:#f92672">,</span> length<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> length<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> firstLength<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Array<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>newArr<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> Array<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>firstArr<span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                Array<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>newArr<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> Array<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>secondArr<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> firstLength<span style="color:#f92672">));</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> newArr<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>最终效果（一开始是&quot;Before Hotfix&quot;，而在将补丁文件移动到指定位置后就会优先加载补丁文件，得到&quot;After Hotfix&quot;）
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogqzone-hotfix-demo.gif" alt="">
+需要注意的是本代码只能运行在art虚拟上(Android5.0以上)，在dalvik虚拟机上还需要一个插桩过程。如何插桩以及为什么需要插桩可以参考下文给出的链接。</p>
+<h2 id="感悟">感悟</h2>
+<p>源码面前，了无秘密。本文的代码并不复杂，但是建立在对源码透彻的理解之上。阅读源码不会带来直接收益，但从长远看绝对会促成质的飞跃！！</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&amp;mid=400118620&amp;idx=1&amp;sn=b4fdd5055731290eef12ad0d17f39d4a">安卓App热补丁动态修复技术介绍</a></li>
+<li><a href="http://blog.csdn.net/u010386612/article/details/51077291"> Android热补丁动态修复技术（二）：实战！CLASS_ISPREVERIFIED问题！</a></li>
+<li><a href="https://github.com/jasonross/Nuwa">jasonross/Nuwa</a></li>
+<li><a href="http://www.voidcn.com/blog/u012760183/article/p-6117282.html">Android 热补丁技术的探索与简单实战&mdash;-Qzone方案</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/aishi-zhan-da-jian-ke-fu-ji-qi-ren/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">&#39;AI实战:搭建客服机器人&#39;</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/ru-he-guan-bi-wang-ye-xuan-fu-chuang/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">如何关闭网页悬浮窗</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

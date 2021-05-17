@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>踩坑记：LinuxMint18字体变为楷体的修复 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="踩坑记：LinuxMint18字体变为楷体的修复" />
+<meta property="og:description" content="踩坑记：LinuxMint18字体变为楷体的修复 本文记录了一次修复系统字体的经历。 起因 起因很奇怪，本来打算今天把动态规划算法好好研究一番，结果一大早起来发现中文输入法消失了！因为之前有次发生这种情况是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-03-25T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="踩坑记：LinuxMint18字体变为楷体的修复"/>
+<meta name="twitter:description" content="踩坑记：LinuxMint18字体变为楷体的修复 本文记录了一次修复系统字体的经历。 起因 起因很奇怪，本来打算今天把动态规划算法好好研究一番，结果一大早起来发现中文输入法消失了！因为之前有次发生这种情况是"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">踩坑记：LinuxMint18字体变为楷体的修复</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-03-25T00:00:00Z">2017-03-25</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="踩坑记linuxmint18字体变为楷体的修复">踩坑记：LinuxMint18字体变为楷体的修复</h1>
+<p>本文记录了一次修复系统字体的经历。</p>
+<h2 id="起因">起因</h2>
+<p>起因很奇怪，本来打算今天把动态规划算法好好研究一番，结果一大早起来发现中文输入法消失了！因为之前有次发生这种情况是因为<strong>一部分软件包未安装更新</strong>，所以先尝试了更新软件包。结果仍然不行。只好放弃搜狗输入法（因为这个有deb包，安装比较方便，因此之前一直用这个），使用设置里面的IBus,结果安装完发现网页和开始菜单的字体全部变成了楷体：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-03-25%2009-26-47%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<p>excuse me?</p>
+<h2 id="解决">解决</h2>
+<p>上午花了大概两个钟头，大概一个钟头解决了输入法，又花了一个钟头修复字体。但是<code>系统设置-字体</code>只能修改桌面、文件夹之类的字体，网页和开始菜单的字体始终无法修改，于是放弃。
+唯一的发现是修改选择主题包下的<code>cinnamon.css</code>文件可以修改大小，但是字体仍然无法修改！
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-03-25%2009-33-02%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<p>下午回来，还是觉得实在受不了，楷体既发虚又难看，于是下定决心要解决这个问题，终于在贴吧里（万万没想到）发现了一点线索，原来这是一个Bug!顺着摸索，找到了这个Bug页面。主要信息如下:</p>
+<blockquote>
+<p>After completing language support installation, fonts-arphic-ukai and fonts-arphic-uming are pulled into user&rsquo;s system and then fontconfig chooses Ukai over Droid Sans Fallback for the default sans-serif font. This is not the desired behavior as Ukai doesn&rsquo;t fit well into the category of screen fonts comparing to Droid Sans.</p>
+</blockquote>
+<p>大概就是默认字体被强制覆盖了（其实也不太懂，还是道行不够！），所以就算我修改了设置也仍然没有效果？</p>
+<p>按照贴吧里面这一段描述修改下就行了，原来就是一行命令的事情:</p>
+<blockquote>
+<p>此页面是关于此楷体无法更换问题的 <a href="https://bugs.launchpad.net/ubuntukylin/+bug/1227034">https://bugs.launchpad.net/ubuntukylin/+bug/1227034</a>
+终端使用命令fc-match &lsquo;sans-serif&rsquo;
+和fc-match &lsquo;serif&rsquo;
+和fc-match &lsquo;monospace&rsquo;
+均输出类似于
+ukai.ttc: &ldquo;AR PL UKai CN&rdquo; &ldquo;Book&rdquo; 如果删除了ukai即楷体则输出uming.ttc: &ldquo;AR PL UMing CN&rdquo; &ldquo;Light&rdquo;。
+种种迹象表面是/etc/font/conf.d中的某文件改写错误造成.
+新安装的linuxMint应该均会出现这样的楷体错误。
+一个简单的解决办法是终端输入命令
+sudo apt-get install language-selector-*
+安装完成后字体会改变为
+~ $ fc-match &lsquo;sans-serif&rsquo;
+NotoSansCJK-Regular.ttc: &ldquo;Noto Sans CJK SC&rdquo; &ldquo;Regular&rdquo;
+~ $ fc-match &lsquo;serif&rsquo;
+uming.ttc: &ldquo;AR PL UMing CN&rdquo; &ldquo;Light&rdquo;
+~ $ fc-match &lsquo;monospace&rsquo;
+DejaVuSansMono.ttf: &ldquo;DejaVu Sans Mono&rdquo; &ldquo;Book&rdquo;</p>
+</blockquote>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>###############################
+另外建议新安装的Mint18全中文系统
+sudo kate /var/lib/locales/supported.d/local
+或者sudo kate /var/lib/locales/supported.d/zh-hans
+编辑其中的一个文件即可。添加如下内容，以配置更完全详细的中文本地支持.
+en_US.UTF-8 UTF-8
+zh_CN.UTF-8 UTF-8
+zh_CN.GBK GBK
+&hellip;..
+执行结果如下
+Generating locales (this might take a while)&hellip;
+en_AG.UTF-8&hellip; done
+en_AU.UTF-8&hellip; done
+&hellip;&hellip;.
+h_TW.EUC-TW&hellip; done
+zh_TW.UTF-8&hellip; done
+/etc/locale.gen使用文本编辑器比如kate打开，可以看到所有的locale语言列表</p>
+<p>还真是要到病除:
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-03-25%2016-25-16%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt="">
+网页也好了:
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-03-25%2016-35-23%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<p>看来自己还是要多学习一个！</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://tieba.baidu.com/p/4845852278">请问下18下为什么字体这么不统一啊？</a></li>
+<li><a href="https://bugs.launchpad.net/ubuntukylin/+bug/1227034">Default Chinese font changed to fonts-arphic-ukai after completing language support installation for zh-* locales</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/cai-keng-ji-cong-c-bian-liang-dao-javayin-yong/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">踩坑记：从C&#43;&#43;变量到Java引用</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">时间复杂度计算类题目两则</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

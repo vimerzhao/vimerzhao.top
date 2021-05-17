@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Andfix源码解析 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Andfix源码解析" />
+<meta property="og:description" content="Andfix源码解析 本文介绍了Andfix热修复框架的原理及实现代码。 Andfix概述 Andfix是阿里开源的一套热修复框架，效果如下 （注意我一直在点击，下发补丁后发生了变化&hellip;&hell" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/andfixyuan-ma-jie-xi/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-08-20T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Andfix源码解析"/>
+<meta name="twitter:description" content="Andfix源码解析 本文介绍了Andfix热修复框架的原理及实现代码。 Andfix概述 Andfix是阿里开源的一套热修复框架，效果如下 （注意我一直在点击，下发补丁后发生了变化&hellip;&hell"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Andfix源码解析</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-08-20T00:00:00Z">2017-08-20</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="andfix源码解析">Andfix源码解析</h1>
+<p>本文介绍了Andfix热修复框架的原理及实现代码。</p>
+<h2 id="andfix概述">Andfix概述</h2>
+<p><code>Andfix</code>是阿里开源的一套热修复框架，效果如下</p>
+<p><img src="http://ond7j4cnz.bkt.clouddn.com/blogandfix-demo.gif" alt="">
+（注意我一直在点击，下发补丁后发生了变化&hellip;&hellip;）</p>
+<h2 id="反编译分析">反编译分析</h2>
+<p>关键就是下发的恶<code>out.apatch</code>文件，其实这个一个<code>jar</code>文件，解压后如下:</p>
+<pre><code>.
+├── diff.dex
+├── out.apatch
+├── out.apatch_FILES    //解压out.apatch所得
+│   ├── classes.dex
+│   └── META-INF
+│       ├── CERT.RSA
+│       ├── CERT.SF
+│       ├── MANIFEST.MF
+│       └── PATCH.MF
+└── smali
+    └── vimerzhao
+        └── fuckandfix
+            └── MainActivity_CF.smali
+
+5 directories, 8 files
+</code></pre><p>利用<code>dex2jar</code>对<code>diff.dex</code>进行反编译:
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogandfix-decompile.png" alt="">
+可以看到被修改的方法添加了一条注解！而<code>out.apatch</code>里面的<code>dex</code>就是这个<code>diff.dex</code>文件，还包含了签名等各种配置信息。</p>
+<h2 id="apkpatch工具分析">apkPatch工具分析</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        
+        <span style="color:#75715e">/*解析命令行参数*/</span>
+        <span style="color:#f92672">......</span>
+
+        ApkPatch apkPatch <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ApkPatch<span style="color:#f92672">(</span>from<span style="color:#f92672">,</span> to<span style="color:#f92672">,</span> name<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> keystore<span style="color:#f92672">,</span> 
+                password<span style="color:#f92672">,</span> alias<span style="color:#f92672">,</span> entry<span style="color:#f92672">);</span>
+        apkPatch<span style="color:#f92672">.</span><span style="color:#a6e22e">doPatch</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>ApkPatch的doPatch方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">doPatch</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// 生成smali文件
+</span><span style="color:#75715e"></span>        File smaliDir <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;smali&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>smaliDir<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            smaliDir<span style="color:#f92672">.</span><span style="color:#a6e22e">mkdir</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            FileUtils<span style="color:#f92672">.</span><span style="color:#a6e22e">cleanDirectory</span><span style="color:#f92672">(</span>smaliDir<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#75715e">// 新建diff.dex文件
+</span><span style="color:#75715e"></span>        File dexFile <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;diff.dex&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>dexFile<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(!</span>dexFile<span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;diff.dex can&#39;t be removed.&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        File outFile <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;diff.apatch&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>outFile<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">())</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(!</span>outFile<span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;diff.apatch can&#39;t be removed.&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#75715e">// Step1:拿到两个apk文件做对比，对比信息写入DiffInfo
+</span><span style="color:#75715e"></span>        DiffInfo info <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DexDiffer<span style="color:#f92672">().</span><span style="color:#a6e22e">diff</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">from</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">to</span><span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// Step2:将对比结果写入.smali文件，然后打包生成dex文件
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">classes</span> <span style="color:#f92672">=</span> buildCode<span style="color:#f92672">(</span>smaliDir<span style="color:#f92672">,</span> dexFile<span style="color:#f92672">,</span> info<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// Step3:将生成的Dex文件写入Jar包，并根据签名信息进行签名，生成diff.apatch
+</span><span style="color:#75715e"></span>        build<span style="color:#f92672">(</span>outFile<span style="color:#f92672">,</span> dexFile<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// Step4:重命名.apatch文件
+</span><span style="color:#75715e"></span>        release<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">,</span> dexFile<span style="color:#f92672">,</span> outFile<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="对比apk文件">对比apk文件</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> DiffInfo <span style="color:#a6e22e">diff</span><span style="color:#f92672">(</span>File newFile<span style="color:#f92672">,</span> File oldFile<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+    <span style="color:#75715e">// 提取dex文件
+</span><span style="color:#75715e"></span>    DexBackedDexFile newDexFile <span style="color:#f92672">=</span> DexFileFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">loadDexFile</span><span style="color:#f92672">(</span>newFile<span style="color:#f92672">,</span> 19<span style="color:#f92672">,</span> 
+            <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+    DexBackedDexFile oldDexFile <span style="color:#f92672">=</span> DexFileFactory<span style="color:#f92672">.</span><span style="color:#a6e22e">loadDexFile</span><span style="color:#f92672">(</span>oldFile<span style="color:#f92672">,</span> 19<span style="color:#f92672">,</span> 
+            <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+
+    DiffInfo info <span style="color:#f92672">=</span> DiffInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">getInstance</span><span style="color:#f92672">();</span>
+
+    <span style="color:#66d9ef">boolean</span> contains <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DexBackedClassDef newClazz <span style="color:#f92672">:</span> newDexFile<span style="color:#f92672">.</span><span style="color:#a6e22e">getClasses</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        Set<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> DexBackedClassDef<span style="color:#f92672">&gt;</span> oldclasses <span style="color:#f92672">=</span> oldDexFile
+            <span style="color:#f92672">.</span><span style="color:#a6e22e">getClasses</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DexBackedClassDef oldClazz <span style="color:#f92672">:</span> oldclasses<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 对比签名相同的方法，检查是否修改过
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>newClazz<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>oldClazz<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">// 检查对应class文件是否有字段变化
+</span><span style="color:#75715e"></span>                compareField<span style="color:#f92672">(</span>newClazz<span style="color:#f92672">,</span> oldClazz<span style="color:#f92672">,</span> info<span style="color:#f92672">);</span>
+                <span style="color:#75715e">// 如果一个类中没有相同方法，则判定为新增方法
+</span><span style="color:#75715e"></span>                compareMethod<span style="color:#f92672">(</span>newClazz<span style="color:#f92672">,</span> oldClazz<span style="color:#f92672">,</span> info<span style="color:#f92672">);</span>
+                contains <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>contains<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// 否则是新增的类
+</span><span style="color:#75715e"></span>            info<span style="color:#f92672">.</span><span style="color:#a6e22e">addAddedClasses</span><span style="color:#f92672">(</span>newClazz<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">// 返回包含diff信息的DiffInfo对象
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> info<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>其原理就是根据 dex diff得到两个apk文件的差别信息。对比方法过程中对比两个dex文件中同时存在的方法，如果方法实现不同则存储为修改过的方法；如果方法名不同，存储为新增的方法，也就是说AndFix支持增加新的方法，这一点已经测试证明。另外，在比较Field的时候有如下代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addModifiedFields</span><span style="color:#f92672">(</span>DexBackedField field<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">modifiedFields</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>field<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> RuntimeException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;can,t modified Field:&#34;</span> <span style="color:#f92672">+</span> 
+            field<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;(&#34;</span> <span style="color:#f92672">+</span> field<span style="color:#f92672">.</span><span style="color:#a6e22e">getType</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;), &#34;</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;in class :&#34;</span> <span style="color:#f92672">+</span> 
+            field<span style="color:#f92672">.</span><span style="color:#a6e22e">getDefiningClass</span><span style="color:#f92672">());</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#f92672">.....</span>
+
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addAddedMethods</span><span style="color:#f92672">(</span>DexBackedMethod method<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;add new Method:&#34;</span> <span style="color:#f92672">+</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getReturnType</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> 
+            <span style="color:#e6db74">&#34;  &#34;</span> <span style="color:#f92672">+</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;(&#34;</span> <span style="color:#f92672">+</span> 
+            Formater<span style="color:#f92672">.</span><span style="color:#a6e22e">formatStringList</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">getParameterTypes</span><span style="color:#f92672">())</span> <span style="color:#f92672">+</span> 
+            <span style="color:#e6db74">&#34;)  in Class:&#34;</span> <span style="color:#f92672">+</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getDefiningClass</span><span style="color:#f92672">());</span>
+    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">addedMethods</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>method<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">modifiedClasses</span><span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">classDef</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">modifiedClasses</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>method<span style="color:#f92672">.</span><span style="color:#a6e22e">classDef</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+</code></pre></div><p>也就是说AndFix不支持增加成员变量，但是支持在新增方法中增加的局部变量。也不支持修改成员变量。
+还有一个地方要注意，就是提取dex文件的地方，在DexFileFactory类中</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#a6e22e">@Nonnull</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> DexBackedDexFile <span style="color:#a6e22e">loadDexFile</span><span style="color:#f92672">(</span>File dexFile<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> api<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> experimental<span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> loadDexFile<span style="color:#f92672">(</span>dexFile<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;classes.dex&#34;</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Opcodes<span style="color:#f92672">(</span>api<span style="color:#f92672">,</span> experimental<span style="color:#f92672">));</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>可以看到，只提取出了classes.dex这个文件，所以源生工具并不支持multidex，如果使用了multidex方案，并且修复的类不在同一个dex文件中，那么补丁就不会生效。</p>
+<h3 id="将对比结果打包">将对比结果打包</h3>
+<p>这一步我们重点关注拿到DiffInfo后将其存入smali文件的过程，ApkPatch.buildCode()方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">buildCode</span><span style="color:#f92672">(</span>File smaliDir<span style="color:#f92672">,</span> File dexFile<span style="color:#f92672">,</span> DiffInfo info<span style="color:#f92672">)</span>
+    <span style="color:#66d9ef">throws</span> IOException<span style="color:#f92672">,</span> RecognitionException<span style="color:#f92672">,</span> FileNotFoundException <span style="color:#f92672">{</span>
+    Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> classes <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">();</span>
+    Set<span style="color:#f92672">&lt;</span>DexBackedClassDef<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">();</span>
+    list<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>info<span style="color:#f92672">.</span><span style="color:#a6e22e">getAddedClasses</span><span style="color:#f92672">());</span>
+    list<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>info<span style="color:#f92672">.</span><span style="color:#a6e22e">getModifiedClasses</span><span style="color:#f92672">());</span>
+
+    baksmaliOptions options <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> baksmaliOptions<span style="color:#f92672">();</span>
+
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">deodex</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">noParameterRegisters</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">useLocalsDirective</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">useSequentialLabels</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">outputDebugInfo</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">addCodeOffsets</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">jobs</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">noAccessorComments</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">registerInfo</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">ignoreErrors</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">inlineResolver</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    options<span style="color:#f92672">.</span><span style="color:#a6e22e">checkPackagePrivateAccess</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>options<span style="color:#f92672">.</span><span style="color:#a6e22e">noAccessorComments</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        options<span style="color:#f92672">.</span><span style="color:#a6e22e">syntheticAccessorResolver</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SyntheticAccessorResolver<span style="color:#f92672">(</span>
+                list<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    ClassFileNameHandler outFileNameHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassFileNameHandler<span style="color:#f92672">(</span>
+            smaliDir<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;.smali&#34;</span><span style="color:#f92672">);</span>
+    ClassFileNameHandler inFileNameHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassFileNameHandler<span style="color:#f92672">(</span>
+            smaliDir<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;.smali&#34;</span><span style="color:#f92672">);</span>
+    DexBuilder dexBuilder <span style="color:#f92672">=</span> DexBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">makeDexBuilder</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>DexBackedClassDef classDef <span style="color:#f92672">:</span> list<span style="color:#f92672">)</span>
+    <span style="color:#f92672">{</span>
+        String className <span style="color:#f92672">=</span> classDef<span style="color:#f92672">.</span><span style="color:#a6e22e">getType</span><span style="color:#f92672">();</span>
+        baksmali<span style="color:#f92672">.</span><span style="color:#a6e22e">disassembleClass</span><span style="color:#f92672">(</span>classDef<span style="color:#f92672">,</span> outFileNameHandler<span style="color:#f92672">,</span> options<span style="color:#f92672">);</span>
+        File smaliFile <span style="color:#f92672">=</span> inFileNameHandler<span style="color:#f92672">.</span><span style="color:#a6e22e">getUniqueFilenameForClass</span><span style="color:#f92672">(</span>
+                TypeGenUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">newType</span><span style="color:#f92672">(</span>className<span style="color:#f92672">));</span>
+        classes<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>TypeGenUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">newType</span><span style="color:#f92672">(</span>className<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> TypeGenUtil<span style="color:#f92672">.</span><span style="color:#a6e22e">newType</span><span style="color:#f92672">(</span>className<span style="color:#f92672">).</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span>
+                <span style="color:#f92672">.</span><span style="color:#a6e22e">replace</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">));</span>
+        SmaliMod<span style="color:#f92672">.</span><span style="color:#a6e22e">assembleSmaliFile</span><span style="color:#f92672">(</span>smaliFile<span style="color:#f92672">,</span> dexBuilder<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+    dexBuilder<span style="color:#f92672">.</span><span style="color:#a6e22e">writeTo</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> FileDataStore<span style="color:#f92672">(</span>dexFile<span style="color:#f92672">));</span>
+
+    <span style="color:#66d9ef">return</span> classes<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>将上一步得到的diff信息写入smali文件，并且生成diff.dex文件。smali文件的命名以<code>_CF.smali</code>结尾，并且在修改的地方用自定义的Annotation(MethodReplace)标注，用于在替换之前查找修复的变量或方法，如下。</p>
+<pre><code>.....
+    .annotation runtime Lcom/alipay/euler/andfix/annotation/MethodReplace;
+        method = &quot;bugMethod&quot;
+        clazz = &quot;vimerzhao.fuckandfix.MainActivity&quot;
+    .end annotation
+.....
+</code></pre><p>在打包生成的diff.dex文件中，反编译出来可以看到这段代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"></code></pre></div><p>@MethodReplace(clazz=&ldquo;vimerzhao.fuckandfix.MainActivity&rdquo;, method=&ldquo;bugMethod&rdquo;)
+private void bugMethod(TextView paramTextView)
+{
+paramTextView.setText(&ldquo;After Hotfix&rdquo;);
+paramTextView.setBackgroundColor(-16711936);
+}</p>
+<pre><code>然后就是签名，打包，加密的流程，就不具体分析了。注意，apkPatch在生成.apatch补丁文件的时候会加入签名信息，并且会进行加密操作，在应用补丁的时候会验证签名信息是否正确。
+
+## Java层源码分析
+通常，自定义`Application`如下:
+```java
+public class MainApplication extends Application {
+    private static final String TAG = &quot;euler&quot;;
+
+    private static final String APATCH_PATH = &quot;/out.apatch&quot;;
+    /**
+     * patch manager
+     */
+    private PatchManager mPatchManager;
+
+    @Override
+        public void onCreate() {
+            super.onCreate();
+            // initialize
+            mPatchManager = new PatchManager(this);
+            mPatchManager.init(&quot;1.0&quot;);
+            Log.d(TAG, &quot;inited.&quot;);
+
+            // load patch
+            mPatchManager.loadPatch();
+            Log.d(TAG, &quot;apatch loaded.&quot;);
+
+            // add patch at runtime
+            try {
+                // .apatch file path
+                String patchFileString = Environment.getExternalStorageDirectory()
+                    .getAbsolutePath() + APATCH_PATH;
+                mPatchManager.addPatch(patchFileString);
+                Log.d(TAG, &quot;apatch:&quot; + patchFileString + &quot; added.&quot;);
+            } catch (IOException e) {
+                Log.e(TAG, &quot;&quot;, e);
+            }
+
+        }
+}
+</code></pre><p><code>PatchManager.init()</code>方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">init</span><span style="color:#f92672">(</span>String appVersion<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>mPatchDir<span style="color:#f92672">.</span><span style="color:#a6e22e">exists</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>mPatchDir<span style="color:#f92672">.</span><span style="color:#a6e22e">mkdirs</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span><span style="color:#75715e">// make directory fail
+</span><span style="color:#75715e"></span>        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;patch dir create error.&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>mPatchDir<span style="color:#f92672">.</span><span style="color:#a6e22e">isDirectory</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span><span style="color:#75715e">// not directory
+</span><span style="color:#75715e"></span>        mPatchDir<span style="color:#f92672">.</span><span style="color:#a6e22e">delete</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    SharedPreferences sp <span style="color:#f92672">=</span> mContext<span style="color:#f92672">.</span><span style="color:#a6e22e">getSharedPreferences</span><span style="color:#f92672">(</span>SP_NAME<span style="color:#f92672">,</span>
+            Context<span style="color:#f92672">.</span><span style="color:#a6e22e">MODE_PRIVATE</span><span style="color:#f92672">);</span>
+    String ver <span style="color:#f92672">=</span> sp<span style="color:#f92672">.</span><span style="color:#a6e22e">getString</span><span style="color:#f92672">(</span>SP_VERSION<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+    <span style="color:#75715e">// 根据版本号加载补丁，版本号不同则清空缓存目录
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ver <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>ver<span style="color:#f92672">.</span><span style="color:#a6e22e">equalsIgnoreCase</span><span style="color:#f92672">(</span>appVersion<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        cleanPatch<span style="color:#f92672">();</span>
+        sp<span style="color:#f92672">.</span><span style="color:#a6e22e">edit</span><span style="color:#f92672">().</span><span style="color:#a6e22e">putString</span><span style="color:#f92672">(</span>SP_VERSION<span style="color:#f92672">,</span> appVersion<span style="color:#f92672">).</span><span style="color:#a6e22e">commit</span><span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        initPatchs<span style="color:#f92672">();</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">// 缓存目录data/data/package/file/apatch/会缓存补丁文件
+</span><span style="color:#75715e">// 即使原目录被删除也可以打补丁
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">initPatchs</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    File<span style="color:#f92672">[]</span> files <span style="color:#f92672">=</span> mPatchDir<span style="color:#f92672">.</span><span style="color:#a6e22e">listFiles</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>File file <span style="color:#f92672">:</span> files<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        addPatch<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p><code>addPatch()</code>和<code>loadPatch()</code>方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">loadPatch</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    mLoaders<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;*&#34;</span><span style="color:#f92672">,</span> mContext<span style="color:#f92672">.</span><span style="color:#a6e22e">getClassLoader</span><span style="color:#f92672">());</span><span style="color:#75715e">// wildcard
+</span><span style="color:#75715e"></span>    Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> patchNames<span style="color:#f92672">;</span>
+    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> classes<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Patch patch <span style="color:#f92672">:</span> mPatchs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        patchNames <span style="color:#f92672">=</span> patch<span style="color:#f92672">.</span><span style="color:#a6e22e">getPatchNames</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String patchName <span style="color:#f92672">:</span> patchNames<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            classes <span style="color:#f92672">=</span> patch<span style="color:#f92672">.</span><span style="color:#a6e22e">getClasses</span><span style="color:#f92672">(</span>patchName<span style="color:#f92672">);</span>
+            mAndFixManager<span style="color:#f92672">.</span><span style="color:#a6e22e">fix</span><span style="color:#f92672">(</span>patch<span style="color:#f92672">.</span><span style="color:#a6e22e">getFile</span><span style="color:#f92672">(),</span> mContext<span style="color:#f92672">.</span><span style="color:#a6e22e">getClassLoader</span><span style="color:#f92672">(),</span>
+                    classes<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#66d9ef">private</span> Patch <span style="color:#a6e22e">addPatch</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Patch patch <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">().</span><span style="color:#a6e22e">endsWith</span><span style="color:#f92672">(</span>SUFFIX<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            patch <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Patch<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
+            mPatchs<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>patch<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;addPatch&#34;</span><span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> patch<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>再看下<code>AndFixManager</code>的<code>fix()</code>方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">fixClass</span><span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?&gt;</span> clazz<span style="color:#f92672">,</span> ClassLoader classLoader<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Method<span style="color:#f92672">[]</span> methods <span style="color:#f92672">=</span> clazz<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethods</span><span style="color:#f92672">();</span>
+    MethodReplace methodReplace<span style="color:#f92672">;</span>
+    String clz<span style="color:#f92672">;</span>
+    String meth<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Method method <span style="color:#f92672">:</span> methods<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * 这里是通过注解找到需要替换的方法，需要结合apkPatch工具的源码理解
+</span><span style="color:#75715e">         */</span>
+        methodReplace <span style="color:#f92672">=</span> method<span style="color:#f92672">.</span><span style="color:#a6e22e">getAnnotation</span><span style="color:#f92672">(</span>MethodReplace<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>methodReplace <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        clz <span style="color:#f92672">=</span> methodReplace<span style="color:#f92672">.</span><span style="color:#a6e22e">clazz</span><span style="color:#f92672">();</span>
+        meth <span style="color:#f92672">=</span> methodReplace<span style="color:#f92672">.</span><span style="color:#a6e22e">method</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isEmpty<span style="color:#f92672">(</span>clz<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isEmpty<span style="color:#f92672">(</span>meth<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * 真正的替换过程发生在这里，调用native层方法
+</span><span style="color:#75715e">             * 总结：Java层找到补丁，做防御检查，通过注解找到需要替换的方法，
+</span><span style="color:#75715e">             * 在native层进行真正的替换。
+</span><span style="color:#75715e">             */</span>
+            replaceMethod<span style="color:#f92672">(</span>classLoader<span style="color:#f92672">,</span> clz<span style="color:#f92672">,</span> meth<span style="color:#f92672">,</span> method<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>后面就是调用native层的方法，写在jni中，打包为.so文件供java层调用。</p>
+<p>总结一下，java层的功能就是找到补丁文件，根据补丁中的注解找到将要替换的方法然后交给jni层去处理替换方法的操作。好了，继续往下看。</p>
+<h2 id="native层源码分析">Native层源码分析</h2>
+<p>在jni的代码中支持Dalvik与ART，那么这是怎么区分的呢?在<code>AndFixManager</code>的构造方法中有这么一句:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isSupport</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isChecked<span style="color:#f92672">)</span>
+        <span style="color:#66d9ef">return</span> isSupport<span style="color:#f92672">;</span>
+
+    isChecked <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#75715e">// not support alibaba&#39;s YunOs
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isYunOS<span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> AndFix<span style="color:#f92672">.</span><span style="color:#a6e22e">setup</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> isSupportSDKVersion<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        isSupport <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>inBlackList<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        isSupport <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> isSupport<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>AndFix的`setUp()``方法:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">setup</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * 批注/vimerzhao/2017-8-20
+</span><span style="color:#75715e">         * 如果Art虚拟机版本更新为3.0.0+将导致Bug
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">final</span> String vmVersion <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">getProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;java.vm.version&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">boolean</span> isArt <span style="color:#f92672">=</span> vmVersion <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> vmVersion<span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;2&#34;</span><span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> apilevel <span style="color:#f92672">=</span> Build<span style="color:#f92672">.</span><span style="color:#a6e22e">VERSION</span><span style="color:#f92672">.</span><span style="color:#a6e22e">SDK_INT</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> setup<span style="color:#f92672">(</span>isArt<span style="color:#f92672">,</span> apilevel<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;setup&#34;</span><span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><p>最后调用<code>setup(isArt, apilevel)</code>的native方法，在<code>andfix.cpp</code>中注册jni方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> * JNI registration.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> JNINativeMethod gMethods[] <span style="color:#f92672">=</span> {
+    <span style="color:#75715e">/* name, signature, funcPtr */</span>
+    { <span style="color:#e6db74">&#34;setup&#34;</span>, <span style="color:#e6db74">&#34;(ZI)Z&#34;</span>, (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) setup }, { <span style="color:#e6db74">&#34;replaceMethod&#34;</span>,
+                                             <span style="color:#e6db74">&#34;(Ljava/lang/reflect/Method;Ljava/lang/reflect/Method;)V&#34;</span>,
+                                             (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) replaceMethod }, { <span style="color:#e6db74">&#34;setFieldFlag&#34;</span>,
+                                                 <span style="color:#e6db74">&#34;(Ljava/lang/reflect/Field;)V&#34;</span>, (<span style="color:#66d9ef">void</span><span style="color:#f92672">*</span>) setFieldFlag }, };
+
+</code></pre></div><p><code>Native</code>实现:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">static</span> jboolean <span style="color:#a6e22e">setup</span>(JNIEnv<span style="color:#f92672">*</span> env, jclass clazz, jboolean isart,
+        jint apilevel) {
+    isArt <span style="color:#f92672">=</span> isart;
+    LOGD(<span style="color:#e6db74">&#34;vm is: %s , apilevel is: %i&#34;</span>, (isArt <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;art&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;dalvik&#34;</span>),
+            (<span style="color:#66d9ef">int</span> )apilevel);
+    <span style="color:#66d9ef">if</span> (isArt) {
+        <span style="color:#66d9ef">return</span> art_setup(env, (<span style="color:#66d9ef">int</span>) apilevel);
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">return</span> dalvik_setup(env, (<span style="color:#66d9ef">int</span>) apilevel);
+    }
+}
+
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">replaceMethod</span>(JNIEnv<span style="color:#f92672">*</span> env, jclass clazz, jobject src,
+        jobject dest) {
+    <span style="color:#66d9ef">if</span> (isArt) {
+        art_replaceMethod(env, src, dest);
+    } <span style="color:#66d9ef">else</span> {
+        dalvik_replaceMethod(env, src, dest);
+    }
+}
+</code></pre></div><p>根据上层传过来的<code>isArt</code>判断调用<code>Dalvik</code>还是<code>Art</code>的方法。以<code>Dalvik</code>为例,继续往下分析,代码在<code>dalvik_method_replace.cpp</code>中<code>dalvik_setup</code>方法</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">extern</span> jboolean <span style="color:#a6e22e">__attribute__</span> ((visibility (<span style="color:#e6db74">&#34;hidden&#34;</span>))) dalvik_setup(
+        JNIEnv<span style="color:#f92672">*</span> env, <span style="color:#66d9ef">int</span> apilevel) {
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * 批注/vimerzhao/2017-8-20
+</span><span style="color:#75715e">     * 通过打开系统libdvm.so文件，获取到指定的两个函数，
+</span><span style="color:#75715e">     * 因为这两个函数在后面可以通过类对象获取其对应的
+</span><span style="color:#75715e">     * ClassObject结构题信息
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">void</span><span style="color:#f92672">*</span> dvm_hand <span style="color:#f92672">=</span> dlopen(<span style="color:#e6db74">&#34;libdvm.so&#34;</span>, RTLD_NOW);
+    <span style="color:#66d9ef">if</span> (dvm_hand) {
+        dvmDecodeIndirectRef_fnPtr <span style="color:#f92672">=</span> dvm_dlsym(dvm_hand,
+                apilevel <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span>
+                <span style="color:#e6db74">&#34;_Z20dvmDecodeIndirectRefP6ThreadP8_jobject&#34;</span> <span style="color:#f92672">:</span>
+                <span style="color:#e6db74">&#34;dvmDecodeIndirectRef&#34;</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>dvmDecodeIndirectRef_fnPtr) {
+            <span style="color:#66d9ef">return</span> JNI_FALSE;
+        }
+        dvmThreadSelf_fnPtr <span style="color:#f92672">=</span> dvm_dlsym(dvm_hand,
+                apilevel <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">10</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;_Z13dvmThreadSelfv&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;dvmThreadSelf&#34;</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>dvmThreadSelf_fnPtr) {
+            <span style="color:#66d9ef">return</span> JNI_FALSE;
+        }
+        jclass clazz <span style="color:#f92672">=</span> env<span style="color:#f92672">-&gt;</span>FindClass(<span style="color:#e6db74">&#34;java/lang/reflect/Method&#34;</span>);
+        jClassMethod <span style="color:#f92672">=</span> env<span style="color:#f92672">-&gt;</span>GetMethodID(clazz, <span style="color:#e6db74">&#34;getDeclaringClass&#34;</span>,
+                <span style="color:#e6db74">&#34;()Ljava/lang/Class;&#34;</span>);
+
+        <span style="color:#66d9ef">return</span> JNI_TRUE;
+    } <span style="color:#66d9ef">else</span> {
+        <span style="color:#66d9ef">return</span> JNI_FALSE;
+    }
+}
+
+</code></pre></div><p>替换方法的关键在于<code>native</code>层怎么影响内存里的java代码，我们知道java代码里将一个方法声明为<code>native</code>方法时,对此函数的调用就会到<code>native</code>世界里找，<code>AndFix</code>原理就是将一个不是<code>native</code>的方法修改成<code>native</code>方法，然后在<code>native</code>层进行替换，通过<code>dvmCallMethod_fnPtr</code>函数指针来调用<code>libdvm.so</code>中的<code>dvmCallMethod()</code>来加载替换后的新方法，达到替换方法的目的。Jni反射调用java方法时要用到一个<code>jmethodID</code>指针,这个指针在<code>Dalvik</code>里其实就是<code>Method</code>类,通过修改这个类的一些属性就可以实现在运行时将一个方法修改成<code>native</code>方法。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">extern</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">__attribute__</span> ((visibility (<span style="color:#e6db74">&#34;hidden&#34;</span>))) dalvik_replaceMethod(
+        JNIEnv<span style="color:#f92672">*</span> env, jobject src, jobject dest) {
+    jobject clazz <span style="color:#f92672">=</span> env<span style="color:#f92672">-&gt;</span>CallObjectMethod(dest, jClassMethod);
+    ClassObject<span style="color:#f92672">*</span> clz <span style="color:#f92672">=</span> (ClassObject<span style="color:#f92672">*</span>) dvmDecodeIndirectRef_fnPtr(
+            dvmThreadSelf_fnPtr(), clazz);
+    <span style="color:#75715e">// 初始化完毕
+</span><span style="color:#75715e"></span>    clz<span style="color:#f92672">-&gt;</span>status <span style="color:#f92672">=</span> CLASS_INITIALIZED;
+
+    <span style="color:#75715e">// meth是将被替换的方法
+</span><span style="color:#75715e"></span>    Method<span style="color:#f92672">*</span> meth <span style="color:#f92672">=</span> (Method<span style="color:#f92672">*</span>) env<span style="color:#f92672">-&gt;</span>FromReflectedMethod(src);
+    <span style="color:#75715e">// target是新的方法
+</span><span style="color:#75715e"></span>    Method<span style="color:#f92672">*</span> target <span style="color:#f92672">=</span> (Method<span style="color:#f92672">*</span>) env<span style="color:#f92672">-&gt;</span>FromReflectedMethod(dest);
+    LOGD(<span style="color:#e6db74">&#34;dalvikMethod: %s&#34;</span>, meth<span style="color:#f92672">-&gt;</span>name);
+
+    <span style="color:#75715e">//	meth-&gt;clazz = target-&gt;clazz;
+</span><span style="color:#75715e"></span>    meth<span style="color:#f92672">-&gt;</span>accessFlags <span style="color:#f92672">|=</span> ACC_PUBLIC;
+    meth<span style="color:#f92672">-&gt;</span>methodIndex <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>methodIndex;
+    meth<span style="color:#f92672">-&gt;</span>jniArgInfo <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>jniArgInfo;
+    meth<span style="color:#f92672">-&gt;</span>registersSize <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>registersSize;
+    meth<span style="color:#f92672">-&gt;</span>outsSize <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>outsSize;
+    meth<span style="color:#f92672">-&gt;</span>insSize <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>insSize;
+
+    meth<span style="color:#f92672">-&gt;</span>prototype <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>prototype;
+    meth<span style="color:#f92672">-&gt;</span>insns <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>insns;
+    meth<span style="color:#f92672">-&gt;</span>nativeFunc <span style="color:#f92672">=</span> target<span style="color:#f92672">-&gt;</span>nativeFunc;
+}
+
+</code></pre></div><p>看下dalvik_replaceMethod(env, src, dest);</p>
+<h2 id="总结">总结</h2>
+<p>AndFix热补丁原理就是在native动态替换方法java层的代码，通过native层hook java层的代码。</p>
+<h3 id="优点">优点</h3>
+<ul>
+<li>因为是动态的，所以不需要重启应用就可以生效</li>
+<li>支持ART与Dalvik</li>
+<li>与multidex方案相比，性能会有所提升(Multi Dex需要修改所有class的class_ispreverified标志位，导致运行时性能有所损失)</li>
+<li>支持新增加方法</li>
+<li>支持在新增方法中新增局部变量</li>
+<li>足够轻量，生成补丁文件简单</li>
+<li>安全性够高，验证签名</li>
+</ul>
+<h3 id="缺点">缺点</h3>
+<ul>
+<li>因为是动态的，跳过了类的初始化，设置为初始化完毕，所以对于静态方法、静态成员变量、构造方法或者class.forname()的处理可能会有问题</li>
+<li>不支持新增成员变量和修改成员变量</li>
+<li>官方apkPatch工具不支持multidex,但是可以通过修改工具来达到支持multidex的目的</li>
+<li>由于是在native层替换方法，某些缺心眼厂商可能会修改源生关键部分的native层实现，导致可能在某些特定ROM支持不够好</li>
+</ul>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="http://w4lle.com/2016/03/03/Android%E7%83%AD%E8%A1%A5%E4%B8%81%E4%B9%8BAndFix%E5%8E%9F%E7%90%86%E8%A7%A3%E6%9E%90/">Android热补丁之AndFix原理解析 | w4lle&rsquo;s Notes</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/ni-ming-nei-bu-lei-dao-zhi-re-bu-ding-crash/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">匿名内部类导致热补丁Crash</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/re-bu-ding-qzonefang-an-zai-dalvikxu-ni-ji-shang-de-shi-xian/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">热补丁：Qzone方案在Dalvik虚拟机上的实现</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

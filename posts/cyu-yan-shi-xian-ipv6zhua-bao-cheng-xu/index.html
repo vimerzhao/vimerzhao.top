@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>C语言实现IPv6抓包程序 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="C语言实现IPv6抓包程序" />
+<meta property="og:description" content="C语言实现IPv6抓包程序 本文记录了如何借助libpcap实现一个简单的抓包程序。 准备 对于实现一个抓包程序，最重要的是熟悉每种协议。熟悉协议包括两部分：每个协议具体字段的意义和每个协议在C语言中对应的" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/cyu-yan-shi-xian-ipv6zhua-bao-cheng-xu/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-04-19T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="C语言实现IPv6抓包程序"/>
+<meta name="twitter:description" content="C语言实现IPv6抓包程序 本文记录了如何借助libpcap实现一个简单的抓包程序。 准备 对于实现一个抓包程序，最重要的是熟悉每种协议。熟悉协议包括两部分：每个协议具体字段的意义和每个协议在C语言中对应的"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">C语言实现IPv6抓包程序</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-04-19T00:00:00Z">2017-04-19</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="c语言实现ipv6抓包程序">C语言实现IPv6抓包程序</h1>
+<p>本文记录了如何借助libpcap实现一个简单的抓包程序。</p>
+<h2 id="准备">准备</h2>
+<p>对于实现一个抓包程序，最重要的是熟悉每种协议。熟悉协议包括两部分：每个协议具体字段的意义和每个协议在C语言中对应的具体结构。
+关于每个协议的理论知识，可以参考《计算机网络》（第五版，谢希仁编著）就，需要注意的是关于IPv6的部分书中只是简单提及，比如具体数字对应的协议可能还需用自己查找，最有效的方式是Wiki和官方文档，这些资料可能比较晦涩而且又是英文，但绝对正确、权威。
+关于代码实现，可以查看<code>/usr/include/netinet</code>目录下的头文件，比如说<code>icmp6.h</code>下就记录了ICMPv6协议的格式：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> icmp6_hdr
+  {
+    uint8_t     icmp6_type;   <span style="color:#75715e">/* type field */</span>
+    uint8_t     icmp6_code;   <span style="color:#75715e">/* code field */</span>
+    uint16_t    icmp6_cksum;  <span style="color:#75715e">/* checksum field */</span>
+    <span style="color:#66d9ef">union</span>
+      {
+    uint32_t  icmp6_un_data32[<span style="color:#ae81ff">1</span>]; <span style="color:#75715e">/* type-specific field */</span>
+    uint16_t  icmp6_un_data16[<span style="color:#ae81ff">2</span>]; <span style="color:#75715e">/* type-specific field */</span>
+    uint8_t   icmp6_un_data8[<span style="color:#ae81ff">4</span>];  <span style="color:#75715e">/* type-specific field */</span>
+      } icmp6_dataun;
+  };
+</code></pre></div><p>所以这一部分只要弄懂了协议其实十分简单。</p>
+<p>此外，关于IPv6抓包，网上能找到的直接参考还是很少的，需要自己多下功夫！
+<img src="http://ond7j4cnz.bkt.clouddn.com/blog2017-04-19%2011-35-53%E5%B1%8F%E5%B9%95%E6%88%AA%E5%9B%BE.png" alt=""></p>
+<h2 id="实现">实现</h2>
+<p>代码十分简单，就是在解析一个比特流：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#75715e">/*
+</span><span style="color:#75715e"> ip_sniffer.c: capture packet(IPv4/IPv6)
+</span><span style="color:#75715e"> Copyright © 2017 Yu Zhao &lt;dutzhaoyu@gmail.com&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"> This program is free software: you can redistribute it and/or modify
+</span><span style="color:#75715e"> it under the terms of the GNU General Public License as published by
+</span><span style="color:#75715e"> the Free Software Foundation, either version 3 of the License, or
+</span><span style="color:#75715e"> (at your option) any later version.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"> This program is distributed in the hope that it will be useful,
+</span><span style="color:#75715e"> but WITHOUT ANY WARRANTY; without even the implied warranty of
+</span><span style="color:#75715e"> MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+</span><span style="color:#75715e"> GNU General Public License for more details.
+</span><span style="color:#75715e">
+</span><span style="color:#75715e"> You should have received a copy of the GNU General Public License
+</span><span style="color:#75715e"> along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+</span><span style="color:#75715e"> */</span>
+
+<span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdio.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;stdlib.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;string.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;pcap.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/in.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;net/ethernet.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;sys/socket.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;net/ethernet.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/ip_icmp.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/udp.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/tcp.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/ip.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;arpa/inet.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/icmp6.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;linux/ipv6.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;netinet/ip6.h&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#define DEFINE_ICMP 1
+</span><span style="color:#75715e">#define DEFINE_ICMPv6 58
+</span><span style="color:#75715e">#define DEFINE_TCP 6
+</span><span style="color:#75715e">#define DEFINE_UDP 17
+</span><span style="color:#75715e">#define DEFINE_FRAG 44
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ipv6_to_str</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> in6_addr <span style="color:#f92672">*</span>);
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ethernet_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ethernet_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv4_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv6_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv4_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv6_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_tcp_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_udp_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_tcp_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_udp_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv4_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv4_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv6_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv6_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_fragment</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>, <span style="color:#66d9ef">int</span>);
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_complete_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>, <span style="color:#66d9ef">int</span>);
+
+
+FILE <span style="color:#f92672">*</span>fp;
+<span style="color:#66d9ef">enum</span> { IPv4, IPv6 }IP_TYPE;
+<span style="color:#66d9ef">int</span> mac_size, ip_size, trans_size;<span style="color:#75715e">//icmp not belong to trans in theory.
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">int</span> ipv6_cnt, ipv4_cnt, loss_cnt;
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">my_packet_handler</span>(u_char <span style="color:#f92672">*</span>args, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> pcap_pkthdr <span style="color:#f92672">*</span>header, <span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet) {
+    <span style="color:#66d9ef">struct</span> ether_header <span style="color:#f92672">*</span>eth_header;
+    eth_header <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> ether_header <span style="color:#f92672">*</span>) packet;
+
+    <span style="color:#75715e">/* if packet is not complete,return */</span>
+    <span style="color:#66d9ef">if</span> (header<span style="color:#f92672">-&gt;</span>caplen <span style="color:#f92672">&lt;</span> header<span style="color:#f92672">-&gt;</span>len) {
+        loss_cnt<span style="color:#f92672">++</span>;
+        <span style="color:#66d9ef">return</span>;
+    }
+
+    <span style="color:#66d9ef">if</span> (ntohs(eth_header<span style="color:#f92672">-&gt;</span>ether_type) <span style="color:#f92672">==</span> ETHERTYPE_IPV6) {
+        fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">------------------------------IPv6------------------------------</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+        IP_TYPE <span style="color:#f92672">=</span> IPv6;
+        ipv6_cnt<span style="color:#f92672">++</span>;
+        print_ethernet_packet(packet, header<span style="color:#f92672">-&gt;</span>len);
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (ntohs(eth_header<span style="color:#f92672">-&gt;</span>ether_type) <span style="color:#f92672">==</span> ETHERTYPE_IP) {
+        fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n\n</span><span style="color:#e6db74">------------------------------IPv4------------------------------</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+        IP_TYPE <span style="color:#f92672">=</span> IPv4;
+        ipv4_cnt<span style="color:#f92672">++</span>;
+        print_ethernet_packet(packet, header<span style="color:#f92672">-&gt;</span>len);
+    }
+    printf(<span style="color:#e6db74">&#34;IPv4: %d,   IPv6: %d,   NOT COMPLETE: %d</span><span style="color:#ae81ff">\r</span><span style="color:#e6db74">&#34;</span>, ipv4_cnt, ipv6_cnt, loss_cnt);
+
+    fprintf(fp, <span style="color:#e6db74">&#34;Ethernet Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    print_complete_packet(packet, mac_size);
+
+    fprintf(fp, <span style="color:#e6db74">&#34;IP Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    print_complete_packet(packet<span style="color:#f92672">+</span>mac_size, ip_size);
+
+    fprintf(fp, <span style="color:#e6db74">&#34;TCP/UDP/ICMP Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    print_complete_packet(packet<span style="color:#f92672">+</span>mac_size<span style="color:#f92672">+</span>ip_size, trans_size);
+
+    fprintf(fp, <span style="color:#e6db74">&#34;DATA Packet</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    <span style="color:#66d9ef">int</span> header_sum <span style="color:#f92672">=</span> mac_size <span style="color:#f92672">+</span> ip_size <span style="color:#f92672">+</span> trans_size;
+    print_complete_packet(packet <span style="color:#f92672">+</span> header_sum, header<span style="color:#f92672">-&gt;</span>len <span style="color:#f92672">-</span> header_sum);
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">*</span> argv[]) {
+    pcap_t <span style="color:#f92672">*</span>handle;
+    <span style="color:#66d9ef">char</span> error_buffer[PCAP_ERRBUF_SIZE];
+    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>device;
+    <span style="color:#66d9ef">int</span> snapshot_len <span style="color:#f92672">=</span> <span style="color:#ae81ff">1028</span>;
+    <span style="color:#66d9ef">int</span> promiscuous <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    <span style="color:#66d9ef">int</span> timeout <span style="color:#f92672">=</span> <span style="color:#ae81ff">1000</span>;
+
+    mac_size <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr);
+    ipv4_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    ipv6_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+    loss_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+
+    device <span style="color:#f92672">=</span> pcap_lookupdev(error_buffer);
+    <span style="color:#66d9ef">if</span> (device <span style="color:#f92672">==</span> NULL) {
+        printf(<span style="color:#e6db74">&#34;Error finding device: %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, error_buffer);
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+    }
+    printf(<span style="color:#e6db74">&#34;DEVICE:    %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, device);
+    <span style="color:#66d9ef">if</span>((fp <span style="color:#f92672">=</span> fopen(<span style="color:#e6db74">&#34;sniffer_log.txt&#34;</span>, <span style="color:#e6db74">&#34;w&#34;</span>)) <span style="color:#f92672">==</span> NULL) {
+        fprintf(stderr, <span style="color:#e6db74">&#34;Can not open sniffer_log.txt</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+        exit(<span style="color:#ae81ff">1</span>);
+    }
+    handle <span style="color:#f92672">=</span> pcap_open_live(device, snapshot_len, promiscuous, timeout, error_buffer);
+    pcap_loop(handle, <span style="color:#ae81ff">0</span>, my_packet_handler, NULL);
+    pcap_close(handle);
+    <span style="color:#66d9ef">if</span> (fclose(fp) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+        fprintf(stderr, <span style="color:#e6db74">&#34;Close sniffer_log.txt fail!</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+        exit(<span style="color:#ae81ff">1</span>);
+    }
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ethernet_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    print_ethernet_header(packet, size);
+    <span style="color:#66d9ef">if</span> (IPv4 <span style="color:#f92672">==</span> IP_TYPE) {
+        print_ipv4_packet(packet, size);
+    } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (IPv6 <span style="color:#f92672">==</span> IP_TYPE) {
+        print_ipv6_packet(packet, size);
+    }
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ethernet_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    <span style="color:#66d9ef">struct</span> ethhdr <span style="color:#f92672">*</span>eth <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> ethhdr <span style="color:#f92672">*</span>)packet;
+    fprintf(fp , <span style="color:#e6db74">&#34;Ethernet Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">|-Destination Address  : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, eth<span style="color:#f92672">-&gt;</span>h_dest[<span style="color:#ae81ff">0</span>] , eth<span style="color:#f92672">-&gt;</span>h_dest[<span style="color:#ae81ff">1</span>] , eth<span style="color:#f92672">-&gt;</span>h_dest[<span style="color:#ae81ff">2</span>] , eth<span style="color:#f92672">-&gt;</span>h_dest[<span style="color:#ae81ff">3</span>] , eth<span style="color:#f92672">-&gt;</span>h_dest[<span style="color:#ae81ff">4</span>] , eth<span style="color:#f92672">-&gt;</span>h_dest[<span style="color:#ae81ff">5</span>] );
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">|-Source Address       : %.2X-%.2X-%.2X-%.2X-%.2X-%.2X</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, eth<span style="color:#f92672">-&gt;</span>h_source[<span style="color:#ae81ff">0</span>] , eth<span style="color:#f92672">-&gt;</span>h_source[<span style="color:#ae81ff">1</span>] , eth<span style="color:#f92672">-&gt;</span>h_source[<span style="color:#ae81ff">2</span>] , eth<span style="color:#f92672">-&gt;</span>h_source[<span style="color:#ae81ff">3</span>] , eth<span style="color:#f92672">-&gt;</span>h_source[<span style="color:#ae81ff">4</span>] , eth<span style="color:#f92672">-&gt;</span>h_source[<span style="color:#ae81ff">5</span>] );
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">|-Protocol             : %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span>)eth<span style="color:#f92672">-&gt;</span>h_proto);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv4_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    print_ipv4_header(packet, size);
+    <span style="color:#66d9ef">struct</span> iphdr <span style="color:#f92672">*</span>iph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> iphdr <span style="color:#f92672">*</span>)(packet  <span style="color:#f92672">+</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr) );
+    <span style="color:#66d9ef">int</span> ip4len <span style="color:#f92672">=</span> iph<span style="color:#f92672">-&gt;</span>ihl<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>;
+    <span style="color:#66d9ef">int</span> offset <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr) <span style="color:#f92672">+</span> ip4len;
+    <span style="color:#66d9ef">switch</span> (iph<span style="color:#f92672">-&gt;</span>protocol) {
+       <span style="color:#66d9ef">case</span> DEFINE_ICMP:
+            print_icmpv4_packet(packet, size, offset); <span style="color:#66d9ef">break</span>;
+       <span style="color:#66d9ef">case</span> DEFINE_TCP:
+            print_tcp_packet(packet, size, offset); <span style="color:#66d9ef">break</span>;
+       <span style="color:#66d9ef">case</span> DEFINE_UDP:
+            print_udp_packet(packet, size, offset); <span style="color:#66d9ef">break</span>;
+    }
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv4_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    <span style="color:#66d9ef">struct</span> sockaddr_in source,dest;
+    <span style="color:#66d9ef">struct</span> iphdr <span style="color:#f92672">*</span>iph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> iphdr <span style="color:#f92672">*</span>)(packet  <span style="color:#f92672">+</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr) );
+
+    memset(<span style="color:#f92672">&amp;</span>source, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(source));
+    source.sin_addr.s_addr <span style="color:#f92672">=</span> iph<span style="color:#f92672">-&gt;</span>saddr;
+
+    memset(<span style="color:#f92672">&amp;</span>dest, <span style="color:#ae81ff">0</span>, <span style="color:#66d9ef">sizeof</span>(dest));
+    dest.sin_addr.s_addr <span style="color:#f92672">=</span> iph<span style="color:#f92672">-&gt;</span>daddr;
+
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">IP Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Version           : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>version);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Header Length     : %d DWORDS or %d Bytes</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>ihl,((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(iph<span style="color:#f92672">-&gt;</span>ihl))<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Type Of Service      : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>tos);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Total Length      : %d  Bytes(size of Packet)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(iph<span style="color:#f92672">-&gt;</span>tot_len));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Identification       : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(iph<span style="color:#f92672">-&gt;</span>id));
+    <span style="color:#75715e">//fprintf(fp , &#34;   |-Reserved ZERO Field   : %d\n&#34;,(unsigned int)iphdr-&gt;ip_reserved_zero);
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//fprintf(fp , &#34;   |-Dont Fragment Field   : %d\n&#34;,(unsigned int)iphdr-&gt;ip_dont_fragment);
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//fprintf(fp , &#34;   |-More Fragment Field   : %d\n&#34;,(unsigned int)iphdr-&gt;ip_more_fragment);
+</span><span style="color:#75715e"></span>    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-TTL                  : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>ttl);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Protocol             : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>protocol);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Checksum             : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(iph<span style="color:#f92672">-&gt;</span>check));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Source IP            : %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> , inet_ntoa(source.sin_addr) );
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Destination IP       : %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> , inet_ntoa(dest.sin_addr) );
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv6_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    print_ipv6_header(packet, size);
+    <span style="color:#66d9ef">struct</span> ipv6hdr <span style="color:#f92672">*</span>iph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> ipv6hdr <span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr) );
+    <span style="color:#66d9ef">int</span> offset <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr) <span style="color:#f92672">+</span> <span style="color:#ae81ff">40</span><span style="color:#f92672">*</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">char</span>);
+    <span style="color:#66d9ef">switch</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>nexthdr) {
+        <span style="color:#66d9ef">case</span> DEFINE_ICMPv6:
+            print_icmpv6_packet(packet, size, offset); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> DEFINE_TCP:
+            print_tcp_packet(packet, size, offset); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> DEFINE_UDP:
+            print_udp_packet(packet, size, offset); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> DEFINE_FRAG:
+            print_fragment(packet, size, offset);
+            <span style="color:#66d9ef">break</span>;
+    }
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_ipv6_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    <span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">short</span> iphdrlen;
+    <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>ipv6_addr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>)malloc(<span style="color:#ae81ff">40</span><span style="color:#f92672">*</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">char</span>));
+    <span style="color:#66d9ef">struct</span> ipv6hdr <span style="color:#f92672">*</span>iph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> ipv6hdr <span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ethhdr) );
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t</span><span style="color:#e6db74">IPv6 Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Version        : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>version);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Traffic Class  : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>priority);
+    <span style="color:#75715e">//fprintf(fp, &#34;   |-IP Flow Label     : %d\n&#34;, ()iph-&gt;);
+</span><span style="color:#75715e"></span>    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Payload Length : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>payload_len);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP  Next Header   : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>nexthdr);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-IP Hop Limit      : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)iph<span style="color:#f92672">-&gt;</span>hop_limit);
+    ipv6_to_str(ipv6_addr, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> in6_addr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>iph<span style="color:#f92672">-&gt;</span>saddr);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Source IP         : %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, ipv6_addr);
+    ipv6_to_str(ipv6_addr, (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> in6_addr <span style="color:#f92672">*</span>)<span style="color:#f92672">&amp;</span>iph<span style="color:#f92672">-&gt;</span>daddr);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">|-Destination IP    : %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, ipv6_addr);
+    free(ipv6_addr);
+    ip_size <span style="color:#f92672">=</span> <span style="color:#ae81ff">40</span><span style="color:#f92672">*</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">char</span>);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">ipv6_to_str</span>(<span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span> str, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> in6_addr <span style="color:#f92672">*</span>addr) {
+   sprintf(str, <span style="color:#e6db74">&#34;%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x:%02x%02x&#34;</span>,
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">0</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">1</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">2</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">3</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">4</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">5</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">6</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">7</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">8</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">9</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">10</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">11</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">12</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">13</span>],
+                 (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">14</span>], (<span style="color:#66d9ef">int</span>)addr<span style="color:#f92672">-&gt;</span>s6_addr[<span style="color:#ae81ff">15</span>]);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_tcp_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    print_tcp_header(packet, size, offset);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_tcp_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    <span style="color:#66d9ef">struct</span> tcphdr <span style="color:#f92672">*</span>tcph<span style="color:#f92672">=</span>(<span style="color:#66d9ef">struct</span> tcphdr<span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> offset);
+
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">TCP Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Source Port         : %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(tcph<span style="color:#f92672">-&gt;</span>source));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Destination Port    : %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(tcph<span style="color:#f92672">-&gt;</span>dest));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Sequence Number     : %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohl(tcph<span style="color:#f92672">-&gt;</span>seq));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Acknowledge Number  : %u</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohl(tcph<span style="color:#f92672">-&gt;</span>ack_seq));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Header Length       : %d DWORDS or %d BYTES</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> ,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>doff,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>doff<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>);
+    <span style="color:#75715e">//fprintf(fp , &#34;   |-CWR Flag : %d\n&#34;,(unsigned int)tcph-&gt;cwr);
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//fprintf(fp , &#34;   |-ECN Flag : %d\n&#34;,(unsigned int)tcph-&gt;ece);
+</span><span style="color:#75715e"></span>    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Urgent Flag         : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>urg);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Acknowledgement Flag: %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>ack);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Push Flag           : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>psh);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Reset Flag          : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>rst);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Synchronise Flag    : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>syn);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Finish Flag         : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)tcph<span style="color:#f92672">-&gt;</span>fin);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Window              : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(tcph<span style="color:#f92672">-&gt;</span>window));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Checksum            : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(tcph<span style="color:#f92672">-&gt;</span>check));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Urgent Pointer      : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,tcph<span style="color:#f92672">-&gt;</span>urg_ptr);
+
+    trans_size <span style="color:#f92672">=</span> tcph<span style="color:#f92672">-&gt;</span>doff<span style="color:#f92672">*</span><span style="color:#ae81ff">4</span>;<span style="color:#75715e">//Data Offset
+</span><span style="color:#75715e"></span>}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_udp_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    print_udp_header(packet, size, offset);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_udp_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    <span style="color:#66d9ef">struct</span> udphdr <span style="color:#f92672">*</span>udph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> udphdr<span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> offset);
+
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">UDP Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Source Port      : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> , ntohs(udph<span style="color:#f92672">-&gt;</span>source));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Destination Port : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> , ntohs(udph<span style="color:#f92672">-&gt;</span>dest));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-UDP Length       : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> , ntohs(udph<span style="color:#f92672">-&gt;</span>len));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-UDP Checksum     : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> , ntohs(udph<span style="color:#f92672">-&gt;</span>check));
+
+    trans_size <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> udphdr);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv4_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    print_icmpv4_header(packet, size, offset);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv4_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    <span style="color:#66d9ef">struct</span> icmphdr <span style="color:#f92672">*</span>icmph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> icmphdr <span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> offset);
+
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">ICMP Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Type : %d&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(icmph<span style="color:#f92672">-&gt;</span>type));
+
+    <span style="color:#66d9ef">switch</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(icmph<span style="color:#f92672">-&gt;</span>type)) {
+        <span style="color:#66d9ef">case</span> ICMP_ECHOREPLY:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Echo Reply</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_DEST_UNREACH:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Destination Unreachable</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_SOURCE_QUENCH:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Source Quench</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_REDIRECT:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Redirect (change route)</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_ECHO:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Echo Request</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_TIME_EXCEEDED:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Time Exceeded</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_PARAMETERPROB:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Parameter Problem</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_TIMESTAMP:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Timestamp Request</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> ICMP_TIMESTAMPREPLY:
+            fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">Timestamp Reply</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>); <span style="color:#66d9ef">break</span>;
+    }
+
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Code : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(icmph<span style="color:#f92672">-&gt;</span>code));
+    fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Checksum : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>,ntohs(icmph<span style="color:#f92672">-&gt;</span>checksum));
+    <span style="color:#75715e">//fprintf(fp , &#34;   |-ID       : %d\n&#34;,ntohs(icmph-&gt;id));
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">//fprintf(fp , &#34;   |-Sequence : %d\n&#34;,ntohs(icmph-&gt;sequence));
+</span><span style="color:#75715e"></span>
+    trans_size <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> icmphdr);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv6_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    print_icmpv6_header(packet, size, offset);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_icmpv6_header</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    <span style="color:#66d9ef">struct</span> icmp6_hdr <span style="color:#f92672">*</span>icmph <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> icmp6_hdr <span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> offset);
+    fprintf(fp ,<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">ICMPv6 Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp ,<span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Type       : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(icmph<span style="color:#f92672">-&gt;</span>icmp6_type));
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Code       : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(icmph<span style="color:#f92672">-&gt;</span>icmp6_code));
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Checksum   : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(icmph<span style="color:#f92672">-&gt;</span>icmp6_code));
+
+    trans_size <span style="color:#f92672">=</span> <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> icmp6_hdr);
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_fragment</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size, <span style="color:#66d9ef">int</span> offset) {
+    <span style="color:#66d9ef">struct</span> ip6_frag <span style="color:#f92672">*</span>frag_hdr <span style="color:#f92672">=</span> (<span style="color:#66d9ef">struct</span> ip6_frag <span style="color:#f92672">*</span>)(packet <span style="color:#f92672">+</span> offset);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t</span><span style="color:#e6db74">Fragment Header</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Next Header    : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(frag_hdr<span style="color:#f92672">-&gt;</span>ip6f_nxt));
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Fragment Offset: %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(frag_hdr<span style="color:#f92672">-&gt;</span>ip6f_offlg));
+    fprintf(fp, <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\t\t\t</span><span style="color:#e6db74">|-Identification : %d</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(frag_hdr<span style="color:#f92672">-&gt;</span>ip6f_ident));
+    <span style="color:#66d9ef">switch</span> ((<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)(frag_hdr<span style="color:#f92672">-&gt;</span>ip6f_nxt)) {
+        <span style="color:#66d9ef">case</span> DEFINE_TCP:
+            print_tcp_packet(packet, size, offset<span style="color:#f92672">+</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ip6_frag));
+            <span style="color:#66d9ef">break</span>;
+        <span style="color:#66d9ef">case</span> DEFINE_UDP:
+            print_udp_packet(packet, size, offset<span style="color:#f92672">+</span><span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> ip6_frag));
+            <span style="color:#66d9ef">break</span>;
+    }
+}
+
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">print_complete_packet</span>(<span style="color:#66d9ef">const</span> u_char <span style="color:#f92672">*</span>packet, <span style="color:#66d9ef">int</span> size) {
+    <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span> ; i <span style="color:#f92672">&lt;</span> size ; <span style="color:#f92672">++</span>i) {
+        <span style="color:#66d9ef">if</span>( i<span style="color:#f92672">!=</span><span style="color:#ae81ff">0</span> <span style="color:#f92672">&amp;&amp;</span> i<span style="color:#f92672">%</span><span style="color:#ae81ff">16</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>) {
+            fprintf(fp , <span style="color:#e6db74">&#34;         &#34;</span>);
+            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i<span style="color:#f92672">-</span><span style="color:#ae81ff">16</span> ; j <span style="color:#f92672">&lt;</span> i ; j<span style="color:#f92672">++</span>) {
+                fprintf(fp , <span style="color:#e6db74">&#34;%c&#34;</span>, (packet[j]<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">&amp;&amp;</span> packet[j]<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">128</span>) <span style="color:#f92672">?</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)packet[j] <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;.&#39;</span>);
+            }
+            fprintf(fp , <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+        }
+        <span style="color:#66d9ef">if</span>(i<span style="color:#f92672">%</span><span style="color:#ae81ff">16</span><span style="color:#f92672">==</span><span style="color:#ae81ff">0</span>) fprintf(fp, <span style="color:#e6db74">&#34;   &#34;</span>);
+        fprintf(fp , <span style="color:#e6db74">&#34;%02X &#34;</span>,(<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">int</span>)packet[i]);
+        <span style="color:#66d9ef">if</span>( size<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> i) {
+            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;j <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">15</span><span style="color:#f92672">-</span>i<span style="color:#f92672">%</span><span style="color:#ae81ff">16</span>; <span style="color:#f92672">++</span>j) {
+                fprintf(fp , <span style="color:#e6db74">&#34;   &#34;</span>);
+            }
+            fprintf(fp , <span style="color:#e6db74">&#34;         &#34;</span>);
+            <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i<span style="color:#f92672">-</span>i<span style="color:#f92672">%</span><span style="color:#ae81ff">16</span> ; j <span style="color:#f92672">&lt;=</span> i ; <span style="color:#f92672">++</span>j) {
+                fprintf(fp , <span style="color:#e6db74">&#34;%c&#34;</span>, (packet[j]<span style="color:#f92672">&gt;=</span><span style="color:#ae81ff">32</span> <span style="color:#f92672">&amp;&amp;</span> packet[j]<span style="color:#f92672">&lt;=</span><span style="color:#ae81ff">128</span>) <span style="color:#f92672">?</span> (<span style="color:#66d9ef">unsigned</span> <span style="color:#66d9ef">char</span>)packet[j] <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;.&#39;</span>);
+            }
+            fprintf(fp ,  <span style="color:#e6db74">&#34;</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span> );
+        }
+    }
+}
+</code></pre></div><h2 id="抓包">抓包</h2>
+<p>编译以上代码：</p>
+<pre><code>$ gcc ip_sniffer.c -lpcap
+$ sudo ./a.out
+</code></pre><p>然后在浏览器打开一个窗口，如<a href="http://test-ipv6.com/">http://test-ipv6.com/</a>。便可以抓到数据包，由于数据较多，选取一段：</p>
+<pre><code></code></pre>
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/bi-shi-zong-jie-line2018shi-xi-sheng-ruan-jian-gong-cheng-shi/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">笔试总结：LINE2018实习生（软件工程师）</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/tcplian-jie-de-jian-li-yu-shi-fang/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">TCP连接的建立与释放</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

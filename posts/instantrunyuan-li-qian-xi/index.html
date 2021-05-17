@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>InstantRun原理浅析 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="InstantRun原理浅析" />
+<meta property="og:description" content="InstantRun原理浅析 本文从宏观上简要介绍了InstantRun的实现原理。 InstantRun概述 InstantRun是Android Studio2.0推出的新功能，旨在加快构建编译速度，提升" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/instantrunyuan-li-qian-xi/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2017-08-17T00:00:00&#43;00:00" />
+<meta property="article:modified_time" content="2021-05-16T17:12:53&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="InstantRun原理浅析"/>
+<meta name="twitter:description" content="InstantRun原理浅析 本文从宏观上简要介绍了InstantRun的实现原理。 InstantRun概述 InstantRun是Android Studio2.0推出的新功能，旨在加快构建编译速度，提升"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">InstantRun原理浅析</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-08-17T00:00:00Z">2017-08-17</time>
+	<time class="meta__text" datetime="2021-05-16T17:12:53&#43;08:00">(最后修改: 2021-05-16)</time></div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="instantrun原理浅析">InstantRun原理浅析</h1>
+<p>本文从宏观上简要介绍了InstantRun的实现原理。</p>
+<h2 id="instantrun概述">InstantRun概述</h2>
+<p>InstantRun是Android Studio2.0推出的新功能，旨在加快构建编译速度，提升开发体验，详细可参见<a href="https://developer.android.com/studio/run/index.html#instant-run">构建和运行您的应用 | Android Studio</a>。
+从流程角度来看，这是我们正常的开发流程：</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instantrun-001.png" alt=""></p>
+<p>即修改-编译-部署-重启。但是InstantRun的核心思想在于只编译修改了的部分</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instantrun-002.png" alt=""></p>
+<p>即修改-编译修改部分-部署修改部分-部署&hellip;.关于<code>Cold Swap</code>、<code>Warm Swap</code>和<code>Hot Swap</code>参考：</p>
+<ul>
+<li><a href="https://medium.com/google-developers/instant-run-how-does-it-work-294a1633367f">Instant Run: How Does it Work?! – Google Developers – Medium</a></li>
+<li><a href="https://android.googlesource.com/platform/tools/base/+/studio-master-dev/instant-run/README.md">Android Developer Tools - Instant Run</a></li>
+</ul>
+<h2 id="程序员的品味">程序员的品味</h2>
+<p>（本段是个人感悟）
+一开始我用Android Studio的时候觉得修改代码之后重新编译、运行是再自然不过的事情了。可顶尖的程序员就是不一样，一个庞大的Android项目可能需要编译几分钟、几小时，仅仅是因为修改了几行代码！我个人感觉优秀的程序员有一个与生俱来的特质：追求极致的效率。所以InstantRun应运而生。但是仔细想想，这东西其实早就有了：make。make就是只会编译修改了的代码从而提高了开发效率。只是Android开发开发的特点导致其在实现上稍有不同。且不论编程语言不同，Android开发的一大特点就是开发环境与运行环境是分开的，所以InstantRun的实现也采用了C/S模式，以下是源码的第一层结构：</p>
+<pre><code>.
+├── BUILD
+├── instant-run-annotations
+├── instant-run-client
+├── instant-run-common
+├── instant-run.iml
+├── instant-run-runtime
+├── instant-run-server
+└── README.md
+</code></pre><p>这里的Server端就是我们的设备而Client端才是电脑，通过USB通信。所以在我看来，InstantRun就是Android开发中对make增量编译的实现。</p>
+<h2 id="逆向分析">逆向分析</h2>
+<p>需要说明的是，本文用于演示的Android Studio版本是2.0，InstantRun的版本是gradle2.0.0的，实际上已经和最新版本的使用有些出入，源码也有所改动，但研究其最初版本更有助于理解InstantRun的实现思路，以后会详细分析gradle2.0.0中InstantRun到gradle2.3.0中InstantRun实现的变更，以及相关细节。
+首先新建一个工程，自定义一个<code>Application</code>，运行后在<code>output/apk</code>目录下拿到安装包，解压后发现目录结构如下：</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instant-run-001.PNG" alt=""></p>
+<p>反编译<code>AndroidManifest.xml</code>发现我们自己<code>Application</code>已经被替换:</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instant-run-003.png" alt=""></p>
+<p>并且我们自己代码的dex文件已经被打包进了<code>instant-run.zip</code>文件:</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instant-run-006.png" alt=""></p>
+<p>而<code>classes.dex</code>和<code>classes2.dex</code>反编译出来的代码则对应InstantRun的代理<code>Application</code>:</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instant-run-002.PNG" alt=""></p>
+<p>具体来说对应的是<code>imtermidiates</code>目录下的<code>instant-run.jar</code>和<code>instant-run-bootstrap.jar</code>文件</p>
+<p><img src="http://ouv3jwdep.bkt.clouddn.com/2017-8-19instant-run-007.png" alt=""></p>
+<p>通过以上分析可知，突破口是<code>BootstrapApplication</code>。</p>
+<h2 id="源码分析">源码分析</h2>
+<p>这一部分需要对Android的底层机制，尤其是<strong>应用如何启动（<code>Application</code>的执行流程）、资源如何加载</strong>等问题比较熟悉，最好读过源码，否则看起来会比较晦涩。此外，既然是浅析，就要把关注点放在逻辑流程上，对于安全性检查、兼容低版本等代码适当忽略以求抓住重点。</p>
+<h3 id="attachbasecontext分析"><code>attachBaseContext</code>分析</h3>
+<p><code>BootstrapApplication</code>的<code>attachBaseContext</code>是分析的入口：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">attachBaseContext</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// As of Marshmallow, we use APK splits and don&#39;t need to rely on
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// reflection to inject classes and resources for coldswap
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//noinspection PointlessBooleanExpression
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">usingApkSplits</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            String apkFile <span style="color:#f92672">=</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getApplicationInfo</span><span style="color:#f92672">().</span><span style="color:#a6e22e">sourceDir</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">long</span> apkModified <span style="color:#f92672">=</span> apkFile <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">new</span> File<span style="color:#f92672">(</span>apkFile<span style="color:#f92672">).</span><span style="color:#a6e22e">lastModified</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> 0L<span style="color:#f92672">;</span>
+            createResources<span style="color:#f92672">(</span>apkModified<span style="color:#f92672">);</span>
+            setupClassLoaders<span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> context<span style="color:#f92672">.</span><span style="color:#a6e22e">getCacheDir</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">(),</span> apkModified<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        createRealApplication<span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// This is called from ActivityThread#handleBindApplication() -&gt; LoadedApk#makeApplication().
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Application#mApplication is changed right after this call, so we cannot do the monkey
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// patching here. So just forward this method to the real Application instance.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">attachBaseContext</span><span style="color:#f92672">(</span>context<span style="color:#f92672">);</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>realApplication <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                Method attachBaseContext <span style="color:#f92672">=</span>
+                        ContextWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;attachBaseContext&#34;</span><span style="color:#f92672">,</span> Context<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+                attachBaseContext<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                attachBaseContext<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>realApplication<span style="color:#f92672">,</span> context<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>流程如下：<code>createResources</code>&ndash;&gt;<code>setupClassLoaders</code>&ndash;&gt;<code>createRealApplication</code>在此过程即完成了资源和代码的更新。</p>
+<h4 id="createresources分析"><code>createResources</code>分析</h4>
+<p>代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createResources</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// Look for changes stashed in the inbox folder while the server was not running
+</span><span style="color:#75715e"></span>        FileManager<span style="color:#f92672">.</span><span style="color:#a6e22e">checkInbox</span><span style="color:#f92672">();</span>
+
+        File file <span style="color:#f92672">=</span> FileManager<span style="color:#f92672">.</span><span style="color:#a6e22e">getExternalResourceFile</span><span style="color:#f92672">();</span>
+        externalResourcePath <span style="color:#f92672">=</span> file <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> file<span style="color:#f92672">.</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Resource override is &#34;</span> <span style="color:#f92672">+</span> externalResourcePath<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>file <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">long</span> resourceModified <span style="color:#f92672">=</span> file<span style="color:#f92672">.</span><span style="color:#a6e22e">lastModified</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Resource patch last modified: &#34;</span> <span style="color:#f92672">+</span> resourceModified<span style="color:#f92672">);</span>
+                    Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;APK last modified: &#34;</span> <span style="color:#f92672">+</span> apkModified <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">+</span>
+                            <span style="color:#f92672">(</span>apkModified <span style="color:#f92672">&gt;</span> resourceModified <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;&gt;&#34;</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#34;&lt;&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; resource patch&#34;</span><span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>apkModified <span style="color:#f92672">==</span> 0L <span style="color:#f92672">||</span> resourceModified <span style="color:#f92672">&lt;=</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Ignoring resource file, older than APK&#34;</span><span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+                    externalResourcePath <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Failed to check patch timestamps&#34;</span><span style="color:#f92672">,</span> t<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>很多语句在打日志，主要是分析<code>resource.ap_</code>是否该改变，即资源是否由增减或修改。</p>
+<h4 id="setupclassloaders分析"><code>setupClassLoaders</code>分析</h4>
+<p>代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setupClassLoaders</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> String codeCacheDir<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dexList <span style="color:#f92672">=</span> FileManager<span style="color:#f92672">.</span><span style="color:#a6e22e">getDexList</span><span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> apkModified<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// Make sure class loader finds these
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unused&#34;</span><span style="color:#f92672">)</span> Class<span style="color:#f92672">&lt;</span>Server<span style="color:#f92672">&gt;</span> server <span style="color:#f92672">=</span> Server<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+        <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unused&#34;</span><span style="color:#f92672">)</span> Class<span style="color:#f92672">&lt;</span>MonkeyPatcher<span style="color:#f92672">&gt;</span> patcher <span style="color:#f92672">=</span> MonkeyPatcher<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>dexList<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Bootstrapping class loader with dex list &#34;</span> <span style="color:#f92672">+</span> join<span style="color:#f92672">(</span><span style="color:#e6db74">&#39;\n&#39;</span><span style="color:#f92672">,</span> dexList<span style="color:#f92672">));</span>
+            <span style="color:#f92672">}</span>
+
+            ClassLoader classLoader <span style="color:#f92672">=</span> BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getClassLoader</span><span style="color:#f92672">();</span>
+            String nativeLibraryPath<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                nativeLibraryPath <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>String<span style="color:#f92672">)</span> classLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;getLdLibraryPath&#34;</span><span style="color:#f92672">)</span>
+                                <span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>classLoader<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Native library path: &#34;</span> <span style="color:#f92672">+</span> nativeLibraryPath<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Failed to determine native library path &#34;</span> <span style="color:#f92672">+</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">getMessage</span><span style="color:#f92672">());</span>
+                nativeLibraryPath <span style="color:#f92672">=</span> FileManager<span style="color:#f92672">.</span><span style="color:#a6e22e">getNativeLibraryFolder</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+            IncrementalClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">inject</span><span style="color:#f92672">(</span>
+                    classLoader<span style="color:#f92672">,</span>
+                    nativeLibraryPath<span style="color:#f92672">,</span>
+                    codeCacheDir<span style="color:#f92672">,</span>
+                    dexList<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>继续看<code>IncrementalClassLoader.inject</code></p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ClassLoader <span style="color:#a6e22e">inject</span><span style="color:#f92672">(</span>
+            ClassLoader classLoader<span style="color:#f92672">,</span> String nativeLibraryPath<span style="color:#f92672">,</span> String codeCacheDir<span style="color:#f92672">,</span>
+            List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dexes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        IncrementalClassLoader incrementalClassLoader <span style="color:#f92672">=</span>
+                <span style="color:#66d9ef">new</span> IncrementalClassLoader<span style="color:#f92672">(</span>classLoader<span style="color:#f92672">,</span> nativeLibraryPath<span style="color:#f92672">,</span> codeCacheDir<span style="color:#f92672">,</span> dexes<span style="color:#f92672">);</span>
+        setParent<span style="color:#f92672">(</span>classLoader<span style="color:#f92672">,</span> incrementalClassLoader<span style="color:#f92672">);</span>
+
+        <span style="color:#75715e">// This works as follows:
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// We&#39;re given the current class loader that&#39;s used to load the bootstrap application.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// We have a new class loader which reads patches/overrides from the data directory
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// instead. We want *that* class loader to have the bootstrap class loader&#39;s parent
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// as its parent, and then we make the bootstrap class loader parented by our
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// class loader.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// In other words, we have this:
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//      BootstrapApplication.classLoader = ClassLoader1, parent=ClassLoader2
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// We create ClassLoader3 from the .dex files in the data directory, and arrange for
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// the hierarchy to be like this:
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//      BootstrapApplication.classLoader = ClassLoader1, parent=ClassLoader3, parent=ClassLoader2
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// With this approach, a class find (which should always look at the parents first) should
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// find anything from ClassLoader3 before they get them from ClassLoader1.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// (Note that ClassLoader2 in the above is generally the BootClassLoader, not containing
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// any classes we care about.)
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">return</span> incrementalClassLoader<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>由注释可以更加确定，其实就是利用<strong>双亲委托模式</strong>在中间安插一个加载器，从而控制对dex的加载。</p>
+<h4 id="createrealapplication分析"><code>createRealApplication</code>分析</h4>
+<p>代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createRealApplication</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationClass</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;About to create real application of class name = &#34;</span> <span style="color:#f92672">+</span>
+                        AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationClass</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
+                Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Application<span style="color:#f92672">&gt;</span> realClass <span style="color:#f92672">=</span>
+                        <span style="color:#f92672">(</span>Class<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Application<span style="color:#f92672">&gt;)</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationClass</span><span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Created delegate app class successfully : &#34;</span> <span style="color:#f92672">+</span> realClass <span style="color:#f92672">+</span>
+                            <span style="color:#e6db74">&#34; with class loader &#34;</span> <span style="color:#f92672">+</span> realClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getClassLoader</span><span style="color:#f92672">());</span>
+                <span style="color:#f92672">}</span>
+                Constructor<span style="color:#f92672">&lt;?</span> <span style="color:#66d9ef">extends</span> Application<span style="color:#f92672">&gt;</span> constructor <span style="color:#f92672">=</span> realClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getConstructor</span><span style="color:#f92672">();</span>
+                realApplication <span style="color:#f92672">=</span> constructor<span style="color:#f92672">.</span><span style="color:#a6e22e">newInstance</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Created real app instance successfully :&#34;</span> <span style="color:#f92672">+</span> realApplication<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            realApplication <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Application<span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><p>其实就是利用<code>AppInfo</code>中的信息得到真正的<code>Application</code>并反射出来。</p>
+<h3 id="oncreate分析"><code>onCreate</code>分析</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Override</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">// As of Marshmallow, we use APK splits and don&#39;t need to rely on
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// reflection to inject classes and resources for coldswap
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//noinspection PointlessBooleanExpression
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">usingApkSplits</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            MonkeyPatcher<span style="color:#f92672">.</span><span style="color:#a6e22e">monkeyPatchApplication</span><span style="color:#f92672">(</span>
+                    BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span>
+                    realApplication<span style="color:#f92672">,</span> externalResourcePath<span style="color:#f92672">);</span>
+            MonkeyPatcher<span style="color:#f92672">.</span><span style="color:#a6e22e">monkeyPatchExistingResources</span><span style="color:#f92672">(</span>BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span>
+                    externalResourcePath<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// We still need to set the application instance in the LoadedApk etc
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// such that getApplication() returns the new application
+</span><span style="color:#75715e"></span>            MonkeyPatcher<span style="color:#f92672">.</span><span style="color:#a6e22e">monkeyPatchApplication</span><span style="color:#f92672">(</span>
+                    BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span> BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">,</span>
+                    realApplication<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">();</span>
+
+        <span style="color:#75715e">// Start server, unless we&#39;re in a multiprocess scenario and this isn&#39;t the
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// primary process
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationId</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">boolean</span> foundPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">int</span> pid <span style="color:#f92672">=</span> Process<span style="color:#f92672">.</span><span style="color:#a6e22e">myPid</span><span style="color:#f92672">();</span>
+                ActivityManager manager <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>ActivityManager<span style="color:#f92672">)</span> getSystemService<span style="color:#f92672">(</span>
+                        Context<span style="color:#f92672">.</span><span style="color:#a6e22e">ACTIVITY_SERVICE</span><span style="color:#f92672">);</span>
+                List<span style="color:#f92672">&lt;</span>RunningAppProcessInfo<span style="color:#f92672">&gt;</span> processes <span style="color:#f92672">=</span> manager<span style="color:#f92672">.</span><span style="color:#a6e22e">getRunningAppProcesses</span><span style="color:#f92672">();</span>
+
+                <span style="color:#66d9ef">boolean</span> startServer<span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>processes <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> processes<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#75715e">// Multiple processes: look at each, and if the process name matches
+</span><span style="color:#75715e"></span>                    <span style="color:#75715e">// the package name (for the current pid), it&#39;s the main process.
+</span><span style="color:#75715e"></span>                    startServer <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>RunningAppProcessInfo processInfo <span style="color:#f92672">:</span> processes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationId</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>processInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">processName</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                            foundPackage <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>processInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">pid</span> <span style="color:#f92672">==</span> pid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                                startServer <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                            <span style="color:#f92672">}</span>
+                        <span style="color:#f92672">}</span>
+                    <span style="color:#f92672">}</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>startServer <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>foundPackage<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#75715e">// Safety check: If for some reason we didn&#39;t even find the main package,
+</span><span style="color:#75715e"></span>                        <span style="color:#75715e">// start the server anyway. This safeguards against apps doing strange
+</span><span style="color:#75715e"></span>                        <span style="color:#75715e">// things with the process name.
+</span><span style="color:#75715e"></span>                        startServer <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Multiprocess but didn&#39;t find process with package: &#34;</span>
+                                    <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;starting server anyway&#34;</span><span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                    <span style="color:#75715e">// If there is only one process, start the server.
+</span><span style="color:#75715e"></span>                    startServer <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>startServer<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    Server<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationId</span><span style="color:#f92672">,</span> BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+                    Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Failed during multi process check&#34;</span><span style="color:#f92672">,</span> t<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+                Server<span style="color:#f92672">.</span><span style="color:#a6e22e">create</span><span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationId</span><span style="color:#f92672">,</span> BootstrapApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">this</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>realApplication <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            realApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">();</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>执行流程<code>monkeyPatchApplication</code>&ndash;&gt;<code>monkeyPatchExistingResources</code>&ndash;&gt;<code>startServer</code>&ndash;&gt;<code>realApplication.onCreate</code>。可以发现<code>realApplication</code>的启动流程都被<code>BootstrapApplication</code>代理了。</p>
+<h4 id="monkeypatchapplication分析"><code>monkeyPatchApplication</code>分析</h4>
+<p>代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchApplication</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
+                                              <span style="color:#a6e22e">@Nullable</span> Application bootstrap<span style="color:#f92672">,</span>
+                                              <span style="color:#a6e22e">@Nullable</span> Application realApplication<span style="color:#f92672">,</span>
+                                              <span style="color:#a6e22e">@Nullable</span> String externalResourceFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">        The code seems to perform this:
+</span><span style="color:#75715e">        Application realApplication = the newly instantiated (in attachBaseContext) user app
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        currentActivityThread = ActivityThread.currentActivityThread;
+</span><span style="color:#75715e">        Application initialApplication = currentActivityThread.mInitialApplication;
+</span><span style="color:#75715e">        if (initialApplication == BootstrapApplication.this) {
+</span><span style="color:#75715e">            currentActivityThread.mInitialApplication = realApplication;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Replace all instance of the stub application in ActivityThread#mAllApplications with the
+</span><span style="color:#75715e">        // real one
+</span><span style="color:#75715e">        List&lt;Application&gt; allApplications = currentActivityThread.mAllApplications;
+</span><span style="color:#75715e">        for (int i = 0; i &lt; allApplications.size(); i++) {
+</span><span style="color:#75715e">            if (allApplications.get(i) == BootstrapApplication.this) {
+</span><span style="color:#75715e">                allApplications.set(i, realApplication);
+</span><span style="color:#75715e">            }
+</span><span style="color:#75715e">        }
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Enumerate all LoadedApk (or PackageInfo) fields in ActivityThread#mPackages and
+</span><span style="color:#75715e">        // ActivityThread#mResourcePackages and do two things:
+</span><span style="color:#75715e">        //   - Replace the Application instance in its mApplication field with the real one
+</span><span style="color:#75715e">        //   - Replace mResDir to point to the external resource file instead of the .apk. This is
+</span><span style="color:#75715e">        //     used as the asset path for new Resources objects.
+</span><span style="color:#75715e">        //   - Set Application#mLoadedApk to the found LoadedApk instance
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        ArrayMap&lt;String, WeakReference&lt;LoadedApk&gt;&gt; map1 = currentActivityThread.mPackages;
+</span><span style="color:#75715e">        for (Map.Entry&lt;String, WeakReference&lt;?&gt;&gt; entry : map1.entrySet()) {
+</span><span style="color:#75715e">            Object loadedApk = entry.getValue().get();
+</span><span style="color:#75715e">            if (loadedApk == null) {
+</span><span style="color:#75715e">                continue;
+</span><span style="color:#75715e">            }
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">            if (loadedApk.mApplication == BootstrapApplication.this) {
+</span><span style="color:#75715e">                loadedApk.mApplication = realApplication;
+</span><span style="color:#75715e">                if (externalResourceFile != null) {
+</span><span style="color:#75715e">                    loadedApk.mResDir = externalResourceFile;
+</span><span style="color:#75715e">                }
+</span><span style="color:#75715e">                realApplication.mLoadedApk = loadedApk;
+</span><span style="color:#75715e">            }
+</span><span style="color:#75715e">        }
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Exactly the same as above, except done for mResourcePackages instead of mPackages
+</span><span style="color:#75715e">        ArrayMap&lt;String, WeakReference&lt;LoadedApk&gt;&gt; map2 = currentActivityThread.mResourcePackages;
+</span><span style="color:#75715e">        for (Map.Entry&lt;String, WeakReference&lt;?&gt;&gt; entry : map2.entrySet()) {
+</span><span style="color:#75715e">            Object loadedApk = entry.getValue().get();
+</span><span style="color:#75715e">            if (loadedApk == null) {
+</span><span style="color:#75715e">                continue;
+</span><span style="color:#75715e">            }
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">            if (loadedApk.mApplication == BootstrapApplication.this) {
+</span><span style="color:#75715e">                loadedApk.mApplication = realApplication;
+</span><span style="color:#75715e">                if (externalResourceFile != null) {
+</span><span style="color:#75715e">                    loadedApk.mResDir = externalResourceFile;
+</span><span style="color:#75715e">                }
+</span><span style="color:#75715e">                realApplication.mLoadedApk = loadedApk;
+</span><span style="color:#75715e">            }
+</span><span style="color:#75715e">        }
+</span><span style="color:#75715e">        */</span>
+
+        <span style="color:#75715e">// BootstrapApplication is created by reflection in Application#handleBindApplication() -&gt;
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// LoadedApk#makeApplication(), and its return value is used to set the Application field in all
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// sorts of Android internals.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Fortunately, Application#onCreate() is called quite soon after, so what we do is monkey
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// patch in the real Application instance in BootstrapApplication#onCreate().
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// A few places directly use the created Application instance (as opposed to the fields it is
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// eventually stored in). Fortunately, it&#39;s easy to forward those to the actual real
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// Application class.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// Find the ActivityThread instance for the current thread
+</span><span style="color:#75715e"></span>            Class<span style="color:#f92672">&lt;?&gt;</span> activityThread <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ActivityThread&#34;</span><span style="color:#f92672">);</span>
+            Object currentActivityThread <span style="color:#f92672">=</span> getActivityThread<span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> activityThread<span style="color:#f92672">);</span>
+
+            <span style="color:#75715e">// Find the mInitialApplication field of the ActivityThread to the real application
+</span><span style="color:#75715e"></span>            Field mInitialApplication <span style="color:#f92672">=</span> activityThread<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mInitialApplication&#34;</span><span style="color:#f92672">);</span>
+            mInitialApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            Application initialApplication <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Application<span style="color:#f92672">)</span> mInitialApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>currentActivityThread<span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>realApplication <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> initialApplication <span style="color:#f92672">==</span> bootstrap<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                mInitialApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>currentActivityThread<span style="color:#f92672">,</span> realApplication<span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#75715e">// Replace all instance of the stub application in ActivityThread#mAllApplications with the
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// real one
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>realApplication <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Field mAllApplications <span style="color:#f92672">=</span> activityThread<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAllApplications&#34;</span><span style="color:#f92672">);</span>
+                mAllApplications<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                List<span style="color:#f92672">&lt;</span>Application<span style="color:#f92672">&gt;</span> allApplications <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>Application<span style="color:#f92672">&gt;)</span> mAllApplications
+                        <span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>currentActivityThread<span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> allApplications<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>allApplications<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> bootstrap<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        allApplications<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> realApplication<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#75715e">// Figure out how loaded APKs are stored.
+</span><span style="color:#75715e"></span>
+            <span style="color:#75715e">// API version 8 has PackageInfo, 10 has LoadedApk. 9, I don&#39;t know.
+</span><span style="color:#75715e"></span>            Class<span style="color:#f92672">&lt;?&gt;</span> loadedApkClass<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                loadedApkClass <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.LoadedApk&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ClassNotFoundException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                loadedApkClass <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ActivityThread$PackageInfo&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+            Field mApplication <span style="color:#f92672">=</span> loadedApkClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mApplication&#34;</span><span style="color:#f92672">);</span>
+            mApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            Field mResDir <span style="color:#f92672">=</span> loadedApkClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResDir&#34;</span><span style="color:#f92672">);</span>
+            mResDir<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+
+            <span style="color:#75715e">// 10 doesn&#39;t have this field, 14 does. Fortunately, there are not many Honeycomb devices
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// floating around.
+</span><span style="color:#75715e"></span>            Field mLoadedApk <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                mLoadedApk <span style="color:#f92672">=</span> Application<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mLoadedApk&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">// According to testing, it&#39;s okay to ignore this.
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+
+            <span style="color:#75715e">// Enumerate all LoadedApk (or PackageInfo) fields in ActivityThread#mPackages and
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// ActivityThread#mResourcePackages and do two things:
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//   - Replace the Application instance in its mApplication field with the real one
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//   - Replace mResDir to point to the external resource file instead of the .apk. This is
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//     used as the asset path for new Resources objects.
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">//   - Set Application#mLoadedApk to the found LoadedApk instance
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String fieldName <span style="color:#f92672">:</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]{</span><span style="color:#e6db74">&#34;mPackages&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;mResourcePackages&#34;</span><span style="color:#f92672">})</span> <span style="color:#f92672">{</span>
+                Field field <span style="color:#f92672">=</span> activityThread<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span>fieldName<span style="color:#f92672">);</span>
+                field<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                Object value <span style="color:#f92672">=</span> field<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>currentActivityThread<span style="color:#f92672">);</span>
+
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> WeakReference<span style="color:#f92672">&lt;?&gt;&gt;</span> entry <span style="color:#f92672">:</span>
+                        <span style="color:#f92672">((</span>Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> WeakReference<span style="color:#f92672">&lt;?&gt;&gt;)</span> value<span style="color:#f92672">).</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                    Object loadedApk <span style="color:#f92672">=</span> entry<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>loadedApk <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>loadedApk<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> bootstrap<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>realApplication <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            mApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>loadedApk<span style="color:#f92672">,</span> realApplication<span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span>
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>externalResourceFile <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            mResDir<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>loadedApk<span style="color:#f92672">,</span> externalResourceFile<span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span>
+
+                        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>realApplication <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> mLoadedApk <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            mLoadedApk<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>realApplication<span style="color:#f92672">,</span> loadedApk<span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+</code></pre></div><p>结合注释可以清楚知道主要逻辑就是把代理的<code>Application</code>替换为真正的<code>Application</code>。</p>
+<h4 id="monkeypatchexistingresources分析"><code>monkeyPatchExistingResources</code>分析</h4>
+<p>代码</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchExistingResources</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
+                                                    <span style="color:#a6e22e">@Nullable</span> String externalResourceFile<span style="color:#f92672">,</span>
+                                                    <span style="color:#a6e22e">@Nullable</span> Collection<span style="color:#f92672">&lt;</span>Activity<span style="color:#f92672">&gt;</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>externalResourceFile <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">        (Note: the resource directory is *also* inserted into the loadedApk in
+</span><span style="color:#75715e">        monkeyPatchApplication)
+</span><span style="color:#75715e">        The code seems to perform this:
+</span><span style="color:#75715e">        File externalResourceFile = &lt;path to resources.ap_ or extracted directory&gt;
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        AssetManager newAssetManager = new AssetManager();
+</span><span style="color:#75715e">        newAssetManager.addAssetPath(externalResourceFile)
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Kitkat needs this method call, Lollipop doesn&#39;t. However, it doesn&#39;t seem to cause any harm
+</span><span style="color:#75715e">        // in L, so we do it unconditionally.
+</span><span style="color:#75715e">        newAssetManager.ensureStringBlocks();
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Find the singleton instance of ResourcesManager
+</span><span style="color:#75715e">        ResourcesManager resourcesManager = ResourcesManager.getInstance();
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Iterate over all known Resources objects
+</span><span style="color:#75715e">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) {
+</span><span style="color:#75715e">            for (WeakReference&lt;Resources&gt; wr : resourcesManager.mActiveResources.values()) {
+</span><span style="color:#75715e">                Resources resources = wr.get();
+</span><span style="color:#75715e">                // Set the AssetManager of the Resources instance to our brand new one
+</span><span style="color:#75715e">                resources.mAssets = newAssetManager;
+</span><span style="color:#75715e">                resources.updateConfiguration(resources.getConfiguration(), resources.getDisplayMetrics());
+</span><span style="color:#75715e">            }
+</span><span style="color:#75715e">        }
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        // Also, for each context, call getTheme() to get the current theme; null out its
+</span><span style="color:#75715e">        // mTheme field, then invoke initializeTheme() to force it to be recreated (with the
+</span><span style="color:#75715e">        // new asset manager!)
+</span><span style="color:#75715e">
+</span><span style="color:#75715e">        */</span>
+
+        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+            <span style="color:#75715e">// Create a new AssetManager instance and point it to the resources installed under
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// /sdcard
+</span><span style="color:#75715e"></span>            AssetManager newAssetManager <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getConstructor</span><span style="color:#f92672">().</span><span style="color:#a6e22e">newInstance</span><span style="color:#f92672">();</span>
+            Method mAddAssetPath <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;addAssetPath&#34;</span><span style="color:#f92672">,</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+            mAddAssetPath<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(((</span>Integer<span style="color:#f92672">)</span> mAddAssetPath<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">,</span> externalResourceFile<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Could not create new AssetManager&#34;</span><span style="color:#f92672">);</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#75715e">// Kitkat needs this method call, Lollipop doesn&#39;t. However, it doesn&#39;t seem to cause any harm
+</span><span style="color:#75715e"></span>            <span style="color:#75715e">// in L, so we do it unconditionally.
+</span><span style="color:#75715e"></span>            Method mEnsureStringBlocks <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;ensureStringBlocks&#34;</span><span style="color:#f92672">);</span>
+            mEnsureStringBlocks<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+            mEnsureStringBlocks<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">);</span>
+
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>activities <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Activity activity <span style="color:#f92672">:</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    Resources resources <span style="color:#f92672">=</span> activity<span style="color:#f92672">.</span><span style="color:#a6e22e">getResources</span><span style="color:#f92672">();</span>
+
+                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                        Field mAssets <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        Field mResourcesImpl <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourcesImpl&#34;</span><span style="color:#f92672">);</span>
+                        mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        Object resourceImpl <span style="color:#f92672">=</span> mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
+                        Field implAssets <span style="color:#f92672">=</span> resourceImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resourceImpl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+
+                    Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span> theme <span style="color:#f92672">=</span> activity<span style="color:#f92672">.</span><span style="color:#a6e22e">getTheme</span><span style="color:#f92672">();</span>
+                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                            Field ma <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                            Field themeField <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mThemeImpl&#34;</span><span style="color:#f92672">);</span>
+                            themeField<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                            Object impl <span style="color:#f92672">=</span> themeField<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">);</span>
+                            Field ma <span style="color:#f92672">=</span> impl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>impl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+                        <span style="color:#f92672">}</span>
+
+                        Field mt <span style="color:#f92672">=</span> ContextThemeWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mTheme&#34;</span><span style="color:#f92672">);</span>
+                        mt<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        mt<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>activity<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+                        Method mtm <span style="color:#f92672">=</span> ContextThemeWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;initializeTheme&#34;</span><span style="color:#f92672">);</span>
+                        mtm<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        mtm<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>activity<span style="color:#f92672">);</span>
+
+                        Method mCreateTheme <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;createTheme&#34;</span><span style="color:#f92672">);</span>
+                        mCreateTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        Object internalTheme <span style="color:#f92672">=</span> mCreateTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">);</span>
+                        Field mTheme <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mTheme&#34;</span><span style="color:#f92672">);</span>
+                        mTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        mTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">,</span> internalTheme<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Failed to update existing theme for activity &#34;</span> <span style="color:#f92672">+</span> activity<span style="color:#f92672">,</span>
+                                e<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+
+                    pruneResourceCaches<span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+
+            <span style="color:#75715e">// Iterate over all known Resources objects
+</span><span style="color:#75715e"></span>            Collection<span style="color:#f92672">&lt;</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> references<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SDK_INT <span style="color:#f92672">&gt;=</span> KITKAT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#75715e">// Find the singleton instance of ResourcesManager
+</span><span style="color:#75715e"></span>                Class<span style="color:#f92672">&lt;?&gt;</span> resourcesManagerClass <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ResourcesManager&#34;</span><span style="color:#f92672">);</span>
+                Method mGetInstance <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;getInstance&#34;</span><span style="color:#f92672">);</span>
+                mGetInstance<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                Object resourcesManager <span style="color:#f92672">=</span> mGetInstance<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                    Field fMActiveResources <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mActiveResources&#34;</span><span style="color:#f92672">);</span>
+                    fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                    <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
+                    ArrayMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> arrayMap <span style="color:#f92672">=</span>
+                            <span style="color:#f92672">(</span>ArrayMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resourcesManager<span style="color:#f92672">);</span>
+                    references <span style="color:#f92672">=</span> arrayMap<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">();</span>
+                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    Field mResourceReferences <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourceReferences&#34;</span><span style="color:#f92672">);</span>
+                    mResourceReferences<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                    <span style="color:#75715e">//noinspection unchecked
+</span><span style="color:#75715e"></span>                    references <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Collection<span style="color:#f92672">&lt;</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> mResourceReferences<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resourcesManager<span style="color:#f92672">);</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                Class<span style="color:#f92672">&lt;?&gt;</span> activityThread <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ActivityThread&#34;</span><span style="color:#f92672">);</span>
+                Field fMActiveResources <span style="color:#f92672">=</span> activityThread<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mActiveResources&#34;</span><span style="color:#f92672">);</span>
+                fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                Object thread <span style="color:#f92672">=</span> getActivityThread<span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> activityThread<span style="color:#f92672">);</span>
+                <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
+                HashMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> map <span style="color:#f92672">=</span>
+                        <span style="color:#f92672">(</span>HashMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
+                references <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">();</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;</span> wr <span style="color:#f92672">:</span> references<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                Resources resources <span style="color:#f92672">=</span> wr<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resources <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#75715e">// Set the AssetManager of the Resources instance to our brand new one
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+                        Field mAssets <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        Field mResourcesImpl <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourcesImpl&#34;</span><span style="color:#f92672">);</span>
+                        mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        Object resourceImpl <span style="color:#f92672">=</span> mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
+                        Field implAssets <span style="color:#f92672">=</span> resourceImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resourceImpl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+                    <span style="color:#f92672">}</span>
+
+                    resources<span style="color:#f92672">.</span><span style="color:#a6e22e">updateConfiguration</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">.</span><span style="color:#a6e22e">getConfiguration</span><span style="color:#f92672">(),</span> resources<span style="color:#f92672">.</span><span style="color:#a6e22e">getDisplayMetrics</span><span style="color:#f92672">());</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+</code></pre></div><p>忽视处理版本兼容的代码，本质是如果<code>resource.ap_</code>文件有改变，那么新建一个AssetManager对象newAssetManager，然后用newAssetManager对象替换所有当前Resource、Resource.Theme的mAssets成员变量；如果当前的已经有Activity启动了，还需要替换所有Activity中mAssets成员变量。</p>
+<h4 id="startserver分析"><code>startServer</code>分析</h4>
+<p><code>Server</code>类负责处理热部署、温部署还是冷部署以及通信协议，在此不做详细分析。</p>
+<h2 id="借鉴意义">借鉴意义</h2>
+<p>通过分析InstantRun代码，一方面可以了解Android Studio一个简单按钮背后的原理，也可以借鉴到自己的需求中，主流热修复方案中对资源的修复都很大程度上参考了InstantRun的实现。
+由于目前姿势水平有限，只是做了粗略的分析，希望以后有机会更加详细地分析InstantRun的技术细节。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://github.com/nuptboyzhb/AndroidInstantRun">nuptboyzhb/AndroidInstantRun: Android Instant Run原理分析</a></li>
+<li><a href="https://medium.com/google-developers/instant-run-how-does-it-work-294a1633367f">Instant Run: How Does it Work?! – Google Developers – Medium</a></li>
+<li>gradle_2.0.0<a href="https://android.googlesource.com/platform/tools/base/+/gradle_2.0.0/instant-run">instant-run - platform/tools/base - Git at Google</a></li>
+<li>gradle_2.3.0<a href="https://android.googlesource.com/platform/tools/base/+/gradle_2.3.0/instant-run">instant-run - platform/tools/base - Git at Google</a></li>
+<li><a href="https://developer.android.com/studio/run/index.html#instant-run">构建和运行您的应用 | Android Studio</a></li>
+<li><a href="http://jiajixin.cn/2015/11/25/instant-run/">Instant Run 浅析 | Jason&rsquo;s Blog</a></li>
+<li><a href="https://juejin.im/entry/5731f50ef38c840067dcce48">从 Instant-Run 出发，谈谈 Android 上的热修复 - Android - 掘金</a></li>
+<li><a href="http://weishu.me/2016/04/05/understand-plugin-framework-classloader/">Android 插件化原理解析——插件加载机制 | Weishu&rsquo;s Notes</a></li>
+</ul>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/re-xiu-fu-zhi-zi-yuan-geng-xin-de-shi-xian/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">热修复之资源更新的实现</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/posts/ni-ming-nei-bu-lei-dao-zhi-re-bu-ding-crash/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">匿名内部类导致热补丁Crash</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/best-android-projector/">最好的Android投屏工具</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-2/">Flutter源码剖析(二):源码的阅读与调试环境配置</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
