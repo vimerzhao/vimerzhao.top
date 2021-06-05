@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>技术精选 on V大师在一号线</title>
+    <link>/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/</link>
+    <description>Recent content in 技术精选 on V大师在一号线</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 27 May 2021 19:22:48 +0800</lastBuildDate><atom:link href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>大道至简：Flutter嵌套滑动冲突解决之路</title>
+      <link>/posts/flutter-nested-scroll-conflict/</link>
+      <pubDate>Thu, 27 May 2021 19:22:48 +0800</pubDate>
+      
+      <guid>/posts/flutter-nested-scroll-conflict/</guid>
+      <description>背景与挑战 为了充分验证Flutter在UI开发上的完备性（能Cover住足够复杂的场景），我们选择了微视端内最复杂的页面之一的个人页进行改造，其UI形态如下。 用户1: 用户2: 观察可以发现，对于UI层面</description>
+    </item>
+    
+    <item>
+      <title>Android系统服务的注册缓存机制分析</title>
+      <link>/posts/android-system-service-cache-analyze/</link>
+      <pubDate>Fri, 21 Aug 2020 12:18:22 +0800</pubDate>
+      
+      <guid>/posts/android-system-service-cache-analyze/</guid>
+      <description>本文说明 本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解</description>
+    </item>
+    
+    <item>
+      <title>插件化技术的演进之路</title>
+      <link>/posts/evolution-of-plugin-framework/</link>
+      <pubDate>Wed, 13 May 2020 12:14:43 +0800</pubDate>
+      
+      <guid>/posts/evolution-of-plugin-framework/</guid>
+      <description>序言 关于本次分享 今天要和大家分享的是Android的插件化技术，这在Android中其实是一个相对来说比较复杂，历史悠久，内容庞杂的知识，不是今天一个小时能讲完的，所以我今天也是有选择地分享一些我认为</description>
+    </item>
+    
+    <item>
+      <title>Android P内联优化导致的一个诡异Bug</title>
+      <link>/posts/solve-of-android-p-inline-opt/</link>
+      <pubDate>Fri, 24 Apr 2020 23:51:25 +0800</pubDate>
+      
+      <guid>/posts/solve-of-android-p-inline-opt/</guid>
+      <description>问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------</description>
+    </item>
+    
+    <item>
+      <title>Android安装包极限优化</title>
+      <link>/posts/opt-apk-size-by-remove-debuginfo/</link>
+      <pubDate>Fri, 17 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/opt-apk-size-by-remove-debuginfo/</guid>
+      <description>背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优</description>
+    </item>
+    
+    <item>
+      <title>Git内部原理剖析</title>
+      <link>/posts/git-internals/</link>
+      <pubDate>Tue, 26 Nov 2019 12:31:51 +0800</pubDate>
+      
+      <guid>/posts/git-internals/</guid>
+      <description>导读 为什么写这篇文章 写这篇文章的本意有二: 工作安排原因，常有同事询问我一些关于 Git 的问题，总觉得自己解释的不够透彻，因此觉得有必要深入了解一下。 目前中文的 Git 教程往往本末倒置， 一味从版本管理工具的角度去堆</description>
+    </item>
+    
+    <item>
+      <title>全面了解Android热修复技术</title>
+      <link>/posts/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</link>
+      <pubDate>Sun, 10 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</guid>
+      <description>全面了解Android热修复技术 引言:本文全面地探讨了Android热修复技术的发展脉络，现状及其未来。 热修复技术概述 热修复技术在近年来飞速发展，尤其是在InstantRun方案推出之后，各种热修复技</description>
+    </item>
+    
+  </channel>
+</rss>
