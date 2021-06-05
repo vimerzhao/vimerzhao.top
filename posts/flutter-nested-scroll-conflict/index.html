@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>大道至简：Flutter嵌套滑动冲突解决之路 - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="大道至简：Flutter嵌套滑动冲突解决之路" />
+<meta property="og:description" content="背景与挑战 为了充分验证Flutter在UI开发上的完备性（能Cover住足够复杂的场景），我们选择了微视端内最复杂的页面之一的个人页进行改造，其UI形态如下。 用户1: 用户2: 观察可以发现，对于UI层面" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/flutter-nested-scroll-conflict/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-05-27T19:22:48&#43;08:00" />
+<meta property="article:modified_time" content="2021-06-05T16:43:00&#43;08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="大道至简：Flutter嵌套滑动冲突解决之路"/>
+<meta name="twitter:description" content="背景与挑战 为了充分验证Flutter在UI开发上的完备性（能Cover住足够复杂的场景），我们选择了微视端内最复杂的页面之一的个人页进行改造，其UI形态如下。 用户1: 用户2: 观察可以发现，对于UI层面"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">大道至简：Flutter嵌套滑动冲突解决之路</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-05-27T19:22:48&#43;08:00">2021-05-27</time>
+	<time class="meta__text" datetime="2021-06-05T16:43:00&#43;08:00">(最后修改: 2021-06-05)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/" rel="category">Flutter实践</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_背景与挑战">背景与挑战</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>为了充分验证Flutter在UI开发上的完备性（能Cover住足够复杂的场景），我们选择了微视端内最复杂的页面之一的个人页进行改造，其UI形态如下。</p>
+</div>
+<div class="paragraph">
+<p>用户1:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/weishi-personal-page-1.gif" alt="weishi personal page 1"/>
+</div>
+</div>
+<div class="paragraph">
+<p>用户2:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/weishi-personal-page-2.gif" alt="weishi personal page 2"/>
+</div>
+</div>
+<div class="paragraph">
+<p>观察可以发现，对于UI层面而言，个人页的复杂性主要体现在以下几点：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>需要支持刷新（指示器、二楼）、加载的UI效果</p>
+</li>
+<li>
+<p>总体而言是一个【列表-PageView-列表/WebView】的嵌套层次，必然存在一些手势冲突</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在初期调研之后，我们发现一个Flutter的刷新加载框架 <a href="https://github.com/peng8350/flutter_pulltorefresh">flutter_pulltorefresh</a> 可以满足刷新、加载、二楼等UI效果，于是我们引入了这个库。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/Kapture%202021-06-01%20_pullrefresher.gif" alt="Kapture%202021 06 01%20 pullrefresher"/>
+</div>
+</div>
+<div class="paragraph">
+<p>但是，该第三方库存在一个严重的问题，就是不支持NestedScrollView，具体原因可见这个ISSUE：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/peng8350/flutter_pulltorefresh/issues/298" target="_blank" rel="noopener">当child不是ListView,GridView,CustomScollView(内部含有滚动组件)时,无法对其进行识别,下拉刷新失效 · Issue #298 · peng8350/flutter_pulltorefresh</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>此时，摆在我们面前的有两个选择：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>让NestedScrollView支持刷新、加载、二楼等UI效果</p>
+</li>
+<li>
+<p>让flutter_pulltorefresh支持列表的嵌套，或者说开发一个支持flutter_pulltorefresh的嵌套列表</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>在斟酌之后，我们选择了第二种思路，主要原因如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>flutter_pulltorefresh实现刷新、加载、二楼的思路比较合理，对于NestedScrollView的不支持看起来是很难突破的。因此，即使选择了思路1，我们也很难超越这个第三方库。</p>
+</li>
+<li>
+<p>即使flutter_pulltorefresh支持了NestedScrollView，如果内层可滚动组件是WebView这种原生View，仍然避免不了要解决滑动冲突，所以这个问题是无法避免的。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>所以，我们就此开始了Flutter滑动冲突解决的探索之路。在这段探索之路上，有失误、有争论，也有收获，所以行文一篇，以作复盘、记录。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_困境与争论">困境与争论</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在我之前，这个问题由另一种思路主导，其采取的方法是一种非常合乎客户端传统开发思维的解法：拦截事件，根据滑动方向和内外列表的剩余滑动距离进行事件分配。</p>
+</div>
+<div class="paragraph">
+<p>但是，这个思路的效果并不理想，主要体现为以下几点：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>经常会出现一些奇怪的Bug需要解决，因为分发手势的逻辑需要实时获取内外列表的滚动距离。</p>
+</li>
+<li>
+<p>由于flutter_pulltorefresh会重组列表，而该方案也要定制列表内部的手势识别器，所以两者有冲突。导致的结果就是该方案需要侵入flutter_pulltorefresh这个纯粹的第三方组件。</p>
+</li>
+<li>
+<p>效果不理想，投入一段时间后只能支持普通的滑动，像快滑之后的Fling特效都没法做到。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>我个人对此思路也存在一些担忧：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Flutter的事件分发机制和Android并不完全一样，没有 <code>dispatchTouchEvent</code> 、 <code>onTouchEvent</code> 等回调，Flutter会首先通过“手势竞技场”决胜出一个响应后续手势的Widget（准确来说是GestureArenaMember，可以粗略理解为Widget），然后由该实例响应后续手势。如果再一次滑动过程中肆意分配响应手势的Widget，其实是破坏了系统的规则，风险很大。</p>
+</li>
+<li>
+<p>侵入了第三方库flutter_pulltorefresh，这其实是大忌，以后很难维护了。</p>
+</li>
+<li>
+<p>从分发手势解决，有其无法避免的局限性。因为<strong>列表关心的其实不是手势，而是手势所产生的列表的偏移</strong>。比如Fling效果，是基于内外列表的总长度计算滚动效果的，所以仅仅处理手势是解决不了的，实际也是如此。再比如，只处理手势，那么嵌套列表的 <code>jumpTo</code> 、 <code>animateTo</code> 等方法还是不能正确执行，因为它们是直接告诉列表偏移值，而这个偏移值并不是通过手势产生。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>基于这些分歧，也感谢团队内部良好的技术氛围，我申请到了一周的时间来探索新的思路和解法。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题梳理">问题梳理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在开始解决问题之前，我认为有必要梳理清楚两件事情： <strong>一是个人页的UI到底有多次种嵌套导致滑动冲突，二是Flutter列表滑动的中枢到底是什么</strong> 。</p>
+</div>
+<div class="paragraph">
+<p>首先分析第一个问题，其实个人页一共存在4个嵌套滑动冲突，只是之前由于在Flutter列表嵌套Flutter列表的问题上消耗太多，一直没有系统地提出来。</p>
+</div>
+<div class="paragraph">
+<p>既然要破旧立新，就要磨刀不误砍柴工，个人页的UI模型整理如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/personal-page-ui-model.png" alt="personal page ui model"/>
+</div>
+</div>
+<div class="paragraph">
+<p>具体来说，对于个人页的UI而言，其实有4个冲突需要解决，分别是：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Flutter列表嵌套Flutter列表，垂直方向上的滑动冲突</p>
+</li>
+<li>
+<p>Flutter列表嵌套WebView，垂直方向上的滑动冲突</p>
+</li>
+<li>
+<p>WebView是嵌套在Flutter的PageView（水平方向可滑动）之中的，而WebView自身也有可水平滑动的元素（虽然其本身是垂直滑动的），因而也存在WebView和Flutter的PageView的水平方向上的滑动冲突</p>
+</li>
+<li>
+<p>Flutter页面所在的Fragment（以Android为例）是可以横滑切换的，它通过Google官方的ViewPager2实现，而Flutter页面内部也有可横滑的Widget: PageView，他们也存在水平方向上的滑动冲突</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>至此，我们理清了挡在前面的4座大山。</p>
+</div>
+<div class="paragraph">
+<p>下面分析第二个问题：Flutter列表滑动的中枢是什么？下图是我之前研读Flutter源码时总结的关键类图：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-scrollable-model.png" alt="flutter scrollable model"/>
+</div>
+</div>
+<div class="paragraph">
+<p>由图可知，ScrollPosition貌似是Flutter列表滑动的核心所在，实际也正是如此，如下图：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/2021-05-27_20-scroll-position.png" alt="2021 05 27 20 scroll position"/>
+</div>
+</div>
+<div class="paragraph">
+<p>滑动手势产出的副作用将通过 <code>setPixels</code> 方法体现，而 <code>jumpTo</code> 等逻辑也将调用到ScrollPosition的具体实现，也就是说搞定了这个类，问题就搞定得差不多了。</p>
+</div>
+<div class="paragraph">
+<p>至此，思路初步确定：<strong>不要以表层的手势处理为切入点，而是扼住列表滑动的咽喉：ScrollPosition</strong>。</p>
+</div>
+<div class="paragraph">
+<p>下面开始正式解决这4个问题。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题一普通列表嵌套的竖滑冲突">问题一：普通列表嵌套的竖滑冲突</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在之前的解法中，我们第一直觉上，似乎flutter_pulltorefresh和NestedScrollView是水火不容的（如果相容的话，我们就不需要解决这个问题）。
+但是，如果深入分析flutter_pulltorefresh的逻辑，可以发现，它之所以不兼容后者，其实是因为后者将创建Sliver列表的逻辑隐藏的太深了，以致flutter_pulltorefresh无法获取到该列表，用以自定义刷新和加载效果（所谓的刷新、加载，其实就是在原有的Sliver列表前后各插入一个Sliver）。</p>
+</div>
+<div class="paragraph">
+<p>由此看来，NestedScrollView只是构建时的层级过深，其解决滑动冲突的思路其实是大大值得借鉴的。分析其源码之后，可以发现官方的解决思路正是从ScrollPosition入手，关键代码如下所示：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/2021-05-28_09-58-33-coordinator.png" alt="2021 05 28 09 58 33 coordinator"/>
+</div>
+</div>
+<div class="paragraph">
+<p><code>NestedScrollView</code> 实现了一个特殊的 <code>ScrollPosition</code> : <code>_NestedScrollPosition</code> ，它会将自身的逻辑委托给 <code>_NestedScrollCoordinator</code> 这个类，如其名字所昭示的，它将协调列表内外的滚动距离等信息。</p>
+</div>
+<div class="paragraph">
+<p>由于这个逻辑是私有的，所以我们无法直接使用，为了验证其确实是列表嵌套滑动的核心所在，我们可以拷贝出相关代码（大概1000行，都在packages/flutter/lib/src/widgets/nested_scroll_view.dart 文件中），然后将其负责外部滑动的 ScrollController 赋值给外部列表，负责内部滑动的 ScrollController 赋值给内部列表，大致如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  @override
+  Widget build(BuildContext context) {
+    ......
+    return CustomScrollView(
+      controller: _coordinator.outerController, // 负责控制外部列表的滚动
+      slivers: [
+        SliverToBoxAdapter(......),
+        SliverAppBar(......),
+        SliverToBoxAdapter(
+          child: Container(
+            height: innerListHeight,
+            child: PageView.builder(
+              onPageChanged: _onPageChange,
+              controller: pageController,
+              itemBuilder: (BuildContext context, int index) {
+                return _buildList();
+              },
+              itemCount: 4,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+  Widget _buildList() {
+    return GridView.builder(
+      controller: _coordinator.innerController, // 负责控制内部列表的滚动
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+      itemBuilder: (context, index) {
+        return Container(
+          alignment: Alignment.center,
+          child: Text(&#34;项目$index&#34;),
+        );
+      },
+    );
+  }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如此，便使得普通的 CustomScrollView 和 NestedScrollView 一样，有了嵌套滑动的能力，后面我们会提一个 Isuue，推动官方将这个类的权限变为公开，如此，便可以不费一兵一卒，解决普通列表的滑动冲突问题了。</p>
+</div>
+<div class="paragraph">
+<p>需要注意的是，这种方法是不需要关注所谓的手势冲突的：内外列表，在谁的区域就由谁负责响应手势，只是响应手势的逻辑统一委托给了协调器。由于协调器持有了两个内外列表的最大可滚动距离，当前已滚动距离等信息，Fling效果等问题也迎刃而解了。</p>
+</div>
+<div class="paragraph">
+<p>实际上，根据Flutter的官方文档，从 ScrollPosition 切入解决也是符合其设计的，</p>
+</div>
+<div class="quoteblock">
+<div class="title">From <a href="https://api.flutter.dev/flutter/widgets/Scrollable-class.html" class="bare">https://api.flutter.dev/flutter/widgets/Scrollable-class.html</a></div>
+<blockquote>
+<div class="paragraph">
+<p>To further customize scrolling behavior with a Scrollable:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>You can provide a viewportBuilder to customize the child model. For example, SingleChildScrollView uses a viewport that displays a single box child whereas CustomScrollView uses a Viewport or a ShrinkWrappingViewport, both of which display a list of slivers.</p>
+</li>
+<li>
+<p>You can provide a custom ScrollController that creates a custom ScrollPosition subclass. For example, PageView uses a PageController, which creates a page-oriented scroll position subclass that keeps the same page visible when the Scrollable resizes.</p>
+</li>
+</ol>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>最终效果如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-flutter-nest-list.gif" alt="ezgif flutter nest list"/>
+</div>
+</div>
+<div class="paragraph">
+<p>可以看到，即使我们不用 NestedScrollView ，只是将内外 CustomScrollView 的 ScrollController 分别设置了一下（虽然仍是借用了 NestedScrollView 的协调器），即解决了列表嵌套的滑动冲突问题。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题二列表嵌套webview的竖滑冲突">问题二：列表嵌套WebView的竖滑冲突</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>下面分析第2个问题，首先说明一下：Flutter列表嵌套Flutter列表的情况，之所以可以用一个协调器解决，主要原因就是内外可滚动组件（CustomScrollView等）的滚动模型是一致的，所以可以引入一个协调器解决。</p>
+</div>
+<div class="paragraph">
+<p>而对于Flutter列表嵌套WebView的情况来说，后者的滑动模型对于我们完全是一个黑盒，那么自然无法直接引入协调器了。</p>
+</div>
+<div class="paragraph">
+<p>那么我们就先尝试着从手势冲突的角度解决，对于WebView这种原生组件而言，Flutter会提供一个 <code>gestureRecognizers</code> 参数，用于Flutter定义哪些手势可以传入WebView。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class WebViewGestureRecognizer extends OneSequenceGestureRecognizer {
+  bool scrollEnabled = false;
+
+  Offset _dragDistance = Offset.zero;
+  Offset _webViewDragDistance = Offset.zero;
+
+  WebViewGestureRecognizer();
+
+  @override
+  void addPointer(PointerEvent event) {
+    startTrackingPointer(event.pointer);
+  }
+  @override
+  String get debugDescription =&gt; &#39;custom&#39;;
+
+  @override
+  void didStopTrackingLastPointer(int pointer) {}
+
+  @override
+  void handleEvent(PointerEvent event) {
+    _dragDistance = _dragDistance + event.delta;
+    if (event is PointerMoveEvent) {
+      final double dy = _dragDistance.dy.abs();
+      final double dx = _dragDistance.dx.abs();
+      if (_webViewDragDistance.dy &gt; 0) {
+        WidgetsBinding.instance.cancelPointer(event.pointer);
+        scrollEnabled = false;
+        _webViewDragDistance = Offset.zero;
+      } else { // isPinned标记外部Flutter列表是否滑动完，通过监听滑动距离更新
+        scrollEnabled = isPinned;
+      }
+      if (scrollEnabled) { // Vertical drag: accept
+        _webViewDragDistance = _webViewDragDistance+ event.delta; // 累计滚动距离
+        resolve(GestureDisposition.accepted); // WebView internal will win
+        _dragDistance = Offset.zero;
+      } else if (dx &gt; kTouchSlop &amp;&amp; dx &gt; dy) { // Horizontal drag: stop tracking
+        stopTrackingPointer(event.pointer); // Native external will win
+        _dragDistance = Offset.zero;
+      }
+    }
+  }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以上逻辑的大致思路如下：判断外部列表是否滑动完，滑动完则允许WebView响应滑动；通过WebView是否滑动到顶部（注：以上代码并未体现这个思路，因为代码被我调试过程中误删了）、或者通过WebView的累计滑动距离判断WebView是否滑动回顶部，滑动到顶部则不再响应滑动。</p>
+</div>
+<div class="paragraph">
+<p>这个方案的效果并不太好，如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-flutter-webview-in-list-1.gif" alt="ezgif flutter webview in list 1"/>
+</div>
+</div>
+<div class="paragraph">
+<p>造成这个方案的效果不好的原因主要如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>单次滑动的响应者只能有一个，比如Flutter列表滑动完之后，如果不抬起手指而继续滑动，是不会触发WebView的滑动的。</p>
+</li>
+<li>
+<p>边界问题不好处理，比如当前WebView已经滑倒顶部了，那么下一次滑动如下是下滑则应该给外部列表响应、如果是上滑应该给WebView响应。这种细枝末节很多，实现起来非常繁复。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>实际上，原来的Native页面也存在这些问题，所以他们干脆把WebView按照实际高度展开了，但这样也有不少问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>内存占用过高</p>
+</li>
+<li>
+<p>WebView如果需要在底部弹窗是没法做的，因为展开的原因，WebView的底部实际在屏幕之外</p>
+</li>
+<li>
+<p>和问题2类似，WebView因为展开，没法触发Web自身的上滑加载，因为WebView是展开的，即使滑倒底部，也只是WebView这个组件滑到了底部，Web页面本身并不知道滑到底部了，所以Web没法做滑动加载，结果如下：</p>
+</li>
+</ol>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/android-nest-webview-demo.png" alt="android nest webview demo"/>
+</div>
+</div>
+<div class="paragraph">
+<p>即只能用一个加载按钮让用户去点击。</p>
+</div>
+<div class="paragraph">
+<p>综上所述，其实从手势分发、或者WebView展开的角度来解决这个问题都有其局限性。回过头来思考，<strong>我们能不能把WebView当作Flutter的一个滚动组件来处理呢？</strong></p>
+</div>
+<div class="paragraph">
+<p>结合解决问题一时引用的文档，自定义滚动行为有两种方法，解决问题一时用的是第2种，那么我们现在可不可以用1种方法（即自定义一个viewportBuilder）来解决呢？文档中特别提到了SingleChildScrollView，仔细想想，我们的WebView是不是就是一个单子节点的可滚动组件呢？</p>
+</div>
+<div class="paragraph">
+<p>更具体来说，WebView的实际高度（即Content Height）减去Viewport（即WebView作为一个Android组件的大小）的高度就是列表的滚动距离，列表的偏移就是WebView的偏移，我们虽然无法直接控制WebView的绘制偏移，但是我们可以通过 <code>scrollTo</code> 这个方法告诉WebView！！！</p>
+</div>
+<div class="paragraph">
+<p>SingleChildScrollView 的底层实现其实是 _RenderSingleChildViewport：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class _RenderSingleChildViewport extends RenderBox
+    with RenderObjectWithChildMixin&lt;RenderBox&gt; implements RenderAbstractViewport {
+  ......
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>理论上，我们只需要实现一个自己的RenderAbstractViewport就可以解决这个问题了。</p>
+</div>
+<div class="paragraph">
+<p>【预警：接下来的论述有点绕，但是可以通过很少的代码解决问题】</p>
+</div>
+<div class="paragraph">
+<p>但是，我们真的需要为WebView做一个RenderAbstractViewport吗？SingleChildScrollView其实就是我们想要的组件，只是WebView无法直接嵌入其中罢了（因为直接嵌入WebView没有布局高度约束，而且滑动距离最终体现为绘制偏移，WebView和Flutter的Widget绘制是分开的）。</p>
+</div>
+<div class="paragraph">
+<p>为了解决这个问题，我们可以加入一个中间层：把WebView的实际高度告诉 SingleChildScrollView，用于校正可滚动距离；把列表的滚动距离告诉WebView，用于产生WebView自身的滑动效果。</p>
+</div>
+<div class="paragraph">
+<p>关键实现如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// Flutter侧逻辑
+@override
+void paint(PaintingContext context, Offset offset) {
+  Offset offsetReset = Offset.zero;
+  // 滑动距离同步过去
+  scrollSyncChannel.invokeMethod(&#39;&#39;, {
+    &#39;dx&#39;: -offset.dx,
+    &#39;dy&#39;: -offset.dy,
+  });
+  paintOffset = offset;
+  super.paint(context, offsetReset);
+}
+
+// Android侧逻辑
+scrollSyncChannel.setMethodCallHandler(new MethodChannel.MethodCallHandler() {
+    @Override
+    public void onMethodCall(@NonNull MethodCall call, @NonNull MethodChannel.Result result) {
+        @SuppressWarnings(&#34;unchecked&#34;)
+        Map&lt;String, Object&gt; map = (Map&lt;String, Object&gt;) call.arguments;
+        try {
+            double dx = (double) map.get(DX);
+            double dy = (double) map.get(DY);
+            dx *= density;
+            dy *= density;
+            if (platformView != null) {
+                platformView.syncTo(dx, dy); // 将调用WebView的scrollTo
+            }
+        } catch (NullPointerException ignored) {
+        }
+    }
+});</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们使用一个中间层隔离 SingleChildScrollView 和 WebView，在此将绘制偏移转成WebView应该滚动的距离。由重写了paint方法，读者也可以理解成我们使用了一个和WebView同高度的浮层（但没有绘制任何内容，所以不会有性能问题）来滚动，并将自身的滚动距离实时同步给WebView。</p>
+</div>
+<div class="paragraph">
+<p>此外，由于WebView可能会加载新的内容，所以我们需要不断地将WebView的高度告诉Flutter，具体逻辑如下：</p>
+</div>
+<div class="paragraph">
+<p>Android侧在WebView的onDraw方法中检查高度是否改变，并适时同步到Flutter：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// CustomWebView.java
+@Override
+protected void onDraw(Canvas canvas) {
+    super.onDraw(canvas);
+    if (platformViewScrollHelper != null) {
+        platformViewScrollHelper.onHeightUpdate(getContentHeight());
+    }
+}
+// PlatformViewScrollHelper.java
+public void onHeightUpdate(double newSize) {
+    if (Double.valueOf(newSize).equals(currentSize)) {
+        return;
+    }
+    currentSize = newSize;
+    heightSyncChannel.invokeMethod(&#34;&#34;, newSize);
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Flutter侧重写 <code>get size</code> 方法，告诉Viewport自身的高度改变了，并请求重新布局：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  _RenderPlatformViewShell({
+    ......
+  }) : super(child: child, additionalConstraints: additionalConstraints) {
+    ...... // 省略其他逻辑
+    heightSyncChannel.setMethodCallHandler((call) {
+      if (call.arguments is! double || realHeight == call.arguments) {
+        return Future.value(0);
+      }
+      realHeight = call.arguments; // 更新高度
+      markNeedsLayout();
+      return Future.value(0);
+    });
+  }
+
+  Size get size { // 每次布局的时候，Viewport会根据这个信息计算列表大小
+    return Size.fromHeight(realHeight);
+  }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最终效果如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-flutter-webview-in-list-2.gif" alt="ezgif flutter webview in list 2"/>
+</div>
+</div>
+<div class="paragraph">
+<p>可以看到，由于我们用Flutter的列表模型去管理WebView，所以WebView的嵌套滑动可以像普通列表一样，同时Fling等效果也自然而然支持了。而且，这种方法不需要展开WebView，自然也会支持WebView滑到底部的自动Laoding能力，而无需一个“加载更多”的按钮了。</p>
+</div>
+<div class="paragraph">
+<p>注意：在验证这个想法阶段，我直接盖了一个透明列表在WebView上，监听列表的滑动偏移，调用 <code>scrollBy</code> 做同步，发现效果不是很好，比如快滑之后直接反向滑动，使用偏移值同步就不准。因此，要用滑动的总偏移 + <code>scrollTo</code> 方法来同步浮层和WebView。</p>
+</div>
+<div class="paragraph">
+<p>至此，第二个问题完美解决。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题三pageview嵌套webview的横滑冲突">问题三：PageView嵌套WebView的横滑冲突</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在问题二中，由于WebView本身是垂直方向滑动的，所以我们可以用一个垂直方向的列表做同步。但对于横滑，这个思路是行不通的，因为WebView本身在水平方向是不可滑动的，能滑动的是Web自己控制的列表，所以<strong>必须把横滑事件传递给WebView</strong>，这一点是无法改变的。</p>
+</div>
+<div class="paragraph">
+<p><strong>基于此不可改变之事实，我们思考的核心就变成了：如何让WebView在自身可以横滑时横滑自身，在自身无法横滑时横滑外部的 Flutter PageView。</strong></p>
+</div>
+<div class="paragraph">
+<p>和问题二（通过Flutter控制WebView）截然相反，这一次，我们要通过WebView来控制Flutter。首先在WebView侧，我们可以通过通过WebView的一个回调监听横滑是否越界：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@Override
+protected void onOverScrolled(int scrollX, int scrollY, boolean clampedX, boolean clampedY) {
+    super.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+    if (platformViewScrollHelper != null) {
+        platformViewScrollHelper.onOverScrolled(scrollX, scrollY, clampedX, clampedY);
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>一旦发生越界（clampedX为true），我们立即发一个信号给Flutter，Flutter拿到信号后，开始捕获每次滑动（PointerMoveEvent）在水平方向的偏移，如下所示：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  void _handlePlatformViewEvent(PointerEvent event) {
+    if (!attached) return;
+    if (event is PointerDownEvent) {
+      lastX = event.position.dx; // 每次按下的时候都做记录
+      isHorizontalOverScrolled = false; // 默认WebView没有滑动越界
+    }
+    if (isHorizontalOverScrolled) {
+      if (event is PointerMoveEvent) {
+        double delta = lastX - event.position.dx; // 计算越界距离
+        onOverScrolled?.call(delta); // 通知本次有效滑动
+        lastX = event.position.dx;
+      }
+    }
+  }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>外部可以根据这个 delta 值来调用 ScrollPosition 的 <code>pointerScroll</code> 方法，其定义如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/// Changes the scrolling position based on a pointer signal from current
+/// value to delta without animation and without checking if new value is in
+/// range, taking min/max scroll extent into account.
+///
+/// Any active animation is canceled. If the user is currently scrolling, that
+/// action is canceled.
+///
+/// This method dispatches the start/update/end sequence of scrolling
+/// notifications.
+///
+/// This method is very similar to [jumpTo], but [pointerScroll] will
+/// update the [ScrollDirection].
+///
+// TODO(YeungKC): Support trackpad scroll, https://github.com/flutter/flutter/issues/23604.
+void pointerScroll(double delta);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如此，便基本实现了横滑冲突的解决，但是有几个细节需要注意：</p>
+</div>
+<div class="paragraph">
+<p>1.WebView明明已经赢得了事件竞争，Flutter是如何知道滑动的距离的？ 答：通过PointerRouter的addGlobalRoute方法监听，它是手势竞争逻辑之外的另一个获取手势信息的通道。</p>
+</div>
+<div class="paragraph">
+<p>2.一定要Flutter侧计算delta值吗？答：是的，WebView越界时其自身也会滚动，所以即使手指不动，WebView获取到的横滑位置也是不准的，会出现以下抖动：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-webview-horizontal-1.gif" alt="ezgif webview horizontal 1"/>
+</div>
+</div>
+<div class="paragraph">
+<p>3.仅仅调用pointerScroll就可以模拟出PageView的滚动吗？答：不是的，如果只调用 <code>pointerScroll</code> ，那么手指横滑不动后，PageView自动归位，而不是悬停住，现象如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-webview-horizontal-2.gif" alt="ezgif webview horizontal 2"/>
+</div>
+</div>
+<div class="paragraph">
+<p>完整逻辑如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>void _onOverScrolled(double delta){
+  if (delta == 0.0) { // 处理PlatformView的越界信息
+    pageController.position.hold(() {
+    }).cancel(); // 没有滑动时能悬停住
+  } else {
+    pageController.position.pointerScroll(delta);
+  }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>最终效果如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-pageview-webview-horizontal-demo.gif" alt="ezgif pageview webview horizontal demo"/>
+</div>
+</div>
+<div class="paragraph">
+<p>此外，还有一个非常隐蔽且棘手问题需要解决，如下图所示：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-webview-in-pageview-error.gif" alt="ezgif webview in pageview error"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这又是为何？这个其实是在解决问题二的时候引入的，当问题2中用于同步WebView的中间层滑动一段距离后，他将不在参与手势竞技，所以上图中即使看起来滑动在WebView的可横滑区域，但WebView是根本没有响应。</p>
+</div>
+<div class="paragraph">
+<p>默认情况下，我们滑动浮层一段距离后，在浮层上的手势坐标仍会按照原始位置发送给PlatformView，如下图。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/pageview-nested-webview-model-2.png" alt="pageview nested webview model 2"/>
+</div>
+</div>
+<div class="paragraph">
+<p>对于上图左边，由于中间层列表没有实质的滚动，所有可响应点击测试的区域、中间层和WebView是能正确对应上的。但是，当浮层滚动的时候（上图右边），可响应点击测试区域就划走了，所以此时如果直接从位置2处开始滑动，PageView会直接响应，而不是由WebView响应。而当此时如果从位置1开始滑动，由于默认的映射规则，WebView的响应区域将是位置1在中间层的绝对位置，即位置2（可以理解为位置1与中间层顶部的距离 == 位置2与WebView顶部的距离）。</p>
+</div>
+<div class="paragraph">
+<p>知道了原因，就可以着手解决问题。即：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>如何让中间层全部区域加入点击测试？</p>
+</li>
+<li>
+<p>如何让中间层的坐标转换为正确的WebView坐标？</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>首先分析一下中间层的父类做点击检测（hitTest）的逻辑，如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>bool hitTest(BoxHitTestResult result, { required Offset position }) {
+  if (_size!.contains(position)) {
+    if (hitTestChildren(result, position: position) || hitTestSelf(position)) {
+      result.add(BoxHitTestEntry(this, position));
+      return true;
+    }
+  }
+  return false;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>症结就出现在 <code>_zise</code> 字段，我们只是重写了 <code>get size</code> ，所以这个字段仍是WebView的布局大小，而不是WebView内部可滚动列表的大小写。与此同时，position 却是列表中的绝对位置，因为当滚动完一屏WebView后，浮层将完全无法接收手势，因为第一个条件都无法判断通过。</p>
+</div>
+<div class="paragraph">
+<p>于是，重写这个方法，让中间层任意位置都可以参与手势竞争：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>bool hitTest(BoxHitTestResult result, { required Offset position }) {
+  Offset newPos =  Offset(position.dx + paintOffset.dx, position.dy + paintOffset.dy);
+  if (hitTestChildren(result, position: newPos) || hitTestSelf(newPos)) {
+    result.add(BoxHitTestEntry(this, newPos));
+    return true;
+  }
+  return false;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>上图中还有一个问题，就是滑动一段距离后，横滑顶部位置，响应滑动的却是底部的位置。这又是为什么？这就要涉及到Flutter和WebView的坐标系转换了，所有的Flutter事件在分发给PlatformView时都会进行坐标的转换，这也是导致上面横滑抖动的原因，其具体逻辑如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  Offset globalToLocal(Offset point, { RenderObject? ancestor }) {
+    final Matrix4 transform = getTransformTo(ancestor);
+    final double det = transform.invert();
+    if (det == 0.0)
+      return Offset.zero;
+    final Vector3 n = Vector3(0.0, 0.0, 1.0);
+    final Vector3 i = transform.perspectiveTransform(Vector3(0.0, 0.0, 0.0));
+    final Vector3 d = transform.perspectiveTransform(Vector3(0.0, 0.0, 1.0)) - i;
+    final Vector3 s = transform.perspectiveTransform(Vector3(point.dx, point.dy, 0.0));
+    final Vector3 p = s - d * (n.dot(s) / n.dot(d));
+    return Offset(p.x, p.y);
+  }
+  Matrix4 getTransformTo(RenderObject? ancestor) {
+    ...... // 省略其他逻辑
+    for (int index = renderers.length - 1; index &gt; 0; index -= 1) {
+      renderers[index].applyPaintTransform(renderers[index - 1], transform);
+    }
+    return transform;
+  }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>因此，当滚动一段距离后就会出现问题，如果理解了这个过程，解决也十分简单，即在中间层的applyPaintTransform方法中根据当前滚动距离（在paint方法中获取），映射回正确的坐标就行了，如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>@override
+void applyPaintTransform(covariant RenderObject child, Matrix4 transform) {
+  transform.translate(-paintOffset.dx, - paintOffset.dy);
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>至此，问题三解决。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题四viewpager2嵌套pageview的横滑冲突">问题四：ViewPager2嵌套PageView的横滑冲突</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>下面，解决最后一个问题，现状如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-viewpager2-flutter.gif" alt="ezgif viewpager2 flutter"/>
+</div>
+</div>
+<div class="paragraph">
+<p>即ViewPager2内的FlutterFragment无法响应横滑事件，这是因为ViewPager2 默认会拦截横滑事件，那么问题就变成了两个：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>如何禁用/允许ViewPager2的拦截？</p>
+</li>
+<li>
+<p>如何判断何时由Flutter响应滑动，何时由ViewPager2响应滑动？</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>首先针对问题1，可以使用 <code>requestDisallowInterceptTouchEvent</code> 解决。而对于问题2，则要具体问题具体分析，以本文的例子为例，可以分为3部分：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>顶部的区域没有横滑能力，所以直接由ViewPager2响应</p>
+</li>
+<li>
+<p>下方的PageView如果自身无法滑动，会发出OverscrollNotification通知，我们可以捕获这个通知，告知ViewPager2开始拦截、自行响应</p>
+</li>
+<li>
+<p>如果PageView的第一个或者最后一个Page是WebView，那么WebView滑动到边界需要发出自行发出一个越界通知。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>为了统一处理此类情况，一个自定义一个通知如下:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class EnableInterceptNotification extends Notification {
+  static MethodChannel _channel =  MethodChannel(&#39;flutter_nested_scroll/global&#39;);
+  static void emitToPlatform() {
+    // 不需要任何参数，一般是在Move过程中告知Platform ，Platform会在每次事件开始时重置
+    _channel.invokeMethod(&#39;&#39;, &#39;&#39;);
+  }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于第1种情况，在页面根部监听横滑事件即可，如果根部能监听到，说明肯定没有被PageView等组件响应，对于第2种情况，在PageView的外部监听 OverscrollNotification通知即可：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class NotificationScaffold extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      // 滑动一个不会消费横滑事件的区域
+      onHorizontalDragUpdate: (DragUpdateDetails details) {
+        EnableInterceptNotification().dispatch(context);
+      },
+      child: NotificationListener(
+        onNotification: (notification) {
+          // 监听PageView滑动到边界的情况
+          if (notification is OverscrollNotification) {
+            EnableInterceptNotification().dispatch(context);
+          }
+          return false;
+        },
+        child: DemoPage(), // 真正的UI
+      ),
+    );
+  }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于第三种情况，结合越界情况和PageView的索引综合判断即可， <code>_onOverScrolled</code> 的完整逻辑如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  void _onOverScrolled(double delta){
+    if (delta == 0.0) { // 处理PlatformView的越界信息
+      pageController.position.hold(() {
+      }).cancel();
+    } else {
+      pageController.position.pointerScroll(delta);
+      if ((delta &gt; 0 &amp;&amp; pageController.page! &gt;= 3.0) // 右侧越界滑动
+          || (delta &lt; 0 &amp;&amp; pageController.page! &lt;= 0.0)) { // 左侧越界滑动
+        // 发送出去，由根部统一处理
+        EnableInterceptNotification().dispatch(context);
+      }
+    }
+  }</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>具体UI节点负责发送一个特殊的通知，我们负责在根节点告知Platform此信息：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: &#39;Flutter Demo&#39;,
+      theme: ThemeData(primarySwatch: Colors.blue,),
+      home: SafeArea(
+        child: Scaffold(
+          body: NotificationListener(
+            onNotification: (notification) {
+              // 通知宿主
+              if (notification is EnableInterceptNotification) {
+                EnableInterceptNotification.emitToPlatform();
+                return true;
+              }
+              return false;
+            },
+            child: NotificationScaffold(),
+          ),
+        ),
+      ),
+    );
+  }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>至此，所有的横滑冲突也彻底解决了，效果如下：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/ezgif-viewpager2-nest-flutter-demo.gif" alt="ezgif viewpager2 nest flutter demo"/>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_复盘总结">复盘总结</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p>突破惯性思维，跳出经验圈套，具体问题具体分析。</p>
+</li>
+<li>
+<p>熟悉源码、总揽全局，谋定而后动，方能举重若轻。</p>
+</li>
+<li>
+<p>一个好的切入点可以节省大量代码，同时避免一些本就不该出现的Bug，事半功倍。</p>
+</li>
+<li>
+<p>对于ListView这种存在内外联动的嵌套，必须从底层滑动机制着手；对于PageView、ViewPager这种每次滑动只需要有一个响应者的嵌套，直接分发到对应的组件即可。</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+		</div>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E9%97%AE%E9%A2%98%E6%94%BB%E5%9D%9A/" rel="tag">问题攻坚</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/record-a-flutter-platform-view-bug/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Flutter PlatformView大小异常导致闪退锁屏</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/all-takenism-and-positivism/">拿来主义与实证精神</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/moral-of-developing-tools/">做工具要有&#34;码德&#34;</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/android-profile-tool-bug-record/">AndroidStudio-Profile工具导致的一个奇怪问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-4/">Flutter源码剖析(四):flutter run流程解析</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-on-sprint/">谈小步快跑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-source-code-analyze-3/">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/gitbook-install-record/">gitbook安装中的一些问题</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/category1/">category1</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a></li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/">疑难杂症</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android/" title="Android">Android (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/asciidoc/" title="Asciidoc">Asciidoc (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/hugo/" title="Hugo">Hugo (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/proguard/" title="Proguard">Proguard (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag1/" title="tag1">tag1 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/tag2/" title="tag2">tag2 (67)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%AE%89%E8%A3%85%E5%8C%85%E7%B2%BE%E7%AE%80/" title="安装包精简">安装包精简 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/" title="疑难杂症">疑难杂症 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%97%AE%E9%A2%98%E6%94%BB%E5%9D%9A/" title="问题攻坚">问题攻坚 (1)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
