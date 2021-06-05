@@ -26,29 +26,83 @@
     </item>
     
     <item>
-      <title>category1</title>
-      <link>/categories/category1/</link>
+      <title>随笔杂记</title>
+      <link>/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/</link>
       <pubDate>Sun, 20 Dec 2020 19:49:29 +0800</pubDate>
       
-      <guid>/categories/category1/</guid>
+      <guid>/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Bug解决记录</title>
+      <link>/categories/bug%E8%A7%A3%E5%86%B3%E8%AE%B0%E5%BD%95/</link>
+      <pubDate>Thu, 10 Dec 2020 12:36:32 +0800</pubDate>
+      
+      <guid>/categories/bug%E8%A7%A3%E5%86%B3%E8%AE%B0%E5%BD%95/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>源码剖析</title>
+      <link>/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/</link>
+      <pubDate>Sun, 22 Nov 2020 12:23:18 +0800</pubDate>
+      
+      <guid>/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Android实践</title>
       <link>/categories/android%E5%AE%9E%E8%B7%B5/</link>
-      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      <pubDate>Thu, 12 Nov 2020 15:48:51 +0800</pubDate>
       
       <guid>/categories/android%E5%AE%9E%E8%B7%B5/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>疑难杂症</title>
-      <link>/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</link>
-      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      <title>读书笔记</title>
+      <link>/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</link>
+      <pubDate>Sat, 17 Oct 2020 23:44:11 +0800</pubDate>
       
-      <guid>/categories/%E7%96%91%E9%9A%BE%E6%9D%82%E7%97%87/</guid>
+      <guid>/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>业余研究</title>
+      <link>/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/</link>
+      <pubDate>Sun, 01 Mar 2020 19:57:34 +0800</pubDate>
+      
+      <guid>/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>总结反思</title>
+      <link>/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/</link>
+      <pubDate>Wed, 01 Jan 2020 20:02:29 +0800</pubDate>
+      
+      <guid>/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>软件沉思录</title>
+      <link>/categories/%E8%BD%AF%E4%BB%B6%E6%B2%89%E6%80%9D%E5%BD%95/</link>
+      <pubDate>Thu, 19 Dec 2019 19:38:07 +0800</pubDate>
+      
+      <guid>/categories/%E8%BD%AF%E4%BB%B6%E6%B2%89%E6%80%9D%E5%BD%95/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>历史归档</title>
+      <link>/categories/%E5%8E%86%E5%8F%B2%E5%BD%92%E6%A1%A3/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/categories/%E5%8E%86%E5%8F%B2%E5%BD%92%E6%A1%A3/</guid>
       <description></description>
     </item>
     

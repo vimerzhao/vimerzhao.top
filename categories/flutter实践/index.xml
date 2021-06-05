@@ -25,5 +25,14 @@
       <description>最近在Flutter中嵌入WebView的时候，遇到一个奇怪的Bug，不仅闪退，还会导致应用锁屏，现状如下（在当前页面卡顿很久，然后黑屏、锁屏…​…​）： 抓到的错误日志如下： + 分析之后发现是使用Vir</description>
     </item>
     
+    <item>
+      <title>Flutter:移动端跨平台技术演进之路</title>
+      <link>/posts/cross-platform-mobile-ui-development-evolution/</link>
+      <pubDate>Wed, 06 Nov 2019 12:21:29 +0800</pubDate>
+      
+      <guid>/posts/cross-platform-mobile-ui-development-evolution/</guid>
+      <description>导读 本文约4688字，阅读可能需要15分钟。 最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著). 从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上</description>
+    </item>
+    
   </channel>
 </rss>
