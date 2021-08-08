@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>抽丝剥茧：Flutter Engine隐藏的一个惊天Bug - V大师在一号线</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="抽丝剥茧：Flutter Engine隐藏的一个惊天Bug" />
+<meta property="og:description" content="零、背景介绍 Flutter技术在微视内经过大半年的探索，已经从存量业务的改造尝试阶段，开始进入增量业务的承接阶段。横版视频的为你推荐就是这样一个场景，原Native体验如下： 使用Flutter完成新业" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/fix-a-serious-flutter-engine-multithread-bug/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-08-08T15:53:53+08:00" />
+<meta property="article:modified_time" content="2021-08-08T16:17:33+08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="抽丝剥茧：Flutter Engine隐藏的一个惊天Bug"/>
+<meta name="twitter:description" content="零、背景介绍 Flutter技术在微视内经过大半年的探索，已经从存量业务的改造尝试阶段，开始进入增量业务的承接阶段。横版视频的为你推荐就是这样一个场景，原Native体验如下： 使用Flutter完成新业"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="V大师在一号线" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">V大师在一号线</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-08-08T15:53:53&#43;08:00">2021-08-08</time>
+	<time class="meta__text" datetime="2021-08-08T16:17:33&#43;08:00">(最后修改: 2021-08-08)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/" rel="category">Flutter实践</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			<h1 id="零背景介绍">零、背景介绍</h1>
+<p>Flutter技术在微视内经过大半年的探索，已经从存量业务的改造尝试阶段，开始进入增量业务的承接阶段。横版视频的<strong>为你推荐</strong>就是这样一个场景，原Native体验如下：</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-01.gif" alt=""></p>
+<p>使用Flutter完成新业务的改造后体验如下：</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-02.gif" alt=""></p>
+<p>新的UI体验更加丰富，在一些细节上（比如跟手滑动）也有所优化，后面将详细复盘挑战与解法。</p>
+<p>本文将分析，由该业务上线而牵出的一个Flutte Engine的巨大Bug。在解决问题的过程，有山重水复、走投无路的沮丧，也有峰回路转、醍醐灌顶的激动，故此记录，以飨读者。</p>
+<h1 id="一crash来袭">一、Crash来袭</h1>
+<p>在Flutter版本的为你推荐页面上线后（放量10%），负责质量的同学stevenqihu向我们反馈了一个Flutter的Native Crash。虽然没有完全放量，该Crash的发生次数已经来到了Top 2。</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-03.png" alt=""></p>
+<p>一方面，我们要保证质量数据的稳定；另一方面，也要保证产品需求的上线，所以解决这个问题<strong>迫在眉睫</strong>。</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-04.png" alt=""></p>
+<h1 id="二疑云重重">二、疑云重重</h1>
+<p>由于我并不是专业解Crash的同学，所以负责这块工作的bingozhuang也参与了进来。按照常规的解法，我们从Bugly上拿到了Crash的堆栈，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">#12927 1.io
+SIGSEGV(SEGV_MAPERR):
+#00 pc 00000000004aeb04 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#01 pc 0000000000218270 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#02 pc 000000000021b5e8 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#03 pc 000000000017994c /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#04 pc 00000000001791ec /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#05 pc 0000000000179214 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#06 pc 00000000000be234 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#07 pc 00000000000be2e0 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#08 pc 00000000000be2f8 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#09 pc 00000000000270ac /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#10 pc 000000000002a584 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#11 pc 000000000002c9ec /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#12 pc 00000000000144fc /system/lib64/libutils.so (_ZN7android6Looper9pollInnerEi+836) [arm64-v8a::6e28af754ab0291416498f650e306ff7]
+#13 pc 0000000000014114 /system/lib64/libutils.so (_ZN7android6Looper8pollOnceEiPiS1_PPv+60) [arm64-v8a::6e28af754ab0291416498f650e306ff7]
+#14 pc 000000000e2cd368 /vendor/lib64/libgralloc_extra.so (ALooper_pollOnce+96) [arm64-v8a::d050bf4fefcf3a8b991ea0bdb35b7260]
+#15 pc 000000000002cafc /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#16 pc 0000000000029884 /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#17 pc 000000000002b59c /data/app/com.tencent.weishi-DT3Bh5C_tryVQSznNp4AeA==/lib/arm64/libflutter.so [arm64-v8a::0aa29a54fe1d9f96d4bad726f0374603]
+#18 pc 0000000000083824 /system/lib64/libc.so (_ZL15__pthread_startPv+36) [arm64-v8a::974ac4902843d14d893999c925af5a95]
+#19 pc 000000000002340c /system/lib64/libc.so (__start_thread+68) [arm64-v8a::974ac4902843d14d893999c925af5a95]
+java:
+[Failed to get Java stack]
+</code></pre></div><p>然后，通过addr2line工具进行还原。令人匪夷所思的是，这些地址根本没法还原，于是我们做了以下尝试：</p>
+<ul>
+<li>最有可能的：符号表没对上。可是，通过比较Crash信息携带的BuildID和用readelf读出的libflutter.so符号表的BuildID，发现他们是一样的！</li>
+<li>继续上一个猜想，我们直接把带符号表的so打入微视，然后跑稳定性测试，抓到堆栈用同一个so仍然无法还原！</li>
+</ul>
+<p>至此，我们遇到了第一个困难：<strong>无法还原符号表</strong>。这几乎是致命的，并且还将在后面继续阻碍我们，先按下不表。比较熟悉这块的bingo也给了一些猜想，比如</p>
+<blockquote>
+<p>也有一个猜想，你试试32位的，他们那个回栈是基于unwind，一般来说也不至于有问题，有个点你可以考虑下，也有可能bugly对64位的兼容有问题，可以试试拿32位的包去测试一下</p>
+</blockquote>
+<p>目前来说，堆栈无法还原的，这个看起来不是很好解决，我们只能根据一些额外的信息来进行分析，比如：</p>
+<ul>
+<li>由 <code>SIGSEGV(SEGV_MAPERR)</code> 可知，这是一个非法内存访问导致的Crash。</li>
+<li>由 <code>1.io</code> 可知，Crash发生在 Flutter 的 io 线程，该线程<strong>负责图片资源的离屏渲染</strong>，我们的Native业务代码一般运行在platform线程，Flutter业务代码一般运行在ui线程，所以这<strong>大概率不是我们业务代码导致的问题</strong>。</li>
+</ul>
+<p>当然了，我们这个场景比较特殊，Flutter页面是以浮层的形式和Native共存，也不排除这个原因。</p>
+<p>此外，我们的Flutter SDK版本是2.0.1，仅在Flutte 2.0发布后升级过一次，是不是因为这个版本还不太稳定（虽然也是stable分支的）。抱着一丝幻想，我们做了第一个尝试，把Flutter SDK升级到最新的稳定版本2.2.3。或许，这就是Flutter在开发过程中的一个Bug，升级到最新版本就好了，抱着一丝侥幸心理，我们进行了升级和灰度。天不遂人愿，Crash依然“源源不断”地有上报。</p>
+<p>继续分析堆栈的潜在信息，可以发现堆栈的最下面有 <code>pthread_start</code> 和 <code>ALooper_pollOnce</code> 等信息，据此判断，应该是io线程创建后，启动（消息循环post的第一个逻辑）时发生的，于是我们把io线程的启动逻辑捋了一遍，找到一些可疑点但最后都被推翻了。事后来看，这是一个缺乏经验的判断，因为任何一次Crash，只要一直往上回溯，都能回溯到 <code>ALooper_pollOnce</code> 。不过，这部分尝试也不是完全没有价值：io线程，这个隐藏在Flutter Engine最底层的线程，开始漏出了它的冰山一角。</p>
+<p>这一阶段，做了很多尝试，但是并没有什么有价值的突破。But，距离我给产品的deadline也越来越近</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-05.png" alt=""></p>
+<h1 id="三峰回路转">三、峰回路转</h1>
+<p>就在这疑云重重的时候，我们组另外一位同学（nickdxuli）反馈他遇到了一次为你推荐的Crash，堆栈和Bugly的一摸一样，于是我继续了解了下他的Crash场景：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">vimerzhao 7-16 20:43
+你的表现是退出横版视频，还是整个APP都退出了？
+nickdxuli 7-16 20:45
+退出横版视频时出现了，然后回到推荐页变成了其他视频
+vimerzhao 7-16 20:45
+好的
+vimerzhao 7-16 21:36
+你出现的是一进入就闪退吗？
+vimerzhao 7-16 21:36
+还是说你是故意进入之后立即退出才会出现
+nickdxuli 7-16 23:14
+故意进入后马上推出
+</code></pre></div><p>虽然这个堆栈仍然无法还原，但是从以上对话至少可以推断出两点：</p>
+<ul>
+<li>可能<strong>并不是io线程启动后的第一个逻辑Crash的</strong>，而是退出时Crash的</li>
+<li>启动和退出的间隔可能要尽可能短，才能Crash</li>
+</ul>
+<p>而且，结合线上Crash的出现频率，及以上对话提供的信息，我们应该是可以复现这个问题的。手动当然是不可能的，于是我设计了以下脚本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash"><span style="color:#66d9ef">for</span> i in <span style="color:#f92672">{</span>1..1000<span style="color:#f92672">}</span>
+<span style="color:#66d9ef">do</span>
+   echo <span style="color:#e6db74">&#34;Welcome </span>$i<span style="color:#e6db74"> times&#34;</span>
+   <span style="color:#75715e"># 启动横版视频页面的deeplink路由</span>
+   adb shell am start -a android.intent.action.VIEW -d <span style="color:#e6db74">&#39;weishi://horizontal_video?*****************&#39;</span>
+   sleep 0.7 <span style="color:#75715e"># 随机等待0.7～1.7s</span>
+   sleep 0.<span style="color:#e6db74">&#34;</span>$RANDOM<span style="color:#e6db74">&#34;</span>
+   adb shell input keyevent <span style="color:#ae81ff">4</span> <span style="color:#75715e"># 退出并等待 1 s</span>
+   sleep <span style="color:#ae81ff">1</span>
+<span style="color:#66d9ef">done</span>
+</code></pre></div><p>果然，通过以上脚本，就可以在100次之内触发这个问题！至此，我们也看到了这个Crash的真面目：</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-06.gif" alt=""></p>
+<p>这时，我冒出一个猜想，如果这个问题普遍存在，那么应该早就有人反馈给Flutter官方并被解决了（后面证明我还是too young），我们这个业务比较特殊，他是竖屏转横屏，那么<strong>有没有可能在某个瞬间Flutter以为当前是竖屏，然后下一个刻到达了横屏的临界点，于是发生了非法的内存访问，</strong> 看起来有点戏，和上面图中Crash发生时的横竖屏切换也能对得上。于是，我又做了一次灰度：延迟500ms初始化，如果猜想正确，Crash应该大大减少，然而并没有。</p>
+<p>至此，又一个可能性破灭。</p>
+<p>好在天无绝人之路，组内另外一个同事（panyu）也遇到了一次这个问题，并提供了一个不一样的堆栈，他的堆栈<strong>是可以还原的</strong>！！（注：为啥这次的堆栈可以还原？唯一说得通的特殊之处是panyu的手机是Google原生系统）</p>
+<p>以下是附带手工还原信息的堆栈</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">07-20 21:14:23.741  9230 24550 F libc    : Fatal signal 11 (SIGSEGV), code 0 (SI_USER) in tid 24550 (2.io), pid 9230 (WsPlayer-Worker)
+07-20 21:14:24.357 27164 27164 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+07-20 21:14:24.357 27164 27164 F DEBUG   : Build fingerprint: &#39;Phh/treble_arm64_bgS/phhgsi_arm64_ab:11/RQ2A.210505.003/210505:userdebug/test-keys&#39;
+07-20 21:14:24.357 27164 27164 F DEBUG   : Revision: &#39;0&#39;
+07-20 21:14:24.357 27164 27164 F DEBUG   : ABI: &#39;arm64&#39;
+07-20 21:14:24.358 27164 27164 F DEBUG   : Timestamp: 2021-07-20 21:14:24+0800
+07-20 21:14:24.358 27164 27164 F DEBUG   : pid: 9230, tid: 24550, name: 2.io  &gt;&gt;&gt; com.tencent.weishi &lt;&lt;&lt;
+07-20 21:14:24.358 27164 27164 F DEBUG   : uid: 10275
+07-20 21:14:24.358 27164 27164 F DEBUG   : signal 11 (SIGSEGV), code 0 (SI_USER), fault addr --------
+07-20 21:14:24.360 27164 27164 F DEBUG   : backtrace:
+
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #00 pc 0000000000767dd0  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+OUTLINED_FUNCTION_7438 ld-temp.o:? 
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #01 pc 00000000004c5ec8  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+std::__1::unique_ptr&lt;GrGLContext, std::__1::default_delete&lt;GrGLContext&gt; &gt;::operator-&gt;() const
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/libcxx/include/memory:?
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #02 pc 00000000004c9084  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+~GrGLSemaphore
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/skia/src/gpu/gl/GrGLSemaphore.cpp:16   
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #03 pc 0000000000430a64  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+~RefHelper
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/skia/src/gpu/GrBackendTextureImageGenerator.cpp:42
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #04 pc 00000000004302f0  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+~GrBackendTextureImageGenerator
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/skia/src/gpu/GrBackendTextureImageGenerator.cpp:82
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #05 pc 0000000000430318  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #06 pc 000000000036da78  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+07-20 21:14:24.360 27164 27164 F DEBUG   :       #07 pc 000000000036db20  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+~SkImage_Lazy
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/skia/src/image/SkImage_Lazy.h:22
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #08 pc 000000000036db38  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #09 pc 00000000002d3b58  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+SkRefCntBase::unref() const
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/skia/include/core/SkRefCnt.h:77
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #10 pc 00000000002d7050  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+std::__1::function&lt;void ()&gt;::operator()() const
+/Users/vimerzhao/SourceCode/flutter_source/src/out/android_release_arm64/../../third_party/libcxx/include/functional:2419
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #11 pc 00000000002d948c  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+fml::MessageLoopAndroid::OnEventFired()
+/Users/vimerzhao/SourceCode/flutter_source_for_writing/src/out/android_release_arm64/../../flutter/fml/platform/android/message_loop_android.cc:92
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #12 pc 0000000000019dac  /system/lib64/libutils.so (android::Looper::pollInner(int)+916) (BuildId: 5d6af74124211886d954d61c96514a46)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #13 pc 00000000000199b0  /system/lib64/libutils.so (android::Looper::pollOnce(int, int*, int*, void**)+112) (BuildId: 5d6af74124211886d954d61c96514a46)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #14 pc 0000000000012c74  /system/lib64/libandroid.so (ALooper_pollOnce+100) (BuildId: 98721e1736430f099cefab596fc48463)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #15 pc 00000000002d959c  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #16 pc 00000000002d62dc  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #17 pc 00000000002d8008  /data/app/~~2KomJ56WgxMlYGDqcaIs9w==/com.tencent.weishi-3QS7dDVKEWyhSaRKKAtxpA==/lib/arm64/libflutter.so (BuildId: 9df6c7c4b6627a8fb73c9e78930980a1ad61e210)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #18 pc 00000000000afd4c  /apex/com.android.runtime/lib64/bionic/libc.so (__pthread_start(void*)+64) (BuildId: 88826ef406dbbed88068a41b1da6c056)
+07-20 21:14:24.361 27164 27164 F DEBUG   :       #19 pc 0000000000050288  /apex/com.android.runtime/lib64/bionic/libc.so (__start_thread+64) (BuildId: 88826ef406dbbed88068a41b1da6c056)
+</code></pre></div><p>不过，后面我用脚本跑了几次这台手机，再也没有出现这个堆栈了（就两个字：离谱）。</p>
+<p>不管其他的，我们决定先攻克这份日志。</p>
+<p>可以看到，以上日志中，我们能看到离Crash最近的点是 <code>GrGLSemaphore</code> 的析构函数，其逻辑如下</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 1
+</span><span style="color:#75715e">// third_party/skia/src/gpu/gl/GrGLSemaphore.cpp
+</span><span style="color:#75715e"></span>GrGLSemaphore<span style="color:#f92672">::</span>GrGLSemaphore(GrGLGpu<span style="color:#f92672">*</span> gpu, <span style="color:#66d9ef">bool</span> isOwned)
+        <span style="color:#f92672">:</span> fGpu(gpu), fSync(<span style="color:#66d9ef">nullptr</span>), fIsOwned(isOwned) {}
+
+GrGLSemaphore<span style="color:#f92672">::~</span>GrGLSemaphore() {
+    <span style="color:#66d9ef">if</span> (fSync <span style="color:#f92672">&amp;&amp;</span> fIsOwned) {
+        fGpu<span style="color:#f92672">-&gt;</span>deleteSync(fSync);
+    }
+}
+</code></pre></div><p>经验丰富的庄老师（bingo）一下就看出可能是 <code>fGpu</code> 这个对象在访问时已经被释放了，导致访问了一个非法地址，这是非常合理的！</p>
+<p>于是我们在关键节点加上日志，得到如下信息：</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-07.png" alt=""></p>
+<p>虽然无法理解，但是铁证如山：<code>GrGLGpu</code> 有一定概率在 <code>GrGLSemaphore</code> 之前先析构（注意，这只是表象，我们后面会分析出真正的原因）。</p>
+<h1 id="四妥协规避">四、妥协规避</h1>
+<p>在排查分析了一天（这里其实方向错了，我们去分析 <code>deleteSync</code> 里面的逻辑，试图揭开 <code>GrGLGpu</code> 提前析构的原因 ）之后，我们依旧无法解释这个现象。但是产品迫切希望这个Crash能在当前版本全量之前解决。</p>
+<p>虽然无法彻底解释这个现象，但完全可以规避出问题的地方。于是，我们修改了Skia的源码，重新构建了一个Flutter Enine，发布之后Crash果然消失了。大概的解法如下:</p>
+<p>首先，在 <code>GrGLGpu</code> 的析构触发之前预埋一个方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 2
+</span><span style="color:#75715e">// third_party/skia/include/core/SkRefCnt.h
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SK_API</span> SkRefCntBase {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    ......
+    <span style="color:#75715e">// 新增方法，在 GrGLGpu 中实现逻辑
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">virtual</span> <span style="color:#66d9ef">void</span> extraUnref() <span style="color:#66d9ef">const</span> {}
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">unref</span>() <span style="color:#66d9ef">const</span> {
+        SkASSERT(<span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>getRefCnt() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>);
+        <span style="color:#66d9ef">if</span> (<span style="color:#ae81ff">1</span> <span style="color:#f92672">==</span> fRefCnt.fetch_add(<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>, std<span style="color:#f92672">::</span>memory_order_acq_rel)) {
+            extraUnref();
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>internal_dispose();
+        }
+    }
+    ......
+};
+</code></pre></div><p>由于 <code>GrGLGpu</code> 和 <code>GrGLSemaphore</code> 是双向绑定的，所以我们可以在 <code>GrGLGpu</code> 析构时（ <code>extraUnref</code> 执行）通知绑定的 <code>GrGLSemaphore</code>，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 3
+</span><span style="color:#75715e">// third_party/skia/src/gpu/gl/GrGLGpu.h
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">GrGLGpu</span> <span style="color:#66d9ef">final</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">public</span> GrGpu {
+<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+    <span style="color:#66d9ef">static</span> sk_sp<span style="color:#f92672">&lt;</span>GrGpu<span style="color:#f92672">&gt;</span> Make(sk_sp<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">const</span> GrGLInterface<span style="color:#f92672">&gt;</span>, <span style="color:#66d9ef">const</span> GrContextOptions<span style="color:#f92672">&amp;</span>, GrDirectContext<span style="color:#f92672">*</span>);
+    <span style="color:#f92672">~</span>GrGLGpu() <span style="color:#66d9ef">override</span>;
+    <span style="color:#75715e">// 存储所有和当前实例绑定的 GrGLSemaphore
+</span><span style="color:#75715e"></span>    std<span style="color:#f92672">::</span>unordered_set<span style="color:#f92672">&lt;</span>GrGLSemaphore<span style="color:#f92672">*&gt;</span> semaList;
+    <span style="color:#75715e">// 在 GrGLGpu 析构之前执行
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">extraUnref</span>() <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">override</span> {
+        <span style="color:#66d9ef">for</span>(<span style="color:#66d9ef">auto</span> f : semaList) {
+            f<span style="color:#f92672">-&gt;</span>valid <span style="color:#f92672">=</span> false; <span style="color:#75715e">// 通知 GrGLGpu 的引用是无效的
+</span><span style="color:#75715e"></span>        }
+    }
+    ......
+}
+</code></pre></div><p>下面，我们就可以在 <code>GrGLSemaphore</code> 创建时绑定到 <code>semaList</code> ，然后在析构时检查：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 4
+</span><span style="color:#75715e">// third_party/skia/src/gpu/gl/GrGLSemaphore.cpp
+</span><span style="color:#75715e"></span>GrGLSemaphore<span style="color:#f92672">::</span>GrGLSemaphore(GrGLGpu<span style="color:#f92672">*</span> gpu, <span style="color:#66d9ef">bool</span> isOwned)
+        <span style="color:#f92672">:</span> fGpu(gpu), fSync(<span style="color:#66d9ef">nullptr</span>), fIsOwned(isOwned) {
+    valid <span style="color:#f92672">=</span> true;
+    fGpu<span style="color:#f92672">-&gt;</span>semaList.insert(<span style="color:#66d9ef">this</span>); <span style="color:#75715e">// 注册到 GrGLGpu
+</span><span style="color:#75715e"></span>}
+
+GrGLSemaphore<span style="color:#f92672">::~</span>GrGLSemaphore() {
+    <span style="color:#75715e">// 如果 GrGLGpu 已经析构，则 valid 为 false
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">if</span> (fSync <span style="color:#f92672">&amp;&amp;</span> fIsOwned <span style="color:#f92672">&amp;&amp;</span> valid) {
+        fGpu<span style="color:#f92672">-&gt;</span>semaList.erase(<span style="color:#66d9ef">this</span>); <span style="color:#75715e">// 主动解绑
+</span><span style="color:#75715e"></span>        valid <span style="color:#f92672">=</span> false;
+        fGpu<span style="color:#f92672">-&gt;</span>deleteSync(fSync);
+    }
+}
+</code></pre></div><p>通过以上蹩脚的代码，我们终于“解决”了这个Crash。</p>
+<h1 id="五重整旗鼓">五、重整旗鼓</h1>
+<p>我们的山寨版 Flutter Engine 终于搭载着业务上线了，产品的压力已经没有了。但是，<strong>Skia作为一个广泛使用的图形库，它出问题的概率应该比Flutter更低，更有可能是Flutter的错误使用导致了Skia的Crash</strong>。而且，我们的山寨改法是无法合回谷歌的官方仓库的（显然）。</p>
+<p>本着技术的初心，我们向这个问题发起了最终的冲锋。</p>
+<p>首先，我们分析了几个关键问题。</p>
+<h2 id="51-真的是我们的问题吗">5.1 真的是我们的问题吗？</h2>
+<p>结合 <code>GrGLGpu</code> 、 <code>GrGLSemaphore</code> 等类的作用，我们已经基本分析出，导致这个问题的关键并不是横竖屏，而是图片！图片的创建销毁也伴随着 <code>GrGLSemaphore</code> 的创建销毁，于是我们写了一个简单的Demo，进入一个Flutter页面加载5张图片，立即退出。果然，问题还是会出现！</p>
+<p>至此，我们可以确定的说，<strong>这个问题并不是微视的横版视频才会出现，而是任何一个有图片的Flutter页面都会出现的，只是概率大小的问题</strong>（后面会详细探讨）。</p>
+<h2 id="52-grglgpu--grglsemaphore-等关键类的关系及作用">5.2 GrGLGpu 、 GrGLSemaphore 等关键类的关系及作用？</h2>
+<p>结合上文的堆栈，我们梳理了Skia做图片渲染的几个关键类的关系，如下：</p>
+<ul>
+<li>io线程和ui线程都会持有 <code>SKImage_Lasy</code> ，前者负责生产，后者负责消费（更严谨来说，raster线程负责消费，ui线程负责持有和管理）</li>
+<li>SKImage_Lasy 持有 GrBackendTextureImageGenerator</li>
+<li>GrBackendTextureImageGenerator 持有 RefHelper</li>
+<li>RefHelper 持有 fSemaphore 字段，它是一个 GrGLSemaphore 的实例</li>
+</ul>
+<p>因此，每个图片的销毁会伴随着 GrGLSemaphore 的销毁。 而 GrGLGpu 是一个全局对象，只有整体退出时才会销毁。</p>
+<h2 id="53-grglgpu--grglsemaphore-等关键类的析构顺序">5.3 GrGLGpu 、 GrGLSemaphore 等关键类的析构顺序？</h2>
+<p>由于问题出在析构顺序错乱，所以，我们迫切需要知道这些类的析构是如何触发的。</p>
+<p>一开始，我们使用 <code>_Unwind_Backtrace</code> 和 <code>dladdr</code> 在 <code>GrGLGpu</code> 的析构函数执行时进行回栈，但效果并不理想，如下：</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-08.png" alt=""></p>
+<p>和Bugly上的Crash上报差不多，关键信息并没有还原，而且这些偏移值也无法从符号表还原出来，只有前几位能对得上。</p>
+<p>但是，转念一想，无论析构顺序是否发生错乱，每次析构的触发流程应该都是一样的，所以我们只需要观察正常情况的下的析构顺序就行了。于是，我们构建了一个debug版的libflutter.so，通过llvm调试，拿到了 <code>GrGLGpu</code> / <code>GrGLSemaphore</code> 的析构调用栈。<code>GrGLGpu</code>的回栈：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">(lldb) c
+Process 20783 resuming
+Process 20783 stopped
+* thread #19, name = &#39;1.io&#39;, stop reason = breakpoint 1.1
+    frame #0: 0xcb9ed4e2 libflutter.so`GrGLGpu::~GrGLGpu(this=0xcd867300) at GrGLGpu.cpp:382:21
+   379 	    }
+   380 	}
+   381 	
+-&gt; 382 	GrGLGpu::~GrGLGpu() {
+   383 	    // Ensure any GrGpuResource objects get deleted first, since they may require a working GrGLGpu
+   384 	    // to release the resources held by the objects themselves.
+   385 	    // SkDebugf(&#34;skia v5 GrGLGpu::~GrGLGpu析构函数 %p&#34;, this);
+Target 0: (app_process32) stopped.
+(lldb) bt
+* thread #19, name = &#39;1.io&#39;, stop reason = breakpoint 1.1
+  * frame #0: 0xcb9ed4e2 libflutter.so`GrGLGpu::~GrGLGpu(this=0xcd867300) at GrGLGpu.cpp:382:21
+    frame #1: 0xcb329d6e libflutter.so`SkRefCntBase::internal_dispose(this=0xcd867300) const at SkRefCnt.h:102:9
+    frame #2: 0xcb2e8864 libflutter.so`SkRefCntBase::unref(this=0xcd867300) const at SkRefCnt.h:81:19
+    frame #3: 0xcb2e87f4 libflutter.so`void SkSafeUnref&lt;SkImage&gt;(obj=0xcd867300) at SkRefCnt.h:154:14
+    frame #4: 0xcb2e84b6 libflutter.so`sk_sp&lt;SkImage&gt;::~sk_sp(this=0xcc63c884) at SkRefCnt.h:255:9
+    frame #5: 0xcb88d794 libflutter.so`GrDirectContext::~GrDirectContext(this=0xcc63c820) at GrDirectContext.cpp:88:1
+    frame #6: 0xcb88d914 libflutter.so`GrDirectContext::~GrDirectContext(this=0xcc63c820) at GrDirectContext.cpp:68:37
+    frame #7: 0xcb329d6e libflutter.so`SkRefCntBase::internal_dispose(this=0xcc63c820) const at SkRefCnt.h:102:9
+    frame #8: 0xcb2e8864 libflutter.so`SkRefCntBase::unref(this=0xcc63c820) const at SkRefCnt.h:81:19
+    frame #9: 0xcb2e87f4 libflutter.so`void SkSafeUnref&lt;SkImage&gt;(obj=0xcc63c820) at SkRefCnt.h:154:14
+    frame #10: 0xcb2e84b6 libflutter.so`sk_sp&lt;SkImage&gt;::~sk_sp(this=0xe2d918f4) at SkRefCnt.h:255:9
+    frame #11: 0xcb3b071a libflutter.so`flutter::ShellIOManager::~ShellIOManager(this=0xe2d918f0) at shell_io_manager.cc:92:1
+    frame #12: 0xcb39fdba libflutter.so`std::__1::default_delete&lt;flutter::ShellIOManager&gt;::operator(this=0xc87fe100, __ptr=0xe2d918f0)(flutter::ShellIOManager*) const at memory:2338:5
+    frame #13: 0xcb39fd9c libflutter.so`std::__1::unique_ptr&lt;flutter::ShellIOManager, std::__1::default_delete&lt;flutter::ShellIOManager&gt; &gt;::reset(this=0xc87fe100, __p=0x00000000) at memory:2593:7
+    frame #14: 0xcb3a34c6 libflutter.so`flutter::Shell::~Shell(this=0xc87fe100)::$_5::operator()() at shell.cc:466:20
+</code></pre></div><p><code>GrGLSemaphore</code> 的回栈：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-txt" data-lang="txt">    Process 21502 stopped
+* thread #17, name = &#39;1.io&#39;, stop reason = breakpoint 1.2
+    frame #0: 0xcba08666 libflutter.so`GrGLSemaphore::~GrGLSemaphore(this=0xcc5af8d0) at GrGLSemaphore.cpp:17:33
+   14  	    // SkDebugf( &#34;v5 GrGLSemaphore::GrGLSemaphore构造函数: %p / %p / %p / %d&#34;,this, fGpu, fSync, fIsOwned);
+   15  	    valid = true;
+   16  	    fGpu-&gt;semaList.insert(this);
+-&gt; 17  	}
+   18  	
+   19  	GrGLSemaphore::~GrGLSemaphore() {
+   20  	    // SkDebugf( &#34;v5 GrGLSemaphore::~GrGLSemaphore析构函数: %p / %p / %p / %d&#34;, this, fGpu, fSync, fIsOwned);
+Target 0: (app_process32) stopped.
+(lldb) bt
+* thread #17, name = &#39;1.io&#39;, stop reason = breakpoint 1.2
+  * frame #0: 0xcba08666 libflutter.so`GrGLSemaphore::~GrGLSemaphore(this=0xcc5af8d0) at GrGLSemaphore.cpp:17:33
+    frame #1: 0xcb2ee6e6 libflutter.so`std::__1::default_delete&lt;flutter::IsolateConfiguration&gt;::operator(this=0xcd17dffc, __ptr=0xcc5af8d0)(flutter::IsolateConfiguration*) const at memory:2338:5
+    frame #2: 0xcb2ee6c6 libflutter.so`std::__1::unique_ptr&lt;flutter::IsolateConfiguration, std::__1::default_delete&lt;flutter::IsolateConfiguration&gt; &gt;::reset(this=0xcd17dffc, __p=0x00000000) at memory:2593:7
+    frame #3: 0xcb2eadc8 libflutter.so`std::__1::unique_ptr&lt;flutter::IsolateConfiguration, std::__1::default_delete&lt;flutter::IsolateConfiguration&gt; &gt;::~unique_ptr(this=0xcd17dffc) at memory:2547:19
+    frame #4: 0xcb871eb2 libflutter.so`GrBackendTextureImageGenerator::RefHelper::~RefHelper(this=0xcd17dfc0) at GrBackendTextureImageGenerator.cpp:45:1
+    frame #5: 0xcb872266 libflutter.so`SkNVRefCnt&lt;GrBackendTextureImageGenerator::RefHelper&gt;::unref(this=0xcd17dfc0) const at SkRefCnt.h:184:13
+    frame #6: 0xcb87220c libflutter.so`GrBackendTextureImageGenerator::~GrBackendTextureImageGenerator(this=0xcc523200) at GrBackendTextureImageGenerator.cpp:88:17
+    frame #7: 0xcb872284 libflutter.so`GrBackendTextureImageGenerator::~GrBackendTextureImageGenerator(this=0xcc523200) at GrBackendTextureImageGenerator.cpp:86:67
+    frame #8: 0xcb2ee6e6 libflutter.so`std::__1::default_delete&lt;flutter::IsolateConfiguration&gt;::operator(this=0xcc82c684, __ptr=0xcc523200)(flutter::IsolateConfiguration*) const at memory:2338:5
+    frame #9: 0xcb2ee6c6 libflutter.so`std::__1::unique_ptr&lt;flutter::IsolateConfiguration, std::__1::default_delete&lt;flutter::IsolateConfiguration&gt; &gt;::reset(this=0xcc82c684, __p=0x00000000) at memory:2593:7
+    frame #10: 0xcb2eadc8 libflutter.so`std::__1::unique_ptr&lt;flutter::IsolateConfiguration, std::__1::default_delete&lt;flutter::IsolateConfiguration&gt; &gt;::~unique_ptr(this=0xcc82c684) at memory:2547:19
+    frame #11: 0xcb50b584 libflutter.so`SharedGenerator::~SharedGenerator(this=0xcc82c680) at SkImage_Lazy.cpp:39:7
+    frame #12: 0xcb50b55c libflutter.so`SkNVRefCnt&lt;SharedGenerator&gt;::unref(this=0xcc82c680) const at SkRefCnt.h:184:13
+    frame #13: 0xcb50b520 libflutter.so`void SkSafeUnref&lt;SharedGenerator&gt;(obj=0xcc82c680) at SkRefCnt.h:154:14
+    frame #14: 0xcb50a3fe libflutter.so`sk_sp&lt;SharedGenerator&gt;::~sk_sp(this=0xcc533b54) at SkRefCnt.h:255:9
+    frame #15: 0xcb50b2c8 libflutter.so`SkImage_Lazy::~SkImage_Lazy(this=0xcc533b30) at SkImage_Lazy.h:22:7
+    frame #16: 0xcb50b2e8 libflutter.so`SkImage_Lazy::~SkImage_Lazy(this=0xcc533b30) at SkImage_Lazy.h:22:7
+    frame #17: 0xcb32ad6e libflutter.so`SkRefCntBase::internal_dispose(this=0xcc533b30) const at SkRefCnt.h:102:9
+    frame #18: 0xcb2e9864 libflutter.so`SkRefCntBase::unref(this=0xcc533b30) const at SkRefCnt.h:81:19
+    frame #19: 0xcb2e97f4 libflutter.so`void SkSafeUnref&lt;SkImage&gt;(obj=0xcc533b30) at SkRefCnt.h:154:14
+    frame #20: 0xcb2e94b6 libflutter.so`sk_sp&lt;SkImage&gt;::~sk_sp(this=0xc87b5db8) at SkRefCnt.h:255:9
+    frame #21: 0xcb4a4e86 libflutter.so`SkRecords::DrawImage::~DrawImage(this=0xc87b5db4) at SkRecords.h:237:1
+    frame #22: 0xcb4a4d2c libflutter.so`void SkRecord::Destroyer::operator(this=0xc9ac427c, record=0xc87b5db4)&lt;SkRecords::DrawImage&gt;(SkRecords::DrawImage*) at SkRecord.h:115:47
+    frame #23: 0xcb4a4afe libflutter.so`decltype(this=0xcc6e5c90, f=0xc9ac427c)(nullptr))) SkRecord::Record::mutate&lt;SkRecord::Destroyer&amp;&gt;(SkRecord::Destroyer&amp;) at SkRecord.h:161:36
+    frame #24: 0xcb4a4704 libflutter.so`decltype(this=0xe2d92a98, i=2, f=0xc9ac427c)(nullptr))) SkRecord::mutate&lt;SkRecord::Destroyer&amp;&gt;(int, SkRecord::Destroyer&amp;) at SkRecord.h:51:28
+    frame #25: 0xcb4a46be libflutter.so`SkRecord::~SkRecord(this=0xe2d92a98) at SkRecord.cpp:15:15
+    frame #26: 0xcb4a4718 libflutter.so`SkRecord::~SkRecord(this=0xe2d92a98) at SkRecord.cpp:12:23
+    frame #27: 0xcb32ad6e libflutter.so`SkRefCntBase::internal_dispose(this=0xe2d92a98) const at SkRefCnt.h:102:9
+    frame #28: 0xcb2e9864 libflutter.so`SkRefCntBase::unref(this=0xe2d92a98) const at SkRefCnt.h:81:19
+    frame #29: 0xcb2e97f4 libflutter.so`void SkSafeUnref&lt;SkImage&gt;(obj=0xe2d92a98) at SkRefCnt.h:154:14
+    frame #30: 0xcb2e94b6 libflutter.so`sk_sp&lt;SkImage&gt;::~sk_sp(this=0xc87d3384) at SkRefCnt.h:255:9
+    frame #31: 0xcb54eb6c libflutter.so`SkBigPicture::~SkBigPicture(this=0xc87d3360) at SkBigPicture.h:23:7
+    frame #32: 0xcb54eb8c libflutter.so`SkBigPicture::~SkBigPicture(this=0xc87d3360) at SkBigPicture.h:23:7
+    frame #33: 0xcb32ad6e libflutter.so`SkRefCntBase::internal_dispose(this=0xc87d3360) const at SkRefCnt.h:102:9
+    frame #34: 0xcb2e9864 libflutter.so`SkRefCntBase::unref(this=0xc87d3360) const at SkRefCnt.h:81:19
+    frame #35: 0xcb32ba82 libflutter.so`flutter::SkiaUnrefQueue::Drain(this=0xe2d9bd20) at skia_gpu_object.cc:44:18
+    frame #36: 0xcb32bfaa libflutter.so`flutter::SkiaUnrefQueue::Unref(this=0xe2df2864)::$_0::operator()() const at skia_gpu_object.cc:30:47
+    frame #37: 0xcb32bf94 libflutter.so`decltype(__f=0xe2df2864)::$_0&amp;&gt;(fp)()) std::__1::__invoke&lt;flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0&amp;&gt;(flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0&amp;) at type_traits:3530:1
+    frame #38: 0xcb32bf7e libflutter.so`void std::__1::__invoke_void_return_wrapper&lt;void&gt;::__call&lt;flutter::SkiaUnrefQueue::Unref(__args=0xe2df2864)::$_0&amp;&gt;(flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0&amp;) at __functional_base:348:9
+    frame #39: 0xcb32bf68 libflutter.so`std::__1::__function::__alloc_func&lt;flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0, std::__1::allocator&lt;flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0&gt;, void ()&gt;::operator(this=0xe2df2864)() at functional:1533:16
+    frame #40: 0xcb32be8a libflutter.so`std::__1::__function::__func&lt;flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0, std::__1::allocator&lt;flutter::SkiaUnrefQueue::Unref(SkRefCnt*)::$_0&gt;, void ()&gt;::operator(this=0xe2df2860)() at functional:1707:12
+    frame #41: 0xcb330d60 libflutter.so`std::__1::__function::__value_func&lt;void ()&gt;::operator(this=0xc9ac4488)() const at functional:1860:16
+    frame #42: 0xcb3303fa libflutter.so`std::__1::function&lt;void ()&gt;::operator(this= Lambda in File skia_gpu_object.cc at Line 30)() const at functional:2419:12
+    frame #43: 0xcb33534c libflutter.so`fml::MessageLoopImpl::FlushTasks(this=0xe2d90bf8, type=kAll) at message_loop_impl.cc:130:5
+    frame #44: 0xcb3352a2 libflutter.so`fml::MessageLoopImpl::RunExpiredTasksNow(this=0xe2d90bf8) at message_loop_impl.cc:143:3
+    frame #45: 0xcb33e66a libflutter.so`fml::MessageLoopAndroid::OnEventFired(this=0xe2d90bf8) at message_loop_android.cc:94:5
+    frame #46: 0xcb33e6b0 libflutter.so`fml::MessageLoopAndroid::MessageLoopAndroid(this=0x0000004d, (null)=77, events=1, data=0xe2d90bf8)::$_0::operator()(int, int, void*) const at message_loop_android.cc:42:52
+    frame #47: 0xcb33e68e libflutter.so`fml::MessageLoopAndroid::MessageLoopAndroid((null)=77, events=1, data=0xe2d90bf8)::$_0::__invoke(int, int, void*) at message_loop_android.cc:40:40
+    frame #48: 0xec36de34 libutils.so`android::Looper::pollInner(int) + 1072
+    frame #49: 0xec36d98a libutils.so`android::Looper::pollOnce(int, int*, int*, void**) + 30
+    frame #50: 0xe53d969c libandroid.so`ALooper_pollOnce + 60
+    frame #51: 0xcb33e4ac libflutter.so`fml::MessageLoopAndroid::Run(this=0xe2d90bf8) at message_loop_android.cc:68:18
+    frame #52: 0xcb335268 libflutter.so`fml::MessageLoopImpl::DoRun(this=0xe2d90bf8) at message_loop_impl.cc:96:3
+    frame #53: 0xcb334bfc libflutter.so`fml::MessageLoop::Run(this=0xe2da93c0) at message_loop.cc:49:10
+    frame #54: 0xcb33ab10 libflutter.so`fml::Thread::Thread(this=0xcd3115dc)::$_0::operator()() const at thread.cc:36:10
+    frame #55: 0xcb33aa68 libflutter.so`decltype(__f=0xcd3115dc)::$_0&gt;(fp)()) std::__1::__invoke&lt;fml::Thread::Thread(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;)::$_0&gt;(fml::Thread::Thread(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;)::$_0&amp;&amp;) at type_traits:3530:1
+    frame #56: 0xcb33aa52 libflutter.so`void std::__1::__thread_execute&lt;std::__1::unique_ptr&lt;std::__1::__thread_struct, std::__1::default_delete&lt;std::__1::__thread_struct&gt; &gt;, fml::Thread::Thread(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;)::$_0&gt;(__t=size=2, (null)=__tuple_indices&lt;&gt; @ 0xc9ac492c)::$_0&gt;&amp;, std::__1::__tuple_indices&lt;&gt;) at thread:341:5
+    frame #57: 0xcb33a996 libflutter.so`void* std::__1::__thread_proxy&lt;std::__1::tuple&lt;std::__1::unique_ptr&lt;std::__1::__thread_struct, std::__1::default_delete&lt;std::__1::__thread_struct&gt; &gt;, fml::Thread::Thread(std::__1::basic_string&lt;char, std::__1::char_traits&lt;char&gt;, std::__1::allocator&lt;char&gt; &gt; const&amp;)::$_0&gt; &gt;(__vp=0xcd3115d8) at thread:351:5
+    frame #58: 0xebec27f2 libc.so`__pthread_start(void*) + 24
+    frame #59: 0xebe6efd2 libc.so`__start_thread + 26
+</code></pre></div><h2 id="总结">总结</h2>
+<p>可以看到， <code>GrGLSemaphore</code> 的调用栈和上文的Crash日志还原的堆栈基本一致。而 <code>GrGLGpu</code> 的析构则是由 Shell 析构引起的，即只有Flutter Engine销毁（一般是页面退出）时才会触发。</p>
+<p>至此，我们前面得出的Crash原因“ <code>GrGLGpu</code> 在 <code>GrGLSemaphore</code> 之前析构”要修正一下了，这只是表面现象，本质是<strong>Flutter Engine销毁了，但是还有一张（或几张）图片资源没有销毁，而这个图片真正销毁时，其调用的 GrGLGpu 已经释放了，因而出现了一次非法内存访问</strong>。</p>
+<p>那么，为什么会有一定概率出现这种Case？我们继续分析</p>
+<h1 id="六水落石出">六、水落石出</h1>
+<p>在开始这一阶段的分析之前，我们需要理清楚几个问题：</p>
+<ul>
+<li>业务层使用一张图片，Flutter Engine做了哪些工作</li>
+<li>Flutter Engine销毁时做了哪些工作</li>
+</ul>
+<h2 id="61-flutter的图片加载">6.1 Flutter的图片加载</h2>
+<p>首先分析第一个问题，这里以单帧图片（即PNG、JPG，区别于GIF）为例，其会调用 <code>SingleFrameCodec::getNextFrame</code> 方法，该方法会调用图片解码器进行解码，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 5
+</span><span style="color:#75715e">// lib/ui/painting/single_frame_codec.cc
+</span><span style="color:#75715e"></span>Dart_Handle SingleFrameCodec<span style="color:#f92672">::</span>getNextFrame(Dart_Handle callback_handle) {
+  ...... <span style="color:#75715e">// SKIP
+</span><span style="color:#75715e"></span>  decoder<span style="color:#f92672">-&gt;</span>Decode(descriptor_, target_width_, target_height_,
+    [raw_codec_ref](<span style="color:#66d9ef">auto</span> image) { <span style="color:#75715e">// 注意这个回调
+</span><span style="color:#75715e"></span>        std<span style="color:#f92672">::</span>unique_ptr<span style="color:#f92672">&lt;</span>fml<span style="color:#f92672">::</span>RefPtr<span style="color:#f92672">&lt;</span>SingleFrameCodec<span style="color:#f92672">&gt;&gt;</span> codec_ref(raw_codec_ref);
+        fml<span style="color:#f92672">::</span>RefPtr<span style="color:#f92672">&lt;</span>SingleFrameCodec<span style="color:#f92672">&gt;</span> codec(std<span style="color:#f92672">::</span>move(<span style="color:#f92672">*</span>codec_ref));
+        <span style="color:#66d9ef">auto</span> state <span style="color:#f92672">=</span> codec<span style="color:#f92672">-&gt;</span>pending_callbacks_.front().dart_state().lock();
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>state) { <span style="color:#75715e">// CASE 1 ui线程已经销毁，直接返回
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">return</span>;
+        }
+        tonic<span style="color:#f92672">::</span>DartState<span style="color:#f92672">::</span>Scope scope(state.get());
+        <span style="color:#66d9ef">if</span> (image.get()) { <span style="color:#75715e">// CASE 2 绑定带ui线程相关实例进行使用
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">auto</span> canvas_image <span style="color:#f92672">=</span> fml<span style="color:#f92672">::</span>MakeRefCounted<span style="color:#f92672">&lt;</span>CanvasImage<span style="color:#f92672">&gt;</span>();
+          canvas_image<span style="color:#f92672">-&gt;</span>set_image(std<span style="color:#f92672">::</span>move(image));
+          codec<span style="color:#f92672">-&gt;</span>cached_image_ <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(canvas_image);
+        }
+        ..... <span style="color:#75715e">// SKIP
+</span><span style="color:#75715e"></span>      });
+  ..... <span style="color:#75715e">// SKIP
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> Dart_Null();
+}
+</code></pre></div><p>这里需要注意下 <code>CanvasImage</code> 这个类，他是Skia的图像数据转换为Flutter使用的图像数据的封装类，当Flutter需要销毁时，会触发其 <code>dispose</code> 方法，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 6
+</span><span style="color:#75715e">// lib/ui/painting/image.cc
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> CanvasImage<span style="color:#f92672">::</span>dispose() {
+  <span style="color:#66d9ef">auto</span> hint_freed_delegate <span style="color:#f92672">=</span> UIDartState<span style="color:#f92672">::</span>Current()<span style="color:#f92672">-&gt;</span>GetHintFreedDelegate();
+  <span style="color:#66d9ef">if</span> (hint_freed_delegate) {
+    hint_freed_delegate<span style="color:#f92672">-&gt;</span>HintFreed(GetAllocationSize());
+  }
+  image_.reset(); <span style="color:#75715e">// 触发 flutter::SkiaGPUObject&lt;SkImage&gt; 的析构 ，见 代码清单 8
+</span><span style="color:#75715e"></span>  ClearDartWrapper();
+}
+</code></pre></div><p>下面，我们继续分析下 <code>Decode</code> 方法，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 7
+</span><span style="color:#75715e">// lib/ui/painting/image_decoder.cc
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> ImageDecoder<span style="color:#f92672">::</span>Decode(fml<span style="color:#f92672">::</span>RefPtr<span style="color:#f92672">&lt;</span>ImageDescriptor<span style="color:#f92672">&gt;</span> descriptor_ref_ptr,
+                          <span style="color:#66d9ef">uint32_t</span> target_width,
+                          <span style="color:#66d9ef">uint32_t</span> target_height,
+                          <span style="color:#66d9ef">const</span> ImageResult<span style="color:#f92672">&amp;</span> callback) {
+  TRACE_EVENT0(<span style="color:#e6db74">&#34;flutter&#34;</span>, __FUNCTION__);
+  fml<span style="color:#f92672">::</span>tracing<span style="color:#f92672">::</span>TraceFlow flow(__FUNCTION__);
+  <span style="color:#66d9ef">auto</span> raw_descriptor <span style="color:#f92672">=</span> descriptor_ref_ptr.get();
+  raw_descriptor<span style="color:#f92672">-&gt;</span>AddRef();
+  FML_DCHECK(callback);
+  FML_DCHECK(runners_.GetUITaskRunner()<span style="color:#f92672">-&gt;</span>RunsTasksOnCurrentThread());
+  <span style="color:#66d9ef">auto</span> result <span style="color:#f92672">=</span> <span style="color:#75715e">// io线程解码完成触发这个lambda
+</span><span style="color:#75715e"></span>      [callback, raw_descriptor, ui_runner <span style="color:#f92672">=</span> runners_.GetUITaskRunner()](
+          SkiaGPUObject<span style="color:#f92672">&lt;</span>SkImage<span style="color:#f92672">&gt;</span> image, fml<span style="color:#f92672">::</span>tracing<span style="color:#f92672">::</span>TraceFlow flow) {
+        ui_runner<span style="color:#f92672">-&gt;</span>PostTask(fml<span style="color:#f92672">::</span>MakeCopyable(
+            [callback, raw_descriptor, image <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(image),
+             flow <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(flow)]() <span style="color:#66d9ef">mutable</span> {
+              TRACE_EVENT0(<span style="color:#e6db74">&#34;flutter&#34;</span>, <span style="color:#e6db74">&#34;ImageDecodeCallback&#34;</span>);
+              flow.End();
+              callback(std<span style="color:#f92672">::</span>move(image)); <span style="color:#75715e">// 在ui线程触发 代码清单 5 的 callback
+</span><span style="color:#75715e"></span>              raw_descriptor<span style="color:#f92672">-&gt;</span>Release();
+            }));
+      };
+  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>raw_descriptor<span style="color:#f92672">-&gt;</span>data() <span style="color:#f92672">||</span> raw_descriptor<span style="color:#f92672">-&gt;</span>data()<span style="color:#f92672">-&gt;</span>size() <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span>) {
+    result({}, std<span style="color:#f92672">::</span>move(flow));
+    <span style="color:#66d9ef">return</span>;
+  }
+  <span style="color:#75715e">// 执行第一个逻辑，生成原始的图片数据，在一个独立线程
+</span><span style="color:#75715e"></span>  concurrent_task_runner_<span style="color:#f92672">-&gt;</span>PostTask(
+      fml<span style="color:#f92672">::</span>MakeCopyable([raw_descriptor,                          <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>                         io_manager <span style="color:#f92672">=</span> io_manager_,                <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>                         io_runner <span style="color:#f92672">=</span> runners_.GetIOTaskRunner(),  <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>                         result,                                  <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>                         target_width <span style="color:#f92672">=</span> target_width,             <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>                         target_height <span style="color:#f92672">=</span> target_height,           <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>                         flow <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(flow)                   <span style="color:#75715e">//
+</span><span style="color:#75715e"></span>  ]() <span style="color:#66d9ef">mutable</span> {
+        <span style="color:#75715e">// Step 1: Decompress the image. On Worker.
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">auto</span> decompressed <span style="color:#f92672">=</span> raw_descriptor<span style="color:#f92672">-&gt;</span>is_compressed()
+                <span style="color:#f92672">?</span> ImageFromCompressedData(raw_descriptor, target_width, target_height, flow)
+                <span style="color:#f92672">:</span> ImageFromDecompressedData(raw_descriptor,target_width, target_height, flow);
+        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>decompressed) {
+          FML_LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Could not decompress image.&#34;</span>;
+          result({}, std<span style="color:#f92672">::</span>move(flow));
+          <span style="color:#66d9ef">return</span>;
+        }
+        <span style="color:#75715e">// Step 2: Update the image to the GPU. On IO Thread.
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// 在io线程，开始图片纹理的生成
+</span><span style="color:#75715e"></span>        io_runner<span style="color:#f92672">-&gt;</span>PostTask(fml<span style="color:#f92672">::</span>MakeCopyable([io_manager, decompressed, result,
+                                               flow <span style="color:#f92672">=</span>std<span style="color:#f92672">::</span>move(flow)]() <span style="color:#66d9ef">mutable</span> {
+          <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>io_manager) { <span style="color:#75715e">// io_manager已经销毁，由 代码清单 10 导致
+</span><span style="color:#75715e"></span>            FML_LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Could not acquire IO manager.&#34;</span>;
+            result({}, std<span style="color:#f92672">::</span>move(flow));
+            <span style="color:#66d9ef">return</span>;
+          }
+          <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>io_manager<span style="color:#f92672">-&gt;</span>GetResourceContext()) {
+            result({std<span style="color:#f92672">::</span>move(decompressed), io_manager<span style="color:#f92672">-&gt;</span>GetSkiaUnrefQueue()},
+                   std<span style="color:#f92672">::</span>move(flow));
+            <span style="color:#66d9ef">return</span>;
+          }
+          <span style="color:#75715e">// 上传到raster线程，真正消费图片纹理数据的线程
+</span><span style="color:#75715e"></span>          <span style="color:#66d9ef">auto</span> uploaded <span style="color:#f92672">=</span> UploadRasterImage(std<span style="color:#f92672">::</span>move(decompressed), io_manager, flow);
+          <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>uploaded.get()) {
+            FML_LOG(ERROR) <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Could not upload image to the GPU.&#34;</span>;
+            result({}, std<span style="color:#f92672">::</span>move(flow));
+            <span style="color:#66d9ef">return</span>;
+          }
+          <span style="color:#75715e">// Finally, all done. 触发上面的lambda，最终将触发ui线程的callback
+</span><span style="color:#75715e"></span>          result(std<span style="color:#f92672">::</span>move(uploaded), std<span style="color:#f92672">::</span>move(flow));
+        }));
+      }));
+}
+</code></pre></div><p>通过以上逻辑，我们大概知道了Flutter是如何使用图片的，即：<strong>ui线程发起一次图片解码（Decode），io线程完成解码后会把SkImage封装成 SkiaGPUObject<!-- raw HTML omitted --> 交给ui线程的 CanvasImage ，如果ui线程销毁， Dart 会触发 CanvasImage 的 dispose方法，进而触发SkiaGPUObject的析构</strong>，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 8
+</span><span style="color:#75715e">// flow/skia_gpu_object.h
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">template</span> <span style="color:#f92672">&lt;</span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">T</span><span style="color:#f92672">&gt;</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SkiaGPUObject</span> {
+ <span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+  <span style="color:#66d9ef">using</span> SkiaObjectType <span style="color:#f92672">=</span> T;
+  ...... <span style="color:#75715e">// SKIP
+</span><span style="color:#75715e"></span>  <span style="color:#f92672">~</span>SkiaGPUObject() { reset(); }
+  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reset</span>() {
+    <span style="color:#66d9ef">if</span> (object_ <span style="color:#f92672">&amp;&amp;</span> queue_) {
+      queue_<span style="color:#f92672">-&gt;</span>Unref(object_.release());
+    }
+    queue_ <span style="color:#f92672">=</span> <span style="color:#66d9ef">nullptr</span>;
+    FML_DCHECK(object_ <span style="color:#f92672">==</span> <span style="color:#66d9ef">nullptr</span>);
+  }
+ <span style="color:#66d9ef">private</span><span style="color:#f92672">:</span>
+  sk_sp<span style="color:#f92672">&lt;</span>SkiaObjectType<span style="color:#f92672">&gt;</span> object_;
+  <span style="color:#75715e">// 注意，这个队列是多线程共享，全局唯一的，存放需要解除引用的对象
+</span><span style="color:#75715e"></span>  fml<span style="color:#f92672">::</span>RefPtr<span style="color:#f92672">&lt;</span>SkiaUnrefQueue<span style="color:#f92672">&gt;</span> queue_;
+  FML_DISALLOW_COPY_AND_ASSIGN(SkiaGPUObject);
+};
+</code></pre></div><p>继续，我们分析下 SkiaUnrefQueue 的 Unref逻辑，如下所示。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 9
+</span><span style="color:#75715e">// flow/skia_gpu_object.cc
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> SkiaUnrefQueue<span style="color:#f92672">::</span>Unref(SkRefCnt<span style="color:#f92672">*</span> object) {
+  std<span style="color:#f92672">::</span>scoped_lock lock(mutex_);
+  objects_.push_back(object); <span style="color:#75715e">// 登记到销毁队列
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>drain_pending_) {
+    drain_pending_ <span style="color:#f92672">=</span> true;
+    task_runner_<span style="color:#f92672">-&gt;</span>PostDelayedTask([strong <span style="color:#f92672">=</span> fml<span style="color:#f92672">::</span>Ref(<span style="color:#66d9ef">this</span>)]() {
+          strong<span style="color:#f92672">-&gt;</span>Drain(); <span style="color:#75715e">// 在io线程开始销毁
+</span><span style="color:#75715e"></span>        }, drain_delay_);
+  }
+}
+<span style="color:#66d9ef">void</span> SkiaUnrefQueue<span style="color:#f92672">::</span>Drain() {
+  TRACE_EVENT0(<span style="color:#e6db74">&#34;flutter&#34;</span>, <span style="color:#e6db74">&#34;SkiaUnrefQueue::Drain&#34;</span>);
+  std<span style="color:#f92672">::</span>deque<span style="color:#f92672">&lt;</span>SkRefCnt<span style="color:#f92672">*&gt;</span> skia_objects;
+  {
+    std<span style="color:#f92672">::</span>scoped_lock lock(mutex_);
+    objects_.swap(skia_objects); <span style="color:#75715e">// 取出待销毁的对象
+</span><span style="color:#75715e"></span>    drain_pending_ <span style="color:#f92672">=</span> false;
+  }
+  <span style="color:#66d9ef">for</span> (SkRefCnt<span style="color:#f92672">*</span> skia_object : skia_objects) {
+    skia_object<span style="color:#f92672">-&gt;</span>unref(); <span style="color:#75715e">// 见 代码清单 2
+</span><span style="color:#75715e"></span>  }
+  <span style="color:#66d9ef">if</span> (context_ <span style="color:#f92672">&amp;&amp;</span> skia_objects.size() <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+    context_<span style="color:#f92672">-&gt;</span>performDeferredCleanup(std<span style="color:#f92672">::</span>chrono<span style="color:#f92672">::</span>milliseconds(<span style="color:#ae81ff">0</span>));
+  }
+}
+</code></pre></div><p>由此可知，正常情况下，ui线程析构一张图片的引用，最终会通过 <code>SkiaUnrefQueue::Unref</code> 触发 io线程的对应对象的析构。</p>
+<p>一般来说，Flutter页面退出时，Flutter Engine销毁，ui线程也会销毁，下面开始分析销毁逻辑。</p>
+<h2 id="62-flutter-engine的销毁">6.2 Flutter Engine的销毁</h2>
+<p>Flutter Engine 的销毁是由宿主页面控制的，比如 FlutterActivity 会间接调用一个JNI方法 <code>nativeDestroy</code> ，进而触发 Shell 的析构，其逻辑如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 代码清单 10
+</span><span style="color:#75715e"></span>Shell<span style="color:#f92672">::~</span>Shell() {
+  PersistentCache<span style="color:#f92672">::</span>GetCacheForProcess()<span style="color:#f92672">-&gt;</span>RemoveWorkerTaskRunner(
+      task_runners_.GetIOTaskRunner());
+  vm_<span style="color:#f92672">-&gt;</span>GetServiceProtocol()<span style="color:#f92672">-&gt;</span>RemoveHandler(<span style="color:#66d9ef">this</span>);
+  fml<span style="color:#f92672">::</span>AutoResetWaitableEvent ui_latch, gpu_latch, platform_latch, io_latch;
+  fml<span style="color:#f92672">::</span>TaskRunner<span style="color:#f92672">::</span>RunNowOrPostTask(
+      task_runners_.GetUITaskRunner(),
+      fml<span style="color:#f92672">::</span>MakeCopyable([engine <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(engine_), <span style="color:#f92672">&amp;</span>ui_latch]() <span style="color:#66d9ef">mutable</span> {
+        engine.reset();
+        ui_latch.Signal(); <span style="color:#75715e">// ui线程析构完成，释放
+</span><span style="color:#75715e"></span>      }));
+  ui_latch.Wait(); <span style="color:#75715e">// 等待ui线程销毁完成
+</span><span style="color:#75715e"></span>  fml<span style="color:#f92672">::</span>TaskRunner<span style="color:#f92672">::</span>RunNowOrPostTask(
+      task_runners_.GetRasterTaskRunner(),
+      fml<span style="color:#f92672">::</span>MakeCopyable(
+          [<span style="color:#66d9ef">this</span>, rasterizer <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(rasterizer_), <span style="color:#f92672">&amp;</span>gpu_latch]() <span style="color:#66d9ef">mutable</span> {
+            rasterizer.reset();
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">-&gt;</span>weak_factory_gpu_.reset();
+            gpu_latch.Signal();
+          }));
+  gpu_latch.Wait();
+
+  fml<span style="color:#f92672">::</span>TaskRunner<span style="color:#f92672">::</span>RunNowOrPostTask(
+      task_runners_.GetIOTaskRunner(),
+      fml<span style="color:#f92672">::</span>MakeCopyable([io_manager <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(io_manager_),
+                         platform_view <span style="color:#f92672">=</span> platform_view_.get(),
+                         <span style="color:#f92672">&amp;</span>io_latch]() <span style="color:#66d9ef">mutable</span> {
+        io_manager.reset();
+        <span style="color:#66d9ef">if</span> (platform_view) {
+          platform_view<span style="color:#f92672">-&gt;</span>ReleaseResourceContext();
+        }
+        io_latch.Signal();
+      }));
+  io_latch.Wait();
+
+  fml<span style="color:#f92672">::</span>TaskRunner<span style="color:#f92672">::</span>RunNowOrPostTask(
+      task_runners_.GetPlatformTaskRunner(),
+      fml<span style="color:#f92672">::</span>MakeCopyable([platform_view <span style="color:#f92672">=</span> std<span style="color:#f92672">::</span>move(platform_view_),
+                         <span style="color:#f92672">&amp;</span>platform_latch]() <span style="color:#66d9ef">mutable</span> {
+        platform_view.reset();
+        platform_latch.Signal();
+      }));
+  platform_latch.Wait();
+}
+</code></pre></div><p>以上逻辑，其实一目了然，即Shell的销毁，会触发ui/raster/io/platform线程的依次销毁，<strong>有严格的顺序关系</strong>。那么正常情况下，ui线程会在执行 <code>engine.reset();</code> 时销毁所有的图片，对应的io线程任务会一一进入队列，然后ui线程释放信号，raster线程销毁，接着io线程销毁的销毁任务（主要是 <code>io_manager_</code>的析构 ）进入队列，由于 <code>ui_latch</code> 的存在，图片的销毁任务一定会先进入队列， <code>io_manager_</code> 的销毁理论上是最后进入队列的。</p>
+<p>分析到这里，眼尖的读者其实可能发现了一个逻辑上的漏洞：在 代码清单 9 中，<code>SkiaUnrefQueue::Drain</code> 执行其实要等待 <code>drain_delay_</code> (8ms)。为什么要等待这么一个时间呢？读者可以尝试自行思考。
+那么如此就会带来一个问题：万一在这8ms内，io线程已经开始销毁了，那岂不是上文所说的顺序就不成立了？莫慌！我们看一下 ShellIOManager 的析构方法：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// shell/common/shell_io_manager.cc
+</span><span style="color:#75715e"></span>ShellIOManager<span style="color:#f92672">::~</span>ShellIOManager() {
+  <span style="color:#75715e">// Last chance to drain the IO queue as the platform side reference to the
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// underlying OpenGL context may be going away.
+</span><span style="color:#75715e"></span>  is_gpu_disabled_sync_switch_<span style="color:#f92672">-&gt;</span>Execute(
+      fml<span style="color:#f92672">::</span>SyncSwitch<span style="color:#f92672">::</span>Handlers().SetIfFalse([<span style="color:#f92672">&amp;</span>] { unref_queue_<span style="color:#f92672">-&gt;</span>Drain(); }));
+}
+</code></pre></div><p>写的很清楚了，哪怕 <code>io_manager_</code> 早早开始了销毁，在此仍有最后一次机会执行Drain 方法。此外 Drain方法的定义也有一段值得注意的说明：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// flow/skia_gpu_object.h
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// Usually, the drain is called automatically. However, during IO manager
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// shutdown (when the platform side reference to the OpenGL context is about
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// to go away), we may need to pre-emptively drain the unref queue. It is the
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// responsibility of the caller to ensure that no further unrefs are queued
+</span><span style="color:#75715e"></span>  <span style="color:#75715e">// after this call.
+</span><span style="color:#75715e"></span>  <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Drain</span>();
+</code></pre></div><p>也就是说Drain要求IO manager在销毁之后不再被调用。目前来说，我们从理论上看都是符合预期的。</p>
+<p>然而，理论终究是理论，Flutter Engine忽略了一个最极限的Case，即：</p>
+<ol>
+<li>ui线程在销毁前向io线程发送了一个图片解码请求，接着ui线程开始销毁；</li>
+<li>ui线程销毁结束，释放锁，io线程开始销毁，<code>io_manager_</code> 会导致 <code>GrGLGpu</code> 实例的析构；</li>
+<li>ui线程请求解码的图片解码完成，返回给ui线程，此时在代码清单中会直接命中CASE 1（因为ui线程已经销毁了，故 代码清单 5 的callback中 <code>dart_state()</code> 拿到的是 <code>null</code> ，而此时image实例（本质是 <code>SkImage</code> ）已经通过 <code>std::move</code> 进入了方法作用域，而方法内又没有处理这个指针，直接return了，所以image会<strong>因为没有被引用而直接触发析构</strong>）</li>
+<li>SkImage 开始销毁，一步步调用到 <code>GrGLSemaphore</code> 的析构函数，访问到 <code>fGpu</code> （第2步中已经销毁）的非法内存，报错</li>
+</ol>
+<p>如下图</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-09.png" alt=""></p>
+<p>以上解释，和我们的复现手段完全对得上，即：进入包含图片加载的Flutter页面，然后快速退出（卡退出时ui线程请求图片io线程解码的时间差）。</p>
+<h1 id="七治标治本">七、治标治本</h1>
+<p>至此，我们终于找到了这个Crash的真正原因。那么如何解决呢？在此，笔者提出一个简单的方法：既然io线程有一定概率在销毁自身之后仍有需要销毁的图片，那我们可以给 IO Manager 增加一个计数器，IO线程每生产一张图片，计数器+1；ui线程每消费一张图片，计数器-1。然后，在 代码清单 10 中，io线程销毁时，判断计数器如果大于0，则等待几毫秒，等待ui线程全部消费完成。核心逻辑如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">// 替换代码清单10中io线程的销毁逻辑
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">clearIo</span>(fml<span style="color:#f92672">::</span>AutoResetWaitableEvent<span style="color:#f92672">*</span> io_latch) {
+  fml<span style="color:#f92672">::</span>TaskRunner<span style="color:#f92672">::</span>RunNowOrPostTask(
+      task_runners_.GetIOTaskRunner(),
+      fml<span style="color:#f92672">::</span>MakeCopyable([io_manager <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>io_manager_,
+                            platform_view <span style="color:#f92672">=</span> platform_view_.get(),
+                            io_runner <span style="color:#f92672">=</span> task_runners_.GetIOTaskRunner(),
+                            shell <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span>,
+                            io_latch]() <span style="color:#66d9ef">mutable</span> {
+        <span style="color:#75715e">// 有图片io线程生产了，但ui线程还没消费，则延迟io线程的销毁
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> (io_manager<span style="color:#f92672">-&gt;</span>get()<span style="color:#f92672">-&gt;</span>count <span style="color:#f92672">&gt;</span> <span style="color:#ae81ff">0</span>) {
+          io_runner<span style="color:#f92672">-&gt;</span>PostDelayedTask([shell, io_latch]() {
+            shell<span style="color:#f92672">-&gt;</span>clearIo(io_latch);
+          }, fml<span style="color:#f92672">::</span>TimeDelta<span style="color:#f92672">::</span>FromMilliseconds(<span style="color:#ae81ff">8</span>));
+          <span style="color:#66d9ef">return</span>;
+        } <span style="color:#66d9ef">else</span> {
+          (<span style="color:#f92672">*</span>io_manager).reset();
+          <span style="color:#66d9ef">if</span> (platform_view) {
+            platform_view<span style="color:#f92672">-&gt;</span>ReleaseResourceContext();
+          }
+          io_latch<span style="color:#f92672">-&gt;</span>Signal();
+        }
+      }));
+}
+</code></pre></div><p>其中计数器的+1在 代码清单 7 的 <code>UploadRasterImage</code> 方法之后，计数器的-1在 代码清单 7 的 <code>callback(std::move(image))</code> 调用之后，注意要post到io线程执行。</p>
+<p>此外，要彻底解决这个问题，除了要考虑单帧图片，还有考虑多帧图片的解码。</p>
+<p>当然了，我们对于这部分的逻辑也只是初窥门道，最终的解决办法将会以Issue的形式和Flutter的官方人员最终协定。</p>
+<h1 id="八总结复盘">八、总结复盘</h1>
+<p>问题至此，算是彻底有了定论，简单复盘总结一下。</p>
+<h2 id="81-80的时间都在试错">8.1 80%的时间都在试错</h2>
+<p>本文已经很冗长了，但实际上，我们在解决问题时做的尝试和思考远远更多，由于堆栈无法还原+相关逻辑不熟悉，我们80%的时间其实都在试错。</p>
+<h2 id="82-为什么我们遇到了">8.2 为什么我们遇到了</h2>
+<p>其实，从Github的issue来看，早前已经有人遇到过了一摸一样的问题： <a href="https://github.com/flutter/flutter/issues/48062">https://github.com/flutter/flutter/issues/48062</a> &amp; <a href="https://github.com/flutter/flutter/issues/50959">https://github.com/flutter/flutter/issues/50959</a>。</p>
+<p><img src="http://images.vimerzhao.top/2021-08-08-10.png" alt=""></p>
+<p>只是，由于这个问题的出现概率非常极限，而提出issue的人无法提供稳定复现的路径，所以这个issue自动被关闭了。</p>
+<p>那为什么我们就这么倒霉，偏偏以如此高的概率遇到了？我个人认为有以下几个原因：</p>
+<ol>
+<li>由本文开始的图片可以看出，这个Flutter页面要<strong>加载很多图片</strong>，所以出现Crash的可能性自然增加</li>
+<li>由本文开始的图片可以看出，Flutter浮层和Native的视频播放器共存，<strong>CPU/GPU资源其实更加紧张</strong>，所以卡到Crash的概率会大很多。之前我用Demo一直跑不出Crash的原因就是进入之后的等待时间太长了，微视的复现区间大概在0.7～1.7s，而demo则大概在0～1.0s。</li>
+<li>大部分Flutter页面可能引入Flutter Egine缓存或者 Flutter Engine共用机制，这样退出的时候其实 Engine<strong>不会销毁</strong>，自然不会触发这个问题。</li>
+</ol>
+<h2 id="83-为什么我们解决了">8.3 为什么我们解决了</h2>
+<ul>
+<li>nickdxuli和panyu提供信息非常重要，一个启发了我们找到复现策略，另一个直接提示了Crash位置</li>
+<li>bingo在Crash解决方面经验丰富，预判准确</li>
+<li>我个人对Flutter的源码还算了解</li>
+</ul>
+<p>这个问题非以一人之力可以解决，感谢团队内相关同学的鼎力相助。</p>
+<p>压力到位，谷歌干废。</p>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		程序员。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/flutter-nested-scroll-conflict/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">大道至简：Flutter嵌套滑动冲突解决之路</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">19</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/bug%E8%A7%A3%E5%86%B3%E8%AE%B0%E5%BD%95/">Bug解决记录</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">13</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">4</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">5</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E5%8E%86%E5%8F%B2%E5%BD%92%E6%A1%A3/">历史归档</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">38</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">6</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">25</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/">源码剖析</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">11</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">13</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%BD%AF%E4%BB%B6%E6%B2%89%E6%80%9D%E5%BD%95/">软件沉思录</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">3</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/">随笔杂记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">16</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (7)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2021 V大师在一号线.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

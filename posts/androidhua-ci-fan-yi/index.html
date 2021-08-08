@@ -11,8 +11,8 @@
 <meta property="og:description" content="Android划词翻译 通过复制实现单词查找，更加节省时间。 问题背景 个人经常用BCC News这个APP看新闻，但是遇到陌生词汇时总需要在APP内复制单词，再到另外一个词典应用内查找，如下： 十分不方便。 在" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/androidhua-ci-fan-yi/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2017-10-10T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-05T17:25:07&#43;08:00" />
+<meta property="article:published_time" content="2017-10-10T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-05T17:25:07+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
@@ -151,7 +151,7 @@
 </code></pre><p>就可以使用，在Android上无非就是封装一个GET请求，几十行代码即可以实现，便于维护。</p>
 <h2 id="代码实现">代码实现</h2>
 <p>代码量也不是很大，主界面判断服务是否开启，并提供一个控制按钮：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> Button translator<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> String SERVICE_NAME <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;com.vimerzhao.translator.QueryService&#34;</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">boolean</span> isServiceWork<span style="color:#f92672">;</span>
@@ -199,7 +199,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>开启一个后台服务，用于查找：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueryService</span> <span style="color:#66d9ef">extends</span> Service <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueryService</span> <span style="color:#66d9ef">extends</span> Service <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Handler mHandler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Handler<span style="color:#f92672">();</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> ClipboardManager cm <span style="color:#f92672">=(</span>ClipboardManager<span style="color:#f92672">)</span> MyApplication<span style="color:#f92672">.</span><span style="color:#a6e22e">getApplication</span><span style="color:#f92672">().</span>
             getSystemService<span style="color:#f92672">(</span>Context<span style="color:#f92672">.</span><span style="color:#a6e22e">CLIPBOARD_SERVICE</span><span style="color:#f92672">);</span>
@@ -240,7 +240,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>最后通过一个封装的类发送要查找的词并解析返回的JSON数据：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueryUtils</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">QueryUtils</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String API_URL <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;http://dict-co.iciba.com/api/dictionary.php?w=&#34;</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> String API_KEY <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&amp;type=json&amp;key=你的密钥&#34;</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> TOAST_FLAG <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
@@ -401,9 +401,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -421,7 +421,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;

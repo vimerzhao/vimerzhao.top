@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="zh-cn">
 <head>
-	<meta name="generator" content="Hugo 0.83.1" />
+	<meta name="generator" content="Hugo 0.87.0" />
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -49,7 +49,7 @@
 		<span class="menu__btn-title" tabindex="-1">菜单</span>
 	</button>
 	<ul class="menu__list">
-		<li class="menu__item menu__item--active">
+		<li class="menu__item">
 			<a class="menu__link" href="/">
 				
 				<span class="menu__text">首页</span>
@@ -101,6 +101,28 @@
 			
 <main class="main list" role="main">
 	<article class="list__item post">
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/posts/gitbook-install-record/" rel="bookmark">
+			gitbook安装中的一些问题
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-11-13T15:50:24&#43;08:00">2020-11-13</time>
+	<time class="meta__text" datetime="2021-06-05T17:25:07&#43;08:00">(最后修改: 2021-06-05)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/" rel="category">折腾工具</a>
+	</span>
+</div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		在新的iMac上安装gitbook后，一直无法使用，提示错误如下： Installing GitBook 3.2.3 if (cb) cb.apply(this, arguments) TypeError: cb.apply is not a function at /usr/local/lib/node_modules/gitbook-cli/node_modules/npmi/node_modules/npm/node_modules/graceful-fs/polyfills.js:267:18 at FSReqCallback.oncomplete (fs.js:169:5) 查找诸多问题后，最终确定是新版本的问题，可以通过nvm这个工具控制node的版本，npm不需要关心
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/posts/gitbook-install-record/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
 	<header class="list__header">
 		<h2 class="list__title post__title">
 			<a href="/posts/best-android-projector/" rel="bookmark">
@@ -298,28 +320,6 @@
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/posts/clean-my-room/">阅读全文…</a>
 	</div>
-</article><article class="list__item post">
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/eat-that-frog/" rel="bookmark">
-			读书:《吃掉那只青蛙》
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-06-20T09:44:18&#43;08:00">2020-06-20</time>
-	<time class="meta__text" datetime="2021-06-05T17:25:07&#43;08:00">(最后修改: 2021-06-05)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" rel="category">读书笔记</a>
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		笔记 C01 明确目标 第一步：明确你究竟想要什么 第二步：把你的目标写下来 第三步：为你的目标设定一个完成的最后期限 第四步：为了实现目标，把你所能想到的、所有要完成的事项都列在一个清单上 第五步：进一步梳理整个清单
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/posts/eat-that-frog/">阅读全文…</a>
-	</div>
 </article>
 </main>
 
@@ -343,9 +343,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -363,7 +363,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;

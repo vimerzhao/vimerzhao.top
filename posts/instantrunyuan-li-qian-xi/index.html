@@ -11,8 +11,8 @@
 <meta property="og:description" content="InstantRun原理浅析 本文从宏观上简要介绍了InstantRun的实现原理。 InstantRun概述 InstantRun是Android Studio2.0推出的新功能，旨在加快构建编译速度，提升" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/instantrunyuan-li-qian-xi/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2017-08-17T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-05T17:25:07&#43;08:00" />
+<meta property="article:published_time" content="2017-08-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-05T17:25:07+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
@@ -155,7 +155,7 @@
 <p>这一部分需要对Android的底层机制，尤其是<strong>应用如何启动（<code>Application</code>的执行流程）、资源如何加载</strong>等问题比较熟悉，最好读过源码，否则看起来会比较晦涩。此外，既然是浅析，就要把关注点放在逻辑流程上，对于安全性检查、兼容低版本等代码适当忽略以求抓住重点。</p>
 <h3 id="attachbasecontext分析"><code>attachBaseContext</code>分析</h3>
 <p><code>BootstrapApplication</code>的<code>attachBaseContext</code>是分析的入口：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Override</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Override</span>
     <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">attachBaseContext</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#75715e">// As of Marshmallow, we use APK splits and don&#39;t need to rely on
 </span><span style="color:#75715e"></span>        <span style="color:#75715e">// reflection to inject classes and resources for coldswap
@@ -188,7 +188,7 @@
 </code></pre></div><p>流程如下：<code>createResources</code>&ndash;&gt;<code>setupClassLoaders</code>&ndash;&gt;<code>createRealApplication</code>在此过程即完成了资源和代码的更新。</p>
 <h4 id="createresources分析"><code>createResources</code>分析</h4>
 <p>代码</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createResources</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createResources</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#75715e">// Look for changes stashed in the inbox folder while the server was not running
 </span><span style="color:#75715e"></span>        FileManager<span style="color:#f92672">.</span><span style="color:#a6e22e">checkInbox</span><span style="color:#f92672">();</span>
 
@@ -222,7 +222,7 @@
 </code></pre></div><p>很多语句在打日志，主要是分析<code>resource.ap_</code>是否该改变，即资源是否由增减或修改。</p>
 <h4 id="setupclassloaders分析"><code>setupClassLoaders</code>分析</h4>
 <p>代码</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setupClassLoaders</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> String codeCacheDir<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setupClassLoaders</span><span style="color:#f92672">(</span>Context context<span style="color:#f92672">,</span> String codeCacheDir<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> apkModified<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dexList <span style="color:#f92672">=</span> FileManager<span style="color:#f92672">.</span><span style="color:#a6e22e">getDexList</span><span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> apkModified<span style="color:#f92672">);</span>
 
         <span style="color:#75715e">// Make sure class loader finds these
@@ -254,7 +254,7 @@
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 </code></pre></div><p>继续看<code>IncrementalClassLoader.inject</code></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ClassLoader <span style="color:#a6e22e">inject</span><span style="color:#f92672">(</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ClassLoader <span style="color:#a6e22e">inject</span><span style="color:#f92672">(</span>
             ClassLoader classLoader<span style="color:#f92672">,</span> String nativeLibraryPath<span style="color:#f92672">,</span> String codeCacheDir<span style="color:#f92672">,</span>
             List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dexes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         IncrementalClassLoader incrementalClassLoader <span style="color:#f92672">=</span>
@@ -283,7 +283,7 @@
 </code></pre></div><p>由注释可以更加确定，其实就是利用<strong>双亲委托模式</strong>在中间安插一个加载器，从而控制对dex的加载。</p>
 <h4 id="createrealapplication分析"><code>createRealApplication</code>分析</h4>
 <p>代码</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createRealApplication</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">createRealApplication</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>AppInfo<span style="color:#f92672">.</span><span style="color:#a6e22e">applicationClass</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Log<span style="color:#f92672">.</span><span style="color:#a6e22e">isLoggable</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> Log<span style="color:#f92672">.</span><span style="color:#a6e22e">VERBOSE</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
                 Log<span style="color:#f92672">.</span><span style="color:#a6e22e">v</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;About to create real application of class name = &#34;</span> <span style="color:#f92672">+</span>
@@ -313,7 +313,7 @@
 
 </code></pre></div><p>其实就是利用<code>AppInfo</code>中的信息得到真正的<code>Application</code>并反射出来。</p>
 <h3 id="oncreate分析"><code>onCreate</code>分析</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Override</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#a6e22e">@Override</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         <span style="color:#75715e">// As of Marshmallow, we use APK splits and don&#39;t need to rely on
 </span><span style="color:#75715e"></span>        <span style="color:#75715e">// reflection to inject classes and resources for coldswap
@@ -390,7 +390,7 @@
 </code></pre></div><p>执行流程<code>monkeyPatchApplication</code>&ndash;&gt;<code>monkeyPatchExistingResources</code>&ndash;&gt;<code>startServer</code>&ndash;&gt;<code>realApplication.onCreate</code>。可以发现<code>realApplication</code>的启动流程都被<code>BootstrapApplication</code>代理了。</p>
 <h4 id="monkeypatchapplication分析"><code>monkeyPatchApplication</code>分析</h4>
 <p>代码</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchApplication</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchApplication</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
                                               <span style="color:#a6e22e">@Nullable</span> Application bootstrap<span style="color:#f92672">,</span>
                                               <span style="color:#a6e22e">@Nullable</span> Application realApplication<span style="color:#f92672">,</span>
                                               <span style="color:#a6e22e">@Nullable</span> String externalResourceFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -553,7 +553,7 @@
 </code></pre></div><p>结合注释可以清楚知道主要逻辑就是把代理的<code>Application</code>替换为真正的<code>Application</code>。</p>
 <h4 id="monkeypatchexistingresources分析"><code>monkeyPatchExistingResources</code>分析</h4>
 <p>代码</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchExistingResources</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchExistingResources</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
                                                     <span style="color:#a6e22e">@Nullable</span> String externalResourceFile<span style="color:#f92672">,</span>
                                                     <span style="color:#a6e22e">@Nullable</span> Collection<span style="color:#f92672">&lt;</span>Activity<span style="color:#f92672">&gt;</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>externalResourceFile <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -781,9 +781,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -801,7 +801,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;

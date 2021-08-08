@@ -11,8 +11,8 @@
 <meta property="og:description" content="&lsquo;Python爬虫实战:妹子图&rsquo; 本文记录了一些爬虫的基础知识，并实现了一个50行左右的爬虫脚本。 前言 看了一些Python的语法后打算做一个小项目练手，打发一下时间。爬虫比较容易" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/pythonpa-chong-shi-zhan-mei-zi-tu/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2017-07-02T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-05T17:25:07&#43;08:00" />
+<meta property="article:published_time" content="2017-07-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-05T17:25:07+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
@@ -138,21 +138,21 @@ sudo pip3 install beautifulsoup4
 <h3 id="第二步获取网页">第二步：获取网页</h3>
 <p>需要注意的是，由于涉及网络和文件读写操作，在Linux环境需要在<code>root</code>下运行（亲测命令行需要，PyCharm不需要）。
 接下来正式开始，尽量用代码表达。初次练习，可以用增量式的方法（完成一个功能，验证正确性后在此基础上开发下一个）：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> requests
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> requests
 
 <span style="color:#75715e">## 爬取目标</span>
 url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com&#39;</span>
 <span style="color:#75715e">## 设置报头，Http协议</span>
 header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
 main_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, headers <span style="color:#f92672">=</span> header)
-<span style="color:#66d9ef">print</span>(main_page<span style="color:#f92672">.</span>text)
+print(main_page<span style="color:#f92672">.</span>text)
 </code></pre></div><p>通过以上4行代码就可以获取得到首页内容
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu05.png" alt=""></p>
 <h3 id="第三步解析网页">第三步：解析网页</h3>
 <p>分析可以发现，这个网站的每页的url其实就是<code>www.mzitu.com/n/</code>，其中n是数字，n为1的时候会重定向到<code>www.mzitu.com</code>，所以我们可以设置一个n的最大值，不超过网页实际最大值即可，如此就可实现网页的跳转了，而不用模拟点击了翻页的按钮。
 我们比较关心的内容是套图的入口地址，再对网页进行分析，可以发现，所有链接都在一个<code>id</code>为<code>pins</code>的<code>ul</code>里面，如此便可获取该页面全部套图的入口地址了。
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu-7.png" alt=""></p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python3</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python3</span>
 <span style="color:#f92672">import</span> requests
 <span style="color:#f92672">from</span> bs4 <span style="color:#f92672">import</span> BeautifulSoup
 
@@ -170,7 +170,7 @@ preview_page_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff
     <span style="color:#75715e">## 图片入口和文字入口取一个即可</span>
     preview_link_list <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>find(id<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;pins&#39;</span>)<span style="color:#f92672">.</span>find_all(<span style="color:#e6db74">&#39;a&#39;</span>, target<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_blank&#39;</span>)[<span style="color:#ae81ff">1</span>::<span style="color:#ae81ff">2</span>]
     <span style="color:#66d9ef">for</span> link <span style="color:#f92672">in</span> preview_link_list:
-        <span style="color:#66d9ef">print</span>(link)
+        print(link)
 </code></pre></div><p>结果如下，可以看到，现在已经获取到每个套图的入口地址了。
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu08.png" alt=""></p>
 <h3 id="第四步解析套图网页">第四步：解析套图网页</h3>
@@ -334,9 +334,9 @@ def update_header(referer):
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -354,7 +354,7 @@ def update_header(referer):
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;

@@ -11,8 +11,8 @@
 <meta property="og:description" content="热补丁：Tinker方案实现 本文简单分析了Tinker的实现原理并对dex文件更新做了演示Demo。 Qzone方案与Tinker 在之前的博客里简单介绍了Qzone超级热补丁的原理与实现，本文介绍了腾讯" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/re-bu-ding-tinkerfang-an-shi-xian/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2017-08-03T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-05T17:25:07&#43;08:00" />
+<meta property="article:published_time" content="2017-08-03T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-05T17:25:07+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
@@ -119,7 +119,7 @@
 本文演示的Demo包含五个类：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogtinker-class.PNG" alt="">
 其中，修改<code>BugClass.java</code>以生成补丁文件。修改前</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BugClass</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">sayHello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
@@ -127,7 +127,7 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>修改后</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
 
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BugClass</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">sayHello</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
@@ -143,7 +143,7 @@
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogtinker-cpp.PNG" alt="">
 其中，<code>bzip2</code>是为<code>bspatch.c</code>提供支持，如何在AS中引入C/C++代码参见官方文档。
 最后写一个调用此算法的Java类：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
 
 <span style="color:#f92672">import</span> android.content.Context<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> android.content.pm.ApplicationInfo<span style="color:#f92672">;</span>
@@ -173,7 +173,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><h2 id="提取dex文件">提取dex文件</h2>
 <p>通过前面的代码，已经生成了新的zip文件（其实就是apk文件），现在需要提取其中的dex文件。其实就是解压缩一个zip文件，这里直接用Java提供的工具类：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
 
 <span style="color:#f92672">import</span> java.io.BufferedOutputStream<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> java.io.File<span style="color:#f92672">;</span>
@@ -211,7 +211,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><h2 id="反射注入补丁">反射注入补丁</h2>
 <p>注入补丁和Qzone的方案很像，都是利用反射，但这里需要做的是全量替换，本Demo中只有一个<code>classes.dex</code>文件，如果后面有<code>classes2.dex</code>&hellip;的话应该全部替换，而不是像Qzone方案一样插入，这样可以避免在dalvik虚拟机上需要进行插桩的问题，代码和之前Qzone的注入类似：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
 
 <span style="color:#f92672">import</span> android.app.Application<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> android.os.Environment<span style="color:#f92672">;</span>
@@ -273,7 +273,7 @@
 <span style="color:#f92672">}</span>
 </code></pre></div><h2 id="补丁效果">补丁效果</h2>
 <p>在启动时进行合成（注意，这里没有做检查，实际应该检查是否有patch文件）。在<code>MainActivity.java</code>中设置一个生成补丁的线程：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">package</span> vimerzhao.tinker<span style="color:#f92672">;</span>
 
 <span style="color:#f92672">import</span> android.os.Environment<span style="color:#f92672">;</span>
 <span style="color:#f92672">import</span> android.support.v7.app.AppCompatActivity<span style="color:#f92672">;</span>
@@ -381,9 +381,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -401,7 +401,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;

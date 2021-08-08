@@ -11,8 +11,8 @@
 <meta property="og:description" content="&lsquo;AI实战:搭建客服机器人&rsquo; 本文简要介绍了但前客服机器人的发展情况，并实际开发了一个Demo作为演示。 客服机器人 随着科技发展，廉价劳动力正在不断被淘汰。客服机器人就是这样一个例" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/aishi-zhan-da-jian-ke-fu-ji-qi-ren/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2017-07-29T00:00:00&#43;00:00" />
-<meta property="article:modified_time" content="2021-06-05T17:25:07&#43;08:00" />
+<meta property="article:published_time" content="2017-07-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2021-06-05T17:25:07+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
@@ -141,7 +141,7 @@
 </ol>
 <p>其实，选型是最困难的一步。需要不断的试错、尝试、否定、证明等，就像爱迪生在发明灯泡前尝试了几千次一样。
 关于ChatterBot的使用不做赘述，因为文档十分齐全。以下是一个简单例子，结合注释十分容易理解：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">## !/usr/bin/python3.5</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">## !/usr/bin/python3.5</span>
 <span style="color:#75715e">## 导入库</span>
 <span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
 <span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ListTrainer
@@ -154,8 +154,8 @@ my_bot<span style="color:#f92672">.</span>train([
     <span style="color:#e6db74">&#34;那么，可依得我两件事?&#34;</span>,
     <span style="color:#e6db74">&#34;三件也依得&#34;</span>,
 ])
-<span style="color:#66d9ef">while</span> True:
-    <span style="color:#66d9ef">print</span>(my_bot<span style="color:#f92672">.</span>get_response(input(<span style="color:#e6db74">&#34;&gt;&#34;</span>)))
+<span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+    print(my_bot<span style="color:#f92672">.</span>get_response(input(<span style="color:#e6db74">&#34;&gt;&#34;</span>)))
 </code></pre></div><p>运行结果</p>
 <pre><code>$ python3.5   chatrobot.py
 &gt;真的喜欢？
@@ -167,7 +167,7 @@ my_bot<span style="color:#f92672">.</span>train([
 <p>具体的制作方法由上一节选用的问答系统决定，如ChatterBot可以通过脚本注入sqlite数据库(关闭只读模式)作为知识库，所以我可以写一个脚本来把知识库注入sqlite数据库，这里我选用的是腾讯招聘的FAQ页面：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogtencent_faq.png" alt="">
 注入代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">## !/usr/bin/python3.5</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">## !/usr/bin/python3.5</span>
 
 <span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
 <span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ListTrainer
@@ -196,14 +196,14 @@ my_bot<span style="color:#f92672">.</span>train([
 ])
 
 </code></pre></div><p>运行之后我们就可以看到目录下生成了一个<code>db.sqlite3</code>文件，这就是我们的知识库了！接下来，我们写一个脚本测试一下，注意打开只读模式，否则ChatterBot会不断学习，修改知识库，而这个过程实际不应该让用户来参与，所以应该关闭！测试脚本如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">## !/usr/bin/python3.5</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">## !/usr/bin/python3.5</span>
 <span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
 <span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ListTrainer
 <span style="color:#75715e">## 建议打开只读，防止修改数据库</span>
-my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;FAQ Demo&#34;</span>, read_only<span style="color:#f92672">=</span>True)
+my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;FAQ Demo&#34;</span>, read_only<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
 <span style="color:#75715e">## test</span>
-<span style="color:#66d9ef">while</span> True:
-    <span style="color:#66d9ef">print</span>(my_bot<span style="color:#f92672">.</span>get_response(input(<span style="color:#e6db74">&#34;&gt;&#34;</span>)))
+<span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+    print(my_bot<span style="color:#f92672">.</span>get_response(input(<span style="color:#e6db74">&#34;&gt;&#34;</span>)))
 </code></pre></div><p>运行结果：</p>
 <pre><code>$python3.5   faq-terminal.py
  &gt;面试形式
@@ -214,7 +214,7 @@ my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">
 </code></pre><p>可以看到，虽然问题稍有变化，但是还是得到了正确答案。</p>
 <h2 id="搭建前端后台">搭建前端后台</h2>
 <p>通过前面的努力，我们成功解决了核心问题，接下来就好办了！用户反馈的渠道一般是手机或者网页，所以我们要为之前的成果搭建一个前端，也就是完成下图的左半边，这里只是用于演示，所以我们直接用Socket传输数据。客户端代码：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> Button mSendMessage<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> EditText mQuestion<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> TextView mAnswer<span style="color:#f92672">;</span>
@@ -277,7 +277,7 @@ my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>服务器端我们需要通过Java来调用Python脚本，将接收到的前台消息传入问答系统处理，然后获取系统输出反馈到前端。这一部分的本质就是Socket通信，比较简单，不做赘述，后台代码如下：</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServerThread</span> <span style="color:#66d9ef">extends</span> Thread<span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServerThread</span> <span style="color:#66d9ef">extends</span> Thread<span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> Socket socket<span style="color:#f92672">;</span>
     <span style="color:#75715e">//在构造中得到要单独会话的socket
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ServerThread</span><span style="color:#f92672">(</span>Socket socket<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -349,7 +349,7 @@ my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultiThreadServer</span> <span style="color:#f92672">{</span>
+</code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultiThreadServer</span> <span style="color:#f92672">{</span>
 
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
@@ -422,9 +422,9 @@ my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -442,7 +442,7 @@ my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">3</span>
+				<span class="widget__counter widget__counter--bubble">4</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;
