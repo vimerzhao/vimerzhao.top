@@ -117,11 +117,11 @@
 在自己的第一个需求灰度后，发现Crash率严重超标，虽然排查之后发现主要是其他人合入的需求导致的，但也确实发现了两个自己导致的Bug，由于触发Bug的条件比较极端（见下文），所以测试并没有发现。</p>
 <h2 id="问题一未catch异常">问题一：未Catch异常</h2>
 <p>第一个错误是在读取配置的时候如果没有配置会返回<code>null</code>，而自己的代码：</p>
-<pre><code>    ...Integer.valueOf(Settings.get(key))...
+<pre tabindex="0"><code>    ...Integer.valueOf(Settings.get(key))...
 </code></pre><p>并没有处理这个<code>NumberFormatException</code>，导致出现了Crash。由于这个操作是在退出APP的时候执行的，而从后台拉取配置则是APP启动时执行，所以必须在启动之后（拉取到配置之前）立即退出APP，这种情况很难触发，但是客观存在。</p>
 <h2 id="问题二胡乱设置参数">问题二：胡乱设置参数</h2>
 <p>背景是需要通过Apk包名获取对应APP的名称和图标，当时参考了StackOverflow后通过如下代码实现：</p>
-<pre><code>        PackageManager pm = getPackageManager();
+<pre tabindex="0"><code>        PackageManager pm = getPackageManager();
         try {
             PackageInfo packageInfo = pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
             if (packageInfo != null) {
@@ -151,7 +151,7 @@
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -185,9 +185,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -217,7 +217,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

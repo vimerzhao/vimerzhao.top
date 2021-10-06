@@ -120,7 +120,7 @@
 寒假回来，感觉自己最近一段时间过于沉迷游戏，毕设进度不及预期，博客也多荒废了。明年打算去公司继续实习，所以还是早回正轨吧！</p>
 <h2 id="下载源码">下载源码</h2>
 <p>这次看到一篇博客，给了我一些新的启发，博主将Android6.0的源码打包，然后切割成10个700M左右的文件放在百度网盘，所以我只需要下载之后再合并这些文件就行了：</p>
-<pre><code>➜  下载 ls
+<pre tabindex="0"><code>➜  下载 ls
 Android6_r1_aa
 Android6_r1_ab
 Android6_r1_ac
@@ -132,9 +132,9 @@ Android6_r1_ah
 Android6_r1_ai
 Android6_r1_aj
 </code></pre><p>通过：</p>
-<pre><code>➜  下载 cat Android6_r1_*&gt;Android6_r1.tgz
+<pre tabindex="0"><code>➜  下载 cat Android6_r1_*&gt;Android6_r1.tgz
 </code></pre><p>便可以合并这些文件，值得一提的是：由于文件下载过程中可能损坏（确实存在，有一个文件用浏览器老是下载失败，我便用手机客户端下载之后拷贝过来，就发现合并之后解压失败，检查之后发现这个文件的md5值已经变了），所以需要通过md5检验。通过<code>md5sum</code>命令查看每个文件的md5值，并与随同下载的<code>hash.txt</code>对比：</p>
-<pre><code>➜  下载 cat hash.txt
+<pre tabindex="0"><code>➜  下载 cat hash.txt
 a4129f5d2d6a8293ee3ee3ed4343f0fd  Android6_r1_aa
 e601f1239c0f60895cc6b9199b1cd7d1  Android6_r1_ab
 af2d9e653a51072031ce40b62791c2de  Android6_r1_ac
@@ -153,10 +153,10 @@ cat Android6_r1_*&gt;M.tgz
 ➜  下载 
 </code></pre><h2 id="构建环境">构建环境</h2>
 <p>这一步比较看运气，之前用Ubuntu12就是各种冲突，这次我用的是LinuxMint18 Xfce，而AOSP的官方说明只说了Ubuntu各版本的依赖安装，由于LinuxMint是Ubuntu的近亲，所以我就直接按照最新版本（&gt;=Ubuntu15）来安装依赖，所幸一次通过：</p>
-<pre><code>sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache libgl1-mesa-dev libxml2-utils xsltproc unzip
+<pre tabindex="0"><code>sudo apt-get install git-core gnupg flex bison gperf build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z-dev ccache libgl1-mesa-dev libxml2-utils xsltproc unzip
 </code></pre><h2 id="开始编译">开始编译</h2>
 <p><code>make</code>之后，日常报错，第一次错误很好解决：</p>
-<pre><code>You are attempting to build with the incorrect version
+<pre tabindex="0"><code>You are attempting to build with the incorrect version
 of java.
  
  Your version is: openjdk version &quot;1.8.0_151&quot; OpenJDK Runtime Environment (build 1.8.0_151-8u151-b12-0ubuntu0.16.04.2-b12) OpenJDK 64-Bit Server VM (build 25.151-b12, mixed mode).
@@ -166,7 +166,7 @@ of java.
       https://source.android.com/source/initializing.html
 
 </code></pre><p>由于最新版本已经不能下载openjdk7，所以需要重新设置一下源，下载之后重写一下当前终端的环境变量（一次使用无污染）：</p>
-<pre><code>➜  Android_r1 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64 
+<pre tabindex="0"><code>➜  Android_r1 export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64 
 ➜  Android_r1 export PATH=$JAVA_HOME/bin:$PATH 
 export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
 ➜  Android_r1 java -version
@@ -175,14 +175,14 @@ OpenJDK Runtime Environment (IcedTea 2.6.4) (7u95-2.6.4-3)
 OpenJDK 64-Bit Server VM (build 24.95-b01, mixed mode)
 
 </code></pre><p>最新版本的LinuxMint可能无法直接安装jdk1.7，需要手动设置源：</p>
-<pre><code>sudo add-apt-repository ppa:openjdk-r/ppa  
+<pre tabindex="0"><code>sudo add-apt-repository ppa:openjdk-r/ppa  
 sudo apt-get update   
 sudo apt-get install openjdk-7-jdk
 </code></pre><p>注意不要用</p>
-<pre><code>sudo update-alternatives --config java
+<pre tabindex="0"><code>sudo update-alternatives --config java
 sudo update-alternatives --config javac
 </code></pre><p>来指定版本，否则可能出现</p>
-<pre><code>Lock.ReentrantReadWriteLock.ReadLock(ReentrantReadWriteLock)
+<pre tabindex="0"><code>Lock.ReentrantReadWriteLock.ReadLock(ReentrantReadWriteLock)
 prebuilts/sdk/api/23.txt:53035: error 9: Removed public constructor java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock.ReentrantReadWriteLock.WriteLock(ReentrantReadWriteLock)
 prebuilts/sdk/api/23.txt:53074: error 9: Removed public constructor java.util.jar.Attributes.Name.Attributes.Name(String)
 prebuilts/sdk/api/23.txt:54404: error 9: Removed public constructor javax.crypto.spec.PSource.PSpecified.PSource.PSpecified(byte)
@@ -198,11 +198,11 @@ make: *** [out/target/common/obj/PACKAGING/checkpublicapi-last-timestamp] Error 
 
 ##### make failed to build some targets (05:10 (mm:ss)) ####
 </code></pre><p>第二个问题比较棘手：</p>
-<pre><code>clang: error: linker command failed with exit code 1 (use -v to see invocation)
+<pre tabindex="0"><code>clang: error: linker command failed with exit code 1 (use -v to see invocation)
 build/core/host_shared_library_internal.mk:44: recipe for target 'out/host/linux-x86/obj32/lib/libnativehelper.so' failed
 make: *** [out/host/linux-x86/obj32/lib/libnativehelper.so] Error 1
 </code></pre><p>但StackOverflow上也能找到答案（具体参见链接），但是直接按照答案还是失败了，再参考其他博客后，我覆盖了<code>ld</code>文件，原来的保留为<code>ld.old</code>，并修改<code>/art/build/Android.common_build.mk</code>为：</p>
-<pre><code>## Host.
+<pre tabindex="0"><code>## Host.
 ART_HOST_CLANG := false
 ifneq ($(WITHOUT_HOST_CLANG),true)
     ## By default, host builds use clang for better warnings.
@@ -212,7 +212,7 @@ endif
 最终，这份10G左右的源码在我的老电脑（500G机械硬盘，4G内存，i5处理器）上编译了大概4个小时终于成功了。</p>
 <h2 id="启动模拟器">启动模拟器</h2>
 <p>这个部分原博主说的不是很清楚，这里详细说一下。在编译完成后，所有的结果文件都在<code>out</code>文件夹，有26G：</p>
-<pre><code>➜  Android_r1 du . -h --max-depth=1
+<pre tabindex="0"><code>➜  Android_r1 du . -h --max-depth=1
 16M     ./build
 29M     ./bionic
 28M     ./art
@@ -240,7 +240,7 @@ endif
 401M    ./packages
 40G.
 </code></pre><p>打开一个新终端，首先要设置运行环境，然后选择平台：</p>
-<pre><code>➜  Android_r1 source build/envsetup.sh 
+<pre tabindex="0"><code>➜  Android_r1 source build/envsetup.sh 
 build/envsetup.sh:573: command not found: complete
 WARNING: Only bash is supported, use of other shell would lead to erroneous results
 including device/asus/deb/vendorsetup.sh
@@ -332,7 +332,7 @@ OUT_DIR=out
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -366,9 +366,9 @@ OUT_DIR=out
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -398,7 +398,7 @@ OUT_DIR=out
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

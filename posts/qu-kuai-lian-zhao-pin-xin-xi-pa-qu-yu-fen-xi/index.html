@@ -124,7 +124,7 @@
 针对这种情况，我认为有两种解决办法，一种是使用IP池和多线程，不断变换请求的IP就不会被发现了。另外一种就是用无头浏览器。个人感觉两种都是可行的，下次有需求了再实践一下。</p>
 <h2 id="爬取结果分析">爬取结果分析</h2>
 <p>将爬取的网页提取信息，本着可视化原则，用<code>mathplotlib</code>做些图。其中遇到的主要问题是<code>mathplotlib</code>的中文支持，试了网上很多方法都失败了，这里要把自己亲测可行的方法记录下来：</p>
-<pre><code>from matplotlib import rcParams
+<pre tabindex="0"><code>from matplotlib import rcParams
 import matplotlib.font_manager as fm
 
 zhfont = matplotlib.font_manager.FontProperties(fname='../test.ttf')
@@ -142,7 +142,7 @@ matplotlib.rcParams['font.family'] = 'WenQuanYi Micro Hei'
 <img src="http://p2pe8gnn5.bkt.clouddn.com/blockchain_analysis_salary.png" alt=""></p>
 <p>（感觉这样表示不是很直观，自己划定几个区间，做一个柱状图可能更好）</p>
 <p>最后还用<code>jieba</code>和<code>textrank4zh</code>做了关键词提取，但由于手法粗糙加上噪音严重（产品经理、技术开发等等的招聘需求应该分类处理），效果好像不是很理想：</p>
-<pre><code>Building prefix dict from the default dictionary ...
+<pre tabindex="0"><code>Building prefix dict from the default dictionary ...
 Loading model from cache /tmp/jieba.cache
 Loading model cost 0.854 seconds.
 Prefix dict has been built succesfully.
@@ -186,7 +186,7 @@ Prefix dict has been built succesfully.
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -220,9 +220,9 @@ Prefix dict has been built succesfully.
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -252,7 +252,7 @@ Prefix dict has been built succesfully.
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

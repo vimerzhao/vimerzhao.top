@@ -124,7 +124,7 @@
 为什么不用python、perl等脚本语言？这些脚本需要环境配置，考虑到这些脚本工具可能被其他人使用，所以希望开箱即用，而且bat足够简单，足够满足需求。</p>
 <h2 id="part-1运行环境">PART 1：运行环境</h2>
 <p>类似于编程语言库，这些命令是Windows内置的，可以作为脚本的基本元素，可以在cmd运行，也可以写入cmd运行。首先介绍最重要的两个命令：<code>help</code>,<code>/?</code>，利用<code>help</code>可以查看当前内置的命令：</p>
-<pre><code>F:\BatchFileProgramming&gt;help
+<pre tabindex="0"><code>F:\BatchFileProgramming&gt;help
 有关某个命令的详细信息，请键入 HELP 命令名
 ASSOC          显示或修改文件扩展名关联。
 ATTRIB         显示或更改文件属性。
@@ -142,7 +142,7 @@ CMD            打开另一个 Windows 命令解释程序窗口。
 COLOR          设置默认控制台前景和背景颜色。
 ......
 </code></pre><p>利用<code>/?</code>可以详细的了解某个命令：</p>
-<pre><code>F:\BatchFileProgramming&gt;call /?
+<pre tabindex="0"><code>F:\BatchFileProgramming&gt;call /?
 从批处理程序调用另一个批处理程序。
 
 CALL [drive:][path]filename [batch-parameters]
@@ -165,19 +165,19 @@ CALL 命令现在将卷标当作 CALL 的目标接受。语法是:
 ......
 </code></pre><p>有了这两个命令，我也就不需要像网上那些文章一样详细解释每个命令了，查阅文档即可。这里列一些常用的，建议优先掌握，较为生僻的在需要时详细学习即可。
 常用命令：</p>
-<pre><code>REM,echo,color,title,prompt,cls,date,time,start,exit,call,tree,type,pause,shutdown,at
+<pre tabindex="0"><code>REM,echo,color,title,prompt,cls,date,time,start,exit,call,tree,type,pause,shutdown,at
 </code></pre><p>常用环境变量（Environment variables are special variables that contain its values set by the operating system itself, other applications or by manual）：</p>
-<pre><code>%CD%,%PATH%,%RANDOM%
+<pre tabindex="0"><code>%CD%,%PATH%,%RANDOM%
 </code></pre><p>文件和文件夹相关的命令：</p>
-<pre><code>dir,mkdir,rmdir,chdir,ren,replace,copy,xcopy,del,pushd,popd,move
+<pre tabindex="0"><code>dir,mkdir,rmdir,chdir,ren,replace,copy,xcopy,del,pushd,popd,move
 </code></pre><p>网络：</p>
-<pre><code>net,ping,telnet,tlntadmn,tracert,ipconfig,hostname,ftp,netstat,nbtstat,arp
+<pre tabindex="0"><code>net,ping,telnet,tlntadmn,tracert,ipconfig,hostname,ftp,netstat,nbtstat,arp
 </code></pre><p>如果遇到需要但自己又不知道的，google即可。</p>
 <h2 id="part-2语法">PART 2：语法</h2>
 <p>如果只有这些命令，那么运行bat和在命令行执行没什么区别，最多把命令保存下来了方便以后运行。bat也支持一些编程语言的特性，虽然简陋且不够优雅，但应付简单的自动化任务基本够用。我觉得Dennis Ritchie和Brian Kernighan的<em>The C Programming Language</em>，是介绍一门语言的模板，所以这里也按照该书的结构安排。</p>
 <h3 id="类型变量操作符">类型、变量、操作符</h3>
 <p>bat没有类型。<code>set</code>命令很重要，用于赋值，通过<code>%name%</code>引用变量，且变量赋值的<code>=</code>两边不能有空格：</p>
-<pre><code>C:\Users\vimerzhao\Desktop&gt;set a=1
+<pre tabindex="0"><code>C:\Users\vimerzhao\Desktop&gt;set a=1
 C:\Users\vimerzhao\Desktop&gt;echo a
 a
 C:\Users\vimerzhao\Desktop&gt;echo %a%
@@ -266,14 +266,14 @@ C:\Users\vimerzhao\Desktop&gt;echo %a%
 </tbody>
 </table>
 <p>for循环最常见的应用就是遍历文件夹：</p>
-<pre><code>C:\Users\vimerzhao\Desktop&gt;@echo off
+<pre tabindex="0"><code>C:\Users\vimerzhao\Desktop&gt;@echo off
 C:\Users\vimerzhao\Desktop&gt;echo 显示全部文件
 C:\Users\vimerzhao\Desktop&gt;for %a in (*) do echo %a
 001.PNG
 002.PNG
 ...
 </code></pre><p>在bat脚本中由于%与变量引用冲突，要写成</p>
-<pre><code>for %%a in (*) do echo %%a
+<pre tabindex="0"><code>for %%a in (*) do echo %%a
 </code></pre><p>此外，可以通过内置的语法对文件做处理（如显示完整路径、文件名、后缀名等）：</p>
 <table>
 <thead>
@@ -386,7 +386,7 @@ C:\Users\vimerzhao\Desktop&gt;for %a in (*) do echo %a
 </table>
 <h3 id="子程序">子程序</h3>
 <p>最后，bat也支持简单的子程序调用，和汇编很像，通过%n可以获取参数，从1开始，如以下代码：</p>
-<pre><code>REM filename: test.bat
+<pre tabindex="0"><code>REM filename: test.bat
 @echo off
 call :procedure &quot;argument 1&quot;
 
@@ -396,7 +396,7 @@ goto:eof
     echo %1
 goto:eof
 </code></pre><p>输出为：</p>
-<pre><code>F:\BatchFileProgramming&gt;test.bat
+<pre tabindex="0"><code>F:\BatchFileProgramming&gt;test.bat
 repeat part or modular code
 &quot;argument 1&quot;
 </code></pre><h2 id="总结">总结</h2>
@@ -420,7 +420,7 @@ repeat part or modular code
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -454,9 +454,9 @@ repeat part or modular code
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -486,7 +486,7 @@ repeat part or modular code
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

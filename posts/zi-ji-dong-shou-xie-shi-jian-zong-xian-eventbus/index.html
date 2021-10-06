@@ -184,19 +184,19 @@
 <p><code>EventBus</code>的使用分三个步骤：注册监听、发送事件和取消监听，相应本文也将分这三步来实现。</p>
 <h3 id="注册监听">注册监听</h3>
 <p>定义一个注解：</p>
-<pre><code>@Retention(RetentionPolicy.RUNTIME)
+<pre tabindex="0"><code>@Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface Subscribe {
     ThreadMode threadMode() default ThreadMode.POST;
 }
 </code></pre><p><code>greenrobot/EventBus</code>还支持优先级和粘性事件，这里只支持最基本的能力：区分线程，因为如更新UI的操作必须放在主线程。<code>ThreadMode</code>如下：</p>
-<pre><code>public enum ThreadMode {
+<pre tabindex="0"><code>public enum ThreadMode {
     MAIN, // 主线程
     POST, // 发送消息的线程
     ASYNC // 新开一个线程发送
 }
 </code></pre><p>在对象初始化的时候，使用<code>register</code>方法注册，该方法会解析被注册对象的所有方法，并解析声明了注解的方法（即观察者），核心代码如下：</p>
-<pre><code>public class EventBus {
+<pre tabindex="0"><code>public class EventBus {
     ...
 
     public void register(Object subscriber) {
@@ -252,7 +252,7 @@ public @interface Subscribe {
 }
 
 </code></pre><p>执行过这些逻辑后，该对象所有的观察者方法都会被存在一个Map中，其Key是<code>EventType</code>，即观察事件的类型，Value是订阅了该类型事件的所有方法（即观察者）的一个列表，每个方法和对象一起封装成了一个<code>Subscription</code>类：</p>
-<pre><code>public class Subscription {
+<pre tabindex="0"><code>public class Subscription {
     public final Reference&lt;Object&gt; subscriber;
     public final SubscriberMethod subscriberMethod;
 
@@ -281,7 +281,7 @@ public @interface Subscribe {
 </code></pre><p>如此，便是注册监听方法的核心逻辑了。</p>
 <h3 id="消息发送">消息发送</h3>
 <p>消息的发送代码很简单：</p>
-<pre><code>public class EventBus {
+<pre tabindex="0"><code>public class EventBus {
     ...
     private EventDispatcher mEventDispatcher = new EventDispatcher();
     private ThreadLocal&lt;Queue&lt;EventType&gt;&gt; mThreadLocalEvents = new ThreadLocal&lt;Queue&lt;EventType&gt;&gt;() {
@@ -303,7 +303,7 @@ public @interface Subscribe {
     ...
 }
 </code></pre><p>比较复杂一点的是需要根据注解声明的线程模式在对应的线程进行发布：</p>
-<pre><code>public class EventBus {
+<pre tabindex="0"><code>public class EventBus {
 
     ...
     private class EventDispatcher {
@@ -343,7 +343,7 @@ public @interface Subscribe {
     ...
 }
 </code></pre><p>三种线程模式分别如下，<code>DefaultEventHandler</code>（在发布线程执行观察者放方法）：</p>
-<pre><code>public class DefaultEventHandler implements IEventHandler {
+<pre tabindex="0"><code>public class DefaultEventHandler implements IEventHandler {
     @Override
     public void handleEvent(Subscription subscription, Object message) {
         if (subscription == null || subscription.subscriber.get() == null) {
@@ -357,7 +357,7 @@ public @interface Subscribe {
     }
 }
 </code></pre><p><code>MainEventHandler</code>（在主线程执行）：</p>
-<pre><code>public class MainEventHandler implements IEventHandler {
+<pre tabindex="0"><code>public class MainEventHandler implements IEventHandler {
     private Handler mMainHandler = new Handler(Looper.getMainLooper());
     DefaultEventHandler hanlder = new DefaultEventHandler();
 
@@ -373,7 +373,7 @@ public @interface Subscribe {
     }
 }
 </code></pre><p><code>AsyncEventHandler</code>（新开一个线程执行）：</p>
-<pre><code>public class AsyncEventHandler implements IEventHandler {
+<pre tabindex="0"><code>public class AsyncEventHandler implements IEventHandler {
     private DispatcherThread mDispatcherThread;
     private IEventHandler mEventHandler = new DefaultEventHandler();
 
@@ -421,7 +421,7 @@ public @interface Subscribe {
 </code></pre><p>以上便是发布消息的代码。</p>
 <h3 id="注销监听">注销监听</h3>
 <p>最后一个对象被销毁还要注销监听，否则容易导致内存泄露，目前<code>SimpleEventBus</code>用的是<code>WeakReference</code>，能够通过GC自动回收，但不知道<code>greenrobot/EventBus</code>为什么没这样实现，待研究。注销监听其实就是遍历Map，拿掉该对象的订阅即可：</p>
-<pre><code>public class EventBus {
+<pre tabindex="0"><code>public class EventBus {
 
     ...
     public void unregister(Object subscriber) {
@@ -477,7 +477,7 @@ public @interface Subscribe {
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -511,9 +511,9 @@ public @interface Subscribe {
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -543,7 +543,7 @@ public @interface Subscribe {
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

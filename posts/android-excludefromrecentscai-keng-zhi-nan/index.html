@@ -116,7 +116,7 @@
 <p>工作中遇到的一个小问题，记录一下。</p>
 <h2 id="现象">现象</h2>
 <p>从Activity <code>A</code>跳转到<code>B</code>，<code>B</code>的<code>launchMode</code>设置为<code>singleInstance</code>，并通过<code>excludeFromRecents</code>属性保证<code>B</code>不出现在最近任务列表中。<code>MainActivity</code>：</p>
-<pre><code>public class MainActivity extends AppCompatActivity {
+<pre tabindex="0"><code>public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +134,7 @@
         });
     }
 </code></pre><p><code>SecondActivity</code>：</p>
-<pre><code>public class SecondActivity extends Activity {
+<pre tabindex="0"><code>public class SecondActivity extends Activity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -145,7 +145,7 @@
     }
 }
 </code></pre><p><code>AndroidManifest.xml</code>：</p>
-<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+<pre tabindex="0"><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
 &lt;manifest xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;
     package=&quot;top.vimerzhao.recenttasks&quot;&gt;
 
@@ -195,7 +195,7 @@ I also tested this on the built-in DeskClock app that comes with recent Android 
 </blockquote>
 <p>也就是说，即使设置了<code>excludeFromRecents</code>属性，如果该Task在前台还是会显示在最近任务中，想想这样设计也是合理的，如果某个设置了该属性的<code>Activity</code>正在前台，此时Call多任务如果不显示该<code>Activity</code>那么用户怎么返回，所以说这个设计还是很合理的。<strong>如果确实如此，只能说明官方文档在此处表述存在纰漏了。</strong>
 接下来从源码层面证实这个猜测。一开始我是从<code>RecentsActivity</code>入手，逐步分析，但是Android源码过于复杂，一直没找到重点，后面转变思路，直接搜索<code>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</code>属性，虽然总共有36个结果，但是通过命名很快定位到<code>./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/</code>目录下的可疑类，最终定位到<code>SystemServicesProxy.java</code>的218行：</p>
-<pre><code>...
+<pre tabindex="0"><code>...
 /** Returns a list of the recents tasks */
 public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTasks, int userId,
         boolean isTopTaskHome) {
@@ -244,7 +244,7 @@ public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTa
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -278,9 +278,9 @@ public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTa
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -310,7 +310,7 @@ public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTa
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

@@ -127,16 +127,16 @@
     <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
 }
 </code></pre></div><p>输出为:</p>
-<pre><code>2*5 = 10
+<pre tabindex="0"><code>2*5 = 10
 TEST(2) = 10
 </code></pre><p>**问题：**如果先替换外面的，则第一行展开顺序为:</p>
-<pre><code>PRINT1(TEST(2));
+<pre tabindex="0"><code>PRINT1(TEST(2));
 PR(TEST(2)); printf(&quot;\n&quot;);
 printf(#TEST(2) &quot; = %d&quot;, TEST(2)); printf(&quot;\n&quot;);
 printf(&quot;TEST(2)&quot; &quot; = %d&quot;, 2*5); printf(&quot;\n&quot;);
 TEST(2) = 10
 </code></pre><p>但显然不是；同理，如果先替换里面的:</p>
-<pre><code>PRINT2(TEST(2));
+<pre tabindex="0"><code>PRINT2(TEST(2));
 PRINT2(2*5);
 printf(#2*5 &quot; = %d&quot;, 2*5);
 printf(&quot;2*5&quot; &quot; = %d&quot;, 2*5);
@@ -149,7 +149,7 @@ printf(&quot;2*5&quot; &quot; = %d&quot;, 2*5);
 <p>Macro arguments are completely macro-expanded before they are substituted into a macro body, unless they are stringized or pasted with other tokens. After substitution, the entire macro body, including the substituted arguments, is scanned again for macros to be expanded. The result is that the arguments are scanned twice to expand macro calls in them.</p>
 </blockquote>
 <p>可以知道只有对于<code>#</code>和<code>##</code>处理的参数不做替换，其他的预处理器根本不知道是什么，只是会再扫描一遍，如果又发现了宏则继续替换！所以以上代码的替换过程应该大致如下:</p>
-<pre><code>PRINT1(TEST(2));
+<pre tabindex="0"><code>PRINT1(TEST(2));
 PR(2*5); printf(&quot;\n&quot;);
 printf(#2*5 &quot; = %d&quot;); printf(&quot;\n&quot;);
 printf(&quot;2*5&quot; &quot; = %d&quot;); printf(&quot;\n&quot;);
@@ -159,7 +159,7 @@ printf(#TEST(2) &quot; = %d\n&quot;, 2*5);
 printf(&quot;TEST(2)&quot; &quot; = %d\n&quot;, 2*5);
 TEST(2) = 10    // 第二行
 </code></pre><p>其实，仔细想想，本质就是:</p>
-<pre><code>#define PR(x) printf(#x &quot; = %d\n&quot;, x)
+<pre tabindex="0"><code>#define PR(x) printf(#x &quot; = %d\n&quot;, x)
 </code></pre><p>只不过多了一次带参数宏调用，不知道是不是自己走火入魔了，如果不是的话感觉这个代码也可以当谜题收录到<em>The C Puzzle Book</em>里面去了！
 还有就是Google+StackOverflow比baidu+CSDN强大得真不是一点点！<strong>遇到问题最可靠的还是看文档而不是琢磨别人的解释，而有时候要找到对的文档就需要从StackOverflow这样的高质量社区顺藤摸瓜。</strong></p>
 <h2 id="参考">参考</h2>
@@ -180,7 +180,7 @@ TEST(2) = 10    // 第二行
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -214,9 +214,9 @@ TEST(2) = 10    // 第二行
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -246,7 +246,7 @@ TEST(2) = 10    // 第二行
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

@@ -128,13 +128,13 @@
 <p>当有了一个想法之后，不要急于动手，先评估一下可行性。首先，必须要要监听到用户复制了单词，通过查阅文档，发现系统已经提供了相关的API；其次，获取到用户复制的内容之后需要用代码进行查找，并返回结果，这一部分可以在网上找到免费的API。</p>
 <h3 id="监听剪贴板">监听剪贴板</h3>
 <p>监听剪贴板本来是很简单的事情，系统提供了<code>ClipboardManager</code>这个类，通过其<code>addPrimaryClipChangedListener</code>方法可以添加监听事件。可是实际测试发现，在某些APP复制时这个监听事件会被触发一次，有些APP内复制会触发两次，而BBC News内复制则会触发三次，在监听代码中加入<code>System.out.println(System.currentTimeMillis());</code>能找到如下输出：</p>
-<pre><code>...
+<pre tabindex="0"><code>...
 10-10 16:30:17.494 12915-12915/com.vimerzhao.javatest I/System.out: 1507624217494
 10-10 16:30:17.498 12915-12915/com.vimerzhao.javatest I/System.out: 1507624217498
 10-10 16:30:17.500 12915-12915/com.vimerzhao.javatest I/System.out: 1507624217500
 ...
 </code></pre><p>暂时的解决办法是在监听事件中使用如下代码：</p>
-<pre><code>....
+<pre tabindex="0"><code>....
     mHandler.removeCallbacks(runnable);
     mHandler.postDelayed(runnable, 200);
 ....
@@ -147,7 +147,7 @@
 <li>收费</li>
 </ol>
 <p>基于以上几个原因，我最后选择了金山词霸的API，在浏览器输入：</p>
-<pre><code>http://dict-co.iciba.com/api/dictionary.php?w=要查的词&amp;key=密钥
+<pre tabindex="0"><code>http://dict-co.iciba.com/api/dictionary.php?w=要查的词&amp;key=密钥
 </code></pre><p>就可以使用，在Android上无非就是封装一个GET请求，几十行代码即可以实现，便于维护。</p>
 <h2 id="代码实现">代码实现</h2>
 <p>代码量也不是很大，主界面判断服务是否开启，并提供一个控制按钮：</p>
@@ -367,7 +367,7 @@
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -401,9 +401,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -433,7 +433,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

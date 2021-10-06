@@ -129,7 +129,7 @@
 <p>关于<code>fork</code>的概念理解之后代码不难写，CSAPP讲的很清楚，看完实验一不是问题。主要是shell，要尽可能的模拟Linux的shell，以下是我的代码效果：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blog%E5%AE%9E%E9%AA%8C%E4%B8%80%E6%95%88%E6%9E%9C%E6%BC%94%E7%A4%BA.gif" alt="">
 看到一份非常烂的代码要批判。前面检查的同学就像没用过shell一样，我看了一眼就发现</p>
-<pre><code>//大概这样，具体记不太清
+<pre tabindex="0"><code>//大概这样，具体记不太清
 int a = argv[1];
 int b = argv[2];
 </code></pre><p>这样的代码，也就是说，输入了三个数你就处理不了，输入了小数你的程序就要崩溃。而按照标准的效果，应该能处理任意个数字，因为shell就是这么处理的。而且运行一次就退出，一个简单的REPL都没做出来。完全不是计算机系大三该有的水平。</p>
@@ -144,7 +144,7 @@ int b = argv[2];
 <p>说说我的实现，数据当然放在文本里用<code>&lt;</code>重定向。排版如下(支持不同时间片)：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blog%E5%AE%9E%E9%AA%8C%E4%BA%8C-%E6%BC%94%E7%A4%BA.gif" alt=""></p>
 <p>一个简单的表格输出。测试用例<code>test1.txt</code>：</p>
-<pre><code>A 0 3
+<pre tabindex="0"><code>A 0 3
 B 2 6
 C 4 4
 D 6 5
@@ -164,13 +164,13 @@ E 8 2
 <p>关于实验四，我写了一个小网页，用于显示比较各个算法的差别。此外，这个算法的实现有一个非常有意思的技巧，仔细分析一下可以发现，各个算法唯一不同的就是如何选择下一步移动的位置，所以可以复用其他代码，单独实现选择部分的代码，作为函数指针传入，这样不仅简短了代码，而且提高了拓展性（比如新加入一个算法，只需要实现函数，然后传入指针，而不需要修改其他代码）。最经典的函数指针例子就是qsort函数（如果你用过）。</p>
 </blockquote>
 <p>函数头：</p>
-<pre><code>void run(const int queue[],
+<pre tabindex="0"><code>void run(const int queue[],
         int order[],
         int begin,
         int cnt,
         int (* next)(const int queue[], const int order[], int cur, int cnt)) {
 </code></pre><p>通过不同函数指针调用（这样就复用了run函数的代码，<code>dir</code>表示优先移动方向）：</p>
-<pre><code>run(queue, order, begin, cnt, SSTFnext);
+<pre tabindex="0"><code>run(queue, order, begin, cnt, SSTFnext);
 ....
 dir = 1;
 printf(&quot;\nSCAN(in--&gt;out):\n&quot;);
@@ -206,7 +206,7 @@ run(queue, order, begin, cnt, SCANnext);
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -240,9 +240,9 @@ run(queue, order, begin, cnt, SCANnext);
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -272,7 +272,7 @@ run(queue, order, begin, cnt, SCANnext);
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

@@ -122,30 +122,30 @@ OpenGrok其实就是一个搜索引擎，只不过不同于Google、Baidu面向�
 对于自学能力强者，建议直接看官方文档：<a href="https://github.com/oracle/opengrok/wiki/How-to-setup-OpenGrok">How to setup OpenGrok · oracle/opengrok Wiki</a></p>
 <h3 id="网页浏览器servlet">网页浏览器+Servlet</h3>
 <p>什么要网页浏览器？因为OpenGrok本质是一个建立和处理索引的工具，就像ctags一样，我们一般用的编辑器Vim其实充当了一个显示代码的前端的作用，这个里的网页浏览器其实功能就和Vim类似，用来显示代码。Vim能够直接解析ctags工具生成的tags文件，但网页浏览器却不能，所以需要一个Servlet（服务器端），用来处理查找方法、跳转到方法声明之类的操作所产生的请求，这里我们选择tomcat，版本要求8+。安装过程如下：</p>
-<pre><code>sudo apt-get install tomcat8 
+<pre tabindex="0"><code>sudo apt-get install tomcat8 
 sudo /etc/init.d/tomcat8 restart 
 </code></pre><p>打开<a href="http://localhost:8080/">http://localhost:8080/</a>看到类似下面的网页说明成功了：
 <img src="http://p2pe8gnn5.bkt.clouddn.com/tomcat-works.png" alt=""></p>
 <p>最后下载<a href="https://github.com/oracle/opengrok/releases">OpenGrok</a>，并把<code>source.war</code>这个文件放在Tomcat的webapp目录下：</p>
-<pre><code>sudo cp ~/下载/opengrok-1.1-rc41/lib/source.war /var/lib/tomcat8/webapps
+<pre tabindex="0"><code>sudo cp ~/下载/opengrok-1.1-rc41/lib/source.war /var/lib/tomcat8/webapps
 </code></pre><p>此时<a href="http://localhost:8080/source/">http://localhost:8080/source/</a>应该就能访问了，但是可能会报一些错误，只要不是404就不要慌，继续配置。</p>
 <h3 id="jdk18">JDK1.8+</h3>
 <p>官方明确要求JDK1.8及以上版本，如果版本低会报</p>
-<pre><code>An error occurred at line: 55 in the jsp file: /menu.jspf
+<pre tabindex="0"><code>An error occurred at line: 55 in the jsp file: /menu.jspf
 '&lt;&gt;' operator is not allowed for source level below 1.7
 </code></pre><p>之类的错误，如何安装JDK的教程很多，不做赘述。
 通过<code>java -version</code>和<code>javac -version</code>可以查看版本。</p>
 <h3 id="ctags">ctags</h3>
 <p>必须是<code>universal-ctags</code>，否则后面建立索引的时候会报错：</p>
-<pre><code>严重: Exception running indexer
+<pre tabindex="0"><code>严重: Exception running indexer
     org.opengrok.indexer.index.IndexerException: Didn't find Universal Ctags
     at org.opengrok.indexer.index.Indexer.prepareIndexer(Indexer.java:888)
     at org.opengrok.indexer.index.Indexer.main(Indexer.java:298)
 </code></pre><p>一般通过<code>apt-get</code>安装的都是<code>exuberant-ctags</code>，要注意：</p>
-<pre><code>sudo apt-get install tags[TAB]
+<pre tabindex="0"><code>sudo apt-get install tags[TAB]
 exuberant-ctags               geany-plugin-ctags            libparse-exuberantctags-perl
 </code></pre><p>可以直接下载<code>universal-ctags</code>的源码来编译安装：</p>
-<pre><code>## prepare
+<pre tabindex="0"><code>## prepare
 sudo apt-get remove ctags
 sudo apt-get autoremove
 sudo apt-get install autoconf
@@ -162,21 +162,21 @@ sudo make install
 <h2 id="导入源码">导入源码</h2>
 <h3 id="管理源码">管理源码</h3>
 <p>OpenGrok会通过一个目录存放所有需要被索引的工程，通过一个目录存放索引，对于需要建立索引的源码，为了不影响其他操作，我们可以建立一个目录<code>opengrok-workspace</code>（名字自定义，下同）,将源码放在<code>project</code>目录下，索引放在<code>data</code>目录下。但这样直接移动源码实在不够优雅，其实<code>project</code>目录存在的意义是让OpenGrok知道哪些工程需要被索引，所以我们只需建立一个软链接（Windows下的快捷方式）就行了，这里我为Android源码、Vim源码和Git源码建立了软链接，表示我需要索引这三个工程：</p>
-<pre><code>cd ~/opengrok-workspace/project
+<pre tabindex="0"><code>cd ~/opengrok-workspace/project
 ln -s ~/SourceCode/Android_6.0/mydroid/ Android6.0
 ln -s ~/SourceCode/git/ git
 ln -s ~/SourceCode/vim/ vim
 </code></pre><p>效果如下：</p>
-<pre><code>~/opengrok-workspace/project $ ls
+<pre tabindex="0"><code>~/opengrok-workspace/project $ ls
 Android6.0  git  vim
 </code></pre><p>这样我们不想索引某个项目只需要移除他的软链接（几kb）就行了，而不必移动项目本身（动辄几G）。</p>
 <h3 id="参数配置">参数配置</h3>
 <p>强烈建议通过<code>java -jar ~/Install/opengrok-1.1-rc41/lib/opengrok.jar -h</code>查看每一个参数的意义，比如我最终的命令是下面这样（在 <code>bash</code> 且管理员权限下运行，<code>zsh</code> 会报错，更新完成需要重启服务器 <code>sudo /etc/init.d/tomcat8 restart</code>）：</p>
-<pre><code>java -jar ~/Install/opengrok-1.1-rc41/lib/opengrok.jar -P -S -v -s ~/opengrok-workspace/project -d ~/opengrok-workspace/data -I *.java -I *.c -I *.h -I *.cpp -W ~/opengrok-workspace/configuration.xml
+<pre tabindex="0"><code>java -jar ~/Install/opengrok-1.1-rc41/lib/opengrok.jar -P -S -v -s ~/opengrok-workspace/project -d ~/opengrok-workspace/data -I *.java -I *.c -I *.h -I *.cpp -W ~/opengrok-workspace/configuration.xml
 </code></pre><p>其中<code>-s</code>表明项目地址，<code>-d</code>表明索引输出地址，<code>-W</code>表明配置输出地址，都是必须的。对于Git和Vim不要<code>-I</code>参数可能都没有问题，但对于Android源码，如果不要这个参数产生的索引就会不可用，因为<code>.jar</code>、<code>.so</code>等文件都无法建立索引，所以这里我指定了只对Java和C、C++相关的文件建立索引，不仅建立速度更快，占用空间也更小。</p>
 <h3 id="tomcat配置">Tomcat配置</h3>
 <p>最后，去<code>/var/lib/tomcat8/webapps/source/WEB-INF</code>目录配置<code>CONFIGURATION</code>参数，让服务器端知道索引在哪：</p>
-<pre><code>......
+<pre tabindex="0"><code>......
     &lt;context-param&gt;
         &lt;description&gt;Full path to the configuration file where OpenGrok can read its configuration&lt;/description&gt;
         &lt;param-name&gt;CONFIGURATION&lt;/param-name&gt;
@@ -200,7 +200,7 @@ Android6.0  git  vim
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -234,9 +234,9 @@ Android6.0  git  vim
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -266,7 +266,7 @@ Android6.0  git  vim
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

@@ -128,12 +128,12 @@
 <img src="http://p2pe8gnn5.bkt.clouddn.com/keyboard.png" alt="">
 从程序员的角度来说，这个设计就很不合理。比如<code>CapsLock</code>，占据了一个非常好的位置，但基本不会被使用。现在Vim程序员普遍的做法就是修改键盘映射，比如我，就会把<code>CapsLock</code>映射成<code>Ctrl</code>，<code>Ctrl</code>映射成<code>Esc</code>，<code>Esc</code>映射成最少使用的<code>CapsLock</code>。其实这种修改也符合<em>哈夫曼编码</em>的原则：最常使用的离手指最近，最少使用的离手指最远。
 Windows修改脚本:</p>
-<pre><code>Windows Registry Editor Version 5.00
+<pre tabindex="0"><code>Windows Registry Editor Version 5.00
 
 [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Keyboard Layout]
 &quot;Scancode Map&quot;=hex:00,00,00,00,00,00,00,00,04,00,00,00,3a,00,01,00,1D,00,3a,00,01,00,1D,00,00,00,00,00
 </code></pre><p>Linux修改脚本:</p>
-<pre><code>remove Lock = Caps_Lock
+<pre tabindex="0"><code>remove Lock = Caps_Lock
 remove Control = Control_L
 keycode 9 = Caps_Lock NoSymbol Caps_Lock
 keycode 66 = Control_L NoSymbol Control_L
@@ -169,7 +169,7 @@ add Control = Control_L
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -203,9 +203,9 @@ add Control = Control_L
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -235,7 +235,7 @@ add Control = Control_L
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

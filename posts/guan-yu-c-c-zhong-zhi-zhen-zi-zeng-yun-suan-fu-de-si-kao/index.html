@@ -156,10 +156,10 @@ main.cpp:5:8: error: lvalue required as increment operand
 <p>2 The result of the postfix ++ operator is the value of the operand. After the result is obtained, the value of the operand is incremented. (That is, the value 1 of the appropriate type is added to it.) See the discussions of additive operators and compound assignment for information on constraints, types, and conversions and the effects of operations on pointers. The side effect of updating the stored value of the operand shall occur between the previous and the next sequence point.</p>
 </blockquote>
 <p>也就是说<code>p++</code>这个表达式返回了<code>p</code>的值，然后在执行完这个语句并开始下一语句前更新<code>p</code>（产生一个副作用）。这样就可以解释上面的问题了。首先，<code>*p++</code>（假如p的地址是0xae80），那么有</p>
-<pre><code>*(0xae80);
+<pre tabindex="0"><code>*(0xae80);
 p=p+1;
 </code></pre><p>而<code>++p++</code>则是</p>
-<pre><code>++(0xae80);
+<pre tabindex="0"><code>++(0xae80);
 p=p+1;
 </code></pre><p>而类似<code>++1</code>这样对常数进行自增显然不合逻辑，所以报错！<code>++++p</code>也是相同的道理。
 但在C++中，稍有不同，比如类中对前缀<code>++</code>返回的是引用而后缀<code>++</code>返回的是值，所以在C++中<code>++++p</code>不会报错，因为<code>++p</code>返回的仍然是一个左值（引用），而<code>++p++</code>会报错，因为<code>p++</code>返回的是一个值。</p>
@@ -183,7 +183,7 @@ p=p+1;
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -217,9 +217,9 @@ p=p+1;
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -249,7 +249,7 @@ p=p+1;
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

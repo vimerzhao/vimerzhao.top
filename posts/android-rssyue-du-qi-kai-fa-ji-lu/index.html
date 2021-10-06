@@ -139,7 +139,7 @@
 <img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-18rssreader-01.jpg" alt="">
 <img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-18rssreader-02.jpg" alt="">
 在侧边栏实现一级分类（按照主题分类如新闻资讯、编程语言、网络&hellip;..），在每个页面的顶部实现二级分类（如编程语言可以分为Kotlin、Python、C++&hellip;..）点击二级分类后会刷新列表，每个二级分类对应着一组RSS，如上图对应的配置为</p>
-<pre><code>{
+<pre tabindex="0"><code>{
     &quot;category&quot;: &quot;编程语言&quot;,
         &quot;websites&quot;: [
         {
@@ -171,7 +171,7 @@
 所以一个比较好的方法就是把RSS源（一系列URL地址）放在服务器端，APP本地下载一份，每次启动后都下载一次（可以自己设置是否经常更新），检查版本是否更新（有一个version字段），如果有就替换本地的，下次启动就能用新的RSS源了，这样的好处是这个RSS源列表和APP本身解耦了，如果需要修改RSS源列表只需要在服务器修改就行了，也不会有备份问题了。
 以上是自己的一个想法，在开发初这个优先级并不是很高，因为可能改变策略，所以放在最后实现。目前，我们把这个RSS源列表文件放<code>assets</code>目录打包进APP就行了，这样的好处是可以先解决其他更基础的问题。
 如下是一个测试用的RSS源列表文件（字段都是自己按需定义的）：</p>
-<pre><code>{
+<pre tabindex="0"><code>{
   &quot;theme&quot;: &quot;tech&quot;,
   &quot;author&quot;: &quot;zhaoyu&quot;,
   &quot;email&quot;: &quot;dutzhaoyu@gmail.com&quot;,
@@ -264,7 +264,7 @@
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -298,9 +298,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -330,7 +330,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

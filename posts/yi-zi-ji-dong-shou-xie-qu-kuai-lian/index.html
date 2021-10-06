@@ -122,14 +122,14 @@
 <p>首先，区块链是一系列称作区块（Block）的结构顺序链接而成的不可改变的记录。块中可以包含交易记录、文件或者其他任何你想存储的数据。需要注意的是块与块之间通过hash值链接。如果你不清楚hash是什么，请参考<a href="https://learncryptography.com/hash-functions/what-are-hash-functions">What Are Hash Functions</a>。</p>
 <p>**本文适合哪些人看？**你应该懂得一些基本的Python知识，同时也应该对HTTP请求有所理解，因为我们的区块链是运行在HTTP协议之上的。</p>
 <p>**我需要准备什么？**请确保Python3.6及以上版本和pip工具已经安装。还需要安装Flask和<code>requests</code>库。</p>
-<pre><code>pip install Flask==0.12.2 requests==2.18.4
+<pre tabindex="0"><code>pip install Flask==0.12.2 requests==2.18.4
 </code></pre><p>对了，你还需要一个HTTP客户端，比如Postman或者cURL，当然，其他的也可以。</p>
 <p><strong>最终的代码哪里可以获取？</strong><a href="https://github.com/dvf/blockchain">点击这里</a></p>
 <h2 id="第一步构建区块链">第一步：构建区块链</h2>
 <p>创建一个新的Python文件，名为<code>blockchain.py</code>，我们所有的逻辑都在一个文件完成。</p>
 <h3 id="表示一个区块链">表示一个区块链</h3>
 <p>我们创建一个<code>BlockChain</code>类，其构造器会创建两个列表，一个存储区块链，另一个存储交易。下面是我们这个类的第一个版本：</p>
-<pre><code>class Blockchain(object):
+<pre tabindex="0"><code>class Blockchain(object):
     def __init__(self):
         self.chain = []
         self.current_transactions = []
@@ -154,7 +154,7 @@
 </code></pre><p>我们的<code>BlockChain</code>类负责管理整个区块链，它会存储交易并为新增区块等操作提供辅助方法。下面，我们来实现这些方法。</p>
 <h3 id="区块是什么">区块是什么</h3>
 <p>每个区块都有一个索引（index），一个时间戳（timestamp），一系列交易，一个工作量证明（稍后详述）和前置区块的哈希值。下面是单个区块的一个简单实例：</p>
-<pre><code>block = {
+<pre tabindex="0"><code>block = {
     'index': 1,
     'timestamp': 1506057125.900785,
     'transactions': [
@@ -171,7 +171,7 @@
 如果你不明白上面的话，请花一些时间理解，因为这是区块链的核心思想。</p>
 <h3 id="向区块添加交易">向区块添加交易</h3>
 <p>我们需要一个方法来向区块中添加交易记录，这里命名为<code>new_transaction()</code>，代码写的十分直白易懂：</p>
-<pre><code>class Blockchain(object):
+<pre tabindex="0"><code>class Blockchain(object):
     ...
     
     def new_transaction(self, sender, recipient, amount):
@@ -194,7 +194,7 @@
 <h3 id="创建新区块">创建新区块</h3>
 <p>当<code>BlockChain</code>类初始化的时候，我们需要产生一个创世区块（genesis block，即没有前置区块的区块）作为区块链的第一个区块。我们还需要添加一个<code>proof</code>字段在创世区块中作为挖矿的结果（或者说本次工作量的证明），我们将在后文继续讨论挖矿。
 除了产生创世区块，我们还需要完成一些其他辅助方法(<code>new_block()</code>,<code>new_transaction()</code>和<code>hash()</code>)：</p>
-<pre><code>import hashlib
+<pre tabindex="0"><code>import hashlib
 import json
 from time import time
 
@@ -266,18 +266,18 @@ class Blockchain(object):
 <p>工作量证明（PoW）算法是用来产生或开采区块的一种机制，PoW的目标是找到一个符合要求的数字，从算力的角度来说这个数字对任何人来说都很难找到却十分容易验证（是否符合要求）。这就是PoW算法的核心思想。
 我们举一个非常简单的例子来帮助理解：
 假定我们需要找到一个整数y，使得他和整数x的乘积的哈希值以0结尾，即<code>hash(x*y) = ac23dc...0</code>。如果<code>x=5</code>那么用Python实现如下：</p>
-<pre><code>from hashlib import sha256
+<pre tabindex="0"><code>from hashlib import sha256
 x = 5
 y = 0  ## We don't know what y should be yet...
 while sha256(f'{x*y}'.encode()).hexdigest()[-1] != &quot;0&quot;:
     y += 1
 print(f'The solution is y = {y}')
 </code></pre><p>第一个符合要求的数是<code>y=21</code>，因为：</p>
-<pre><code>hash(5 * 21) = 1253e9373e...5e3600155e860
+<pre tabindex="0"><code>hash(5 * 21) = 1253e9373e...5e3600155e860
 </code></pre><p>在比特币世界中，PoW算法被称为哈希现金（<a href="https://en.wikipedia.org/wiki/Hashcash">Hashcash</a>）,它和我们上面的例子没有本质区别。在这算法中，矿工们开始了解决问题的竞赛，优胜者可以产生一个新的区块。通常来说，难度取决于限制字符的数量。矿工将会因为找到一个合法的解答收到一些比特币作为奖励，整个比特币网络能够很容易验证矿工挖掘的区块是否合法有效。</p>
 <h3 id="实现基本的pow算法">实现基本的PoW算法</h3>
 <p>下面来为我们的区块链实现一个类似的算法，我们的规则将会和上面的例子十分接近：找到一个数p，使得它与前置区块的哈希值由4个0开头。</p>
-<pre><code>import hashlib
+<pre tabindex="0"><code>import hashlib
 import json
 
 from time import time
@@ -324,7 +324,7 @@ class Blockchain(object):
 </ul>
 <h3 id="设置flask">设置Flask</h3>
 <p>我们的每个服务器将对应区块链网络中的一个单一节点。下面是样板代码：</p>
-<pre><code>import hashlib
+<pre tabindex="0"><code>import hashlib
 import json
 from textwrap import dedent
 from time import time
@@ -377,13 +377,13 @@ if __name__ == '__main__':
 </ul>
 <h3 id="交易节点">交易节点</h3>
 <p>用户会想服务器发送交易请求，格式类似下面这样：</p>
-<pre><code>{
+<pre tabindex="0"><code>{
  &quot;sender&quot;: &quot;my address&quot;,
  &quot;recipient&quot;: &quot;someone else's address&quot;,
  &quot;amount&quot;: 5
 }
 </code></pre><p>因为我们已经实现了将交易加入区块的方法，所以剩余部分十分容易：</p>
-<pre><code>import hashlib
+<pre tabindex="0"><code>import hashlib
 import json
 from textwrap import dedent
 from time import time
@@ -414,7 +414,7 @@ def new_transaction():
 <li>通过添加一笔交易奖励矿工1比特币</li>
 <li>产生新的区块并添加入链</li>
 </ol>
-<pre><code>import hashlib
+<pre tabindex="0"><code>import hashlib
 import json
 
 from time import time
@@ -454,21 +454,21 @@ def mine():
 </code></pre><p>需要注意的是接受被开采区块的地址就是我们的节点，并且我们的大部分工作就是和<code>BlockChain</code>类的方法交互。我们已经完成了这部分，现在可以开始和区块链交互了。</p>
 <h2 id="第三步和区块链交互">第三步：和区块链交互</h2>
 <p>你可以使用简单古老的cURL或者Postman来和这些网络中的API交互，首先启动服务器：</p>
-<pre><code>$ python blockchain.py
+<pre tabindex="0"><code>$ python blockchain.py
 * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
 </code></pre><p>让我们发送一个<code>GET</code>请求来开采一个区块：</p>
-<pre><code>http://localhost:5000/mine
+<pre tabindex="0"><code>http://localhost:5000/mine
 </code></pre><p><img src="http://p2pe8gnn5.bkt.clouddn.com/learn_blockchain_1.png" alt="Using Postman to make a GET request"></p>
 <p>再向<code>http://localhost:5000/transactions/new</code>发送一个<code>POST</code>请求，参数是JSON格式的交易数据：</p>
 <p><img src="http://p2pe8gnn5.bkt.clouddn.com/learn_blockchain_2.png" alt="Using Postman to make a POST request"></p>
 <p>如果不想用Postman，cURL也可以做到：</p>
-<pre><code>$ curl -X POST -H &quot;Content-Type: application/json&quot; -d '{
+<pre tabindex="0"><code>$ curl -X POST -H &quot;Content-Type: application/json&quot; -d '{
  &quot;sender&quot;: &quot;d4ee26eee15148ee92c6cd394edd974e&quot;,
  &quot;recipient&quot;: &quot;someone-other-address&quot;,
  &quot;amount&quot;: 5
 }' &quot;http://localhost:5000/transactions/new&quot;
 </code></pre><p>我重启了服务器并开采了两个区块，所以现在总共有3个了，通过<code>http://localhost:5000/chain</code>节点可以获取整个区块：</p>
-<pre><code>{
+<pre tabindex="0"><code>{
   &quot;chain&quot;: [
     {
       &quot;index&quot;: 1,
@@ -515,7 +515,7 @@ def mine():
 <li><code>/nodes/resolve</code>实现共识算法，并解决冲突以保证节点拥有正确的链
 我们需要修改<code>BlockChain</code>类的构造器并提供一个方法来注册节点：</li>
 </ol>
-<pre><code>...
+<pre tabindex="0"><code>...
 from urllib.parse import urlparse
 ...
 
@@ -538,7 +538,7 @@ class Blockchain(object):
 </code></pre><p>现在可以使用<code>set()</code>来存储节点列表。这保证了节点的添加是幂等的，即一个节点无论添加多少次只会出现一次。</p>
 <h3 id="实现共识算法">实现共识算法</h3>
 <p>当一个节点的区块链和另一节点的区块链不同时，冲突就发生了。为了解决这个问题，我们需要制定规则：最长有效链最有权威性，即网络中最长的那条链是真正的区块链。使用这个算法，我们能够达成大多数节点的一致。</p>
-<pre><code>...
+<pre tabindex="0"><code>...
 import requests
 
 
@@ -606,7 +606,7 @@ class Blockchain(object)
 
         return False
 </code></pre><p><code>valid_chain()</code>通过遍历每一区块并检查proof和hash的正确与否判断链的有效性。<code>resolve_conflicts()</code>遍历所有节点，并通过上面的方法验证其有效性。如果一个有效链的长度大于当前链，那么当前链将会被替换。现在添加两个API端口，一个用来添加节点，一个用来解决冲突：</p>
-<pre><code>@app.route('/nodes/register', methods=['POST'])
+<pre tabindex="0"><code>@app.route('/nodes/register', methods=['POST'])
 def register_nodes():
     values = request.get_json()
 
@@ -661,7 +661,7 @@ def consensus():
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -695,9 +695,9 @@ def consensus():
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -727,7 +727,7 @@ def consensus():
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

@@ -116,7 +116,7 @@
 <p>本文记录了在使用<code>TextView</code>的<code>getText()</code>方法时，由于编码不规范导致的诡异问题。</p>
 <h2 id="问题背景">问题背景</h2>
 <p>大意可以描述为以下一段代码：</p>
-<pre><code>public class MainActivity extends Activity {
+<pre tabindex="0"><code>public class MainActivity extends Activity {
     public static final String label = &quot;中文&quot;;
     @Override
         protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +132,7 @@
 }
 </code></pre><h2 id="问题排查">问题排查</h2>
 <p>经过debug之后，发现<code>textView.getText()</code>返回的类型是<code>android.text.SpannableString</code>，但是在高版本机器上返回为<code>android.text.String</code>。为此，我们阅读了<code>TextView</code>的源码，发现有两处执行了<code>setText(mText, BufferType.SPANNABLE);</code>这个方法，其中一处是在<code>getIterableTextForAccessibility</code>方法中：</p>
-<pre><code>/**
+<pre tabindex="0"><code>/**
  * @hide
  */
 @Override
@@ -143,7 +143,7 @@ public CharSequence getIterableTextForAccessibility() {
     return mText;
 }
 </code></pre><p>正好我们的工程就要求开启<strong>辅助功能</strong>，上面的代码是Android4.4中<code>TextView</code>的实现，而在Android6.0中，该方法的实现为：</p>
-<pre><code>/**
+<pre tabindex="0"><code>/**
  * @hide
  */
 @Override
@@ -152,7 +152,7 @@ public CharSequence getIterableTextForAccessibility() {
 }
 </code></pre><p>看来因为辅助功能的开启触发了这个方法，导致了<code>equals()</code>方法在不同版本上表现不一致。
 此外<code>setSelectAllOnFocus</code>方法也可能会导致<code>setText(mText, BufferType.SPANNABLE);</code>的执行：</p>
-<pre><code>/**
+<pre tabindex="0"><code>/**
  * Set the TextView so that when it takes focus, all the text is
  * selected.
  *
@@ -170,7 +170,7 @@ public void setSelectAllOnFocus(boolean selectAllOnFocus) {
 </code></pre><p>因此，如果<code>TextView</code>设置了<code>android:selectAllOnFocus=&quot;true&quot;</code>属性，也会导致类似的问题。</p>
 <h2 id="总结">总结</h2>
 <p><code>getText()</code>方法其实是返回一个<code>CharSequence</code>,对应不同的实现（如<code>String</code>、<code>SpannableString</code>）,建议写法为：</p>
-<pre><code>if (textView.getText() != null) {
+<pre tabindex="0"><code>if (textView.getText() != null) {
     if (label.equals(textView.getText().toString())) {
                 
     }
@@ -190,7 +190,7 @@ public void setSelectAllOnFocus(boolean selectAllOnFocus) {
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -224,9 +224,9 @@ public void setSelectAllOnFocus(boolean selectAllOnFocus) {
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -256,7 +256,7 @@ public void setSelectAllOnFocus(boolean selectAllOnFocus) {
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

@@ -120,7 +120,7 @@
 （注意我一直在点击，下发补丁后发生了变化&hellip;&hellip;）</p>
 <h2 id="反编译分析">反编译分析</h2>
 <p>关键就是下发的恶<code>out.apatch</code>文件，其实这个一个<code>jar</code>文件，解压后如下:</p>
-<pre><code>.
+<pre tabindex="0"><code>.
 ├── diff.dex
 ├── out.apatch
 ├── out.apatch_FILES    //解压out.apatch所得
@@ -297,7 +297,7 @@
     <span style="color:#66d9ef">return</span> classes<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><p>将上一步得到的diff信息写入smali文件，并且生成diff.dex文件。smali文件的命名以<code>_CF.smali</code>结尾，并且在修改的地方用自定义的Annotation(MethodReplace)标注，用于在替换之前查找修复的变量或方法，如下。</p>
-<pre><code>.....
+<pre tabindex="0"><code>.....
     .annotation runtime Lcom/alipay/euler/andfix/annotation/MethodReplace;
         method = &quot;bugMethod&quot;
         clazz = &quot;vimerzhao.fuckandfix.MainActivity&quot;
@@ -310,7 +310,7 @@ private void bugMethod(TextView paramTextView)
 paramTextView.setText(&ldquo;After Hotfix&rdquo;);
 paramTextView.setBackgroundColor(-16711936);
 }</p>
-<pre><code>然后就是签名，打包，加密的流程，就不具体分析了。注意，apkPatch在生成.apatch补丁文件的时候会加入签名信息，并且会进行加密操作，在应用补丁的时候会验证签名信息是否正确。
+<pre tabindex="0"><code>然后就是签名，打包，加密的流程，就不具体分析了。注意，apkPatch在生成.apatch补丁文件的时候会加入签名信息，并且会进行加密操作，在应用补丁的时候会验证签名信息是否正确。
 
 ## Java层源码分析
 通常，自定义`Application`如下:
@@ -596,7 +596,7 @@ public class MainApplication extends Application {
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -630,9 +630,9 @@ public class MainApplication extends Application {
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -662,7 +662,7 @@ public class MainApplication extends Application {
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

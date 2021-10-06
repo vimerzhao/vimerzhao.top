@@ -116,18 +116,18 @@
 <p>本文记录了一个在命令行启动GVim时遇到的问题及其解决办法。</p>
 <h2 id="问题">问题</h2>
 <p>今天发现在命令行模式下启动GVim会出现一个小问题：</p>
-<pre><code>zhaoyu@Dell ~ $ vim .vim
+<pre tabindex="0"><code>zhaoyu@Dell ~ $ vim .vim
 (gvim:12853): GLib-GObject-WARNING **: cannot retrieve class for invalid (unclassed) type '&lt;invalid&gt;'
 ^C
 </code></pre><p>每次编辑完退出时都会收到警告，虽然不影响编辑，但每次都要多按Ctrl-C退出也着实麻烦。</p>
 <h2 id="解决">解决</h2>
 <h2 id="方法一">方法一</h2>
 <p>方法一亲测有效，输入以下两行命令即可：</p>
-<pre><code>sudo apt-get remove vim-gnome
+<pre tabindex="0"><code>sudo apt-get remove vim-gnome
 sudo apt-get install vim-gtk
 </code></pre><h2 id="方法二">方法二</h2>
 <p>方法二没有测试，应该也可以，在<code>.bashrc</code>中加入：</p>
-<pre><code>alias gvim=&quot;gvim 2&gt;/dev/null&quot;
+<pre tabindex="0"><code>alias gvim=&quot;gvim 2&gt;/dev/null&quot;
 </code></pre><h2 id="思考">思考</h2>
 <p>由方法一可知，是由于<code>vim-gnome</code>导致了警告，换成<code>vim-gtk</code>就可以了，那么他们有何区别？但查了一些资料后我也还是没完全清楚，只能说<code>vim-gnome</code>功能更强，需要的依赖也多一些，所以出现问题的可能性也就大一些。所以，一般安装<code>vim-gtk</code>就行了。</p>
 <h2 id="参考">参考</h2>
@@ -151,7 +151,7 @@ sudo apt-get install vim-gtk
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -185,9 +185,9 @@ sudo apt-get install vim-gtk
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -217,7 +217,7 @@ sudo apt-get install vim-gtk
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

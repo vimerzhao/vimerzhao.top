@@ -118,7 +118,7 @@
 <p>看了一些Python的语法后打算做一个小项目练手，打发一下时间。爬虫比较容易上手，加之Python十分适合写爬虫，于是花了半天时间写了一个爬虫，在此记录一下。</p>
 <h2 id="工具">工具</h2>
 <p>Python比较爽的一点就是开源社区为其贡献了无数高质量的第三方库，可以将程序员从繁琐的细节中解放出来，更加专注于自己的目标。在这里需要安装两个库</p>
-<pre><code>sudo pip3 install requests
+<pre tabindex="0"><code>sudo pip3 install requests
 sudo pip3 install beautifulsoup4
 </code></pre><p><code>requests</code>用于网络请求，<code>beautifulsoup4</code>用于html解析。</p>
 <blockquote>
@@ -177,7 +177,7 @@ preview_page_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff
 <p>每个网页显示套图中的一张图片，所以我们需要做两件事：1.分析有多少图片（即网页）2.每个图片的地址（即右键选择“在新标签页打开”时的地址）。
 分析可以发现，页面数量在<code>class</code>为<code>pagenavi</code>的<code>div</code>里面，而图片地址在<code>class</code>为<code>main-image</code>的<code>div</code>里面，并且每个每个网页格式一致：<code>www.mzitu.com/套图id/n</code>，其中n为不超过图片数量的一个数字。
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu09.png" alt=""></p>
-<pre><code>#!/usr/bin/env python3
+<pre tabindex="0"><code>#!/usr/bin/env python3
 import requests
 from bs4 import BeautifulSoup
 
@@ -211,7 +211,7 @@ for cur_page in range(1, int(preview_page_cnt)+1):
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu10.png" alt=""></p>
 <h3 id="第五步下载图片">第五步：下载图片</h3>
 <p>主要涉及文件读写，比较简单，添加之后完整代码如下：</p>
-<pre><code>#!/usr/bin/env python3
+<pre tabindex="0"><code>#!/usr/bin/env python3
 import requests
 from bs4 import BeautifulSoup
 import os
@@ -273,7 +273,7 @@ print('下载完成')
 <p>因为请求的<code>Referer</code>字段为空,所以代码运行之后是这样：
 <img src="http://p2pe8gnn5.bkt.clouddn.com/2018-04-11-21-17-24.png" alt=""></p>
 <p>处理方法也很简单，增加一个不断更新<code>Referer</code>字段的函数，然后每次请求前调用就可以绕过这个拦截了：</p>
-<pre><code>....
+<pre tabindex="0"><code>....
 def update_header(referer):
     header['Referer'] = '{}'.format(referer)
 ....
@@ -300,7 +300,7 @@ def update_header(referer):
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -334,9 +334,9 @@ def update_header(referer):
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -366,7 +366,7 @@ def update_header(referer):
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;

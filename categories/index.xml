@@ -6,7 +6,16 @@
     <description>Recent content in Categories on V大师在一号线</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 Aug 2021 15:53:53 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Oct 2021 17:39:41 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>总结反思</title>
+      <link>/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/</link>
+      <pubDate>Tue, 05 Oct 2021 17:39:41 +0800</pubDate>
+      
+      <guid>/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>Flutter实践</title>
       <link>/categories/flutter%E5%AE%9E%E8%B7%B5/</link>
@@ -76,15 +85,6 @@
       <pubDate>Sun, 01 Mar 2020 19:57:34 +0800</pubDate>
       
       <guid>/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>总结反思</title>
-      <link>/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/</link>
-      <pubDate>Wed, 01 Jan 2020 20:02:29 +0800</pubDate>
-      
-      <guid>/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/</guid>
       <description></description>
     </item>
     

@@ -6,7 +6,7 @@
     <description>Recent content on V大师在一号线</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 Aug 2021 15:53:53 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 05 Oct 2021 17:39:41 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>关于</title>
       <link>/about/</link>
@@ -32,6 +32,15 @@
       
       <guid>/archives/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>关于过去一年的思考（2020/9～2021/9）</title>
+      <link>/posts/thinking-about-past-one-year/</link>
+      <pubDate>Tue, 05 Oct 2021 17:39:41 +0800</pubDate>
+      
+      <guid>/posts/thinking-about-past-one-year/</guid>
+      <description>去年这个时候，刚刚活水（即公司内部的岗位调动）到新的部门，当时写了一篇《自我奋斗与历史进程》，里面提到了接下来一年的目标： 交付更有价值的工作成果 成体系地输出自己的影响力 对周遭的变化有更强的控制和适应能</description>
     </item>
     
     <item>

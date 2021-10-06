@@ -118,7 +118,7 @@
 <p>Android插件化从技术上来说就是如何启动未安装的apk（主要是四大组件）里面的类，主要问题涉及如何加载类、如何加载资源、如何管理组件生命周期。</p>
 <h3 id="类加载">类加载</h3>
 <p>Android对于外部的dex文件，主要通过<code>DexClassLoader</code>类加载，因此，只需要给定插件的路径，就可以构造对应的类加载器：</p>
-<pre><code>private DexClassLoader createDexClassLoader(String apkPath) {
+<pre tabindex="0"><code>private DexClassLoader createDexClassLoader(String apkPath) {
     File dexOutputDir = mContext.getDir(&quot;dex&quot;, Context.MODE_PRIVATE);
     DexClassLoader loader = new DexClassLoader(apkPath, dexOutputDir.getAbsolutePath(),
             null, mContext.getClassLoader());
@@ -126,7 +126,7 @@
 }
 </code></pre><h3 id="资源加载">资源加载</h3>
 <p>Android系统通过Resource对象加载资源,因此只需要添加资源（即apk文件）所在路径到<code>AssetManager</code>中，即可实现对插件资源的访问。</p>
-<pre><code>  AssetManager assetManager = AssetManager.class.newInstance();
+<pre tabindex="0"><code>  AssetManager assetManager = AssetManager.class.newInstance();
   Method addAssetPath = assetManager.getClass().getMethod(addAssetPathMethod, String.class);
   addAssetPath.invoke(assetManager, apkPath);
   Resources pluginRes = new Resources(assetManager,
@@ -139,7 +139,7 @@
 了解了这些原理往往还不够，知识往往需要经过推导和实践才能变成自己的，因此，接下来我们结合这些原理来实现一个插件化框架，不考虑兼容性和健壮性，纯粹来实践上面提及的原理。</p>
 <h2 id="代理实现">代理实现</h2>
 <p>首先建立一个<code>PluginManager</code>类来实现插件的加载：</p>
-<pre><code>public class PluginManager {
+<pre tabindex="0"><code>public class PluginManager {
     static class PluginMgrHolder {
         static PluginManager sManager = new PluginManager();
     }
@@ -232,7 +232,7 @@
 }
 
 </code></pre><p><code>PluginApk</code>表示一个Apk文件：</p>
-<pre><code>public class PluginApk {
+<pre tabindex="0"><code>public class PluginApk {
     public PackageInfo packageInfo;
     public DexClassLoader classLoader;
     public Resources pluginRes;
@@ -243,7 +243,7 @@
 
 }
 </code></pre><p>所有插件Activity都要继承一个父类<code>PluginActivity</code>:</p>
-<pre><code>public abstract class PluginActivity extends Activity implements Pluginable, Attachable&lt;Activity&gt; {
+<pre tabindex="0"><code>public abstract class PluginActivity extends Activity implements Pluginable, Attachable&lt;Activity&gt; {
     public final static String TAG = PluginActivity.class.getSimpleName();
     protected Activity mProxyActivity;
     private Resources mResources;
@@ -357,7 +357,7 @@
 }
 
 </code></pre><p>这个类只是一个壳，系统会通过<code>ProxyActivity</code>触发对应的方法的具体实现：</p>
-<pre><code>public class ProxyActivity extends Activity {
+<pre tabindex="0"><code>public class ProxyActivity extends Activity {
     LifeCircleController mPluginController = new LifeCircleController(this);
 
     @Override
@@ -416,7 +416,7 @@
     }
 }
 </code></pre><p>这个类是系统实际启动的类，其主要逻辑由<code>LifeCircleController</code>负责：</p>
-<pre><code>public class LifeCircleController implements Pluginable {
+<pre tabindex="0"><code>public class LifeCircleController implements Pluginable {
     Activity mProxy;
     PluginActivity mPlugin;
     Resources mResources;
@@ -497,12 +497,12 @@
 
 </code></pre><p>有点像Activity源码的外观模式，内部的分工和职责划分对于使用者是不可见的。
 最后在主工程启动插件：</p>
-<pre><code>Intent intent = new Intent();
+<pre tabindex="0"><code>Intent intent = new Intent();
 intent.putExtra(Constants.PACKAGE_NAME, PLUGIN_PACKAGE_NAME);
 intent.putExtra(Constants.PLUGIN_CLASS_NAME, PLUGIN_CLAZZ_NAME);
 mPluginManager.startActivity(intent);
 </code></pre><p>插件Activity如下：</p>
-<pre><code>public class MainActivity extends PluginActivity {
+<pre tabindex="0"><code>public class MainActivity extends PluginActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -517,7 +517,7 @@ mPluginManager.startActivity(intent);
 <h2 id="hook实现">Hook实现</h2>
 <p>Hook的方式需要基本了解系统启动一个Activity的过程，一般来说系统会先检查Activity是否注册，然后再去生成该Activity，那么我们只需要在检查的时候用一个已经注册的Activity（桩，通常表示为StubActivity）来给系统检查，检查通过后在生成的时候再替换成插件的就可以了。
 首先要自己实现一个<code>Instrumentation</code>，在里面做一些替换工作，然后去Hook掉系统持有的对象：</p>
-<pre><code>public class HookedInstrumentation extends Instrumentation implements Handler.Callback {
+<pre tabindex="0"><code>public class HookedInstrumentation extends Instrumentation implements Handler.Callback {
     public static final String TAG = &quot;HookedInstrumentation&quot;;
     protected Instrumentation mBase;
     private PluginManager mPluginManager;
@@ -584,7 +584,7 @@ mPluginManager.startActivity(intent);
 }
 
 </code></pre><p>在负责启动的<code>execStartActivity</code>设置为启动已注册的Activity，再在<code>newActivity</code>设置为实际要启动的插件的Activity。然后去Hook系统持有的该字段：</p>
-<pre><code>public class ReflectUtil {
+<pre tabindex="0"><code>public class ReflectUtil {
     public static final String METHOD_currentActivityThread = &quot;currentActivityThread&quot;;
     public static final String CLASS_ActivityThread = &quot;android.app.ActivityThread&quot;;
     public static final String FIELD_mInstrumentation = &quot;mInstrumentation&quot;;
@@ -673,7 +673,7 @@ mPluginManager.startActivity(intent);
 }
 
 </code></pre><p><code>PluginManager</code>同样负责加载插件的类和资源等：</p>
-<pre><code>public class PluginManager {
+<pre tabindex="0"><code>public class PluginManager {
     private final static String TAG = &quot;PluginManager&quot;;
     private static PluginManager sInstance;
     private Context mContext;
@@ -792,7 +792,7 @@ mPluginManager.startActivity(intent);
     }
 }
 </code></pre><p>在MainActivity中初始化，注意Hook的时机：</p>
-<pre><code>public class MainActivity extends Activity implements View.OnClickListener {
+<pre tabindex="0"><code>public class MainActivity extends Activity implements View.OnClickListener {
     // https://zhuanlan.zhihu.com/p/33017826
 
     public static final boolean DEBUG = true;
@@ -863,7 +863,7 @@ mPluginManager.startActivity(intent);
     }
 }
 </code></pre><p>现在插件Activity不会有任何限制：</p>
-<pre><code>public class MainActivity extends AppCompatActivity {
+<pre tabindex="0"><code>public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -903,7 +903,7 @@ mPluginManager.startActivity(intent);
 		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
 	</div>
 	<div class="authorbox__description">
-		程序员。
+		👈欢迎扫码关注：一个程序员对于技术、职场、成长的思考，以及读书、看剧、旅游的碎碎念。
 	</div>
 </div>
 
@@ -937,9 +937,9 @@ mPluginManager.startActivity(intent);
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
 		</ul>
 	</div>
 </div>
@@ -969,7 +969,7 @@ mPluginManager.startActivity(intent);
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">6</span>
+				<span class="widget__counter widget__counter--bubble">7</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;
