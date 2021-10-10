@@ -6,7 +6,16 @@
     <description>Recent content in Posts on V大师在一号线</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 05 Oct 2021 17:39:41 +0800</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Oct 2021 22:24:00 +0800</lastBuildDate><atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>现阶段（2021年10月）对于Vim和Emacs的思考</title>
+      <link>/posts/thinking-about-vim-and-emacs/</link>
+      <pubDate>Sun, 10 Oct 2021 22:24:00 +0800</pubDate>
+      
+      <guid>/posts/thinking-about-vim-and-emacs/</guid>
+      <description>最近由于在工作调整，加上国庆节，时间稍微宽裕一点，于是重新启动了对Emacs的学习，这次稍微找到了点感觉：包括使用的感觉和对Emacs的理解。 为什么一直对Emacs念念不忘？作为一个使用了多年Vim的</description>
+    </item>
+    
     <item>
       <title>关于过去一年的思考（2020/9～2021/9）</title>
       <link>/posts/thinking-about-past-one-year/</link>

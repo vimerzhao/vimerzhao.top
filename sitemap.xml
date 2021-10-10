@@ -12,13 +12,19 @@
     <lastmod>2021-05-08T19:50:31+08:00</lastmod>
   </url><url>
     <loc>/categories/</loc>
-    <lastmod>2021-10-05T20:12:06+08:00</lastmod>
+    <lastmod>2021-10-10T23:43:06+08:00</lastmod>
   </url><url>
     <loc>/posts/</loc>
-    <lastmod>2021-10-05T20:12:06+08:00</lastmod>
+    <lastmod>2021-10-10T23:43:06+08:00</lastmod>
   </url><url>
     <loc>/</loc>
-    <lastmod>2021-10-05T20:12:06+08:00</lastmod>
+    <lastmod>2021-10-10T23:43:06+08:00</lastmod>
+  </url><url>
+    <loc>/posts/thinking-about-vim-and-emacs/</loc>
+    <lastmod>2021-10-10T23:43:06+08:00</lastmod>
+  </url><url>
+    <loc>/categories/%E8%BD%AF%E4%BB%B6%E6%B2%89%E6%80%9D%E5%BD%95/</loc>
+    <lastmod>2021-10-10T23:43:06+08:00</lastmod>
   </url><url>
     <loc>/posts/thinking-about-past-one-year/</loc>
     <lastmod>2021-10-05T20:12:06+08:00</lastmod>
@@ -249,9 +255,6 @@
     <lastmod>2021-06-05T17:25:07+08:00</lastmod>
   </url><url>
     <loc>/posts/tao-and-art-of-writing-tech-docs/</loc>
-    <lastmod>2021-06-05T17:25:07+08:00</lastmod>
-  </url><url>
-    <loc>/categories/%E8%BD%AF%E4%BB%B6%E6%B2%89%E6%80%9D%E5%BD%95/</loc>
     <lastmod>2021-06-05T17:25:07+08:00</lastmod>
   </url><url>
     <loc>/posts/git-practice/</loc>
