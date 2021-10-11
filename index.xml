@@ -6,7 +6,7 @@
     <description>Recent content on V大师在一号线</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 10 Oct 2021 22:24:00 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Oct 2021 10:49:57 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>关于</title>
       <link>/about/</link>
@@ -32,6 +32,15 @@
       
       <guid>/archives/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>日常开发尽量使用英文</title>
+      <link>/posts/try-to-use-english-everywhere/</link>
+      <pubDate>Mon, 11 Oct 2021 10:49:57 +0800</pubDate>
+      
+      <guid>/posts/try-to-use-english-everywhere/</guid>
+      <description>以后在日常开发中尽量使用英文，主要包括： 使用英文命名目录 使用英文写代码注释 为什么要这么做？ 主要是为了提高操作和编辑效率。举例： 在切换目录的时候，有的工具能自动在多个目录间跳转（比如zsh下的cd命令）</description>
     </item>
     
     <item>
