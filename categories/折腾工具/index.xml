@@ -6,7 +6,16 @@
     <description>Recent content in 折腾工具 on V大师在一号线</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 08 May 2021 19:41:53 +0800</lastBuildDate><atom:link href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 11 Oct 2021 16:57:09 +0800</lastBuildDate><atom:link href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何提高中文输入的效率</title>
+      <link>/posts/improve-efficiency-by-shuangpin/</link>
+      <pubDate>Mon, 11 Oct 2021 16:57:09 +0800</pubDate>
+      
+      <guid>/posts/improve-efficiency-by-shuangpin/</guid>
+      <description>最近写文章和文档的频率比较高，发现常规的全拼输入法的打字速度完全跟不上大脑想表达的速度。于是，想着要不要学一学五笔，调研尝试一番之后发现不太理想，原因有二： 五笔的学习成本比较高 五笔最具优势的场景是看着</description>
+    </item>
+    
     <item>
       <title>Hugo&#43;Asciidoc配置记录</title>
       <link>/posts/configure-hugo-asciidoc-blog/</link>
