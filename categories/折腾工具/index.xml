@@ -6,7 +6,16 @@
     <description>Recent content in 折腾工具 on V大师在一号线</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Oct 2021 16:57:09 +0800</lastBuildDate><atom:link href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 01 Nov 2021 18:32:39 +0800</lastBuildDate><atom:link href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android Sutdio开发C&#43;&#43;项目踩坑记录</title>
+      <link>/posts/developing-cpp-with-android-sutdio/</link>
+      <pubDate>Mon, 01 Nov 2021 18:32:39 +0800</pubDate>
+      
+      <guid>/posts/developing-cpp-with-android-sutdio/</guid>
+      <description>背景 由于工作性质关系，后面主要是基于C++开发，日常构建、运行、调试的宿主是Android设备。 由于example工程的设计，可以方便地通过Android Studio构建这个工程并运行在Android</description>
+    </item>
+    
     <item>
       <title>如何提高中文输入的效率</title>
       <link>/posts/improve-efficiency-by-shuangpin/</link>

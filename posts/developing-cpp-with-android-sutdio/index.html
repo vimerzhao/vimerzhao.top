@@ -4,20 +4,20 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>代码相似性检测工具 - V大师在一号线</title>
+	<title>Android Sutdio开发C&#43;&#43;项目踩坑记录 - V大师在一号线</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="代码相似性检测工具" />
-<meta property="og:description" content="背景 最近由于工作需要，想找一个能够检查代码相似性的工具。这种工具主要有两个应用： 代码自身的冗余检查 查重，例如检查学生的编程作业是否有抄袭 工具 最后找到了两个工具sim和moss，具体实现算法还没有研究，" />
+		<meta property="og:title" content="Android Sutdio开发C&#43;&#43;项目踩坑记录" />
+<meta property="og:description" content="背景 由于工作性质关系，后面主要是基于C&#43;&#43;开发，日常构建、运行、调试的宿主是Android设备。 由于example工程的设计，可以方便地通过Android Studio构建这个工程并运行在Android" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/software-similarity-tester/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-04-14T12:33:16+08:00" />
-<meta property="article:modified_time" content="2021-06-05T17:25:07+08:00" />
+<meta property="og:url" content="/posts/developing-cpp-with-android-sutdio/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2021-11-01T18:32:39+08:00" />
+<meta property="article:modified_time" content="2021-11-01T18:52:26+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="代码相似性检测工具"/>
-<meta name="twitter:description" content="背景 最近由于工作需要，想找一个能够检查代码相似性的工具。这种工具主要有两个应用： 代码自身的冗余检查 查重，例如检查学生的编程作业是否有抄袭 工具 最后找到了两个工具sim和moss，具体实现算法还没有研究，"/>
+<meta name="twitter:title" content="Android Sutdio开发C&#43;&#43;项目踩坑记录"/>
+<meta name="twitter:description" content="背景 由于工作性质关系，后面主要是基于C&#43;&#43;开发，日常构建、运行、调试的宿主是Android设备。 由于example工程的设计，可以方便地通过Android Studio构建这个工程并运行在Android"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -102,135 +102,28 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">代码相似性检测工具</h1>
+			<h1 class="post__title">Android Sutdio开发C&#43;&#43;项目踩坑记录</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-04-14T12:33:16&#43;08:00">2020-04-14</time>
-	<time class="meta__text" datetime="2021-06-05T17:25:07&#43;08:00">(最后修改: 2021-06-05)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/" rel="category">折腾工具</a>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-11-01T18:32:39&#43;08:00">2021-11-01</time>
+	<time class="meta__text" datetime="2021-11-01T18:52:26&#43;08:00">(最后修改: 2021-11-01)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/" rel="category">折腾工具</a>
 	</span>
 </div></div>
 		</header><div class="content post__content clearfix">
-			<div class="sect1">
-<h2 id="_背景">背景</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>最近由于工作需要，想找一个能够检查代码相似性的工具。这种工具主要有两个应用：</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>代码自身的冗余检查</p>
-</li>
-<li>
-<p>查重，例如检查学生的编程作业是否有抄袭</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_工具">工具</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>最后找到了两个工具<code>sim</code>和<code>moss</code>，具体实现算法还没有研究，但是<code>moss</code>需要申请，并且通过网络使用，这样速度、灵活性和安全性都是有缺陷的，所以选择了<code>sim</code>。</p>
-</div>
-<div class="paragraph">
-<p>这个工具编译起来也很麻烦，而且没有mac的版本，幸好已经有人编了一个https://github.com/fanghon/antiplag/blob/master/sim_java.exe[Windows版本可执行文件]，先用着。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_扩展">扩展</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>由于我是要比较两个项目，并且按照相似性排序，但是<code>sim</code>本身的参数似乎不支持，所以写了一个脚本（<code>moss</code>后端不在本地，这种定制能力就做不了）</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-python" data-lang="python">import os
-
-dir1 = &#34;*******&#34;
-dir2 = &#34;*******&#34;
-
-target_file_list_1 = []
-target_file_list_2 = []
-
-
-def gen_file_list(dir_name, suffix_name):
-    temp = []
-    for root, dirs, files in os.walk(dir_name):
-        for file in files:
-            if file.endswith(suffix_name):
-                temp.append(os.path.join(root, file))
-    return temp
-
-
-target_file_list_1 = gen_file_list(dir1, &#34;.java&#34;)
-target_file_list_2 = gen_file_list(dir2, &#34;.java&#34;)
-
-result = []
-
-def parse_result(text):
-    for line in text.split(&#34;\n&#34;):
-        if &#34; % of &#34; in line:
-            line_arr = line.split(&#34; &#34;)
-            result.append([line_arr[0], line_arr[-2], line_arr[3]])
-            break
-
-
-total = len(target_file_list_1) * len(target_file_list_2)
-
-cnt = 0
-for from_f in target_file_list_1:
-    for to_f in target_file_list_2:
-        cnt += 1
-        ret = os.popen(&#34;sim_java.exe -p {} {}&#34;.format(from_f, to_f))
-        parse_result(ret.read())
-        print(&#34;{} / {}&#34;.format(cnt, total))
-
-result.sort(key=lambda d: int(d[2]), reverse=True)
-with open(&#34;./out.txt&#34;, &#39;w&#39;) as f:
-    for item in result:
-        f.write(str(item) + &#34;\n&#34;)</code></pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_参考文章">参考文章</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p><a href="https://theory.stanford.edu/~aiken/moss/">Plagiarism Detection</a></p>
-</li>
-<li>
-<p><a href="https://dickgrune.com/Programs/similarity_tester/">The software and text similarity tester SIM</a></p>
-</li>
-<li>
-<p><a href="https://dickgrune.com/Programs/similarity_tester/sim.pdf">sim.pdf</a></p>
-</li>
-<li>
-<p><a href="https://www.zhihu.com/question/21117858">如何计算两份代码的相似度？ - 知乎</a></p>
-</li>
-<li>
-<p><a href="https://www.zhihu.com/question/53401092">现在大学程序代码查重的方法？能查到什么程度？ - 知乎</a></p>
-</li>
-<li>
-<p><a href="https://blog.mythsman.com/post/5d2b46e325601931a5f8d788/">一个实用的代码查重程序sim工具</a></p>
-</li>
-<li>
-<p><a href="https://blog.jingwei.site/2017/01/21/e4-bb-a3-e7-a0-81-e6-9f-a5-e9-87-8d-e5-b7-a5-e5-85-b7sim/">代码查重工具sim | crazyX’s Blog</a></p>
-</li>
-<li>
-<p><a href="https://tautcony.xyz/2018/01/06/moss-and-sim/">代码查重系统MOSS与SIM小测 - 踢锡部落格 | TC Blog| TC的博客</a></p>
-</li>
-</ul>
-</div>
-</div>
-</div>
+			<h2 id="背景">背景</h2>
+<p>由于工作性质关系，后面主要是基于C++开发，日常构建、运行、调试的宿主是Android设备。
+由于example工程的设计，可以方便地通过Android Studio构建这个工程并运行在Android上。</p>
+<p>当然了，CLion对于C++的支持应该更好，自己基于Emacs、Vim搭建环境应该更快。
+由于索引的生成现在不是很了解，也不想花费过多精力在这方面，所以就干脆用Android Studio开发一段时间吧。</p>
+<p>时机合适后，考虑切换到更高效的开发环境。</p>
+<h2 id="新增文件不支持代码高亮补齐等">新增文件不支持代码高亮、补齐等</h2>
+<h3 id="问题">问题</h3>
+<p>新建文件后，include语句提示错误，无法解析，即使有错误构建也不会报错。</p>
+<h3 id="解决">解决</h3>
+<p>必须有相关代码引用后构建逻辑才会触发。</p>
+<p>至于代码解析应该是AS的问题，需要删除几个自动生成的目录 <code>.idea</code> 、 <code>.gradle</code> 、 <code>.cxx</code> （索引所在目录），然后通过 <code>Files/Invalidate Caches /Restart</code> 重启即可。</p>
 
 		</div>
 	</article>
@@ -250,15 +143,9 @@ with open(&#34;./out.txt&#34;, &#39;w&#39;) as f:
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/posts/a-weird-bug-record/" rel="prev">
+		<a class="pager__link" href="/posts/improve-efficiency-by-shuangpin/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">记一次诡异的Bug</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/posts/virtualbox-lose-64-bit/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">Windows10下VirtualBox不支持64位</p>
+			<p class="pager__title">如何提高中文输入的效率</p>
 		</a>
 	</div>
 </nav>
