@@ -12,7 +12,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/posts/developing-cpp-with-android-sutdio/" /><meta property="article:section" content="posts" />
 <meta property="article:published_time" content="2021-11-01T18:32:39+08:00" />
-<meta property="article:modified_time" content="2021-11-08T14:42:28+08:00" />
+<meta property="article:modified_time" content="2021-12-29T17:19:14+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
@@ -108,7 +108,7 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-11-01T18:32:39&#43;08:00">2021-11-01</time>
-	<time class="meta__text" datetime="2021-11-08T14:42:28&#43;08:00">(最后修改: 2021-11-08)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/" rel="category">折腾工具</a>
+	<time class="meta__text" datetime="2021-12-29T17:19:14&#43;08:00">(最后修改: 2021-12-29)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/" rel="category">折腾工具</a>
 	</span>
 </div></div>
 		</header><div class="content post__content clearfix">
@@ -126,6 +126,8 @@
 <p>至于代码解析应该是AS的问题，需要删除几个自动生成的目录 <code>.idea</code> 、<code>build</code> 、 <code>.gradle</code> 、 <code>.cxx</code> （索引所在目录），然后通过 <code>Files/Invalidate Caches /Restart</code> 重启即可。</p>
 <h2 id="2-更新代码后构建不通过">2. 更新代码后构建不通过</h2>
 <p>和问题1类似，别人新增了文件，此时仍需要重复问题1的解决方法。</p>
+<h2 id="3-基于问题1操作后头文件仍然无法识别">3. 基于问题1操作后，头文件仍然无法识别</h2>
+<p>Android Studio的索引是基于 <code>cc/cpp</code> 文件产生的，确保头文件至少被一个实现文件 <code>include</code> ，否则仍会无法识别。</p>
 
 		</div>
 	</article>
@@ -173,9 +175,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/improve-efficiency-by-shuangpin/">如何提高中文输入的效率</a></li>
 		</ul>
 	</div>
 </div>
@@ -209,7 +211,7 @@
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;
-				<span class="widget__counter widget__counter--bubble">28</span>
+				<span class="widget__counter widget__counter--bubble">29</span>
 				</li>
 			<li class="widget__item">
 				<a class="widget__link" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/">源码剖析</a>&nbsp;
