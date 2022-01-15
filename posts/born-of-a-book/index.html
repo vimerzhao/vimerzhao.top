@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>一本书的诞生 - 编程研讨会</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="一本书的诞生" />
+<meta property="og:description" content="零、背景 今天(2022-01-12)对我来说应该算是一个特别的日子，自己花了小半年撰写的《Flutter内核源码剖析》终于出版了。 思来想去，还是应该写点什么。毕竟，这件事情倾注了自己不少心血，一条简简" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/posts/born-of-a-book/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-01-15T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-01-15T16:37:31+08:00" />
+
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="一本书的诞生"/>
+<meta name="twitter:description" content="零、背景 今天(2022-01-12)对我来说应该算是一个特别的日子，自己花了小半年撰写的《Flutter内核源码剖析》终于出版了。 思来想去，还是应该写点什么。毕竟，这件事情倾注了自己不少心血，一条简简"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	<link rel="stylesheet" href="/css/highlighter-pygments-monokai.css"><link rel="stylesheet" href="/css/asciidoctor.css">
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="编程研讨会" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">编程研讨会</div>
+					<div class="logo__tagline">业精于勤，荒于嬉；行成于思，毁于随。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/categories/">
+				
+				<span class="menu__text">分类</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/tags/">
+				
+				<span class="menu__text">标签</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk/">
+				
+				<span class="menu__text">分享</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/archives/">
+				
+				<span class="menu__text">归档</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">一本书的诞生</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2022-01-15T00:00:00Z">2022-01-15</time>
+	<time class="meta__text" datetime="2022-01-15T16:37:31&#43;08:00">(最后修改: 2022-01-15)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/" rel="category">随笔杂记</a>
+	</span>
+</div></div>
+		</header><div class="content post__content clearfix">
+			
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+零、背景
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>今天(2022-01-12)对我来说应该算是一个特别的日子，自己花了小半年撰写的《Flutter内核源码剖析》终于出版了。</p>
+<p>
+思来想去，还是应该写点什么。毕竟，这件事情倾注了自己不少心血，一条简简单单的朋友圈是说不清楚的；另一方面，写书也并非什么高深莫测、遥不可及的事情。所以，最好的方法还是用最真实的文字记录下过去一年在这件事情上的投入。功过是非，自由他人评说，如果能对本文读者产生一些帮助和启发，自然是最好的。</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+一、契机
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<p>2020年下旬的时候，我因为工作内容调整，开始接触Flutter，当时可供系统研究的资料并不多，加之遇到问题时感觉自己总是囿于局部而不见整体，于是便梳理了一个Flutter相关知识点的脑图，并开始逐步研究：</p>
+<p>
+<img src="http://images.vimerzhao.top/01-2020%E5%B9%B4%E5%BA%95%E5%8F%91%E8%A1%A8%E7%9A%84%E5%87%A0%E7%AF%87%E6%96%87%E7%AB%A0.jpg" alt="http://images.vimerzhao.top/01-2020%E5%B9%B4%E5%BA%95%E5%8F%91%E8%A1%A8%E7%9A%84%E5%87%A0%E7%AF%87%E6%96%87%E7%AB%A0.jpg" title="http://images.vimerzhao.top/01-2020%E5%B9%B4%E5%BA%95%E5%8F%91%E8%A1%A8%E7%9A%84%E5%87%A0%E7%AF%87%E6%96%87%E7%AB%A0.jpg" /></p>
+<p>
+图1： 2020年底发表的几篇文章</p>
+<p>
+没写几篇文章后，出版社的一位编辑就通过微信公众号后台找到了我。由于我之前已经梳理了一个Flutter相关的脑图，于是写书的计划我们算是一拍即合。</p>
+<p>
+<img src="http://images.vimerzhao.top/02-%E5%92%8C%E7%BC%96%E8%BE%91%E4%B8%80%E6%8B%8D%E5%8D%B3%E5%90%88.jpg" alt="http://images.vimerzhao.top/02-%E5%92%8C%E7%BC%96%E8%BE%91%E4%B8%80%E6%8B%8D%E5%8D%B3%E5%90%88.jpg" title="http://images.vimerzhao.top/02-%E5%92%8C%E7%BC%96%E8%BE%91%E4%B8%80%E6%8B%8D%E5%8D%B3%E5%90%88.jpg" /></p>
+<p>
+图2: 和编辑一拍即合，决定写书</p>
+<p>
+其中，要着重说一下关于选题。市场上关于Flutter的书当时已经有了不少，每年技术领域新出的书籍也可谓汗牛充栋。但客观来说，大多数书籍都存在 <strong>同质化问题</strong> ，书和书之间的内容同质、书和官网上、技术社区里的内容同质，等等。</p>
+<p>
+对于我个人来说，撷取部分这样的内容来写一本书当然也是可以的，但这样就背离了初心。所以，我一开始就明确了定位，就是往深了挖，因为我非常确定，当时市面上（现在依旧如此）没有一本系统讲述Flutter源码的书籍。</p>
+</div>
+</div>
+<div id="outline-container-headline-3" class="outline-2">
+<h2 id="headline-3">
+二、历程
+</h2>
+<div id="outline-text-headline-3" class="outline-text-2">
+<p>大概在2020年底的时候，我签订了合同，开始写作。由于之前多年的博客写作经历，以及个人对技术问题的表达颇有研究，所以在大的方向上基本没有问题。主要挑战集中在三个方面。</p>
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+2.1 时间
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>我当时的的工作节奏并不清闲，但幸好是双休。从2020年12月到2022年4月底交稿，我所有的周末和假期都用来写书。</p>
+<p>
+这几个月，也算是深刻体会到了鲁迅先生的那句“时间就像海绵里的水,只要愿挤,总还是有的”。</p>
+<p>
+但是，客观来说，这种节奏是非常折磨的、不适合长期维持的。所以我当时赶着在五一前交稿，好让自己安心度个长假。</p>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+2.2 内容
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>另一方面的挑战是内容，因为一开始我并没有计划写那么多，但是对于书籍的宏观设想已经决定了有些内容我必须得写，否则留下的遗憾可能是更长久的。</p>
+<p>
+由于这些计划外的内容，自己除了写作本身，还要去调试、写Demo验证等等，有些主题自己得保证先消化透了才能动笔写。</p>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-3">
+<h3 id="headline-6">
+2.3 体力
+</h3>
+<div id="outline-text-headline-6" class="outline-text-3">
+<p>不得不说，写作也是一项体力活。比如画图，一开始自己计划用graphviz画图，好处是一旦定型，后面的修改管理都很方便。但是，我发现很多图由于过于复杂，用结构化文本描述的效率其实比手工绘制还要低，于是我统一换成了draw.io绘图，差不多50多张图，一张一张手绘~</p>
+<p>
+<img src="http://images.vimerzhao.top/03-%E5%90%84%E7%A7%8D%E6%89%8B%E7%BB%98%E7%9A%84%E9%85%8D%E5%9B%BE.jpg" alt="http://images.vimerzhao.top/03-%E5%90%84%E7%A7%8D%E6%89%8B%E7%BB%98%E7%9A%84%E9%85%8D%E5%9B%BE.jpg" title="http://images.vimerzhao.top/03-%E5%90%84%E7%A7%8D%E6%89%8B%E7%BB%98%E7%9A%84%E9%85%8D%E5%9B%BE.jpg" /></p>
+<p>
+图3： 各种手绘的配图</p>
+<p>
+此外，由于出版社要求交稿用Word，而自己平时习惯用Vim，最后交稿的时候打字也是异常痛苦，时不时 <code>i</code> 、 <code>:w</code> 就打进去了。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-7" class="outline-2">
+<h2 id="headline-7">
+三、影响
+</h2>
+<div id="outline-text-headline-7" class="outline-text-2">
+<div id="outline-container-headline-8" class="outline-3">
+<h3 id="headline-8">
+3.1 对工作的影响
+</h3>
+<div id="outline-text-headline-8" class="outline-text-3">
+<p>客观来说，写书让自己在工作之余的恢复时间几乎没有了。但另一方面，自己在工作上遇到的问题，也得益于写书期间的积累，而得以逐一攻克。</p>
+<p>
+<img src="http://images.vimerzhao.top/04-%E5%B7%A5%E4%BD%9C%E6%9C%9F%E9%97%B4%E8%A7%A3%E5%86%B3%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98.jpg" alt="http://images.vimerzhao.top/04-%E5%B7%A5%E4%BD%9C%E6%9C%9F%E9%97%B4%E8%A7%A3%E5%86%B3%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98.jpg" title="http://images.vimerzhao.top/04-%E5%B7%A5%E4%BD%9C%E6%9C%9F%E9%97%B4%E8%A7%A3%E5%86%B3%E7%9A%84%E4%B8%80%E4%BA%9B%E9%97%AE%E9%A2%98.jpg" /></p>
+<p>
+图4：工作期间解决的一些问题</p>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-3">
+<h3 id="headline-9">
+3.2 对成长的影响
+</h3>
+<div id="outline-text-headline-9" class="outline-text-3">
+<p>个人觉得，这是写作这本书最有价值的一部分，写作这本书，让自己从一个“不知道自己不知道”的阶段过渡到了“知道自己不知道”的阶段。</p>
+<p>
+在此之前，自己多少对未来有点恐惧和迷茫，在写作的过程中反而渐渐释怀了。努者，奴之力也，与其被绩效、他人的评价等种种外部因素驱使驾驭，不如回归自己内心，专注在事情本身上。</p>
+<p>
+此外，在等待出版期间，我还将本书的核心内容提炼成了一门课程：《Flutter源码导读》，讲了几次，效果都还可以，自己也从学员的反馈中受益匪浅。</p>
+<p>
+<img src="http://images.vimerzhao.top/05-%E4%B8%80%E4%BA%9B%E8%AF%BE%E7%A8%8B%E5%8F%8D%E9%A6%88.jpg" alt="http://images.vimerzhao.top/05-%E4%B8%80%E4%BA%9B%E8%AF%BE%E7%A8%8B%E5%8F%8D%E9%A6%88.jpg" title="http://images.vimerzhao.top/05-%E4%B8%80%E4%BA%9B%E8%AF%BE%E7%A8%8B%E5%8F%8D%E9%A6%88.jpg" /></p>
+<p>
+图5：一些课程反馈</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-10" class="outline-2">
+<h2 id="headline-10">
+四、关于本书
+</h2>
+<div id="outline-text-headline-10" class="outline-text-2">
+<p>
+<img src="http://images.vimerzhao.top/06-%E6%9C%AC%E4%B9%A6%E7%9A%84%E7%9B%AE%E5%BD%95%E5%A4%A7%E7%BA%B2.png" alt="http://images.vimerzhao.top/06-%E6%9C%AC%E4%B9%A6%E7%9A%84%E7%9B%AE%E5%BD%95%E5%A4%A7%E7%BA%B2.png" title="http://images.vimerzhao.top/06-%E6%9C%AC%E4%B9%A6%E7%9A%84%E7%9B%AE%E5%BD%95%E5%A4%A7%E7%BA%B2.png" /></p>
+<p>
+图6: 本书的目录大纲</p>
+<p>
+我可以很负责任地说：我尽力了。 <strong>如有纰漏不足，大概率不是我粗心大意，而是我彼时彼刻水平真的只有那样</strong> 。</p>
+<p>
+多年以后，我希望自己回头看这本书的时候，能把它作为一部不够完美的作品，而非自己技术生涯的顶点。</p>
+</div>
+</div>
+<div id="outline-container-headline-11" class="outline-2">
+<h2 id="headline-11">
+五、关于未来
+</h2>
+<div id="outline-text-headline-11" class="outline-text-2">
+<p>Peter Norvig有一篇闻名遐迩的文章 <em>Teach Yourself Programming in Ten Years</em> ，而我的技术生涯显然还缺乏更多的历练。</p>
+<p>
+这本书为我带来的是毁是誉，可能还得让子弹飞一会才知道。</p>
+<p>
+但无论结果如何，我都会按照惯例，引用路遥在《早晨从中午开始》中的一段话作为我今后的注脚：</p>
+<blockquote>
+<p>…..是的，只要不丧失远大的使用感，或者说还保持着较为清醒的头脑，就决然不能把人生之船长期停泊在某个温暖的港湾，应该重新扬起风帆，驶向生活的惊涛骇浪中，以领略其间的无限风光。人，不仅要战胜失败，而且还要超越胜利。</p>
+</blockquote>
+<p>
+认识到自己的不足，然后去超越它。</p>
+</div>
+</div>
+<div id="outline-container-headline-12" class="outline-2">
+<h2 id="headline-12">
+六、写在最后
+</h2>
+<div id="outline-text-headline-12" class="outline-text-2">
+<p>放个链接（如果需要或者感兴趣就支持一下 ^_^）：</p>
+<ul>
+<li>京东： <a href="https://item.jd.com/10043325278439.html">https://item.jd.com/10043325278439.html</a></li>
+<li>淘宝： <a href="https://detail.tmall.com/item.htm?id=666650086940">https://detail.tmall.com/item.htm?id=666650086940</a></li>
+</ul>
+<p>
+<img src="http://images.vimerzhao.top/07-%E4%B9%A6%E7%B1%8DDemoFlutter%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.jpg" alt="http://images.vimerzhao.top/07-%E4%B9%A6%E7%B1%8DDemoFlutter%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.jpg" title="http://images.vimerzhao.top/07-%E4%B9%A6%E7%B1%8DDemoFlutter%E5%86%85%E6%A0%B8%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90.jpg" />
+图7： Flutter内核源码剖析</p>
+</div>
+</div>
+
+		</div>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/images/avatar.jpg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		努力变强的程序员
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/posts/research-about-note-software/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">关于笔记软件的比较研究</p>
+		</a>
+	</div>
+</nav>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/" />
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/born-of-a-book/">一本书的诞生</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android%E5%AE%9E%E8%B7%B5/">Android实践</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">19</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/bug%E8%A7%A3%E5%86%B3%E8%AE%B0%E5%BD%95/">Bug解决记录</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">13</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter%E5%AE%9E%E8%B7%B5/">Flutter实践</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">4</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%9A%E4%BD%99%E7%A0%94%E7%A9%B6/">业余研究</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">5</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E5%8E%86%E5%8F%B2%E5%BD%92%E6%A1%A3/">历史归档</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">38</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%80%BB%E7%BB%93%E5%8F%8D%E6%80%9D/">总结反思</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">7</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%8A%98%E8%85%BE%E5%B7%A5%E5%85%B7/">折腾工具</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">29</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/">源码剖析</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">11</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">13</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E8%BD%AF%E4%BB%B6%E6%B2%89%E6%80%9D%E5%BD%95/">软件沉思录</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">4</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/">随笔杂记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">18</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (7)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2022 编程研讨会.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+	</div>
+</footer>
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

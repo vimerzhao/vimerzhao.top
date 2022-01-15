@@ -6,7 +6,16 @@
     <description>Recent content in 随笔杂记 on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 11 Oct 2021 10:49:57 +0800</lastBuildDate><atom:link href="/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 15 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/categories/%E9%9A%8F%E7%AC%94%E6%9D%82%E8%AE%B0/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>一本书的诞生</title>
+      <link>/posts/born-of-a-book/</link>
+      <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/born-of-a-book/</guid>
+      <description>零、背景 今天(2022-01-12)对我来说应该算是一个特别的日子，自己花了小半年撰写的《Flutter内核源码剖析》终于出版了。 思来想去，还是应该写点什么。毕竟，这件事情倾注了自己不少心血，一条简简</description>
+    </item>
+    
     <item>
       <title>日常开发尽量使用英文</title>
       <link>/posts/try-to-use-english-everywhere/</link>
