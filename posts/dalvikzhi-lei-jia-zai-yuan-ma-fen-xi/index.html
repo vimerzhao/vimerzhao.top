@@ -111,7 +111,36 @@
 	<time class="meta__text" datetime="2021-06-05T17:25:07&#43;08:00">(最后修改: 2021-06-05)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" rel="category">源码剖析</a>
 	</span>
 </div></div>
-		</header><div class="content post__content clearfix">
+		</header>
+<div class="post__toc toc">
+	<div class="toc__title">目录</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#java类加载">Java类加载</a></li>
+    <li><a href="#分析classloaderjava源码">分析<code>ClassLoader.java</code>源码</a>
+      <ul>
+        <li><a href="#systemclassloader"><code>SystemClassLoader</code></a></li>
+        <li><a href="#bootclassloader"><code>BootClassLoader</code></a></li>
+      </ul>
+    </li>
+    <li><a href="#分析basedexclassloaderjava源码">分析<code>BaseDexClassloader.java</code>源码</a></li>
+    <li><a href="#分析dexpathlistjava源码">分析<code>DexPathList.java</code>源码</a></li>
+    <li><a href="#分析dexfilejava源码">分析<code>DexFile.java</code>源码</a></li>
+    <li><a href="#分析dalvik_system_dexfilecpp源码">分析<code>dalvik_system_DexFile.cpp</code>源码</a></li>
+    <li><a href="#分析classcpp源码">分析<code>Class.cpp</code>源码</a>
+      <ul>
+        <li><a href="#检查是否加载">检查是否加载</a></li>
+        <li><a href="#寻找">寻找</a></li>
+        <li><a href="#加载类">加载类</a></li>
+        <li><a href="#链接">链接</a></li>
+        <li><a href="#初始化">初始化</a></li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+	</div>
+</div><div class="content post__content clearfix">
 			<h1 id="dalvik之类加载源码分析">Dalvik之类加载源码分析</h1>
 <p>基于Kitkat源码粗线条地分析了Dalvik虚拟机类的加载过程。</p>
 <h2 id="java类加载">Java类加载</h2>

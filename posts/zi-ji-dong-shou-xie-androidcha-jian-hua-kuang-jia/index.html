@@ -111,7 +111,28 @@
 	<time class="meta__text" datetime="2021-06-05T17:25:07&#43;08:00">(最后修改: 2021-06-05)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/android%E5%AE%9E%E8%B7%B5/" rel="category">Android实践</a>
 	</span>
 </div></div>
-		</header><div class="content post__content clearfix">
+		</header>
+<div class="post__toc toc">
+	<div class="toc__title">目录</div>
+	<div class="toc__menu">
+		<nav id="TableOfContents">
+  <ul>
+    <li><a href="#原理与背景">原理与背景</a>
+      <ul>
+        <li><a href="#类加载">类加载</a></li>
+        <li><a href="#资源加载">资源加载</a></li>
+        <li><a href="#生命周期">生命周期</a></li>
+      </ul>
+    </li>
+    <li><a href="#代理实现">代理实现</a></li>
+    <li><a href="#hook实现">Hook实现</a></li>
+    <li><a href="#demo地址">Demo地址</a></li>
+    <li><a href="#总结">总结</a></li>
+    <li><a href="#参考">参考</a></li>
+  </ul>
+</nav>
+	</div>
+</div><div class="content post__content clearfix">
 			<h1 id="自己动手写android插件化框架">自己动手写Android插件化框架</h1>
 <p>最近在工作中接触到了Android插件内的开发，发现自己这种技术还缺乏最基本的了解，以至于在一些基本问题上浪费不少时间，如插件Context和主工程Context的区别，权限必须在主工程申明等，因此花了点时间了解了一下插件的历史，并写了两个Demo作为总结。本文旨在通过两个实例直观的说明插件的实现原理以加深对插件内开发的理解，因此不会深入探讨背景和原理，代码也尽量专注于核心逻辑。</p>
 <h2 id="原理与背景">原理与背景</h2>
