@@ -33,8 +33,6 @@
 <body class="body">
 	<div class="container container--outer">
 		<header class="header">
-    
-    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
 	<div class="container header__container">
 		
 	<div class="logo">
@@ -115,8 +113,7 @@
 	</span>
 </div></div>
 		</header>
-
-        <span id="wc" style="color:grey; font-size: 0.9em">本文约 4900 字，阅读需 10 分钟，总阅读量<span id="busuanzi_value_page_pv"></span>次。</span><p/><div class="content post__content clearfix">
+        <span style="color:grey; font-size: 0.9em">本文约 4900 字，阅读需 10 分钟。</span><p /><div class="content post__content clearfix">
 			<h1 id="译自己动手写区块链">【译】自己动手写区块链</h1>
 <p>目前大多数对于区块链的文章都是停留在概念性的描述，大肆宣扬其颠覆性，本文则反其道行之，以一个程序员的视角，通过300行代码，快速实现了一个区块链原型。虽然没有覆盖区块链的全部内容（如Merkle树），但对于理解区块链的核心技术仍大有裨益。
 &ndash;译者注</p>
@@ -655,6 +652,8 @@ def consensus():
 <p><strong>Update</strong>：我计划写这个话题的第二部分，我将进一步拓展这个区块链并支持交易验证（ Transaction Validation Mechanism），同时也将讨论如何将你的区块链产业化。</p>
 
 		</div>
+
+        <p/><span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
 	</article>
 </main>
 
@@ -782,7 +781,19 @@ def consensus():
 </div>
 </aside>
 		</div>
-		<footer class="footer">
+		
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+<footer class="footer">
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
