@@ -6,7 +6,7 @@
     <description>Recent content on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 19 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 08 Nov 2021 12:56:59 +0800</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>关于</title>
       <link>/about/</link>
@@ -37,15 +37,6 @@
       
       <guid>/archives/</guid>
       <description></description>
-    </item>
-    
-    <item>
-      <title>关于笔记软件的比较研究</title>
-      <link>/posts/research-about-note-software/</link>
-      <pubDate>Sun, 19 Dec 2021 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/research-about-note-software/</guid>
-      <description>一篇还不成熟的文章。 一、引言 工作以来，如何高效地整理自己的信息这个问题一直困扰着我。经常会遇到这种情况， 自己需要记录一个信息，但依稀记得自己记录过类似的信息，却又半天找不到。 举个例子，我发现一个学习C</description>
     </item>
     
     <item>
@@ -420,7 +411,7 @@
     <item>
       <title>记一次诡异的Bug</title>
       <link>/posts/a-weird-bug-record/</link>
-      <pubDate>Mon, 13 Apr 2020 10:01:17 +0800</pubDate>
+      <pubDate>Mon, 13 Apr 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/a-weird-bug-record/</guid>
       <description>背景 上周四的时候，发了一个maven，结果报ExceptionInInitializerError错误： java.lang.ExceptionInInitializerError at repackage.aw.̍(ProGuard:43) at com.tencent.sandbox.PluginHelper.applicationAttachBaseContext(ProGuard:160) ...... Caused by: java.lang.IllegalArgumentException: Illegal pattern character &amp;#39;V&amp;#39; at java.text.SimpleDateFormat.compile(SimpleDateFormat.java:870) at java.text.SimpleDateFormat.initialize(SimpleDateFormat.java:684) at java.text.SimpleDateFormat.&amp;lt;init&amp;gt;(SimpleDateFormat.java:623) at java.text.SimpleDateFormat.&amp;lt;init&amp;gt;(SimpleDateFormat.java:598) at</description>

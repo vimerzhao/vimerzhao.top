@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>源码剖析 on 编程研讨会</title>
+    <link>/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/</link>
+    <description>Recent content in 源码剖析 on 编程研讨会</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 22 Nov 2020 12:23:18 +0800</lastBuildDate><atom:link href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flutter源码剖析(四):flutter run流程解析</title>
+      <link>/posts/flutter-source-code-analyze-4/</link>
+      <pubDate>Sun, 22 Nov 2020 12:23:18 +0800</pubDate>
+      
+      <guid>/posts/flutter-source-code-analyze-4/</guid>
+      <description>关于flutter run flutter run负责执行构建一个flutter工程，输出产物到对应设备，并负责提供基本的交互控制，使用效果如下： $ flutter run Launching lib/main.dart on COL AL10 in debug mode... Running Gradle task &amp;#39;assembleDebug&amp;#39;... Running Gradle task &amp;#39;assembleDebug&amp;#39;... Done 23.8s ✓ Built build/app/outputs/flutter-apk/app-debug.apk. Installing build/app/outputs/flutter-apk/app.apk... 13.7s Waiting for COL AL10 to report its views... 7ms Syncing files</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(三):Flutter-Android-Embedder启动流程</title>
+      <link>/posts/flutter-source-code-analyze-3/</link>
+      <pubDate>Sun, 15 Nov 2020 12:23:15 +0800</pubDate>
+      
+      <guid>/posts/flutter-source-code-analyze-3/</guid>
+      <description>概述 Flutter的启动包括Embedder、Engine、Framework三部分，本文仅描述Android平台的Embdder模块的启动流程。Flutter通常通过启动一个FlutterActiv</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(二):源码的阅读与调试环境配置</title>
+      <link>/posts/flutter-source-code-analyze-2/</link>
+      <pubDate>Thu, 05 Nov 2020 12:23:13 +0800</pubDate>
+      
+      <guid>/posts/flutter-source-code-analyze-2/</guid>
+      <description>综述 Flutter从架构上来说有3部分： 用Dart写的Framework层，面向开发者 用Java/Kotlin写的Embdder层（For Android，iOS是OC/Swift），纯Flutter A</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(一):源码获取与构建</title>
+      <link>/posts/flutter-source-code-analyze-1/</link>
+      <pubDate>Thu, 29 Oct 2020 12:23:10 +0800</pubDate>
+      
+      <guid>/posts/flutter-source-code-analyze-1/</guid>
+      <description>概述 本文介绍了Flutter源码的获取与构建，后面会另有文章介绍Flutter源码的版本管理、开发环境搭建等主题。 准备工作 Flutter源码分为两个部分： flutter/flutter是框架层，为开发</description>
+    </item>
+    
+    <item>
+      <title>Android系统服务的注册缓存机制分析</title>
+      <link>/posts/android-system-service-cache-analyze/</link>
+      <pubDate>Fri, 21 Aug 2020 12:18:22 +0800</pubDate>
+      
+      <guid>/posts/android-system-service-cache-analyze/</guid>
+      <description>本文说明 本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解</description>
+    </item>
+    
+    <item>
+      <title>Android P源码构建记录</title>
+      <link>/posts/android-p-source-code-build/</link>
+      <pubDate>Wed, 29 Apr 2020 12:11:29 +0800</pubDate>
+      
+      <guid>/posts/android-p-source-code-build/</guid>
+      <description>缘由 最近在追查一个dex2oat的问题时，看源码觉得有些地方不单步调试或者加些日志，实在是不方便，另外由于最近的工作和Framework层打交道比较多，也有必要搞个源码环境，趁机深入学习一下。 虚拟机 一</description>
+    </item>
+    
+    <item>
+      <title>twint源码阅读笔记</title>
+      <link>/posts/read-twint/</link>
+      <pubDate>Sun, 05 Apr 2020 23:48:26 +0800</pubDate>
+      
+      <guid>/posts/read-twint/</guid>
+      <description>介绍 twint全称Twitter Intelligence Tool，是一个twitter爬虫工具。官方介绍如下： Twint is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles without using Twitter’s API. Twint utilizes Twitter’s search operators to let you scrape Tweets from specific users, scrape Tweets relating to certain</description>
+    </item>
+    
+    <item>
+      <title>源码阅读环境OpenGrok搭建</title>
+      <link>/posts/yuan-ma-yue-du-huan-jing-opengrokda-jian/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/yuan-ma-yue-du-huan-jing-opengrokda-jian/</guid>
+      <description>源码阅读环境OpenGrok搭建 工欲善其事，必先利其器。 导语 阅读源码最常见操作的就是在函数/方法的调用与定义之间跳转，对于只有大部分源码来说，都可以通过ctags+vim获得比较好的体验，但对于And</description>
+    </item>
+    
+    <item>
+      <title>Android6.0源码编译教程</title>
+      <link>/posts/android6-0yuan-ma-bian-yi-jiao-cheng/</link>
+      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/android6-0yuan-ma-bian-yi-jiao-cheng/</guid>
+      <description>Android6.0源码编译教程 第一次成功编译了Android的源码，记录一下。 回忆 这是我第二次尝试去编译Android的源码，第一次是半年前，当时刚刚拿到去腾讯实习的Offer，虽然当时会一些And</description>
+    </item>
+    
+    <item>
+      <title>Dalvik之类加载源码分析</title>
+      <link>/posts/dalvikzhi-lei-jia-zai-yuan-ma-fen-xi/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/dalvikzhi-lei-jia-zai-yuan-ma-fen-xi/</guid>
+      <description>Dalvik之类加载源码分析 基于Kitkat源码粗线条地分析了Dalvik虚拟机类的加载过程。 Java类加载 在Java的世界里，所有类的加载，都由java.lang.ClassLoader来负责。Cl</description>
+    </item>
+    
+    <item>
+      <title>Andfix源码解析</title>
+      <link>/posts/andfixyuan-ma-jie-xi/</link>
+      <pubDate>Sun, 20 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/andfixyuan-ma-jie-xi/</guid>
+      <description>Andfix源码解析 本文介绍了Andfix热修复框架的原理及实现代码。 Andfix概述 Andfix是阿里开源的一套热修复框架，效果如下 （注意我一直在点击，下发补丁后发生了变化&amp;hellip;&amp;hell</description>
+    </item>
+    
+    <item>
+      <title>OpenJDK7u40编译与调试实战</title>
+      <link>/posts/openjdk7u40bian-yi-yu-diao-shi-shi-zhan/</link>
+      <pubDate>Sun, 28 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/openjdk7u40bian-yi-yu-diao-shi-shi-zhan/</guid>
+      <description>OpenJDK7u40编译与调试实战 记录了第一次编译调试OpenJDK的经过。 JDK与OpenJDK的关系 简单来说，OpenJDK是OracleJDK（也就是我们平时用的Java JDK，由Oracle</description>
+    </item>
+    
+  </channel>
+</rss>

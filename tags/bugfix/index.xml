@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>BugFix on 编程研讨会</title>
+    <link>/tags/bugfix/</link>
+    <description>Recent content in BugFix on 编程研讨会</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 08 Aug 2021 15:53:53 +0800</lastBuildDate><atom:link href="/tags/bugfix/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</title>
+      <link>/posts/fix-a-serious-flutter-engine-multithread-bug/</link>
+      <pubDate>Sun, 08 Aug 2021 15:53:53 +0800</pubDate>
+      
+      <guid>/posts/fix-a-serious-flutter-engine-multithread-bug/</guid>
+      <description>零、背景介绍 Flutter技术在微视内经过大半年的探索，已经从存量业务的改造尝试阶段，开始进入增量业务的承接阶段。横版视频的为你推荐就是这样一个场景，原Native体验如下： 使用Flutter完成新业</description>
+    </item>
+    
+    <item>
+      <title>AndroidStudio-Profile工具导致的一个奇怪问题</title>
+      <link>/posts/android-profile-tool-bug-record/</link>
+      <pubDate>Thu, 10 Dec 2020 12:36:32 +0800</pubDate>
+      
+      <guid>/posts/android-profile-tool-bug-record/</guid>
+      <description>在使用AndroidStudio里面的Profile查看内存占用时，发现一个奇怪的现象： 应用启动后Native内存猛增，即使一个空的App也是如此，按理说不应该。于是用adb工具导出了一次内存： adb shell dumpsys</description>
+    </item>
+    
+    <item>
+      <title>记一个博客刷新的Bug</title>
+      <link>/posts/blog-refresh-bugfix/</link>
+      <pubDate>Thu, 30 Apr 2020 10:20:44 +0800</pubDate>
+      
+      <guid>/posts/blog-refresh-bugfix/</guid>
+      <description>之前通过教程草草建立了一个博客，后来申请到了备案号，于是更新了代码，但是Gunicorn操作不是很熟悉，导致重启服务后出现了如下问题： 备案号时有时无，今天又要添加公安备案号，于是打算查查这个问题，发现</description>
+    </item>
+    
+    <item>
+      <title>Android P内联优化导致的一个诡异Bug</title>
+      <link>/posts/solve-of-android-p-inline-opt/</link>
+      <pubDate>Fri, 24 Apr 2020 23:51:25 +0800</pubDate>
+      
+      <guid>/posts/solve-of-android-p-inline-opt/</guid>
+      <description>问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------</description>
+    </item>
+    
+    <item>
+      <title>Android混淆问题一则</title>
+      <link>/posts/android-proguard-problem/</link>
+      <pubDate>Tue, 24 Mar 2020 09:56:45 +0800</pubDate>
+      
+      <guid>/posts/android-proguard-problem/</guid>
+      <description>问题 dex包里面的build.gradle通过api引用了一个包，同事主工程调用dex包里面的方法抛出ClassNotFoundException。 分析 使用AS的Analyze APK发现该类其实是存在</description>
+    </item>
+    
+    <item>
+      <title>记一次AbstractMethodError</title>
+      <link>/posts/abstractmethoderror-solve/</link>
+      <pubDate>Tue, 24 Mar 2020 09:55:46 +0800</pubDate>
+      
+      <guid>/posts/abstractmethoderror-solve/</guid>
+      <description>最近在灰度的时候发现了一个Error： 详细信息如下： 结合机型分布，可以判断是部分ROM自己的修改导致的问题(因为已经走到系统Api里面了)。 最后直接catch住了，因为触发的机型其实很少，灰度15w，</description>
+    </item>
+    
+    <item>
+      <title>Proguard导致的NoSuchMethodException问题排查</title>
+      <link>/posts/proguard-result-in-nosuchmethodexception/</link>
+      <pubDate>Mon, 16 Mar 2020 09:54:14 +0800</pubDate>
+      
+      <guid>/posts/proguard-result-in-nosuchmethodexception/</guid>
+      <description>背景 之前项目的混淆配置一直没开启Proguard的优化选项 -dontoptimize 最近为了做安装包优化，把这行注释掉了 #-dontoptimize 问题 于是项目里的各种优化配置开始生效了，但是测试反馈了一个Bug：悬浮窗的搜索框点击之后没有反应了。 排</description>
+    </item>
+    
+    <item>
+      <title>UnsatisfiedLinkError...is32-bit instead of 64-bit问题解决</title>
+      <link>/posts/solve-unsatisfiedlinkerror-is-32-bit-instead-of-64-bit/</link>
+      <pubDate>Fri, 28 Feb 2020 09:52:52 +0800</pubDate>
+      
+      <guid>/posts/solve-unsatisfiedlinkerror-is-32-bit-instead-of-64-bit/</guid>
+      <description>背景 在做沙箱动态化时遇到一个问题： 请假其他同事之后发现是因为Android高版本上，默认是64-bit的方式运行，而某些游戏是32-bit的，所以出现了冲突，解决办法就是强制使用32-bit的，而不是</description>
+    </item>
+    
+    <item>
+      <title>防止WebView因为GC被回收</title>
+      <link>/posts/keep-webview-from-gc/</link>
+      <pubDate>Tue, 11 Feb 2020 09:47:55 +0800</pubDate>
+      
+      <guid>/posts/keep-webview-from-gc/</guid>
+      <description>今天遇到一个问题，前端反映说我们共同约定的一个隐藏WebView无法调试，现象如下： 可以看到，小测试这个Tab一出现就消失了，但是同样的代码放在测试Demo里面就没问题，分析之后发现是实际工程里面产生</description>
+    </item>
+    
+    <item>
+      <title>警惕Proguard内联优化导致Crash堆栈信息丢失</title>
+      <link>/posts/proguard-inline-optimieze-make-stacktrace-loss/</link>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/proguard-inline-optimieze-make-stacktrace-loss/</guid>
+      <description>背景 最近在处理异常时遇到一个诡异的问题：自己的Demo里面混淆一个类后，打印Crash堆栈时这个类里面的调用点直接失踪了！ 下面用测试代码说明。 测试代码 // MainActivity.java public class MainActivity extends AppCompatActivity { @Override protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); new Test().fun1(); } } // Test.java public class Test</description>
+    </item>
+    
+    <item>
+      <title>&#39;android:excludeFromRecents踩坑指南&#39;</title>
+      <link>/posts/android-excludefromrecentscai-keng-zhi-nan/</link>
+      <pubDate>Sun, 30 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/android-excludefromrecentscai-keng-zhi-nan/</guid>
+      <description>&amp;lsquo;android:excludeFromRecents踩坑指南&amp;rsquo; 工作中遇到的一个小问题，记录一下。 现象 从Activity A跳转到B，B的launchMode设置为singleI</description>
+    </item>
+    
+    <item>
+      <title>匿名内部类导致热补丁Crash</title>
+      <link>/posts/ni-ming-nei-bu-lei-dao-zhi-re-bu-ding-crash/</link>
+      <pubDate>Sun, 20 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/ni-ming-nei-bu-lei-dao-zhi-re-bu-ding-crash/</guid>
+      <description>匿名内部类导致热补丁Crash 本文记录了匿名内部类可能导致的热补丁Crash及其原因。 问题描述 新建工程 新建一个工程，集成Andfix（设置权限、添加gradle、自定义Application），同时在</description>
+    </item>
+    
+    <item>
+      <title>Activity直接退出应用现象</title>
+      <link>/posts/activityzhi-jie-tui-chu-ying-yong-xian-xiang/</link>
+      <pubDate>Fri, 14 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/activityzhi-jie-tui-chu-ying-yong-xian-xiang/</guid>
+      <description>Activity直接退出应用现象 Activity的退出顺序应该类似一个栈，但最近一次开发中却发现Activity直接退出了应用，这是为什么呢？ 开发Android应用时，系统一般会维护一个回退栈，比如从</description>
+    </item>
+    
+    <item>
+      <title>踩坑记：LinuxMint18字体变为楷体的修复</title>
+      <link>/posts/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/</link>
+      <pubDate>Sat, 25 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/</guid>
+      <description>踩坑记：LinuxMint18字体变为楷体的修复 本文记录了一次修复系统字体的经历。 起因 起因很奇怪，本来打算今天把动态规划算法好好研究一番，结果一大早起来发现中文输入法消失了！因为之前有次发生这种情况是</description>
+    </item>
+    
+  </channel>
+</rss>

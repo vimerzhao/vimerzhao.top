@@ -6,7 +6,16 @@
     <description>Recent content in 技术精选 on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 27 May 2021 19:22:48 +0800</lastBuildDate><atom:link href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 08 Aug 2021 15:53:53 +0800</lastBuildDate><atom:link href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</title>
+      <link>/posts/fix-a-serious-flutter-engine-multithread-bug/</link>
+      <pubDate>Sun, 08 Aug 2021 15:53:53 +0800</pubDate>
+      
+      <guid>/posts/fix-a-serious-flutter-engine-multithread-bug/</guid>
+      <description>零、背景介绍 Flutter技术在微视内经过大半年的探索，已经从存量业务的改造尝试阶段，开始进入增量业务的承接阶段。横版视频的为你推荐就是这样一个场景，原Native体验如下： 使用Flutter完成新业</description>
+    </item>
+    
     <item>
       <title>大道至简：Flutter嵌套滑动冲突解决之路</title>
       <link>/posts/flutter-nested-scroll-conflict/</link>
@@ -62,12 +71,30 @@
     </item>
     
     <item>
+      <title>Flutter:移动端跨平台技术演进之路</title>
+      <link>/posts/cross-platform-mobile-ui-development-evolution/</link>
+      <pubDate>Wed, 06 Nov 2019 12:21:29 +0800</pubDate>
+      
+      <guid>/posts/cross-platform-mobile-ui-development-evolution/</guid>
+      <description>导读 本文约4688字，阅读可能需要15分钟。 最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著). 从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上</description>
+    </item>
+    
+    <item>
       <title>全面了解Android热修复技术</title>
       <link>/posts/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</link>
       <pubDate>Sun, 10 Sep 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</guid>
       <description>全面了解Android热修复技术 引言:本文全面地探讨了Android热修复技术的发展脉络，现状及其未来。 热修复技术概述 热修复技术在近年来飞速发展，尤其是在InstantRun方案推出之后，各种热修复技</description>
+    </item>
+    
+    <item>
+      <title>C语言实现IPv6抓包程序</title>
+      <link>/posts/cyu-yan-shi-xian-ipv6zhua-bao-cheng-xu/</link>
+      <pubDate>Wed, 19 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/cyu-yan-shi-xian-ipv6zhua-bao-cheng-xu/</guid>
+      <description>C语言实现IPv6抓包程序 本文记录了如何借助libpcap实现一个简单的抓包程序。 准备 对于实现一个抓包程序，最重要的是熟悉每种协议。熟悉协议包括两部分：每个协议具体字段的意义和每个协议在C语言中对应的</description>
     </item>
     
   </channel>
