@@ -126,25 +126,25 @@
 注意！Python版本要求<strong>3.5</strong>，wxpy和ChatterBot都可以通过pip安装，不赘述。</p>
 <h2 id="编写代码">编写代码</h2>
 <p>实际的代码不超过20行（果然人生苦短、我用Python），这里添加一些注释便于理解</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python3.5</span>
-<span style="color:#f92672">from</span> wxpy <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
-<span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
-<span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ChatterBotCorpusTrainer
-chatbot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;deepThought&#34;</span>)<span style="color:#75715e">## 用于回复消息的机器人</span>
-chatbot<span style="color:#f92672">.</span>set_trainer(ChatterBotCorpusTrainer)
-chatbot<span style="color:#f92672">.</span>train(<span style="color:#e6db74">&#34;chatterbot.corpus.chinese&#34;</span>)<span style="color:#75715e">## 使用该库的中文语料库</span>
-bot <span style="color:#f92672">=</span> Bot(cache_path<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)<span style="color:#75715e">## 用于接入微信的机器人</span>
-group_2 <span style="color:#f92672">=</span> bot<span style="color:#f92672">.</span>groups(<span style="color:#e6db74">&#34;友谊是&#34;</span>)[<span style="color:#ae81ff">0</span>]<span style="color:#75715e">## 进行测试的群</span>
-group_2<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#34;大家好,我是人工智障&#34;</span>)
-
-<span style="color:#a6e22e">@bot</span><span style="color:#f92672">.</span>register(group_2)
-<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reply_my_friend</span>(msg):
-    print(msg)
-    <span style="color:#66d9ef">return</span> chatbot<span style="color:#f92672">.</span>get_response(msg<span style="color:#f92672">.</span>text)<span style="color:#f92672">.</span>text<span style="color:#75715e">## 使用机器人进行自动回复</span>
-
-<span style="color:#75715e">## 堵塞线程，并进入 Python 命令行</span>
-embed()
-</code></pre></div><h2 id="效果演示">效果演示</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3.5</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> wxpy <span style="color:#f92672">import</span> <span style="color:#f92672">*</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ChatterBotCorpusTrainer
+</span></span><span style="display:flex;"><span>chatbot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;deepThought&#34;</span>)<span style="color:#75715e">## 用于回复消息的机器人</span>
+</span></span><span style="display:flex;"><span>chatbot<span style="color:#f92672">.</span>set_trainer(ChatterBotCorpusTrainer)
+</span></span><span style="display:flex;"><span>chatbot<span style="color:#f92672">.</span>train(<span style="color:#e6db74">&#34;chatterbot.corpus.chinese&#34;</span>)<span style="color:#75715e">## 使用该库的中文语料库</span>
+</span></span><span style="display:flex;"><span>bot <span style="color:#f92672">=</span> Bot(cache_path<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)<span style="color:#75715e">## 用于接入微信的机器人</span>
+</span></span><span style="display:flex;"><span>group_2 <span style="color:#f92672">=</span> bot<span style="color:#f92672">.</span>groups(<span style="color:#e6db74">&#34;友谊是&#34;</span>)[<span style="color:#ae81ff">0</span>]<span style="color:#75715e">## 进行测试的群</span>
+</span></span><span style="display:flex;"><span>group_2<span style="color:#f92672">.</span>send(<span style="color:#e6db74">&#34;大家好,我是人工智障&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@bot</span><span style="color:#f92672">.</span>register(group_2)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">reply_my_friend</span>(msg):
+</span></span><span style="display:flex;"><span>    print(msg)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> chatbot<span style="color:#f92672">.</span>get_response(msg<span style="color:#f92672">.</span>text)<span style="color:#f92672">.</span>text<span style="color:#75715e">## 使用机器人进行自动回复</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 堵塞线程，并进入 Python 命令行</span>
+</span></span><span style="display:flex;"><span>embed()
+</span></span></code></pre></div><h2 id="效果演示">效果演示</h2>
 <p>扫码登陆：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogscan-code-login-new.png" alt=""></p>
 <p>进入人工智障模式：
@@ -207,6 +207,9 @@ embed()
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/from-reactnative-to-flutter/">从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/the-born-of-a-book/">一本书的诞生</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/improve-efficiency-by-shuangpin/">如何提高中文输入的效率</a></li>
@@ -214,9 +217,6 @@ embed()
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-vim-and-emacs/">现阶段（2021年10月）对于Vim和Emacs的思考</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -239,7 +239,7 @@ embed()
 	<h4 class="widget__title">标签</h4>
 	<div class="widget__content">
 		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (27)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
@@ -248,7 +248,7 @@ embed()
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (11)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (15)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (17)</a>
 	</div>
 </div>
 <div class="widget-social widget">

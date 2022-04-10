@@ -123,172 +123,171 @@
 <h2 id="instantrun分析">InstantRun分析</h2>
 <p>InstantRun已经在前面做过介绍，不再赘述。需注意重点不是InstantRun的实现代码，而是Android加载资源的源码，只有明白了Android是如何加载资源的，才能体会InstantRun的意图。
 从Android系统的角度来看，每个应用的资源管理都是通过一个<code>AssetManager</code>(源码<code>./frameworks/base/core/java/android/content/res/AssetManager.java</code>)对象实现，如同Qzone对代码修复时修改<code>pathList</code>一般，InstantRun正是重新构建了一个<code>AssetManager</code>，使其应用补丁包中的资源，并替换原来的<code>AssetManager</code>来实现的:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchExistingResources</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
-                                                    <span style="color:#a6e22e">@Nullable</span> String externalResourceFile<span style="color:#f92672">,</span>
-                                                    <span style="color:#a6e22e">@Nullable</span> Collection<span style="color:#f92672">&lt;</span>Activity<span style="color:#f92672">&gt;</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>externalResourceFile <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">        (Note: the resource directory is *also* inserted into the loadedApk in
-</span><span style="color:#75715e">        monkeyPatchApplication)
-</span><span style="color:#75715e">        The code seems to perform this:
-</span><span style="color:#75715e">        File externalResourceFile = &lt;path to resources.ap_ or extracted directory&gt;
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        AssetManager newAssetManager = new AssetManager();
-</span><span style="color:#75715e">        newAssetManager.addAssetPath(externalResourceFile)
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        // Kitkat needs this method call, Lollipop doesn&#39;t. However, it doesn&#39;t seem to cause any harm
-</span><span style="color:#75715e">        // in L, so we do it unconditionally.
-</span><span style="color:#75715e">        newAssetManager.ensureStringBlocks();
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        // Find the singleton instance of ResourcesManager
-</span><span style="color:#75715e">        ResourcesManager resourcesManager = ResourcesManager.getInstance();
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        // Iterate over all known Resources objects
-</span><span style="color:#75715e">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) {
-</span><span style="color:#75715e">            for (WeakReference&lt;Resources&gt; wr : resourcesManager.mActiveResources.values()) {
-</span><span style="color:#75715e">                Resources resources = wr.get();
-</span><span style="color:#75715e">                // Set the AssetManager of the Resources instance to our brand new one
-</span><span style="color:#75715e">                resources.mAssets = newAssetManager;
-</span><span style="color:#75715e">                resources.updateConfiguration(resources.getConfiguration(), resources.getDisplayMetrics());
-</span><span style="color:#75715e">            }
-</span><span style="color:#75715e">        }
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        // Also, for each context, call getTheme() to get the current theme; null out its
-</span><span style="color:#75715e">        // mTheme field, then invoke initializeTheme() to force it to be recreated (with the
-</span><span style="color:#75715e">        // new asset manager!)
-</span><span style="color:#75715e">
-</span><span style="color:#75715e">        */</span>
-
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// Create a new AssetManager instance and point it to the resources installed under
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// /sdcard
-</span><span style="color:#75715e"></span>            AssetManager newAssetManager <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getConstructor</span><span style="color:#f92672">().</span><span style="color:#a6e22e">newInstance</span><span style="color:#f92672">();</span>
-            Method mAddAssetPath <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;addAssetPath&#34;</span><span style="color:#f92672">,</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
-            mAddAssetPath<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(((</span>Integer<span style="color:#f92672">)</span> mAddAssetPath<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">,</span> externalResourceFile<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Could not create new AssetManager&#34;</span><span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-
-            <span style="color:#75715e">// Kitkat needs this method call, Lollipop doesn&#39;t. However, it doesn&#39;t seem to cause any harm
-</span><span style="color:#75715e"></span>            <span style="color:#75715e">// in L, so we do it unconditionally.
-</span><span style="color:#75715e"></span>            Method mEnsureStringBlocks <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;ensureStringBlocks&#34;</span><span style="color:#f92672">);</span>
-            mEnsureStringBlocks<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-            mEnsureStringBlocks<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">);</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>activities <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Activity activity <span style="color:#f92672">:</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    Resources resources <span style="color:#f92672">=</span> activity<span style="color:#f92672">.</span><span style="color:#a6e22e">getResources</span><span style="color:#f92672">();</span>
-
-                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                        Field mAssets <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
-                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
-                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        Field mResourcesImpl <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourcesImpl&#34;</span><span style="color:#f92672">);</span>
-                        mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        Object resourceImpl <span style="color:#f92672">=</span> mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
-                        Field implAssets <span style="color:#f92672">=</span> resourceImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
-                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resourceImpl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
-                    <span style="color:#f92672">}</span>
-
-                    Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span> theme <span style="color:#f92672">=</span> activity<span style="color:#f92672">.</span><span style="color:#a6e22e">getTheme</span><span style="color:#f92672">();</span>
-                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                            Field ma <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
-                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
-                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                            Field themeField <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mThemeImpl&#34;</span><span style="color:#f92672">);</span>
-                            themeField<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                            Object impl <span style="color:#f92672">=</span> themeField<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">);</span>
-                            Field ma <span style="color:#f92672">=</span> impl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
-                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>impl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
-                        <span style="color:#f92672">}</span>
-
-                        Field mt <span style="color:#f92672">=</span> ContextThemeWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mTheme&#34;</span><span style="color:#f92672">);</span>
-                        mt<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        mt<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>activity<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-                        Method mtm <span style="color:#f92672">=</span> ContextThemeWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;initializeTheme&#34;</span><span style="color:#f92672">);</span>
-                        mtm<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        mtm<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>activity<span style="color:#f92672">);</span>
-
-                        Method mCreateTheme <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;createTheme&#34;</span><span style="color:#f92672">);</span>
-                        mCreateTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        Object internalTheme <span style="color:#f92672">=</span> mCreateTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">);</span>
-                        Field mTheme <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mTheme&#34;</span><span style="color:#f92672">);</span>
-                        mTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        mTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">,</span> internalTheme<span style="color:#f92672">);</span>
-                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Failed to update existing theme for activity &#34;</span> <span style="color:#f92672">+</span> activity<span style="color:#f92672">,</span>
-                                e<span style="color:#f92672">);</span>
-                    <span style="color:#f92672">}</span>
-
-                    pruneResourceCaches<span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-
-            <span style="color:#75715e">// Iterate over all known Resources objects
-</span><span style="color:#75715e"></span>            Collection<span style="color:#f92672">&lt;</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> references<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SDK_INT <span style="color:#f92672">&gt;=</span> KITKAT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#75715e">// Find the singleton instance of ResourcesManager
-</span><span style="color:#75715e"></span>                Class<span style="color:#f92672">&lt;?&gt;</span> resourcesManagerClass <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ResourcesManager&#34;</span><span style="color:#f92672">);</span>
-                Method mGetInstance <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;getInstance&#34;</span><span style="color:#f92672">);</span>
-                mGetInstance<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                Object resourcesManager <span style="color:#f92672">=</span> mGetInstance<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
-                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                    Field fMActiveResources <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mActiveResources&#34;</span><span style="color:#f92672">);</span>
-                    fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                    <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
-                    ArrayMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> arrayMap <span style="color:#f92672">=</span>
-                            <span style="color:#f92672">(</span>ArrayMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resourcesManager<span style="color:#f92672">);</span>
-                    references <span style="color:#f92672">=</span> arrayMap<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">();</span>
-                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    Field mResourceReferences <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourceReferences&#34;</span><span style="color:#f92672">);</span>
-                    mResourceReferences<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                    <span style="color:#75715e">//noinspection unchecked
-</span><span style="color:#75715e"></span>                    references <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Collection<span style="color:#f92672">&lt;</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> mResourceReferences<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resourcesManager<span style="color:#f92672">);</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                Class<span style="color:#f92672">&lt;?&gt;</span> activityThread <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ActivityThread&#34;</span><span style="color:#f92672">);</span>
-                Field fMActiveResources <span style="color:#f92672">=</span> activityThread<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mActiveResources&#34;</span><span style="color:#f92672">);</span>
-                fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                Object thread <span style="color:#f92672">=</span> getActivityThread<span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> activityThread<span style="color:#f92672">);</span>
-                <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
-                HashMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> map <span style="color:#f92672">=</span>
-                        <span style="color:#f92672">(</span>HashMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
-                references <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">();</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;</span> wr <span style="color:#f92672">:</span> references<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                Resources resources <span style="color:#f92672">=</span> wr<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resources <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    <span style="color:#75715e">// Set the AssetManager of the Resources instance to our brand new one
-</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-                        Field mAssets <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
-                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
-                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                        Field mResourcesImpl <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourcesImpl&#34;</span><span style="color:#f92672">);</span>
-                        mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        Object resourceImpl <span style="color:#f92672">=</span> mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
-                        Field implAssets <span style="color:#f92672">=</span> resourceImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
-                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resourceImpl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
-                    <span style="color:#f92672">}</span>
-
-                    resources<span style="color:#f92672">.</span><span style="color:#a6e22e">updateConfiguration</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">.</span><span style="color:#a6e22e">getConfiguration</span><span style="color:#f92672">(),</span> resources<span style="color:#f92672">.</span><span style="color:#a6e22e">getDisplayMetrics</span><span style="color:#f92672">());</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-</code></pre></div><p>除去打日志和处理版本兼容的代码，主要就做了两件事：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">monkeyPatchExistingResources</span><span style="color:#f92672">(</span><span style="color:#a6e22e">@Nullable</span> Context context<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                                                    <span style="color:#a6e22e">@Nullable</span> String externalResourceFile<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                                                    <span style="color:#a6e22e">@Nullable</span> Collection<span style="color:#f92672">&lt;</span>Activity<span style="color:#f92672">&gt;</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>externalResourceFile <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        (Note: the resource directory is *also* inserted into the loadedApk in
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        monkeyPatchApplication)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        The code seems to perform this:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        File externalResourceFile = &lt;path to resources.ap_ or extracted directory&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        AssetManager newAssetManager = new AssetManager();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        newAssetManager.addAssetPath(externalResourceFile)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // Kitkat needs this method call, Lollipop doesn&#39;t. However, it doesn&#39;t seem to cause any harm
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // in L, so we do it unconditionally.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        newAssetManager.ensureStringBlocks();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // Find the singleton instance of ResourcesManager
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        ResourcesManager resourcesManager = ResourcesManager.getInstance();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // Iterate over all known Resources objects
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.KITKAT) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">            for (WeakReference&lt;Resources&gt; wr : resourcesManager.mActiveResources.values()) {
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                Resources resources = wr.get();
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                // Set the AssetManager of the Resources instance to our brand new one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                resources.mAssets = newAssetManager;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                resources.updateConfiguration(resources.getConfiguration(), resources.getDisplayMetrics());
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">            }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        }
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // Also, for each context, call getTheme() to get the current theme; null out its
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // mTheme field, then invoke initializeTheme() to force it to be recreated (with the
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        // new asset manager!)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">        */</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Create a new AssetManager instance and point it to the resources installed under
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">// /sdcard
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            AssetManager newAssetManager <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getConstructor</span><span style="color:#f92672">().</span><span style="color:#a6e22e">newInstance</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            Method mAddAssetPath <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;addAssetPath&#34;</span><span style="color:#f92672">,</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            mAddAssetPath<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(((</span>Integer<span style="color:#f92672">)</span> mAddAssetPath<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">,</span> externalResourceFile<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Could not create new AssetManager&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Kitkat needs this method call, Lollipop doesn&#39;t. However, it doesn&#39;t seem to cause any harm
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">// in L, so we do it unconditionally.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            Method mEnsureStringBlocks <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;ensureStringBlocks&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            mEnsureStringBlocks<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            mEnsureStringBlocks<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>activities <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Activity activity <span style="color:#f92672">:</span> activities<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    Resources resources <span style="color:#f92672">=</span> activity<span style="color:#f92672">.</span><span style="color:#a6e22e">getResources</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        Field mAssets <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        Field mResourcesImpl <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourcesImpl&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Object resourceImpl <span style="color:#f92672">=</span> mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Field implAssets <span style="color:#f92672">=</span> resourceImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resourceImpl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span> theme <span style="color:#f92672">=</span> activity<span style="color:#f92672">.</span><span style="color:#a6e22e">getTheme</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                            Field ma <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                            Field themeField <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mThemeImpl&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            themeField<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            Object impl <span style="color:#f92672">=</span> themeField<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            Field ma <span style="color:#f92672">=</span> impl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            ma<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>impl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                        Field mt <span style="color:#f92672">=</span> ContextThemeWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mTheme&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mt<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mt<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>activity<span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Method mtm <span style="color:#f92672">=</span> ContextThemeWrapper<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;initializeTheme&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mtm<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mtm<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>activity<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                        Method mCreateTheme <span style="color:#f92672">=</span> AssetManager<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;createTheme&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mCreateTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Object internalTheme <span style="color:#f92672">=</span> mCreateTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span>newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Field mTheme <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">Theme</span><span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mTheme&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mTheme<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>theme<span style="color:#f92672">,</span> internalTheme<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span>LOG_TAG<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;Failed to update existing theme for activity &#34;</span> <span style="color:#f92672">+</span> activity<span style="color:#f92672">,</span>
+</span></span><span style="display:flex;"><span>                                e<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    pruneResourceCaches<span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Iterate over all known Resources objects
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            Collection<span style="color:#f92672">&lt;</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> references<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>SDK_INT <span style="color:#f92672">&gt;=</span> KITKAT<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">// Find the singleton instance of ResourcesManager
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                Class<span style="color:#f92672">&lt;?&gt;</span> resourcesManagerClass <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ResourcesManager&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                Method mGetInstance <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredMethod</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;getInstance&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                mGetInstance<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                Object resourcesManager <span style="color:#f92672">=</span> mGetInstance<span style="color:#f92672">.</span><span style="color:#a6e22e">invoke</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    Field fMActiveResources <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mActiveResources&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                    ArrayMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> arrayMap <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#f92672">(</span>ArrayMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resourcesManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    references <span style="color:#f92672">=</span> arrayMap<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoSuchFieldException ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    Field mResourceReferences <span style="color:#f92672">=</span> resourcesManagerClass<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourceReferences&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    mResourceReferences<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">//noinspection unchecked
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    references <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Collection<span style="color:#f92672">&lt;</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> mResourceReferences<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resourcesManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                Class<span style="color:#f92672">&lt;?&gt;</span> activityThread <span style="color:#f92672">=</span> Class<span style="color:#f92672">.</span><span style="color:#a6e22e">forName</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;android.app.ActivityThread&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                Field fMActiveResources <span style="color:#f92672">=</span> activityThread<span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mActiveResources&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                Object thread <span style="color:#f92672">=</span> getActivityThread<span style="color:#f92672">(</span>context<span style="color:#f92672">,</span> activityThread<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#a6e22e">@SuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;unchecked&#34;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>                HashMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;</span> map <span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">(</span>HashMap<span style="color:#f92672">&lt;?,</span> WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;&gt;)</span> fMActiveResources<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                references <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>WeakReference<span style="color:#f92672">&lt;</span>Resources<span style="color:#f92672">&gt;</span> wr <span style="color:#f92672">:</span> references<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                Resources resources <span style="color:#f92672">=</span> wr<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resources <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">// Set the AssetManager of the Resources instance to our brand new one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        Field mAssets <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable ignore<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        Field mResourcesImpl <span style="color:#f92672">=</span> Resources<span style="color:#f92672">.</span><span style="color:#a6e22e">class</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mResourcesImpl&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Object resourceImpl <span style="color:#f92672">=</span> mResourcesImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        Field implAssets <span style="color:#f92672">=</span> resourceImpl<span style="color:#f92672">.</span><span style="color:#a6e22e">getClass</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getDeclaredField</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mAssets&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">setAccessible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                        implAssets<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>resourceImpl<span style="color:#f92672">,</span> newAssetManager<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    resources<span style="color:#f92672">.</span><span style="color:#a6e22e">updateConfiguration</span><span style="color:#f92672">(</span>resources<span style="color:#f92672">.</span><span style="color:#a6e22e">getConfiguration</span><span style="color:#f92672">(),</span> resources<span style="color:#f92672">.</span><span style="color:#a6e22e">getDisplayMetrics</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Throwable e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">throw</span> <span style="color:#66d9ef">new</span> IllegalStateException<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>除去打日志和处理版本兼容的代码，主要就做了两件事：</p>
 <ol>
 <li>构建一个新的AssetManager，并通过反射调用addAssetPath，把这个完整的新资源包加入到AssetManager中，这样就得到一个含有所有新资源的AssetManager。</li>
 <li>找到所有之前引用到原AssetManager的地方，通过反射，吧引用处替换为新的AssetManager。</li>
@@ -344,6 +343,9 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/from-reactnative-to-flutter/">从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/the-born-of-a-book/">一本书的诞生</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/improve-efficiency-by-shuangpin/">如何提高中文输入的效率</a></li>
@@ -351,9 +353,6 @@
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-vim-and-emacs/">现阶段（2021年10月）对于Vim和Emacs的思考</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -376,7 +375,7 @@
 	<h4 class="widget__title">标签</h4>
 	<div class="widget__content">
 		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (27)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
@@ -385,7 +384,7 @@
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (11)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (15)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (17)</a>
 	</div>
 </div>
 <div class="widget-social widget">

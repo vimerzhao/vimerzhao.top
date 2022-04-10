@@ -6,11 +6,20 @@
     <description>Recent content in Tags on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 08 Nov 2021 12:56:59 +0800</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 16 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>随笔</title>
+      <link>/tags/%E9%9A%8F%E7%AC%94/</link>
+      <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/%E9%9A%8F%E7%AC%94/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>工具</title>
       <link>/tags/%E5%B7%A5%E5%85%B7/</link>
-      <pubDate>Mon, 08 Nov 2021 12:56:59 +0800</pubDate>
+      <pubDate>Sun, 19 Dec 2021 00:00:00 +0000</pubDate>
       
       <guid>/tags/%E5%B7%A5%E5%85%B7/</guid>
       <description></description>
@@ -40,15 +49,6 @@
       <pubDate>Sun, 08 Aug 2021 15:53:53 +0800</pubDate>
       
       <guid>/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>随笔</title>
-      <link>/tags/%E9%9A%8F%E7%AC%94/</link>
-      <pubDate>Sun, 20 Dec 2020 19:49:29 +0800</pubDate>
-      
-      <guid>/tags/%E9%9A%8F%E7%AC%94/</guid>
       <description></description>
     </item>
     

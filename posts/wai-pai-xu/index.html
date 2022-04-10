@@ -125,205 +125,205 @@
 需要说明的是图中数字不是弹出文件了，只是为了显示方便。实际就是不断向下读取。
 为什么要用堆排序呢？主要是每次都是写出写入一个数据，如果每次都重新排序显然没有必要，要充分利用已有的信息，如上图，第二次排序时右边显然不需要重复比较。</p>
 <h2 id="代码">代码</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">/*
-</span><span style="color:#75715e"> * Function:    External Sort Demo
-</span><span style="color:#75715e"> * Environment: LinuxMint/g++5.4.0
-</span><span style="color:#75715e"> * Date:        2017-3-20
-</span><span style="color:#75715e"> * Author:      zhaoyu/DUT
-</span><span style="color:#75715e"> */</span>
-<span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bits/stdc++.h&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
-<span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">double</span> ElemType;
-
-<span style="color:#75715e">#define HEAP_SIZE 10000000
-</span><span style="color:#75715e">#define K_WAYS 10
-</span><span style="color:#75715e">#define IN_FORMAT &#34;%lf&#34;
-</span><span style="color:#75715e">#define OUT_FORMAT &#34;%.2lf\n&#34;
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">MinHeapNode</span> {
-    ElemType element;
-    <span style="color:#66d9ef">int</span> index;
-};
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(MinHeapNode <span style="color:#f92672">*</span>x, MinHeapNode <span style="color:#f92672">*</span>y);
-
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MinHeap</span> {
-    MinHeapNode<span style="color:#f92672">*</span> harr;  <span style="color:#75715e">// pointer to array of elements in heap
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> heap_size;      <span style="color:#75715e">// size of min heap
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
-    MinHeap(MinHeapNode a[], <span style="color:#66d9ef">int</span> size);
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MinHeapify</span>(<span style="color:#66d9ef">int</span>);
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">left</span>(<span style="color:#66d9ef">int</span> i) { <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>); }
-    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">right</span>(<span style="color:#66d9ef">int</span> i) { <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>); }
-    MinHeapNode <span style="color:#a6e22e">getMin</span>() { <span style="color:#66d9ef">return</span> harr[<span style="color:#ae81ff">0</span>]; }
-    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">replaceMin</span>(MinHeapNode x) {
-        harr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> x;
-        MinHeapify(<span style="color:#ae81ff">0</span>);
-    }
-};
-
-MinHeap<span style="color:#f92672">::</span>MinHeap(MinHeapNode a[], <span style="color:#66d9ef">int</span> size) {
-    heap_size <span style="color:#f92672">=</span> size;
-    harr <span style="color:#f92672">=</span> a;
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> (heap_size<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; i<span style="color:#f92672">--</span>) {
-        MinHeapify(i);
-    }
-}
-
-<span style="color:#66d9ef">void</span> MinHeap<span style="color:#f92672">::</span>MinHeapify(<span style="color:#66d9ef">int</span> i) {
-    <span style="color:#66d9ef">int</span> l <span style="color:#f92672">=</span> left(i);
-    <span style="color:#66d9ef">int</span> r <span style="color:#f92672">=</span> right(i);
-    <span style="color:#66d9ef">int</span> smallest <span style="color:#f92672">=</span> i;
-    <span style="color:#66d9ef">if</span> (l <span style="color:#f92672">&lt;</span> heap_size <span style="color:#f92672">&amp;&amp;</span> harr[l].element <span style="color:#f92672">&lt;</span> harr[i].element) {
-        smallest <span style="color:#f92672">=</span> l;
-    }
-    <span style="color:#66d9ef">if</span> (r <span style="color:#f92672">&lt;</span> heap_size <span style="color:#f92672">&amp;&amp;</span> harr[r].element <span style="color:#f92672">&lt;</span> harr[smallest].element) {
-        smallest <span style="color:#f92672">=</span> r;
-    }
-    <span style="color:#66d9ef">if</span> (smallest <span style="color:#f92672">!=</span> i) {
-        swap(<span style="color:#f92672">&amp;</span>harr[i], <span style="color:#f92672">&amp;</span>harr[smallest]);
-        MinHeapify(smallest);
-    }
-}
-
-FILE <span style="color:#f92672">*</span><span style="color:#a6e22e">openFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>fileName, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>mode);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">closeFile</span>(FILE <span style="color:#f92672">*</span>fp);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sliceFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mergeFiles</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file);
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">externalSort</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file);
-ElemType <span style="color:#a6e22e">randNumber</span>(<span style="color:#66d9ef">void</span>);
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">*</span> argv[]) {
-    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;in.txt&#34;</span>;
-    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;out.txt&#34;</span>;
-    FILE <span style="color:#f92672">*</span>fin <span style="color:#f92672">=</span> openFile(in_file, <span style="color:#e6db74">&#34;w&#34;</span>);
-    clock_t begin, end_rand, end_sort;
-    begin <span style="color:#f92672">=</span> clock();
-    srand((<span style="color:#66d9ef">unsigned</span>)time(NULL));
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS<span style="color:#f92672">*</span>HEAP_SIZE; i<span style="color:#f92672">++</span>) {
-        fprintf(fin, <span style="color:#e6db74">&#34;%.2f</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, randNumber());
-    }
-    closeFile(fin);
-    end_rand <span style="color:#f92672">=</span> clock();
-    externalSort(in_file, out_file);
-    end_sort <span style="color:#f92672">=</span> clock();
-    printf(<span style="color:#e6db74">&#34;Generate Time:%.5lf</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (end_rand <span style="color:#f92672">-</span> begin)<span style="color:#f92672">*</span><span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span>CLOCKS_PER_SEC);
-    printf(<span style="color:#e6db74">&#34;Sort Time:%.5lf</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (end_sort <span style="color:#f92672">-</span> end_rand)<span style="color:#f92672">*</span><span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span>CLOCKS_PER_SEC);
-    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-}
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(MinHeapNode <span style="color:#f92672">*</span>x, MinHeapNode <span style="color:#f92672">*</span>y) {
-    MinHeapNode temp <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x;
-    <span style="color:#f92672">*</span>x <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>y;
-    <span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> temp;
-}
-
-FILE <span style="color:#f92672">*</span><span style="color:#a6e22e">openFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>fileName, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>mode) {
-    FILE <span style="color:#f92672">*</span>fp <span style="color:#f92672">=</span> fopen(fileName, mode);
-    <span style="color:#66d9ef">if</span> (fp <span style="color:#f92672">==</span> NULL) {
-        fprintf(stderr, <span style="color:#e6db74">&#34;Error while opening %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, fileName);
-        exit(EXIT_FAILURE);
-    }
-    <span style="color:#66d9ef">return</span> fp;
-}
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">closeFile</span>(FILE <span style="color:#f92672">*</span>fp) {
-    <span style="color:#66d9ef">if</span> (fclose(fp) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
-        fprintf(stderr, <span style="color:#e6db74">&#34;CLOSE ERROR</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
-        exit(EXIT_FAILURE);
-    }
-}
-
-ElemType <span style="color:#a6e22e">randNumber</span>(<span style="color:#66d9ef">void</span>) {
-    <span style="color:#66d9ef">return</span> (ElemType) (rand()<span style="color:#f92672">/</span><span style="color:#ae81ff">10.0</span><span style="color:#f92672">*</span><span style="color:#ae81ff">9.0</span>);
-}
-
-<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">comp</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>p1, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>p2) {
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>((ElemType <span style="color:#f92672">*</span>)p1) <span style="color:#f92672">-</span> <span style="color:#f92672">*</span>((ElemType <span style="color:#f92672">*</span>)p2);
-}
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sliceFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file) {
-    FILE <span style="color:#f92672">*</span>fin <span style="color:#f92672">=</span> openFile(in_file, <span style="color:#e6db74">&#34;r&#34;</span>);
-    FILE <span style="color:#f92672">*</span>fout[K_WAYS];
-    <span style="color:#66d9ef">char</span> fileName[<span style="color:#ae81ff">2</span>];
-
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
-        <span style="color:#75715e">// convert i to string
-</span><span style="color:#75715e"></span>        snprintf(fileName, <span style="color:#66d9ef">sizeof</span>(fileName), <span style="color:#e6db74">&#34;%d&#34;</span>, i);
-        fout[i] <span style="color:#f92672">=</span> openFile(fileName, <span style="color:#e6db74">&#34;w&#34;</span>);
-    }
-
-    ElemType <span style="color:#f92672">*</span>arr <span style="color:#f92672">=</span> (ElemType<span style="color:#f92672">*</span>) malloc(HEAP_SIZE <span style="color:#f92672">*</span> <span style="color:#66d9ef">sizeof</span>(ElemType));
-    <span style="color:#66d9ef">bool</span> moreInput <span style="color:#f92672">=</span> true;
-    <span style="color:#66d9ef">int</span> nextOutputFile <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-
-    <span style="color:#66d9ef">while</span> (moreInput) {
-        <span style="color:#66d9ef">int</span> i;
-        <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> HEAP_SIZE; i<span style="color:#f92672">++</span>) {
-            <span style="color:#66d9ef">if</span> (fscanf(fin, <span style="color:#e6db74">&#34;%lf&#34;</span>, (arr<span style="color:#f92672">+</span>i)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
-                moreInput <span style="color:#f92672">=</span> false;  <span style="color:#75715e">// end of input file.
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">break</span>;
-            }
-        }
-        <span style="color:#75715e">// Attention: last i may less than HEAP_SIZE.
-</span><span style="color:#75715e"></span>        qsort(arr, i, <span style="color:#66d9ef">sizeof</span>(ElemType), comp);
-        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> i; j<span style="color:#f92672">++</span>) {
-            fprintf(fout[nextOutputFile], OUT_FORMAT, arr[j]);
-        }
-        nextOutputFile<span style="color:#f92672">++</span>;
-    }
-
-    free(arr);
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
-        closeFile(fout[i]);
-    }
-    closeFile(fin);
-}
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mergeFiles</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file) {
-    FILE <span style="color:#f92672">*</span>fin[K_WAYS];
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
-        <span style="color:#66d9ef">char</span> fileName[<span style="color:#ae81ff">2</span>];
-        snprintf(fileName, <span style="color:#66d9ef">sizeof</span>(fileName), <span style="color:#e6db74">&#34;%d&#34;</span>, i);
-        fin[i] <span style="color:#f92672">=</span> openFile(fileName, <span style="color:#e6db74">&#34;r&#34;</span>);
-    }
-    FILE <span style="color:#f92672">*</span>fout <span style="color:#f92672">=</span> openFile(out_file, <span style="color:#e6db74">&#34;w&#34;</span>);
-
-    <span style="color:#75715e">// Use MinHeap to Sort K files.
-</span><span style="color:#75715e"></span>    MinHeapNode <span style="color:#f92672">*</span>harr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinHeapNode[K_WAYS];
-    <span style="color:#66d9ef">int</span> i;
-    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
-        <span style="color:#66d9ef">if</span> (fscanf(fin[i], IN_FORMAT, <span style="color:#f92672">&amp;</span>harr[i].element) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
-            <span style="color:#66d9ef">break</span>;
-        }
-        harr[i].index <span style="color:#f92672">=</span> i;
-    }
-
-    MinHeap hp(harr, i);
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// sorted files.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (count <span style="color:#f92672">!=</span> i) {
-        MinHeapNode root <span style="color:#f92672">=</span> hp.getMin();
-        fprintf(fout, OUT_FORMAT, root.element);
-        <span style="color:#66d9ef">if</span> (fscanf(fin[root.index], IN_FORMAT, <span style="color:#f92672">&amp;</span>root.element) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
-            root.element <span style="color:#f92672">=</span> INT_MAX<span style="color:#f92672">*</span><span style="color:#ae81ff">1.0</span>;
-            count<span style="color:#f92672">++</span>;
-        }
-        hp.replaceMin(root);
-    }
-    <span style="color:#66d9ef">delete</span> []harr;
-    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
-        closeFile(fin[i]);
-    }
-    closeFile(fout);
-}
-
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">externalSort</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file) {
-    sliceFile(in_file);
-
-    mergeFiles(out_file);
-}
-</code></pre></div><h2 id="验证">验证</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Function:    External Sort Demo
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Environment: LinuxMint/g++5.4.0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Date:        2017-3-20
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Author:      zhaoyu/DUT
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bits/stdc++.h&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">using</span> <span style="color:#66d9ef">namespace</span> std;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">typedef</span> <span style="color:#66d9ef">double</span> ElemType;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#define HEAP_SIZE 10000000
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define K_WAYS 10
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define IN_FORMAT &#34;%lf&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#define OUT_FORMAT &#34;%.2lf\n&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">MinHeapNode</span> {
+</span></span><span style="display:flex;"><span>    ElemType element;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> index;
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(MinHeapNode <span style="color:#f92672">*</span>x, MinHeapNode <span style="color:#f92672">*</span>y);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MinHeap</span> {
+</span></span><span style="display:flex;"><span>    MinHeapNode<span style="color:#f92672">*</span> harr;  <span style="color:#75715e">// pointer to array of elements in heap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> heap_size;      <span style="color:#75715e">// size of min heap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span><span style="color:#f92672">:</span>
+</span></span><span style="display:flex;"><span>    MinHeap(MinHeapNode a[], <span style="color:#66d9ef">int</span> size);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">MinHeapify</span>(<span style="color:#66d9ef">int</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">left</span>(<span style="color:#66d9ef">int</span> i) { <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span>); }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">right</span>(<span style="color:#66d9ef">int</span> i) { <span style="color:#66d9ef">return</span> (<span style="color:#ae81ff">2</span> <span style="color:#f92672">*</span> i <span style="color:#f92672">+</span> <span style="color:#ae81ff">2</span>); }
+</span></span><span style="display:flex;"><span>    MinHeapNode <span style="color:#a6e22e">getMin</span>() { <span style="color:#66d9ef">return</span> harr[<span style="color:#ae81ff">0</span>]; }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">replaceMin</span>(MinHeapNode x) {
+</span></span><span style="display:flex;"><span>        harr[<span style="color:#ae81ff">0</span>] <span style="color:#f92672">=</span> x;
+</span></span><span style="display:flex;"><span>        MinHeapify(<span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>MinHeap<span style="color:#f92672">::</span>MinHeap(MinHeapNode a[], <span style="color:#66d9ef">int</span> size) {
+</span></span><span style="display:flex;"><span>    heap_size <span style="color:#f92672">=</span> size;
+</span></span><span style="display:flex;"><span>    harr <span style="color:#f92672">=</span> a;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> (heap_size<span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>)<span style="color:#f92672">/</span><span style="color:#ae81ff">2</span>; i <span style="color:#f92672">&gt;=</span> <span style="color:#ae81ff">0</span>; i<span style="color:#f92672">--</span>) {
+</span></span><span style="display:flex;"><span>        MinHeapify(i);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> MinHeap<span style="color:#f92672">::</span>MinHeapify(<span style="color:#66d9ef">int</span> i) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> l <span style="color:#f92672">=</span> left(i);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> r <span style="color:#f92672">=</span> right(i);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> smallest <span style="color:#f92672">=</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (l <span style="color:#f92672">&lt;</span> heap_size <span style="color:#f92672">&amp;&amp;</span> harr[l].element <span style="color:#f92672">&lt;</span> harr[i].element) {
+</span></span><span style="display:flex;"><span>        smallest <span style="color:#f92672">=</span> l;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (r <span style="color:#f92672">&lt;</span> heap_size <span style="color:#f92672">&amp;&amp;</span> harr[r].element <span style="color:#f92672">&lt;</span> harr[smallest].element) {
+</span></span><span style="display:flex;"><span>        smallest <span style="color:#f92672">=</span> r;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (smallest <span style="color:#f92672">!=</span> i) {
+</span></span><span style="display:flex;"><span>        swap(<span style="color:#f92672">&amp;</span>harr[i], <span style="color:#f92672">&amp;</span>harr[smallest]);
+</span></span><span style="display:flex;"><span>        MinHeapify(smallest);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FILE <span style="color:#f92672">*</span><span style="color:#a6e22e">openFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>fileName, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>mode);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">closeFile</span>(FILE <span style="color:#f92672">*</span>fp);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sliceFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mergeFiles</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">externalSort</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file);
+</span></span><span style="display:flex;"><span>ElemType <span style="color:#a6e22e">randNumber</span>(<span style="color:#66d9ef">void</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>(<span style="color:#66d9ef">int</span> argc, <span style="color:#66d9ef">char</span> <span style="color:#66d9ef">const</span><span style="color:#f92672">*</span> argv[]) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;in.txt&#34;</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;out.txt&#34;</span>;
+</span></span><span style="display:flex;"><span>    FILE <span style="color:#f92672">*</span>fin <span style="color:#f92672">=</span> openFile(in_file, <span style="color:#e6db74">&#34;w&#34;</span>);
+</span></span><span style="display:flex;"><span>    clock_t begin, end_rand, end_sort;
+</span></span><span style="display:flex;"><span>    begin <span style="color:#f92672">=</span> clock();
+</span></span><span style="display:flex;"><span>    srand((<span style="color:#66d9ef">unsigned</span>)time(NULL));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS<span style="color:#f92672">*</span>HEAP_SIZE; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        fprintf(fin, <span style="color:#e6db74">&#34;%.2f</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, randNumber());
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    closeFile(fin);
+</span></span><span style="display:flex;"><span>    end_rand <span style="color:#f92672">=</span> clock();
+</span></span><span style="display:flex;"><span>    externalSort(in_file, out_file);
+</span></span><span style="display:flex;"><span>    end_sort <span style="color:#f92672">=</span> clock();
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;Generate Time:%.5lf</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (end_rand <span style="color:#f92672">-</span> begin)<span style="color:#f92672">*</span><span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span>CLOCKS_PER_SEC);
+</span></span><span style="display:flex;"><span>    printf(<span style="color:#e6db74">&#34;Sort Time:%.5lf</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, (end_sort <span style="color:#f92672">-</span> end_rand)<span style="color:#f92672">*</span><span style="color:#ae81ff">1.0</span><span style="color:#f92672">/</span>CLOCKS_PER_SEC);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span>(MinHeapNode <span style="color:#f92672">*</span>x, MinHeapNode <span style="color:#f92672">*</span>y) {
+</span></span><span style="display:flex;"><span>    MinHeapNode temp <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>x;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>x <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>y;
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">*</span>y <span style="color:#f92672">=</span> temp;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>FILE <span style="color:#f92672">*</span><span style="color:#a6e22e">openFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>fileName, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>mode) {
+</span></span><span style="display:flex;"><span>    FILE <span style="color:#f92672">*</span>fp <span style="color:#f92672">=</span> fopen(fileName, mode);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (fp <span style="color:#f92672">==</span> NULL) {
+</span></span><span style="display:flex;"><span>        fprintf(stderr, <span style="color:#e6db74">&#34;Error while opening %s</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>, fileName);
+</span></span><span style="display:flex;"><span>        exit(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> fp;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">closeFile</span>(FILE <span style="color:#f92672">*</span>fp) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (fclose(fp) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">0</span>) {
+</span></span><span style="display:flex;"><span>        fprintf(stderr, <span style="color:#e6db74">&#34;CLOSE ERROR</span><span style="color:#ae81ff">\n</span><span style="color:#e6db74">&#34;</span>);
+</span></span><span style="display:flex;"><span>        exit(EXIT_FAILURE);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>ElemType <span style="color:#a6e22e">randNumber</span>(<span style="color:#66d9ef">void</span>) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> (ElemType) (rand()<span style="color:#f92672">/</span><span style="color:#ae81ff">10.0</span><span style="color:#f92672">*</span><span style="color:#ae81ff">9.0</span>);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">comp</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>p1, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">void</span> <span style="color:#f92672">*</span>p2) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">*</span>((ElemType <span style="color:#f92672">*</span>)p1) <span style="color:#f92672">-</span> <span style="color:#f92672">*</span>((ElemType <span style="color:#f92672">*</span>)p2);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">sliceFile</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file) {
+</span></span><span style="display:flex;"><span>    FILE <span style="color:#f92672">*</span>fin <span style="color:#f92672">=</span> openFile(in_file, <span style="color:#e6db74">&#34;r&#34;</span>);
+</span></span><span style="display:flex;"><span>    FILE <span style="color:#f92672">*</span>fout[K_WAYS];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span> fileName[<span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// convert i to string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        snprintf(fileName, <span style="color:#66d9ef">sizeof</span>(fileName), <span style="color:#e6db74">&#34;%d&#34;</span>, i);
+</span></span><span style="display:flex;"><span>        fout[i] <span style="color:#f92672">=</span> openFile(fileName, <span style="color:#e6db74">&#34;w&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    ElemType <span style="color:#f92672">*</span>arr <span style="color:#f92672">=</span> (ElemType<span style="color:#f92672">*</span>) malloc(HEAP_SIZE <span style="color:#f92672">*</span> <span style="color:#66d9ef">sizeof</span>(ElemType));
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">bool</span> moreInput <span style="color:#f92672">=</span> true;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> nextOutputFile <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (moreInput) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> HEAP_SIZE; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (fscanf(fin, <span style="color:#e6db74">&#34;%lf&#34;</span>, (arr<span style="color:#f92672">+</span>i)) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>                moreInput <span style="color:#f92672">=</span> false;  <span style="color:#75715e">// end of input file.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// Attention: last i may less than HEAP_SIZE.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        qsort(arr, i, <span style="color:#66d9ef">sizeof</span>(ElemType), comp);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; j <span style="color:#f92672">&lt;</span> i; j<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>            fprintf(fout[nextOutputFile], OUT_FORMAT, arr[j]);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        nextOutputFile<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    free(arr);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        closeFile(fout[i]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    closeFile(fin);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">mergeFiles</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file) {
+</span></span><span style="display:flex;"><span>    FILE <span style="color:#f92672">*</span>fin[K_WAYS];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">char</span> fileName[<span style="color:#ae81ff">2</span>];
+</span></span><span style="display:flex;"><span>        snprintf(fileName, <span style="color:#66d9ef">sizeof</span>(fileName), <span style="color:#e6db74">&#34;%d&#34;</span>, i);
+</span></span><span style="display:flex;"><span>        fin[i] <span style="color:#f92672">=</span> openFile(fileName, <span style="color:#e6db74">&#34;r&#34;</span>);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    FILE <span style="color:#f92672">*</span>fout <span style="color:#f92672">=</span> openFile(out_file, <span style="color:#e6db74">&#34;w&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Use MinHeap to Sort K files.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    MinHeapNode <span style="color:#f92672">*</span>harr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MinHeapNode[K_WAYS];
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (fscanf(fin[i], IN_FORMAT, <span style="color:#f92672">&amp;</span>harr[i].element) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        harr[i].index <span style="color:#f92672">=</span> i;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    MinHeap hp(harr, i);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; <span style="color:#75715e">// sorted files.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> (count <span style="color:#f92672">!=</span> i) {
+</span></span><span style="display:flex;"><span>        MinHeapNode root <span style="color:#f92672">=</span> hp.getMin();
+</span></span><span style="display:flex;"><span>        fprintf(fout, OUT_FORMAT, root.element);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (fscanf(fin[root.index], IN_FORMAT, <span style="color:#f92672">&amp;</span>root.element) <span style="color:#f92672">!=</span> <span style="color:#ae81ff">1</span>) {
+</span></span><span style="display:flex;"><span>            root.element <span style="color:#f92672">=</span> INT_MAX<span style="color:#f92672">*</span><span style="color:#ae81ff">1.0</span>;
+</span></span><span style="display:flex;"><span>            count<span style="color:#f92672">++</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        hp.replaceMin(root);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">delete</span> []harr;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> K_WAYS; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        closeFile(fin[i]);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    closeFile(fout);
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">externalSort</span>(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>in_file, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span> <span style="color:#f92672">*</span>out_file) {
+</span></span><span style="display:flex;"><span>    sliceFile(in_file);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mergeFiles(out_file);
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h2 id="验证">验证</h2>
 <p>如何验证程序是否正确？肉眼比对显然不是程序员该做的！可以设定一个较小的数据集（节省时间），利用系统自带的<code>sort</code>进行排序，然后利用<code>diff</code>比较自己程序输出和<code>sort</code>的输出，如果一样说明程序正确！既方便又准确。
 Perl语言的发明人Larry Wall说</p>
 <blockquote>
@@ -410,6 +410,9 @@ total 3.8G
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/from-reactnative-to-flutter/">从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/the-born-of-a-book/">一本书的诞生</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/improve-efficiency-by-shuangpin/">如何提高中文输入的效率</a></li>
@@ -417,9 +420,6 @@ total 3.8G
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-vim-and-emacs/">现阶段（2021年10月）对于Vim和Emacs的思考</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -442,7 +442,7 @@ total 3.8G
 	<h4 class="widget__title">标签</h4>
 	<div class="widget__content">
 		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (27)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
@@ -451,7 +451,7 @@ total 3.8G
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (11)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (15)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (17)</a>
 	</div>
 </div>
 <div class="widget-social widget">

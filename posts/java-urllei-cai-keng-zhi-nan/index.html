@@ -111,95 +111,93 @@
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-11-26T00:00:00Z">2017-11-26</time>
 	<time class="meta__text" datetime="2022-02-19T23:47:24&#43;08:00">(最后修改: 2022-02-19)</time></div></div>
 		</header>
-        <span style="color:grey; font-size: 0.9em">本文约 3300 字，阅读需 7 分钟。</span><p /><div class="content post__content clearfix">
+        <span style="color:grey; font-size: 0.9em">本文约 3100 字，阅读需 7 分钟。</span><p /><div class="content post__content clearfix">
 			<h1 id="java-url类踩坑指南">Java URL类踩坑指南</h1>
 <p><code>java.net.URL</code>类的几个细节问题。</p>
 <h2 id="背景介绍">背景介绍</h2>
 <p>最近再做一个RSS阅读工具给自己用，其中一个环节是从服务器端获取一个包含了RSS源列表的json文件，再根据这个json文件下载、解析RSS内容。核心代码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PresenterImpl</span>(<span style="color:#66d9ef">val</span> context: Context, <span style="color:#66d9ef">val</span> activity: MainActivity) : IPresenter {
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">val</span> URL_API = <span style="color:#e6db74">&#34;https://vimerzhao.github.io/others/rssreader/RSS.json&#34;</span>
-
-    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">getRssResource</span>(): RssSource {
-        <span style="color:#66d9ef">val</span> gson = GsonBuilder().create()
-        <span style="color:#66d9ef">return</span> gson.fromJson(getFromNet(URL_API), RssSource<span style="color:#f92672">::</span><span style="color:#66d9ef">class</span>.java)
-    }
-
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">getFromNet</span>(url: String): String {
-        <span style="color:#66d9ef">val</span> result = URL(url).readText()
-        <span style="color:#66d9ef">return</span> result
-    }
-
-    <span style="color:#f92672">......</span>
-}
-</code></pre></div><p>之前一直执行地很好，直到前两天我购买了一个<code>vimerzhao.top</code>的域名，并将原来的域名<code>vimerzhao.github.io</code>重定向到了<code>vimerzhao.top</code>。这个工具就无法使用了，但在浏览器输入<code>URL_API</code>却能得到数据：
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PresenterImpl</span>(<span style="color:#66d9ef">val</span> context: Context, <span style="color:#66d9ef">val</span> activity: MainActivity) : IPresenter {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">val</span> URL_API = <span style="color:#e6db74">&#34;https://vimerzhao.github.io/others/rssreader/RSS.json&#34;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">override</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">getRssResource</span>(): RssSource {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> gson = GsonBuilder().create()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> gson.fromJson(getFromNet(URL_API), RssSource<span style="color:#f92672">::</span><span style="color:#66d9ef">class</span>.java)
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">getFromNet</span>(url: String): String {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">val</span> result = URL(url).readText()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> result
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>之前一直执行地很好，直到前两天我购买了一个<code>vimerzhao.top</code>的域名，并将原来的域名<code>vimerzhao.github.io</code>重定向到了<code>vimerzhao.top</code>。这个工具就无法使用了，但在浏览器输入<code>URL_API</code>却能得到数据：
 <img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-26java_url_01.gif" alt=""></p>
 <p>那为什么<code>URL.readText()</code>没有拿到数据呢？</p>
 <h2 id="不支持重定向">不支持重定向</h2>
 <p>可以通过下面代码测试：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> java.net.*<span style="color:#f92672">;</span>
-<span style="color:#f92672">import</span> java.io.*<span style="color:#f92672">;</span>
-
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestRedirect</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            URL url1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://vimerzhao.github.io/others/rssreader/RSS.json&#34;</span><span style="color:#f92672">);</span>
-            URL url2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://vimerzhao.top/others/rssreader/RSS.json&#34;</span><span style="color:#f92672">);</span>
-            read<span style="color:#f92672">(</span>url1<span style="color:#f92672">);</span>
-            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;=--------------------------------=&#34;</span><span style="color:#f92672">);</span>
-            read<span style="color:#f92672">(</span>url2<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>URL url<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            BufferedReader in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span>
-                    <span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>url<span style="color:#f92672">.</span><span style="color:#a6e22e">openStream</span><span style="color:#f92672">()));</span>
-
-            String inputLine<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>inputLine <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>inputLine<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-            in<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-
-</code></pre></div><p>得到结果如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.net.*<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> java.io.*<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestRedirect</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            URL url1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://vimerzhao.github.io/others/rssreader/RSS.json&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            URL url2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://vimerzhao.top/others/rssreader/RSS.json&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            read<span style="color:#f92672">(</span>url1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;=--------------------------------=&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            read<span style="color:#f92672">(</span>url2<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">read</span><span style="color:#f92672">(</span>URL url<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            BufferedReader in <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>url<span style="color:#f92672">.</span><span style="color:#a6e22e">openStream</span><span style="color:#f92672">()));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            String inputLine<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>inputLine <span style="color:#f92672">=</span> in<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>inputLine<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            in<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>得到结果如下：</p>
 <pre tabindex="0"><code>&lt;html&gt;
 &lt;head&gt;&lt;title&gt;301 Moved Permanently&lt;/title&gt;&lt;/head&gt;
-&lt;body bgcolor=&quot;white&quot;&gt;
+&lt;body bgcolor=&#34;white&#34;&gt;
 &lt;center&gt;&lt;h1&gt;301 Moved Permanently&lt;/h1&gt;&lt;/center&gt;
 &lt;hr&gt;&lt;center&gt;nginx&lt;/center&gt;
 &lt;/body&gt;
 &lt;/html&gt;
 =--------------------------------=
-{&quot;theme&quot;:&quot;tech&quot;,&quot;author&quot;:&quot;zhaoyu&quot;,&quot;email&quot;:&quot;dutzhaoyu@gmail.com&quot;,&quot;version&quot;:&quot;0.01&quot;,&quot;contents&quot;:[{&quot;category&quot;:&quot;综合版块&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;门户网站&quot;,&quot;url&quot;:[&quot;http://geek.csdn.net/admin/news_service/rss&quot;,&quot;http://blog.jobbole.com/feed/&quot;,&quot;http://feed.cnblogs.com/blog/sitehome/rss&quot;,&quot;https://segmentfault.com/feeds&quot;,&quot;http://www.codeceo.com/article/category/pick/feed&quot;]},{&quot;tag&quot;:&quot;知名社区&quot;,&quot;url&quot;:[&quot;https://stackoverflow.com/feeds&quot;,&quot;https://www.v2ex.com/index.xml&quot;]},{&quot;tag&quot;:&quot;官方博客&quot;,&quot;url&quot;:[&quot;https://www.blog.google/rss/&quot;,&quot;https://blog.jetbrains.com/feed/&quot;]},{&quot;tag&quot;:&quot;个人博客-行业&quot;,&quot;url&quot;:[&quot;http://feed.williamlong.info/&quot;,&quot;https://www.liaoxuefeng.com/feed/articles&quot;]},{&quot;tag&quot;:&quot;个人博客-学术&quot;,&quot;url&quot;:[&quot;http://www.norvig.com/rss-feed.xml&quot;]}]},{&quot;category&quot;:&quot;编程语言&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;Kotlin&quot;,&quot;url&quot;:[&quot;https://kotliner.cn/api/rss/latest&quot;]},{&quot;tag&quot;:&quot;Python&quot;,&quot;url&quot;:[&quot;https://www.python.org/dev/peps/peps.rss/&quot;]},{&quot;tag&quot;:&quot;Java&quot;,&quot;url&quot;:[&quot;http://www.codeceo.com/article/category/develop/java/feed&quot;]}]},{&quot;category&quot;:&quot;行业动态&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;Android&quot;,&quot;url&quot;:[&quot;http://www.codeceo.com/article/category/develop/android/feed&quot;]}]},{&quot;category&quot;:&quot;乱七八遭&quot;,&quot;websites&quot;:[{&quot;tag&quot;:&quot;Linux-综合&quot;,&quot;url&quot;:[&quot;https://linux.cn/rss.xml&quot;,&quot;http://www.linuxidc.com/rssFeed.aspx&quot;,&quot;http://www.codeceo.com/article/tag/linux/feed&quot;]},{&quot;tag&quot;:&quot;Linux-发行版&quot;,&quot;url&quot;:[&quot;https://blog.linuxmint.com/?feed=rss2&quot;,&quot;https://manjaro.github.io/feed.xml&quot;]}]}]}
+{&#34;theme&#34;:&#34;tech&#34;,&#34;author&#34;:&#34;zhaoyu&#34;,&#34;email&#34;:&#34;dutzhaoyu@gmail.com&#34;,&#34;version&#34;:&#34;0.01&#34;,&#34;contents&#34;:[{&#34;category&#34;:&#34;综合版块&#34;,&#34;websites&#34;:[{&#34;tag&#34;:&#34;门户网站&#34;,&#34;url&#34;:[&#34;http://geek.csdn.net/admin/news_service/rss&#34;,&#34;http://blog.jobbole.com/feed/&#34;,&#34;http://feed.cnblogs.com/blog/sitehome/rss&#34;,&#34;https://segmentfault.com/feeds&#34;,&#34;http://www.codeceo.com/article/category/pick/feed&#34;]},{&#34;tag&#34;:&#34;知名社区&#34;,&#34;url&#34;:[&#34;https://stackoverflow.com/feeds&#34;,&#34;https://www.v2ex.com/index.xml&#34;]},{&#34;tag&#34;:&#34;官方博客&#34;,&#34;url&#34;:[&#34;https://www.blog.google/rss/&#34;,&#34;https://blog.jetbrains.com/feed/&#34;]},{&#34;tag&#34;:&#34;个人博客-行业&#34;,&#34;url&#34;:[&#34;http://feed.williamlong.info/&#34;,&#34;https://www.liaoxuefeng.com/feed/articles&#34;]},{&#34;tag&#34;:&#34;个人博客-学术&#34;,&#34;url&#34;:[&#34;http://www.norvig.com/rss-feed.xml&#34;]}]},{&#34;category&#34;:&#34;编程语言&#34;,&#34;websites&#34;:[{&#34;tag&#34;:&#34;Kotlin&#34;,&#34;url&#34;:[&#34;https://kotliner.cn/api/rss/latest&#34;]},{&#34;tag&#34;:&#34;Python&#34;,&#34;url&#34;:[&#34;https://www.python.org/dev/peps/peps.rss/&#34;]},{&#34;tag&#34;:&#34;Java&#34;,&#34;url&#34;:[&#34;http://www.codeceo.com/article/category/develop/java/feed&#34;]}]},{&#34;category&#34;:&#34;行业动态&#34;,&#34;websites&#34;:[{&#34;tag&#34;:&#34;Android&#34;,&#34;url&#34;:[&#34;http://www.codeceo.com/article/category/develop/android/feed&#34;]}]},{&#34;category&#34;:&#34;乱七八遭&#34;,&#34;websites&#34;:[{&#34;tag&#34;:&#34;Linux-综合&#34;,&#34;url&#34;:[&#34;https://linux.cn/rss.xml&#34;,&#34;http://www.linuxidc.com/rssFeed.aspx&#34;,&#34;http://www.codeceo.com/article/tag/linux/feed&#34;]},{&#34;tag&#34;:&#34;Linux-发行版&#34;,&#34;url&#34;:[&#34;https://blog.linuxmint.com/?feed=rss2&#34;,&#34;https://manjaro.github.io/feed.xml&#34;]}]}]}
 </code></pre><p>HTTP返回码301，即发生了重定向。可在浏览器上这个过程太快以至于我们看不到这个301界面的出现。这里需要说明的是<code>URL.readText()</code>是Kotlin中一个<code>扩展函数</code>，本质还是调用了<code>URL</code>类的<code>openStream</code>方法，部分源码如下：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-kotlin" data-lang="kotlin"><span style="color:#f92672">....</span>.
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Reads the entire content of this URL as a String using UTF-8 or the specified [charset].
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * This method is not recommended on huge files.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param charset a character set to use.
-</span><span style="color:#75715e"> * @return a string with this URL entire content.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#a6e22e">@kotlin</span>.<span style="color:#66d9ef">internal</span>.InlineOnly
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">URL</span>.readText(charset: Charset = Charsets.UTF_8): String = readBytes().toString(charset)
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Reads the entire content of the URL as byte array.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * This method is not recommended on huge files.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @return a byte array with this URL entire content.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">URL</span>.readBytes(): ByteArray = openStream().use { <span style="color:#66d9ef">it</span>.readBytes() }
-
-</code></pre></div><p>所以上面的测试代码即说明了<code>URL.readText()</code>失败的原因。
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-kotlin" data-lang="kotlin"><span style="display:flex;"><span><span style="color:#f92672">....</span>.
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Reads the entire content of this URL as a String using UTF-8 or the specified [charset].
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * This method is not recommended on huge files.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param charset a character set to use.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return a string with this URL entire content.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">@kotlin</span>.<span style="color:#66d9ef">internal</span>.InlineOnly
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">inline</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">URL</span>.readText(charset: Charset = Charsets.UTF_8): String = readBytes().toString(charset)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Reads the entire content of the URL as byte array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * This method is not recommended on huge files.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return a byte array with this URL entire content.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">fun</span> <span style="color:#a6e22e">URL</span>.readBytes(): ByteArray = openStream().use { <span style="color:#66d9ef">it</span>.readBytes() }
+</span></span></code></pre></div><p>所以上面的测试代码即说明了<code>URL.readText()</code>失败的原因。
 不过<code>URL</code>不支持重定向是否合理？为什么不支持？还有待探究。</p>
 <h2 id="不稳定的equals方法">不稳定的<code>equals</code>方法</h2>
 <p>首先看下<code>equals</code>的说明(<a href="https://docs.oracle.com/javase/7/docs/api/">URL (Java Platform SE 7 )</a>)：</p>
@@ -212,25 +210,24 @@ Since hosts comparison requires name resolution, this operation is a blocking op
 Note: The defined behavior for equals is known to be inconsistent with virtual hosting in HTTP.</p>
 </blockquote>
 <p>接下来再看一段代码：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#f92672">import</span> java.net.*<span style="color:#f92672">;</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestEquals</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">// vimerzhao的博客主页
-</span><span style="color:#75715e"></span>            URL url1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://vimerzhao.github.io/&#34;</span><span style="color:#f92672">);</span>
-            <span style="color:#75715e">// zhanglanqing的博客主页
-</span><span style="color:#75715e"></span>            URL url2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://zhanglanqing.github.io/&#34;</span><span style="color:#f92672">);</span>
-            <span style="color:#75715e">// vimerzhao博客主页重定向后的域名
-</span><span style="color:#75715e"></span>            URL url3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://vimerzhao.top/&#34;</span><span style="color:#f92672">);</span>
-            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>url1<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>url2<span style="color:#f92672">));</span>
-            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>url1<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>url3<span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-
-</code></pre></div><p>根据定义输出结果是什么呢？运行之后是这样：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#f92672">import</span> java.net.*<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TestEquals</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String args<span style="color:#f92672">[])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// vimerzhao的博客主页
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            URL url1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://vimerzhao.github.io/&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// zhanglanqing的博客主页
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            URL url2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;https://zhanglanqing.github.io/&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// vimerzhao博客主页重定向后的域名
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            URL url3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> URL<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;http://vimerzhao.top/&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>url1<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>url2<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>url1<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>url3<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>根据定义输出结果是什么呢？运行之后是这样：</p>
 <pre tabindex="0"><code>true
 false
 </code></pre><p>你可能猜对了，但如果我把电脑<strong>断网</strong>之后再次执行，结果却是：</p>
@@ -301,6 +298,9 @@ vimerzhao.github.io
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/from-reactnative-to-flutter/">从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/the-born-of-a-book/">一本书的诞生</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/improve-efficiency-by-shuangpin/">如何提高中文输入的效率</a></li>
@@ -308,9 +308,6 @@ vimerzhao.github.io
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-vim-and-emacs/">现阶段（2021年10月）对于Vim和Emacs的思考</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -333,7 +330,7 @@ vimerzhao.github.io
 	<h4 class="widget__title">标签</h4>
 	<div class="widget__content">
 		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (27)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
@@ -342,7 +339,7 @@ vimerzhao.github.io
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (11)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (15)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (17)</a>
 	</div>
 </div>
 <div class="widget-social widget">

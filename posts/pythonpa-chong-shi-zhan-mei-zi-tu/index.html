@@ -138,40 +138,40 @@ sudo pip3 install beautifulsoup4
 <h3 id="第二步获取网页">第二步：获取网页</h3>
 <p>需要注意的是，由于涉及网络和文件读写操作，在Linux环境需要在<code>root</code>下运行（亲测命令行需要，PyCharm不需要）。
 接下来正式开始，尽量用代码表达。初次练习，可以用增量式的方法（完成一个功能，验证正确性后在此基础上开发下一个）：</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">import</span> requests
-
-<span style="color:#75715e">## 爬取目标</span>
-url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com&#39;</span>
-<span style="color:#75715e">## 设置报头，Http协议</span>
-header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
-main_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, headers <span style="color:#f92672">=</span> header)
-print(main_page<span style="color:#f92672">.</span>text)
-</code></pre></div><p>通过以上4行代码就可以获取得到首页内容
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 爬取目标</span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 设置报头，Http协议</span>
+</span></span><span style="display:flex;"><span>header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
+</span></span><span style="display:flex;"><span>main_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, headers <span style="color:#f92672">=</span> header)
+</span></span><span style="display:flex;"><span>print(main_page<span style="color:#f92672">.</span>text)
+</span></span></code></pre></div><p>通过以上4行代码就可以获取得到首页内容
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu05.png" alt=""></p>
 <h3 id="第三步解析网页">第三步：解析网页</h3>
 <p>分析可以发现，这个网站的每页的url其实就是<code>www.mzitu.com/n/</code>，其中n是数字，n为1的时候会重定向到<code>www.mzitu.com</code>，所以我们可以设置一个n的最大值，不超过网页实际最大值即可，如此就可实现网页的跳转了，而不用模拟点击了翻页的按钮。
 我们比较关心的内容是套图的入口地址，再对网页进行分析，可以发现，所有链接都在一个<code>id</code>为<code>pins</code>的<code>ul</code>里面，如此便可获取该页面全部套图的入口地址了。
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu-7.png" alt=""></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#75715e">#!/usr/bin/env python3</span>
-<span style="color:#f92672">import</span> requests
-<span style="color:#f92672">from</span> bs4 <span style="color:#f92672">import</span> BeautifulSoup
-
-<span style="color:#75715e">## 爬取目标</span>
-url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com/page/&#39;</span>
-<span style="color:#75715e">## 设置报头，Http协议</span>
-header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
-<span style="color:#75715e">## 爬取的预览页面数量</span>
-preview_page_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
-<span style="color:#66d9ef">for</span> cur_page <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, int(preview_page_cnt)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
-    cur_url <span style="color:#f92672">=</span> url <span style="color:#f92672">+</span> str(cur_page)
-    cur_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(cur_url, headers <span style="color:#f92672">=</span> header)
-    <span style="color:#75715e">## 解析网页</span>
-    soup <span style="color:#f92672">=</span> BeautifulSoup(cur_page<span style="color:#f92672">.</span>text, <span style="color:#e6db74">&#39;html.parser&#39;</span>)
-    <span style="color:#75715e">## 图片入口和文字入口取一个即可</span>
-    preview_link_list <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>find(id<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;pins&#39;</span>)<span style="color:#f92672">.</span>find_all(<span style="color:#e6db74">&#39;a&#39;</span>, target<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_blank&#39;</span>)[<span style="color:#ae81ff">1</span>::<span style="color:#ae81ff">2</span>]
-    <span style="color:#66d9ef">for</span> link <span style="color:#f92672">in</span> preview_link_list:
-        print(link)
-</code></pre></div><p>结果如下，可以看到，现在已经获取到每个套图的入口地址了。
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> bs4 <span style="color:#f92672">import</span> BeautifulSoup
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 爬取目标</span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com/page/&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 设置报头，Http协议</span>
+</span></span><span style="display:flex;"><span>header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 爬取的预览页面数量</span>
+</span></span><span style="display:flex;"><span>preview_page_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> cur_page <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, int(preview_page_cnt)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>    cur_url <span style="color:#f92672">=</span> url <span style="color:#f92672">+</span> str(cur_page)
+</span></span><span style="display:flex;"><span>    cur_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(cur_url, headers <span style="color:#f92672">=</span> header)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## 解析网页</span>
+</span></span><span style="display:flex;"><span>    soup <span style="color:#f92672">=</span> BeautifulSoup(cur_page<span style="color:#f92672">.</span>text, <span style="color:#e6db74">&#39;html.parser&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## 图片入口和文字入口取一个即可</span>
+</span></span><span style="display:flex;"><span>    preview_link_list <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>find(id<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;pins&#39;</span>)<span style="color:#f92672">.</span>find_all(<span style="color:#e6db74">&#39;a&#39;</span>, target<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_blank&#39;</span>)[<span style="color:#ae81ff">1</span>::<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> link <span style="color:#f92672">in</span> preview_link_list:
+</span></span><span style="display:flex;"><span>        print(link)
+</span></span></code></pre></div><p>结果如下，可以看到，现在已经获取到每个套图的入口地址了。
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu08.png" alt=""></p>
 <h3 id="第四步解析套图网页">第四步：解析套图网页</h3>
 <p>每个网页显示套图中的一张图片，所以我们需要做两件事：1.分析有多少图片（即网页）2.每个图片的地址（即右键选择“在新标签页打开”时的地址）。
@@ -182,10 +182,10 @@ import requests
 from bs4 import BeautifulSoup
 
 ## 爬取目标
-url = 'http://www.mzitu.com/page/'
-parser = 'html.parser'
+url = &#39;http://www.mzitu.com/page/&#39;
+parser = &#39;html.parser&#39;
 ## 设置报头，Http协议
-header = {'User-Agent' : 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36'}
+header = {&#39;User-Agent&#39; : &#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;}
 ## 爬取的预览页面数量
 preview_page_cnt = 2
 for cur_page in range(1, int(preview_page_cnt)+1):
@@ -194,18 +194,18 @@ for cur_page in range(1, int(preview_page_cnt)+1):
     ## 解析网页
     soup = BeautifulSoup(cur_page.text, parser)
     ## 图片入口和文字入口取一个即可
-    preview_link_list = soup.find(id='pins').find_all('a', target='_blank')[1::2]
+    preview_link_list = soup.find(id=&#39;pins&#39;).find_all(&#39;a&#39;, target=&#39;_blank&#39;)[1::2]
     for link in preview_link_list:
-        link = link['href']
+        link = link[&#39;href&#39;]
         soup = BeautifulSoup(requests.get(link).text, parser)
         ## 获取图片数量
-        pic_cnt = soup.find('div', class_='pagenavi').find_all('a')[4].get_text()
+        pic_cnt = soup.find(&#39;div&#39;, class_=&#39;pagenavi&#39;).find_all(&#39;a&#39;)[4].get_text()
         ## 遍历获取每页图片的地址
         for pic_index in range(1, int(pic_cnt)+1):
-            pic_link = link + '/' + str(pic_index)
+            pic_link = link + &#39;/&#39; + str(pic_index)
             cur_page = requests.get(pic_link, headers = header)
             soup = BeautifulSoup(cur_page.text, parser)
-            pic_src = soup.find('div', 'main-image').find('img')['src']
+            pic_src = soup.find(&#39;div&#39;, &#39;main-image&#39;).find(&#39;img&#39;)[&#39;src&#39;]
             print(pic_src)
 </code></pre><p>运行之后如下：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu10.png" alt=""></p>
@@ -217,13 +217,13 @@ from bs4 import BeautifulSoup
 import os
 
 ## 爬取目标
-url = 'http://www.mzitu.com/page/'
-parser = 'html.parser'
-cur_path = os.getcwd() + '/'
+url = &#39;http://www.mzitu.com/page/&#39;
+parser = &#39;html.parser&#39;
+cur_path = os.getcwd() + &#39;/&#39;
 
 ## 设置报头，Http协议
 header = {
-    'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36'}
+    &#39;User-Agent&#39;: &#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;}
 ## 爬取的预览页面数量
 preview_page_cnt = 2
 for cur_page in range(1, int(preview_page_cnt) + 1):
@@ -232,34 +232,34 @@ for cur_page in range(1, int(preview_page_cnt) + 1):
     ## 解析网页
     soup = BeautifulSoup(cur_page.text, parser)
     ## 图片入口和文字入口取一个即可
-    preview_link_list = soup.find(id='pins').find_all('a', target='_blank')[1::2]
+    preview_link_list = soup.find(id=&#39;pins&#39;).find_all(&#39;a&#39;, target=&#39;_blank&#39;)[1::2]
     for link in preview_link_list:
-        dir_name = link.get_text().strip().replace('?', '')
-        link = link['href']
+        dir_name = link.get_text().strip().replace(&#39;?&#39;, &#39;&#39;)
+        link = link[&#39;href&#39;]
         soup = BeautifulSoup(requests.get(link).text, parser)
 
         ## 获取图片数量
-        pic_cnt = soup.find('div', class_='pagenavi').find_all('a')[4].get_text()
+        pic_cnt = soup.find(&#39;div&#39;, class_=&#39;pagenavi&#39;).find_all(&#39;a&#39;)[4].get_text()
         ## 创建目录
         pic_path = cur_path + dir_name
         if os.path.exists(pic_path):
-            print('directory exist!')
+            print(&#39;directory exist!&#39;)
         else:
             os.mkdir(pic_path)
         os.chdir(pic_path)  ## 进入目录，开始下载
-        print('下载' + dir_name + '...')
+        print(&#39;下载&#39; + dir_name + &#39;...&#39;)
         ## 遍历获取每页图片的地址
         for pic_index in range(1, int(pic_cnt) + 1):
-            pic_link = link + '/' + str(pic_index)
+            pic_link = link + &#39;/&#39; + str(pic_index)
             cur_page = requests.get(pic_link, headers=header)
             soup = BeautifulSoup(cur_page.text, parser)
-            pic_src = soup.find('div', 'main-image').find('img')['src']
-            pic_name = pic_src.split('/')[-1]
-            f = open(pic_name, 'wb')
+            pic_src = soup.find(&#39;div&#39;, &#39;main-image&#39;).find(&#39;img&#39;)[&#39;src&#39;]
+            pic_name = pic_src.split(&#39;/&#39;)[-1]
+            f = open(pic_name, &#39;wb&#39;)
             f.write(requests.get(pic_src, headers=header).content)
             f.close()
         os.chdir(cur_path)  ## 完成下载，退出目录
-print('下载完成')    
+print(&#39;下载完成&#39;)    
 </code></pre><h3 id="第六步爬取图片">第六步：爬取图片</h3>
 <p>如下：
 <img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu-demo.gif" alt=""></p>
@@ -275,12 +275,12 @@ print('下载完成')
 <p>处理方法也很简单，增加一个不断更新<code>Referer</code>字段的函数，然后每次请求前调用就可以绕过这个拦截了：</p>
 <pre tabindex="0"><code>....
 def update_header(referer):
-    header['Referer'] = '{}'.format(referer)
+    header[&#39;Referer&#39;] = &#39;{}&#39;.format(referer)
 ....
-            pic_src = soup.find('div', 'main-image').find('img')['src']
-            pic_name = pic_src.split('/')[-1]
+            pic_src = soup.find(&#39;div&#39;, &#39;main-image&#39;).find(&#39;img&#39;)[&#39;src&#39;]
+            pic_name = pic_src.split(&#39;/&#39;)[-1]
             update_header(pic_src)
-            f = open(pic_name, 'wb')
+            f = open(pic_name, &#39;wb&#39;)
             f.write(requests.get(pic_src, headers=header).content)
             f.close()
 ....
@@ -333,6 +333,9 @@ def update_header(referer):
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/posts/from-reactnative-to-flutter/">从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/the-born-of-a-book/">一本书的诞生</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/improve-efficiency-by-shuangpin/">如何提高中文输入的效率</a></li>
@@ -340,9 +343,6 @@ def update_header(referer):
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-vim-and-emacs/">现阶段（2021年10月）对于Vim和Emacs的思考</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/thinking-about-past-one-year/">关于过去一年的思考（2020/9～2021/9）</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/fix-a-serious-flutter-engine-multithread-bug/">抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/flutter-nested-scroll-conflict/">大道至简：Flutter嵌套滑动冲突解决之路</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/record-a-flutter-platform-view-bug/">Flutter PlatformView大小异常导致闪退锁屏</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/configure-hugo-asciidoc-blog/">Hugo&#43;Asciidoc配置记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -365,7 +365,7 @@ def update_header(referer):
 	<h4 class="widget__title">标签</h4>
 	<div class="widget__content">
 		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (27)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
@@ -374,7 +374,7 @@ def update_header(referer):
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (11)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
-		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (15)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (17)</a>
 	</div>
 </div>
 <div class="widget-social widget">
