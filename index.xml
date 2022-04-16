@@ -6,7 +6,16 @@
     <description>Recent content on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 16 Jan 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 10 Apr 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>分享</title>
+      <link>/talk/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/talk/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>关于</title>
       <link>/about/</link>
@@ -22,21 +31,21 @@
     </item>
     
     <item>
-      <title>分享</title>
-      <link>/talk/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/talk/</guid>
-      <description></description>
-    </item>
-    
-    <item>
       <title>归档</title>
       <link>/archives/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/archives/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;函数调用栈回溯初探</title>
+      <link>/posts/cpp-function-callstack-backtrace-1/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/cpp-function-callstack-backtrace-1/</guid>
+      <description>背景 之前在解决一个Flutter Engine的C++ Crash问题时，就曾受困于一个问题：如何回溯C++的 函数调用栈？最近频繁使用C++的过程中，这个诉求日益突出。 遂下定决心彻底解决之。 过程 在stac</description>
     </item>
     
     <item>
@@ -949,21 +958,21 @@
     </item>
     
     <item>
-      <title>杂记：初到深圳</title>
-      <link>/posts/za-ji-chu-dao-shen-zhen/</link>
-      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/za-ji-chu-dao-shen-zhen/</guid>
-      <description>杂记：初到深圳 雄关漫道真如铁，而今迈步从头越。 其实是再来深圳 去年6月底，第一次来深，有同学一起，和批量入职的实习生同住中转酒店，然后又稀里糊涂和别人合租，住的离公司颇远，每次上下班40分钟，熬了三个月</description>
-    </item>
-    
-    <item>
       <title>计算机程序中 Bug 的类型大全与历史</title>
       <link>/posts/ji-suan-ji-cheng-xu-zhong-bug-de-lei-xing-da-quan-yu-li-shi/</link>
       <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
       
       <guid>/posts/ji-suan-ji-cheng-xu-zhong-bug-de-lei-xing-da-quan-yu-li-shi/</guid>
       <description>计算机程序中 Bug 的类型大全与历史 美国计算机科学家、图灵奖获得者詹姆斯·尼古拉·格雷(Jim Gray)，在他的著名的论文“Why do computers stop and what can be done about it?”中首次提出了程序bug的类型，比如玻尔bug(Bo</description>
+    </item>
+    
+    <item>
+      <title>杂记：初到深圳</title>
+      <link>/posts/za-ji-chu-dao-shen-zhen/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/za-ji-chu-dao-shen-zhen/</guid>
+      <description>杂记：初到深圳 雄关漫道真如铁，而今迈步从头越。 其实是再来深圳 去年6月底，第一次来深，有同学一起，和批量入职的实习生同住中转酒店，然后又稀里糊涂和别人合租，住的离公司颇远，每次上下班40分钟，熬了三个月</description>
     </item>
     
     <item>
@@ -1039,21 +1048,21 @@
     </item>
     
     <item>
-      <title>Android音视频播放器开发（一）：功能实现</title>
-      <link>/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/</link>
-      <pubDate>Mon, 16 Oct 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/</guid>
-      <description>Android音视频播放器开发（一）：功能实现 本文主要介绍了一个简单的Android音视频播放器的功能模块实现。 概述 本文主要介绍开发一个Android音视频播放器的功能实现，包括4个模块：音乐列表，视</description>
-    </item>
-    
-    <item>
       <title>Android音视频播放器开发（二）：MVP模式实践</title>
       <link>/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-er-mvpmo-shi-shi-jian/</link>
       <pubDate>Mon, 16 Oct 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-er-mvpmo-shi-shi-jian/</guid>
       <description>Android音视频播放器开发（二）：MVP模式实践 本文主要针对上一篇博客的代码进行重构，并简单阐述了使用MVP模式的好处。 以音乐播放部分为例，下图是未重构的代码结构： 虽然还算清晰，但是拓展性很差。经</description>
+    </item>
+    
+    <item>
+      <title>Android音视频播放器开发（一）：功能实现</title>
+      <link>/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/</link>
+      <pubDate>Mon, 16 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/</guid>
+      <description>Android音视频播放器开发（一）：功能实现 本文主要介绍了一个简单的Android音视频播放器的功能模块实现。 概述 本文主要介绍开发一个Android音视频播放器的功能实现，包括4个模块：音乐列表，视</description>
     </item>
     
     <item>
@@ -1273,15 +1282,6 @@
     </item>
     
     <item>
-      <title>与VirtualBox下Linux虚拟机共享文件</title>
-      <link>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</link>
-      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</guid>
-      <description>与VirtualBox下Linux虚拟机共享文件 记录了如何与VirtualBox下的Linux虚拟机共享文件。 最近，需要在Ubuntu虚拟机里面调试HotSpot，截了些图需要在本机上处理一下，所以需</description>
-    </item>
-    
-    <item>
       <title>借助Vim宏处理重复工作</title>
       <link>/posts/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</link>
       <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
@@ -1297,6 +1297,15 @@
       
       <guid>/posts/xue-xi-hotspot-yi-launcher/</guid>
       <description>学习HotSpot（一）：Launcher 《Java虚拟机精讲》学习笔记：剖析HotSpot的Launcher。 HotSpot源码目录 可以用tree命令查看源码层次，对源码层次有一定印象有助于学习每个</description>
+    </item>
+    
+    <item>
+      <title>与VirtualBox下Linux虚拟机共享文件</title>
+      <link>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</guid>
+      <description>与VirtualBox下Linux虚拟机共享文件 记录了如何与VirtualBox下的Linux虚拟机共享文件。 最近，需要在Ubuntu虚拟机里面调试HotSpot，截了些图需要在本机上处理一下，所以需</description>
     </item>
     
     <item>
@@ -1426,21 +1435,21 @@
     </item>
     
     <item>
-      <title>时间复杂度计算类题目两则</title>
-      <link>/posts/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/</link>
-      <pubDate>Sat, 25 Mar 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/</guid>
-      <description>时间复杂度计算类题目两则 本文记录了两则具有代表性的算法复杂度计算题目。 题目1 分析以下代码的时间复杂度: for (int i = 0; i &amp;lt; n; i++) { for (int j = 0; j &amp;lt; i; j++) { for (int k = 0; k &amp;lt; j; k++) { // operations } } } 注：以上代码只作示意，未详细</description>
-    </item>
-    
-    <item>
       <title>踩坑记：LinuxMint18字体变为楷体的修复</title>
       <link>/posts/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/</link>
       <pubDate>Sat, 25 Mar 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/</guid>
       <description>踩坑记：LinuxMint18字体变为楷体的修复 本文记录了一次修复系统字体的经历。 起因 起因很奇怪，本来打算今天把动态规划算法好好研究一番，结果一大早起来发现中文输入法消失了！因为之前有次发生这种情况是</description>
+    </item>
+    
+    <item>
+      <title>时间复杂度计算类题目两则</title>
+      <link>/posts/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/</link>
+      <pubDate>Sat, 25 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/</guid>
+      <description>时间复杂度计算类题目两则 本文记录了两则具有代表性的算法复杂度计算题目。 题目1 分析以下代码的时间复杂度: for (int i = 0; i &amp;lt; n; i++) { for (int j = 0; j &amp;lt; i; j++) { for (int k = 0; k &amp;lt; j; k++) { // operations } } } 注：以上代码只作示意，未详细</description>
     </item>
     
     <item>

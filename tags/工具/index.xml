@@ -206,21 +206,21 @@
     </item>
     
     <item>
-      <title>与VirtualBox下Linux虚拟机共享文件</title>
-      <link>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</link>
-      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</guid>
-      <description>与VirtualBox下Linux虚拟机共享文件 记录了如何与VirtualBox下的Linux虚拟机共享文件。 最近，需要在Ubuntu虚拟机里面调试HotSpot，截了些图需要在本机上处理一下，所以需</description>
-    </item>
-    
-    <item>
       <title>借助Vim宏处理重复工作</title>
       <link>/posts/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</link>
       <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</guid>
       <description>借助Vim宏处理重复工作 记录了一个用Vim宏处理重复操作的例子。 最近写博客时遇到一个问题： 我有一些图片，它们除了图片名的序号不同，比如 launcher-01-debug.png launcher-02-debug.png launcher-03-debug.png launcher-04-debug.png &amp;hellip; 其余都相同 现在我需要把这些图片写在博客里，我该怎么做呢？</description>
+    </item>
+    
+    <item>
+      <title>与VirtualBox下Linux虚拟机共享文件</title>
+      <link>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</guid>
+      <description>与VirtualBox下Linux虚拟机共享文件 记录了如何与VirtualBox下的Linux虚拟机共享文件。 最近，需要在Ubuntu虚拟机里面调试HotSpot，截了些图需要在本机上处理一下，所以需</description>
     </item>
     
     <item>
