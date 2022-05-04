@@ -4,20 +4,20 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Proguard导致的NoSuchMethodException问题排查 - 编程研讨会</title>
+	<title>在疫情与裁员的阴影下继续生长 - 编程研讨会</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="Proguard导致的NoSuchMethodException问题排查" />
-<meta property="og:description" content="背景 之前项目的混淆配置一直没开启Proguard的优化选项 -dontoptimize 最近为了做安装包优化，把这行注释掉了 #-dontoptimize 问题 于是项目里的各种优化配置开始生效了，但是测试反馈了一个Bug：悬浮窗的搜索框点击之后没有反应了。 排" />
+		<meta property="og:title" content="在疫情与裁员的阴影下继续生长" />
+<meta property="og:description" content="遇到什么困难也不要怕，微笑着面对它，消除恐惧的最好办法就是面对恐惧，坚持就是胜利，奥利给！ 最近由于各种原因（工作、练习五笔、懒）没有持续写作，想想这样还是不好，以后还是每周拿出一些时间进行自省。 对于一" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/proguard-result-in-nosuchmethodexception/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2020-03-16T09:54:14+08:00" />
-<meta property="article:modified_time" content="2022-02-19T23:47:24+08:00" />
+<meta property="og:url" content="/posts/under-epidemic-and-layoffs/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-04-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-05-04T21:19:03+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Proguard导致的NoSuchMethodException问题排查"/>
-<meta name="twitter:description" content="背景 之前项目的混淆配置一直没开启Proguard的优化选项 -dontoptimize 最近为了做安装包优化，把这行注释掉了 #-dontoptimize 问题 于是项目里的各种优化配置开始生效了，但是测试反馈了一个Bug：悬浮窗的搜索框点击之后没有反应了。 排"/>
+<meta name="twitter:title" content="在疫情与裁员的阴影下继续生长"/>
+<meta name="twitter:description" content="遇到什么困难也不要怕，微笑着面对它，消除恐惧的最好办法就是面对恐惧，坚持就是胜利，奥利给！ 最近由于各种原因（工作、练习五笔、懒）没有持续写作，想想这样还是不好，以后还是每周拿出一些时间进行自省。 对于一"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -103,126 +103,54 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">Proguard导致的NoSuchMethodException问题排查</h1>
+			<h1 class="post__title">在疫情与裁员的阴影下继续生长</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-03-16T09:54:14&#43;08:00">2020-03-16</time>
-	<time class="meta__text" datetime="2022-02-19T23:47:24&#43;08:00">(最后修改: 2022-02-19)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2022-04-16T00:00:00Z">2022-04-16</time>
+	<time class="meta__text" datetime="2022-05-04T21:19:03&#43;08:00">(最后修改: 2022-05-04)</time></div></div>
 		</header>
-        <span style="color:grey; font-size: 0.9em">本文约 600 字，阅读需 2 分钟。</span><p /><div class="content post__content clearfix">
-			<div class="sect1">
-<h2 id="_背景">背景</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>之前项目的混淆配置一直没开启Proguard的优化选项</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>-dontoptimize</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>最近为了做安装包优化，把这行注释掉了</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>#-dontoptimize</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_问题">问题</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>于是项目里的各种优化配置开始生效了，但是测试反馈了一个Bug：悬浮窗的搜索框点击之后没有反应了。</p>
-</div>
-<div class="paragraph">
-<p>排查一番后发现了问题代码的位置：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>    ......
-    try {
-
-        .....
-        if (params == null) {
-            floatWindowView = (View) floatWindowClass.getConstructor(Context.class).newInstance(AstApp.self());
-        } else {
-            floatWindowView = (View) floatWindowClass.getConstructor(Context.class, Bundle.class).newInstance(AstApp.self(), params);
-        }
-        ......
-    } catch (Exception e) {
-        if (Global.ASSISTANT_DEBUG)e.printStackTrace();
-        Log.e(FloatWindowBigView.tag, &#34;exc &#34; + e.getMessage());
-    } catch (Throwable tr) {
-        Log.e(FloatWindowBigView.tag, &#34;exc &#34; + tr.getMessage());
-    }</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>对应的错误日志如下：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>java.lang.NoSuchMethodException: &lt;init&gt; [class android.content.Context]
-    at java.lang.Class.getConstructor0(Class.java:2320)
-    at java.lang.Class.getConstructor(Class.java:1725)
-    at com.tencent.nucleus.manager.floatingwindow.manager.FloatingWindowManager.a(ProGuard:385)
-    at com.tencent.nucleus.manager.floatingwindow.view.FloatWindowBigView.onClick(ProGuard:10146)
-    at android.view.View.performClick(View.java:6266)
-    at android.view.View$PerformClick.run(View.java:24730)
-    at android.os.Handler.handleCallback(Handler.java:793)
-    at android.os.Handler.dispatchMessage(Handler.java:98)
-    at android.os.Looper.loop(Looper.java:176)
-    at android.app.ActivityThread.main(ActivityThread.java:6701)
-    at java.lang.reflect.Method.invoke(Native Method)
-    at com.android.internal.os.Zygote$MethodAndArgsCaller.run(Zygote.java:249)
-    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:783)
-exc &lt;init&gt; [class android.content.Context]</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>即 <code>&lt;init&gt;</code> 这个方法找不到了，于是看了Proguard的配置，发现其实是有配置相关的：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>#&lt;!-- 悬浮窗的view不混淆 --&gt;
--keepclasseswithmembers class com.tencent.nucleus.manager.floatingwindow.view.* {public &lt;init&gt;(android.content.Context);}
--keepclasseswithmembers class com.tencent.nucleus.manager.floatingwindow.view.* {public &lt;init&gt;(android.content.Context,android.os.Bundle);}
--keepclasseswithmembers class com.tencent.assistant.manager.specialpermission.GuideFloatView {public &lt;init&gt;(android.content.Context);}
--keepclasseswithmembers class com.tencent.assistant.manager.specialpermission.GuideFloatView {public &lt;init&gt;(android.content.Context,android.os.Bundle);}</pre>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_解决">解决</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>那么为什么还是出了问题呢？原因就在于之前的开发同学把搜索框相关的类<code>FloatWindowSearchView</code> 和 <code>FloatWindowSearchResultView</code> 放在了 <code>floatingwindow.manager</code> 包下面，而不是 <code>floatingwindow.view</code> ，所以这个类的<code>&lt;init&gt;</code> 方法被优化掉了。那为什么之前没问题呢？</p>
-</div>
-<div class="paragraph">
-<p>因为之前设置了 <code>-dontoptimize</code> 这个选项，所以不会针对 <code>&lt;init&gt;</code> 这个级别的方法做优化，只会针对工程代码混淆。</p>
-</div>
-<div class="paragraph">
-<p>解决办法就是把搜索框相关的两个类也放在<code>floatingwindow.view</code> 包下面。</p>
-</div>
-<div class="paragraph">
-<p><strong>感觉这真是一个经典的前人挖坑后人踩的案例，也说明了按照项目规范组织文件的重要性</strong>～</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="https://github.com/vimerzhao/images/raw/master/2020-03/Snipaste_2020-03-16_20-28-32.png" alt="Snipaste 2020 03 16 20 28 32"/>
-</div>
-</div>
-<div class="paragraph">
-<p>(注意manager下面有两个自定义View)</p>
-</div>
-</div>
-</div>
+        <span style="color:grey; font-size: 0.9em">本文约 1100 字，阅读需 3 分钟。</span><p /><div class="content post__content clearfix">
+			<blockquote>
+<p>遇到什么困难也不要怕，微笑着面对它，消除恐惧的最好办法就是面对恐惧，坚持就是胜利，奥利给！</p>
+</blockquote>
+<p>
+最近由于各种原因（工作、练习五笔、懒）没有持续写作，想想这样还是不好，以后还是每周拿出一些时间进行自省。</p>
+<p>
+对于一个在深打工的互联网人，近期绕不开的两个话题就是疫情和裁员了。</p>
+<p>
+3月份的时候，开始了居家办公，大概持续了一个月，由于家里的MacBook性能实在太差，我探索出了Vim + DevCloud的开发模式。
+前者取代了笨重的Android Stduio，后者将构建移到了服务器，彻底释放了我本地的CPU，后面考虑单独一篇分享下。</p>
+<p>
+生活方面，自己还算幸运，虽然小区封了几次，但生活基本不受影响，不像近期的某市。</p>
+<p>
+近期的裁员潮中，鹅厂的动静也不小，不过自己应该侥幸躲过一劫。但是，自己所在的部门也经历了巨大的人事变动，手头的事情是
+否会调整也不得而知。</p>
+<p>
+因为自己现在没小孩、没买房，压力也就没那么大。</p>
+<p>
+不过，必需充分意到，自己当前的处境依旧凶险难测，要更好的存活下去，就要它升级自己的认知，更深刻地理解这个世界的运行规律，无论是精神、
+身体还是技能，都要增加抵御风险的阈值。</p>
+<p>
+一个小故事：</p>
+<blockquote>
+<p>1665年英国剑桥爆发鼠疫，是伦敦地区延伸过来的瘟疫。剑桥大学三一学院也随之关闭。教职员、学生、居民都纷纷走避郊区，实施“社交隔离”。
+年轻的学士艾萨克．牛顿也是其中之一，那年他才22岁。他回到了自己的家乡伍尔索普庄园进行“闭关”。</p>
+<p>
+在这个清净，隔离的环境中，牛顿不用上课，也没有社交活动，更没有手机、网络。但其实他脑子一点儿也没有闲着，他有许多自己想要思考、探索的议题。
+这段期间的深入钻研的确硕果辉煌。在数学上，他发展了现代微积分、解析几何学的雏型；设计实验测量重力，酝酿万有引力定律的概念。
+他还在卧室里做光学实验。他在百叶窗片上穿一个小洞，让白光射进来，然后他运用三棱镜观察可见光谱的七彩变化。</p>
+<p>
+日后他回忆这段时光，说这是一个“神奇的年代”（拉丁文：Annus Mirobilis， 英文：Years of Wonders）
+——“那段日子是我发明的巅峰时期，我对数学与哲学的深度关注是空前绝后的。”</p>
+<p>
+始发于1665年的“伦敦大瘟疫”（The Great Plaque）蔓延在1665年到1666年之间，英国有四分之一人口感染死亡。这是英国本土继十四世纪黑死病之后爆发最大规模的致命瘟疫。</p>
+<p>
+牛顿在1667年回剑桥后，发表了大量论文，半年后便成为院士；两年后成为教授。终其一生，他继续思考着物质、时间、光学、色彩等等主题。</p>
+</blockquote>
+<p>
+From: <a href="https://www.sohu.com/a/390495127_557768">https://www.sohu.com/a/390495127_557768</a></p>
 
 		</div>
 
@@ -233,7 +161,7 @@ exc &lt;init&gt; [class android.content.Context]</pre>
 	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/bugfix/" rel="tag">BugFix</a>
+			<a class="tags__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a>
 		</li>
 	</ul>
 </div>
@@ -244,15 +172,15 @@ exc &lt;init&gt; [class android.content.Context]</pre>
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/posts/history-of-my-blog/" rel="prev">
+		<a class="pager__link" href="/posts/cpp-function-callstack-backtrace-1/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">博客往事</p>
+			<p class="pager__title">C&#43;&#43;函数调用栈回溯初探</p>
 		</a>
 	</div>
 	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/posts/yujun-product-methodology/" rel="next">
+		<a class="pager__link" href="/posts/how-to-read/" rel="next">
 			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">读书:《俞军产品方法论》</p>
+			<p class="pager__title">如何高效阅读书籍</p>
 		</a>
 	</div>
 </nav>
