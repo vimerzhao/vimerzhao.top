@@ -4,20 +4,20 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>每日一题：A Regular Expression Matcher - 编程研讨会</title>
+	<title>GoogleIO活动后记 - 编程研讨会</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="每日一题：A Regular Expression Matcher" />
-<meta property="og:description" content="每日一题：A Regular Expression Matcher 选自Beautiful Code第一章：A Regular Expression Matcher。 Task &amp; Background (节选自Beautiful Code) In 1998, Rob Pike and I were writing The Practice of Programming (Addison-Wesley). The last chapter of the book, “Notation,” collected a number of examples where good notation led to better programs and better" />
+		<meta property="og:title" content="GoogleIO活动后记" />
+<meta property="og:description" content="一、 前几周，收到了Google I/O Extended的分享邀请，也没多想就答应了，一是自己之前没有此类经历，想着去体验下肯定是不亏的； 二是自认为在Flutter（乃至跨平台这个领域），我还是相对有不少经验" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/mei-ri-yi-ti-a-regular-expression-matcher/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2018-02-09T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-02-19T23:47:24+08:00" />
+<meta property="og:url" content="/posts/record-of-goolge-io-06-12/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-06-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-06-13T00:02:09+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="每日一题：A Regular Expression Matcher"/>
-<meta name="twitter:description" content="每日一题：A Regular Expression Matcher 选自Beautiful Code第一章：A Regular Expression Matcher。 Task &amp; Background (节选自Beautiful Code) In 1998, Rob Pike and I were writing The Practice of Programming (Addison-Wesley). The last chapter of the book, “Notation,” collected a number of examples where good notation led to better programs and better"/>
+<meta name="twitter:title" content="GoogleIO活动后记"/>
+<meta name="twitter:description" content="一、 前几周，收到了Google I/O Extended的分享邀请，也没多想就答应了，一是自己之前没有此类经历，想着去体验下肯定是不亏的； 二是自认为在Flutter（乃至跨平台这个领域），我还是相对有不少经验"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -103,104 +103,70 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">每日一题：A Regular Expression Matcher</h1>
+			<h1 class="post__title">GoogleIO活动后记</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-02-09T00:00:00Z">2018-02-09</time>
-	<time class="meta__text" datetime="2022-02-19T23:47:24&#43;08:00">(最后修改: 2022-02-19)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2022-06-12T00:00:00Z">2022-06-12</time>
+	<time class="meta__text" datetime="2022-06-13T00:02:09&#43;08:00">(最后修改: 2022-06-13)</time></div></div>
 		</header>
-        <span style="color:grey; font-size: 0.9em">本文约 800 字，阅读需 2 分钟。</span><p /><div class="content post__content clearfix">
-			<h1 id="每日一题a-regular-expression-matcher">每日一题：A Regular Expression Matcher</h1>
-<p>选自<em>Beautiful Code</em>第一章：A Regular Expression Matcher。</p>
-<h2 id="task--background">Task &amp; Background</h2>
-<p>(节选自<em>Beautiful Code</em>)</p>
-<blockquote>
-<p>In 1998, Rob Pike and I were writing The Practice of Programming (Addison-Wesley). The last chapter of the book, “Notation,” collected a number of examples where good notation led to better programs and better programming. This included the use of simple data specifications (printf, for instance), and the generation of code from tables.
-Because of our Unix backgrounds and nearly 30 years of experience with tools based on regular expression notation, we naturally wanted to include a discussion of regular expressions, and it seemed mandatory to include an implementation as well. Given our emphasis on tools, it also seemed best to focus on the class of regular expressions found in grep—rather than, say, those from shell wildcards—since we could also then talk about the design of grep itself.
-The problem was that any existing regular expression package was far too big. The local grep was over 500 lines long (about 10 book pages) and encrusted with barnacles. Open source regular expression packages tended to be huge—roughly the size of the entire book—because they were engineered for generality, flexibility, and speed; none were remotely suitable for pedagogy.
-I suggested to Rob that we find the smallest regular expression package that would illustrate the basic ideas while still recognizing a useful and nontrivial class of patterns. Ideally,the code would fit on a single page.
-Rob disappeared into his office. As I remember it now, he emerged in no more than an hour or two with the 30 lines of C code that subsequently appeared in Chapter 9 of The Practice of Programming. That code implements a regular expression matcher that handles the following constructs.</p>
-</blockquote>
-<table>
-<thead>
-<tr>
-<th>Character</th>
-<th style="text-align:center">Meaning</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>c</td>
-<td style="text-align:center">Matchs any literal character c</td>
-</tr>
-<tr>
-<td>.(period)</td>
-<td style="text-align:center">Matchs any single character</td>
-</tr>
-<tr>
-<td>^</td>
-<td style="text-align:center">Matchs the beginning of the input string</td>
-</tr>
-<tr>
-<td>$</td>
-<td style="text-align:center">Matchs the end of the input string</td>
-</tr>
-<tr>
-<td>*</td>
-<td style="text-align:center">Matchs zero or more occurences of the previous character</td>
-</tr>
-</tbody>
-</table>
-<p>This is quite a useful class; in my own experience of using regular expressions on a day-today basis, it easily accounts for 95 percent of all instances. In many situations, solving the right problem is a big step toward creating a beautiful program. Rob deserves great credit for choosing a very small yet important, well-defined, and extensible set of features from among a wide set of options.</p>
-<h2 id="solution">Solution</h2>
-<pre tabindex="0"><code>int matchhere(char *, char *);
-int matchstar(int, char *, char *);
-
-/* match: search for regexp anywhere in text */
-int match(char *regexp, char *text) {
-    if (regexp[0] == &#39;^&#39;) {
-        return matchhere(regexp+1, text);
-    }
-    do {
-        if (matchhere(regexp, text)) {
-            return 1;
-        }
-    } while (*text++ != &#39;\0&#39;);
-    return 0;
-}
-
-
-/* matchhere: search for regexp at beginning of text */
-int matchhere(char *regexp, char *text) {
-    if (regexp[0] == &#39;\0&#39;) {
-        return 1;
-    }
-    if (regexp[1] == &#39;*&#39;) {
-        return matchstar(regexp[0], regexp+2, text);
-    }
-    if (regexp[0] == &#39;$&#39; &amp;&amp; regexp[1] == &#39;\0&#39;) {
-        return *text == &#39;\0&#39;;
-    }
-    if (*text != &#39;\0&#39; &amp;&amp; (regexp[0] == &#39;.&#39; || regexp[0] == *text)) {
-        return matchhere(regexp+1, text+1);
-    }
-    return 0;
-}
-
-
-/* matchstar: search for c*regexp at beginning of text */
-int matchstar(int c, char *regexp, char *text) {
-    do {
-        if (matchhere(regexp, text)) {
-            return 1;
-        }
-    } while (*text != &#39;\0&#39; &amp;&amp; (*text++ == c || c == &#39;.&#39;));
-    return 0;
-}
-</code></pre><h2 id="comment">Comment</h2>
-<p>Rob’s implementation itself is a superb example of beautiful code: compact, elegant, efficient, and useful. It’s one of the best examples of recursion that I have ever seen, and it shows the power of C pointers. Although at the time we were most interested in conveying the important role of good notation in making a program easier to use (and perhaps easier to write as well), the regular expression code has also been an excellent way to illustrate algorithms, data structures, testing, performance enhancement, and other important topics.</p>
+        <span style="color:grey; font-size: 0.9em">本文约 1100 字，阅读需 3 分钟。</span><p /><div class="content post__content clearfix">
+			<p>
+<img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/google_io_2022-06-12_23-41-25.jpg" alt="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/google_io_2022-06-12_23-41-25.jpg" title="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/google_io_2022-06-12_23-41-25.jpg" />
+一、</p>
+<p>
+前几周，收到了Google I/O Extended的分享邀请，也没多想就答应了，一是自己之前没有此类经历，想着去体验下肯定是不亏的；
+二是自认为在Flutter（乃至跨平台这个领域），我还是相对有不少经验的。</p>
+<p>
+另外，我觉得自已多少有点被动型人格，有些想法和积累，若没有外力介入，自己是很难有动力去做输出。</p>
+<p>
+二、</p>
+<p>
+比较痛苦的是准备过程：一是准备时间不是很充分，提前半个月，除去工作日，实际只有两个周末。二是自己选定的主题有点
+挑战（《Flutter全平台渲染机制浅析》），自己也是最近才深入这个领域的，但是这确实是我最近思考的比较多的问题。当然，我可以
+从之前的内部课程里面选择一部分拿来分享，这样虽然是easy模式，但对我个人的意义就不大了。</p>
+<p>
+另外就是PPT的制作与准备，感觉也有不少问题：</p>
+<ol>
+<li>很多素材之前没有作好管理，需要临时去找</li>
+<li>自己其实很少用PowerPoint，时间充裕的时候一般会用reveal.js去制作幻灯片，但是又没有到得心应手的地步。这其实很不好，
+按照自己的哲学，任何问题，都应该有一个固定且熟练的工具。</li>
+<li>一些分享的技巧，幻灯片的美学风格，自已也没有一个稳定的框架。虽然自己之前有所研究（表达的世界观基础与方法论建设：
+<a href="http://vimerzhao.top/posts/base-and-skill-of-presentation/">http://vimerzhao.top/posts/base-and-skill-of-presentation/</a> ），但终究还是实践太少，难以形成一个理论和实践的
+良性循环。</li>
+</ol>
+<p>最近工作其实也挺忙，之前每次在内部讲《Flutter源码导读》的时候也是如此，想搞点业余活动工作就忙起来了。</p>
+<p>
+今天的分享其实写完PPT后没有一次试讲，但自己还是偏临场型，所以也没出太大差池。</p>
+<p>
+不过，这是在消耗前期积累的经验，这样是不好的，每一次活动都应该是积攒经验的，而不是吃老本～</p>
+<p>
+三、</p>
+<p>
+今天去参加了活动，大致有几点想法：</p>
+<ol>
+<li>分享其实是非常复杂的一件事情：选题、布局、呈现(体态)、临场。既需要理论的支撑，也需要实践的积累。我觉得自己以后还要经常找机会
+锻炼，至少一月一次的频率。</li>
+<li>无论是写文章，还是分享，把一个问题本身讲清楚其实是一件挺复杂的事情的。</li>
+</ol>
+<p>四、</p>
+<p>
+每次特别忙的时候，都想着忙完这一阵就要：看完计划看的书、写完计划写的文章、出完计划出的课程….然后又开始了莫名其妙的躺平</p>
+<p>
+希望这次能好点。</p>
+<p>
+五、</p>
+<p>
+这几年，完成了很多事情：开一门公司级的课程、出书、去GoogleIO这样的活动分享。这些别人看来很高大上的事情，其实很多事情并不是我刻意去
+追求的，只是机缘巧合，自己便顺势而为。</p>
+<p>
+回头来看，反倒不Care这些名头了，比起自己有哪些头衔，我更有底气去关注自己做了哪些事情、能做哪些事情；比起自己做过的事情，我现在更关注
+自己不能做到的事情。</p>
+<p>
+工作的第4年，我才感觉自己的技术生涯刚刚开始。见自己、见天地、见众生，如是而已。</p>
+<p>
+<img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/Snipaste_2022-06-12_23-38-55.jpg" alt="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/Snipaste_2022-06-12_23-38-55.jpg" title="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/Snipaste_2022-06-12_23-38-55.jpg" /></p>
 
 		</div>
 
@@ -211,15 +177,9 @@ int matchstar(int c, char *regexp, char *text) {
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/posts/mei-ri-yi-ti-100-doors/" rel="prev">
+		<a class="pager__link" href="/posts/infinite-scenery-in-the-dangerous-peak/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">每日一题：100 doors</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/posts/za-ji-chu-dao-shen-zhen/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">杂记：初到深圳</p>
+			<p class="pager__title">无限风光在险峰</p>
 		</a>
 	</div>
 </nav>

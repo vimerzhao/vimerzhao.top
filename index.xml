@@ -6,7 +6,7 @@
     <description>Recent content on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 08 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sun, 12 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>分享</title>
       <link>/talk/</link>
@@ -24,10 +24,10 @@
       <guid>/about/</guid>
       <description>零、基础信息 目前就职于腾讯，客户端开发，著有《Flutter内核源码剖析》 ， 主讲课程：《Flutter源码导读》。
 一个尝试走出 绝望之谷 的普通人。
-一、技术  注：百分比表示自我评估的掌握程度。
- 1.1 技术栈（平台、框架） Android(80%)、 iOS(10%)、 Web(30%)、 Flutter(80%)
+一、技术 注：百分比表示自我评估的掌握程度。
+1.1 技术栈（平台、框架） Android(80%)、 iOS(10%)、 Web(30%)、 Flutter(80%)
 1.2 编程语言 C(10%)、 C++(30%)、 Dart(60%)、 Java(60%)
-1.3 常用工具  编辑器：Vim(80%)、 Emacs(20%)、 命令行：Tmux(40%)、 Zsh(40%) 文档：Markdown、Asciidoc、Org-Mode 小工具：Snipaste、Kap  二、健身  2021年：深蹲(120KG)、硬拉(100KG)、卧推(60KG)，体重80KG。  三、读书  2022年：《&amp;hellip;》  四、旅游  2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2021年：广西（桂林、阳朔）、贵州（黔东南）  五、编年简史  2014年：考入大连理工大学“过程装备与控制工程”专业。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2017年：在腾讯实习3个月，并转正。 2018年：大学毕业，入职腾讯。 2021年：写完《Flutter内核源码剖析》并出版，晋升到T9。   最后编辑于 2022-01-28</description>
+1.3 常用工具 编辑器：Vim(80%)、 Emacs(20%)、 命令行：Tmux(40%)、 Zsh(40%) 文档：Markdown、Asciidoc、Org-Mode 小工具：Snipaste、Kap 二、健身 2021年：深蹲(120KG)、硬拉(100KG)、卧推(60KG)，体重80KG。 三、读书 2022年：《&amp;hellip;》 四、旅游 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2021年：广西（桂林、阳朔）、贵州（黔东南） 五、编年简史 2014年：考入大连理工大学“过程装备与控制工程”专业。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2017年：在腾讯实习3个月，并转正。 2018年：大学毕业，入职腾讯。 2021年：写完《Flutter内核源码剖析》并出版，晋升到T9。 最后编辑于 2022-01-28</description>
     </item>
     
     <item>
@@ -37,6 +37,15 @@
       
       <guid>/archives/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>GoogleIO活动后记</title>
+      <link>/posts/record-of-goolge-io-06-12/</link>
+      <pubDate>Sun, 12 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/record-of-goolge-io-06-12/</guid>
+      <description>一、 前几周，收到了Google I/O Extended的分享邀请，也没多想就答应了，一是自己之前没有此类经历，想着去体验下肯定是不亏的； 二是自认为在Flutter（乃至跨平台这个领域），我还是相对有不少经验</description>
     </item>
     
     <item>
@@ -1458,7 +1467,7 @@
       <pubDate>Thu, 06 Apr 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/guan-yu-c-c-zhong-zhi-zhen-zi-zeng-yun-suan-fu-de-si-kao/</guid>
-      <description>关于C/C++中指针自增运算符的思考 本文记录了C/C++中指针自增运算的一些微妙特性。 问题引入 C代码： #include &amp;lt;stdio.h&amp;gt;int main(int argc, char const* argv[]) { int a = 1, *p = &amp;amp;a; ++++p; ++p++; return 0; } C++代码： #include &amp;lt;bits/stdc++.h&amp;gt;int main(int argc, char const* argv[]) { int a = 1, *p = &amp;amp;a; ++++p; ++p++; return 0; } 编译以</description>
+      <description>关于C/C++中指针自增运算符的思考 本文记录了C/C++中指针自增运算的一些微妙特性。 问题引入 C代码： #include &amp;lt;stdio.h&amp;gt; int main(int argc, char const* argv[]) { int a = 1, *p = &amp;amp;a; ++++p; ++p++; return 0; } C++代码： #include &amp;lt;bits/stdc++.h&amp;gt; int main(int argc, char const* argv[]) { int a = 1, *p = &amp;amp;a; ++++p; ++p++; return 0; } 编</description>
     </item>
     
     <item>
@@ -1512,7 +1521,7 @@
       <pubDate>Tue, 14 Mar 2017 00:00:00 +0000</pubDate>
       
       <guid>/posts/cyu-yan-hong-zhan-kai-de-shun-xu-wen-ti/</guid>
-      <description>C语言宏展开的顺序问题 本文记录了作者遇到的一个关于C语言宏展开顺序的问题及其解释。 问题 这是我在阅读The C Puzzle Book一书中遇到的一个问题，为了简化问题，我写了以下一段代码 #include &amp;lt;stdio.h&amp;gt;#define TEST(x) x*5 #define PR(x) printf(#x &amp;#34; = %d&amp;#34;, x) #define PRINT1(x) PR(x);printf(&amp;#34;\n&amp;#34;) #define</description>
+      <description>C语言宏展开的顺序问题 本文记录了作者遇到的一个关于C语言宏展开顺序的问题及其解释。 问题 这是我在阅读The C Puzzle Book一书中遇到的一个问题，为了简化问题，我写了以下一段代码 #include &amp;lt;stdio.h&amp;gt; #define TEST(x) x*5 #define PR(x) printf(#x &amp;#34; = %d&amp;#34;, x) #define PRINT1(x) PR(x);printf(&amp;#34;\n&amp;#34;)</description>
     </item>
     
     <item>
