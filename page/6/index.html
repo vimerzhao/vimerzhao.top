@@ -104,6 +104,26 @@
 	<article class="list__item post">
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/posts/a-weird-bug-record/" rel="bookmark">
+			记一次诡异的Bug
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-04-13T00:00:00Z">2020-04-13</time>
+	<time class="meta__text" datetime="2022-02-19T23:47:24&#43;08:00">(最后修改: 2022-02-19)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		背景 上周四的时候，发了一个maven，结果报ExceptionInInitializerError错误： java.lang.ExceptionInInitializerError at repackage.aw.̍(ProGuard:43) at com.tencent.sandbox.PluginHelper.applicationAttachBaseContext(ProGuard:160) ...... Caused by: java.lang.IllegalArgumentException: Illegal pattern character &#39;V&#39; at java.text.SimpleDateFormat.compile(SimpleDateFormat.java:870) at java.text.SimpleDateFormat.initialize(SimpleDateFormat.java:684) at java.text.SimpleDateFormat.&lt;init&gt;(SimpleDateFormat.java:623) at java.text.SimpleDateFormat.&lt;init&gt;(SimpleDateFormat.java:598) at
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/posts/a-weird-bug-record/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/posts/read-twint/" rel="bookmark">
 			twint源码阅读笔记
 			</a>
@@ -281,26 +301,6 @@
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/posts/proguard-result-in-nosuchmethodexception/">阅读全文…</a>
 	</div>
-</article><article class="list__item post">
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/posts/history-of-my-blog/" rel="bookmark">
-			博客往事
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-03-15T19:41:05&#43;08:00">2020-03-15</time>
-	<time class="meta__text" datetime="2022-02-19T23:47:24&#43;08:00">(最后修改: 2022-02-19)</time></div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		周末花了点时间，把废置了的域名 www.vimerzhao.top 重新折腾了一下，同时将之前写过的博客迁移到了自己的服务器上。 借此机会，也以博客为脉络谈谈最近几年的技术经历吧。 CSDN 我大概是15年开始接触编程的，现在能找到的最早的博客是1
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/posts/history-of-my-blog/">阅读全文…</a>
-	</div>
 </article>
 </main>
 
@@ -325,6 +325,7 @@
 	<div class="widget__content">
 		<ul class="widget__list">
 			<li class="widget__item"><a class="widget__link" href="/posts/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/posts/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/infinite-scenery-in-the-dangerous-peak/">无限风光在险峰</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/how-to-read/">如何高效阅读书籍</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/under-epidemic-and-layoffs/">在疫情与裁员的阴影下继续生长</a></li>
@@ -333,7 +334,6 @@
 			<li class="widget__item"><a class="widget__link" href="/posts/the-born-of-a-book/">一本书的诞生</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/research-about-note-software/">关于笔记软件的比较研究</a></li>
 			<li class="widget__item"><a class="widget__link" href="/posts/change-input-method-with-left-shift/">定制Mac的输入法切换按键为左Shift</a></li>
-			<li class="widget__item"><a class="widget__link" href="/posts/developing-cpp-with-android-sutdio/">Android Sutdio开发C&#43;&#43;项目踩坑记录</a></li>
 		</ul>
 	</div>
 </div>
@@ -355,8 +355,10 @@
 <div class="widget-taglist widget">
 	<h4 class="widget__title">标签</h4>
 	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
 		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
