@@ -22,7 +22,7 @@
       <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
       
       <guid>/posts/use-cmake-3.18.1-in-android-studio/</guid>
-      <description>Android Studio的SDK Manager默认支持的Cmake版本只有3个： 但是，使用3.18版本的Cmake时，大概率遇到 Invalid revision 的错误： 这个错误的原因是Google官方提供的Cmake制品不规范，而Andr</description>
+      <description>Android Studio的SDK Manager默认支持的Cmake版本只有3个： 但是，使用3.18版本的Cmake时，大概率遇到 Invalid revision 的错误： 这个错误的原因是Google官方提供的Cmake制品不规范，而低版本G</description>
     </item>
     
     <item>
