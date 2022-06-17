@@ -6,7 +6,16 @@
     <description>Recent content in Android开发 on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Tue, 07 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/android%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 17 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/android%E5%BC%80%E5%8F%91/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>小米6刷机记录</title>
+      <link>/posts/upgrade-xiaomi6-rom-manually/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/upgrade-xiaomi6-rom-manually/</guid>
+      <description>手头的开发机是小米6，升级到MIUI11（Android9）之后，官方貌似也停止了对其的升级。 另一方面，也想为将来真机调试积累点经验，于是研究了下如何刷机。 刷机这种行为，最佳选择自然是Google Pi</description>
+    </item>
+    
     <item>
       <title>AndroidStudio使用Cmake3.18.1的坑</title>
       <link>/posts/use-cmake-3.18.1-in-android-studio/</link>

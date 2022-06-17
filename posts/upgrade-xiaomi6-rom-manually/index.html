@@ -4,20 +4,20 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>借助Vim宏处理重复工作 - 编程研讨会</title>
+	<title>小米6刷机记录 - 编程研讨会</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="借助Vim宏处理重复工作" />
-<meta property="og:description" content="借助Vim宏处理重复工作 记录了一个用Vim宏处理重复操作的例子。 最近写博客时遇到一个问题： 我有一些图片，它们除了图片名的序号不同，比如 launcher-01-debug.png launcher-02-debug.png launcher-03-debug.png launcher-04-debug.png &hellip; 其余都相同 现在我需要把这些图片写在博客里，我该怎么做呢？" />
+		<meta property="og:title" content="小米6刷机记录" />
+<meta property="og:description" content="手头的开发机是小米6，升级到MIUI11（Android9）之后，官方貌似也停止了对其的升级。 另一方面，也想为将来真机调试积累点经验，于是研究了下如何刷机。 刷机这种行为，最佳选择自然是Google Pi" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/posts/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/" /><meta property="article:section" content="posts" />
-<meta property="article:published_time" content="2017-05-29T00:00:00+00:00" />
-<meta property="article:modified_time" content="2022-02-19T23:47:24+08:00" />
+<meta property="og:url" content="/posts/upgrade-xiaomi6-rom-manually/" /><meta property="article:section" content="posts" />
+<meta property="article:published_time" content="2022-06-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2022-06-17T14:46:29+08:00" />
 
 
 		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="借助Vim宏处理重复工作"/>
-<meta name="twitter:description" content="借助Vim宏处理重复工作 记录了一个用Vim宏处理重复操作的例子。 最近写博客时遇到一个问题： 我有一些图片，它们除了图片名的序号不同，比如 launcher-01-debug.png launcher-02-debug.png launcher-03-debug.png launcher-04-debug.png &hellip; 其余都相同 现在我需要把这些图片写在博客里，我该怎么做呢？"/>
+<meta name="twitter:title" content="小米6刷机记录"/>
+<meta name="twitter:description" content="手头的开发机是小米6，升级到MIUI11（Android9）之后，官方貌似也停止了对其的升级。 另一方面，也想为将来真机调试积累点经验，于是研究了下如何刷机。 刷机这种行为，最佳选择自然是Google Pi"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -103,43 +103,75 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">借助Vim宏处理重复工作</h1>
+			<h1 class="post__title">小米6刷机记录</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-05-29T00:00:00Z">2017-05-29</time>
-	<time class="meta__text" datetime="2022-02-19T23:47:24&#43;08:00">(最后修改: 2022-02-19)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2022-06-17T00:00:00Z">2022-06-17</time>
+	<time class="meta__text" datetime="2022-06-17T14:46:29&#43;08:00">(最后修改: 2022-06-17)</time></div></div>
 		</header>
-        <span style="color:grey; font-size: 0.9em">本文约 500 字，阅读需 1 分钟。</span><p /><div class="content post__content clearfix">
-			<h1 id="借助vim宏处理重复工作">借助Vim宏处理重复工作</h1>
-<p>记录了一个用Vim宏处理重复操作的例子。
-最近写博客时遇到一个问题：</p>
-<blockquote>
-<p>我有一些图片，它们除了图片名的序号不同，比如
-launcher-01-debug.png
-launcher-02-debug.png
-launcher-03-debug.png
-launcher-04-debug.png
-&hellip;
-其余都相同</p>
-</blockquote>
-<p>现在我需要把这些图片写在博客里，我该怎么做呢？</p>
-<h2 id="方法1">方法1</h2>
-<p>比较简单的思路就是，先输入一个图片的链接，然后复制，修改序号，如下图：
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogmacro-vim-01.gif" alt=""></p>
-<h2 id="方法2">方法2</h2>
-<p>上面的方法有一个问题，那就是如果需要输入100个是不是太慢了。
-我们反思一下，我们要做的无非就是</p>
-<blockquote>
-<p>复制本行文字，粘贴到下一行，将粘贴行的序号+1
-重复上面的操作。</p>
-</blockquote>
-<p>我们可以把一次这样的操作看作一个单元操作，现在我们利用Vim宏记录下<strong>一次</strong>单元操作，在重复N-1次不就行了：
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogmacro-vim-02.gif" alt="">
-注意我输入<code>17@a</code>就是将a寄存器里面的操作重复17次。
-这里还有一点附加处理，超过10的时候，我希望是<code>10</code>、<code>11</code>&hellip;但出现的却是<code>010</code>、<code>011</code>&hellip;所以选中这些区域，执行<code>f0x</code>，意思是找到0第一次出现的位置(<code>f0</code>)，然后删除这个0（<code>x</code>）。于是就得到需要的地址。
-以上只是20个图片地址，如果50个，方法2的优势会更加明显。</p>
+        <span style="color:grey; font-size: 0.9em">本文约 600 字，阅读需 2 分钟。</span><p /><div class="content post__content clearfix">
+			<p>
+手头的开发机是小米6，升级到MIUI11（Android9）之后，官方貌似也停止了对其的升级。</p>
+<p>
+另一方面，也想为将来真机调试积累点经验，于是研究了下如何刷机。</p>
+<p>
+刷机这种行为，最佳选择自然是Google Pixel，不过小米的开发者友好度也还可以，所以半天也就搞定了。</p>
+<p>
+首先要对小米进行解锁，有些厂商没有提供这个能力，刷机自然难如登天。按照以下步骤：</p>
+<p>
+<img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/screenshot_2022-06-17_10-57-10.png" alt="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/screenshot_2022-06-17_10-57-10.png" title="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/screenshot_2022-06-17_10-57-10.png" /></p>
+<p>
+有个坑是：官网下载的flash unlock工具是 6.5.224.28 的，一打开就提示升级，一开始没有关注，结果一直解锁失败，点击“设置-安装驱动”也失败。
+老实升级到6.5.406.31就好了（先安装驱动现再解锁）。对比发现 <code>MiUsbDriver</code> 这个文件只有高版本有。</p>
+<p>
+<img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-14-16_01.png" alt="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-14-16_01.png" title="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-14-16_01.png" /></p>
+<p>
+解锁前后如下：</p>
+<p>
+<img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-17-17-02.png" alt="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-17-17-02.png" title="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-17-17-02.png" /></p>
+<p>
+接着，去 <a href="https://download.lineageos.org/sagit#!">https://download.lineageos.org/sagit#!</a> 下载机型对应的 Recovery 和 ROM。</p>
+<p>
+进入 fastboot 模式： <code>adb reboot bootloader</code></p>
+<p>
+如果前面的解锁失败了，则有以下信息：</p>
+<div class="src src-sh">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ fastboot boot ~/Downloads/lineage-18.1-20220616-recovery-sagit.img
+</span></span><span style="display:flex;"><span>Sending <span style="color:#e6db74">&#39;recovery&#39;</span> <span style="color:#f92672">(</span><span style="color:#ae81ff">22768</span> KB<span style="color:#f92672">)</span>                      OKAY <span style="color:#f92672">[</span>  0.531s<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>Writing <span style="color:#e6db74">&#39;recovery&#39;</span>                                 FAILED <span style="color:#f92672">(</span>remote: <span style="color:#e6db74">&#39;Flashing is not allowed in Lock State&#39;</span><span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>fastboot: error: Command failed</span></span></code></pre></div>
+</div>
+<p>
+正确的如下：</p>
+<div class="src src-sh">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ fastboot boot ~/Downloads/lineage-18.1-20220616-recovery-sagit.img
+</span></span><span style="display:flex;"><span>Sending <span style="color:#e6db74">&#39;boot.img&#39;</span> <span style="color:#f92672">(</span><span style="color:#ae81ff">22768</span> KB<span style="color:#f92672">)</span>                      OKAY <span style="color:#f92672">[</span>  0.481s<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>Booting                                            OKAY <span style="color:#f92672">[</span>  0.001s<span style="color:#f92672">]</span>
+</span></span><span style="display:flex;"><span>Finished. Total time: 0.493s</span></span></code></pre></div>
+</div>
+<p>
+然后进入recovery模式（电源 + 音量+）。</p>
+<p>
+选择 <code>Apply update</code> - <code>ADB Sideload</code> ，然后执行：</p>
+<div class="src src-sh">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>  adb sideload ~/Downloads/lineage-18.1-20220616-nightly-sagit-signed.zip
+</span></span><span style="display:flex;"><span>  serving: <span style="color:#e6db74">&#39;/Users/vimerzhao/Downloads/lineage-18.1-20220616-nightly-sagit-signed.zip&#39;</span>  <span style="color:#f92672">(</span>~47%<span style="color:#f92672">)</span>    adb: failed to read command: Undefined error: <span style="color:#ae81ff">0</span></span></span></code></pre></div>
+</div>
+<p>
+这里的错误信息不用关心。然后启动即可。</p>
+<p>
+注：一开始重启了N次，一度以为变砖了。但最后又好了：</p>
+<p>
+<img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-15-15-03.png" alt="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-15-15-03.png" title="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2022-06-17_13-15-15-03.png" /></p>
+<p>
+参考：</p>
+<ul>
+<li>小米6续命–刷入安卓11： <a href="https://sspai.com/post/67052">https://sspai.com/post/67052</a></li>
+<li>Install LineageOS on sagit: <a href="https://wiki.lineageos.org/devices/sagit/install">https://wiki.lineageos.org/devices/sagit/install</a></li>
+<li>Builds for sagit: <a href="https://download.lineageos.org/sagit#!">https://download.lineageos.org/sagit#!</a></li>
+</ul>
 
 		</div>
 
@@ -150,7 +182,7 @@ launcher-04-debug.png
 	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
 	<ul class="tags__list">
 		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
+			<a class="tags__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" rel="tag">Android开发</a>
 		</li>
 	</ul>
 </div>
@@ -161,15 +193,9 @@ launcher-04-debug.png
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/posts/xue-xi-hotspot-yi-launcher/" rel="prev">
+		<a class="pager__link" href="/posts/record-of-goolge-io-06-12/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">学习HotSpot（一）：Launcher</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/posts/2017a-li-shi-xi-sheng-mian-shi-zong-jie/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">2017阿里实习生面试总结</p>
+			<p class="pager__title">GoogleIO活动后记</p>
 		</a>
 	</div>
 </nav>
