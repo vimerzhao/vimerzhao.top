@@ -6,7 +6,7 @@
     <description>Recent content on 编程研讨会</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 17 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 20 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>分享</title>
       <link>/talk/</link>
@@ -37,6 +37,15 @@
       
       <guid>/archives/</guid>
       <description></description>
+    </item>
+    
+    <item>
+      <title>关于自我介绍的一点感想</title>
+      <link>/posts/impression-on-self-introduction/</link>
+      <pubDate>Sat, 20 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/impression-on-self-introduction/</guid>
+      <description>最近半年，因为参加一些活动，经常需要写个自我介绍，不由生发出一些感想。 其时自我介绍也是有分类的，比如刚上大学，又或者加入新的团队，自我介绍更多是让别人 了解 自己。 而在校期间的社团选拔、工作后的各种面试，</description>
     </item>
     
     <item>
