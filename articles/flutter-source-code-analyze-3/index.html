@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Flutter源码剖析(三):Flutter-Android-Embedder启动流程 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Flutter源码剖析(三):Flutter-Android-Embedder启动流程" />
+<meta property="og:description" content="概述 Flutter的启动包括Embedder、Engine、Framework三部分，本文仅描述Android平台的Embdder模块的启动流程。Flutter通常通过启动一个FlutterActiv" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/flutter-source-code-analyze-3/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2020-11-15T12:23:15+08:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flutter源码剖析(三):Flutter-Android-Embedder启动流程"/>
+<meta name="twitter:description" content="概述 Flutter的启动包括Embedder、Engine、Framework三部分，本文仅描述Android平台的Embdder模块的启动流程。Flutter通常通过启动一个FlutterActiv"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Flutter源码剖析(三):Flutter-Android-Embedder启动流程</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-11-15T12:23:15&#43;08:00">2020-11-15</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 2500 字，阅读需 5 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_概述">概述</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutter的启动包括Embedder、Engine、Framework三部分，本文仅描述Android平台的Embdder模块的启动流程。Flutter通常通过启动一个FlutterActivity启动，纯Flutter App则通过FlutterApplication启动。本文以后一种情况为例分析。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutterapplicationoncreate">FlutterApplication#onCreate</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// io/flutter/app/FlutterApplication.java
+
+  @Override
+  @CallSuper
+  public void onCreate() {
+    super.onCreate();
+    FlutterInjector.instance().flutterLoader().startInitialization(this);
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>实际是调用<code>FlutterLoader#startInitialization</code>进行初始化。</p>
+</div>
+<div class="sect2">
+<h3 id="_flutterloaderstartinitialization">FlutterLoader#startInitialization</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  public void startInitialization(@NonNull Context applicationContext) {
+    startInitialization(applicationContext, new Settings());
+  }
+
+  public void startInitialization(@NonNull Context applicationContext, @NonNull Settings settings) {
+    if (this.settings != null) {
+      return;
+    }
+    if (Looper.myLooper() != Looper.getMainLooper()) {
+      throw new IllegalStateException(&#34;startInitialization must be called on the main thread&#34;);
+    }
+
+    final Context appContext = applicationContext.getApplicationContext();
+
+    this.settings = settings;
+
+    initStartTimestampMillis = SystemClock.uptimeMillis();
+    flutterApplicationInfo = ApplicationInfoLoader.load(appContext);
+    VsyncWaiter.getInstance((WindowManager) appContext.getSystemService(Context.WINDOW_SERVICE))
+        .init();
+
+    // Use a background thread for initialization tasks that require disk access.
+    Callable&lt;InitResult&gt; initTask =
+        new Callable&lt;InitResult&gt;() {
+          @Override
+          public InitResult call() {
+            ResourceExtractor resourceExtractor = initResources(appContext);
+
+            if (FlutterInjector.instance().shouldLoadNative()) {
+              System.loadLibrary(&#34;flutter&#34;);
+            }
+
+            // Prefetch the default font manager as soon as possible on a background thread.
+            // It helps to reduce time cost of engine setup that blocks the platform thread.
+            Executors.newSingleThreadExecutor()
+                .execute(
+                    new Runnable() {
+                      @Override
+                      public void run() {
+                        FlutterJNI.nativePrefetchDefaultFontManager();
+                      }
+                    });
+
+            if (resourceExtractor != null) {
+              resourceExtractor.waitForCompletion();
+            }
+
+            return new InitResult(
+                PathUtils.getFilesDir(appContext),
+                PathUtils.getCacheDirectory(appContext),
+                PathUtils.getDataDirectory(appContext));
+          }
+        };
+    initResultFuture = Executors.newSingleThreadExecutor().submit(initTask);
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>主要做了以下几件事：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>检查是否在主线程</p>
+</li>
+<li>
+<p>注册Vsync信号监听</p>
+</li>
+<li>
+<p>启动一个异步任务，执行以下操作：</p>
+<div class="olist loweralpha">
+<ol class="loweralpha" type="a">
+<li>
+<p>加载flutter engine</p>
+</li>
+<li>
+<p>异步初始化字体管理器</p>
+</li>
+<li>
+<p>加载asset目录下的资源</p>
+</li>
+</ol>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>以上是Application会执行的操作，接着一般会进入一个FlutterActivity，那么依次查看其回调。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutteractivityoncreate">FlutterActivity#onCreate</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// io/flutter/embedding/android/FlutterActivity.java
+
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
+    switchLaunchThemeForNormalTheme();
+
+    super.onCreate(savedInstanceState);
+
+    lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
+
+    delegate = new FlutterActivityAndFragmentDelegate(this);
+    delegate.onAttach(this);
+    delegate.onActivityCreated(savedInstanceState);
+
+    configureWindowForTransparency();
+    setContentView(createFlutterView());
+    configureStatusBarForFullscreenFlutterExperience();
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>主要做了以下几件事：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>从Splash切换成真正要显示的View</p>
+</li>
+<li>
+<p>创建一个delegate，并触发对应回调</p>
+</li>
+<li>
+<p>配置相关的窗口属性</p>
+</li>
+<li>
+<p>创建一个新的FlutterView，作为Activity的ContentView</p>
+</li>
+</ol>
+</div>
+<div class="sect2">
+<h3 id="_flutteractivityandfragmentdelegateonattach">FlutterActivityAndFragmentDelegate#onAttach</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  void onAttach(@NonNull Context context) {
+    ensureAlive();
+    if (flutterEngine == null) {
+      setupFlutterEngine();
+    }
+
+    if (host.shouldAttachEngineToActivity()) {
+      Log.v(TAG, &#34;Attaching FlutterEngine to the Activity that owns this delegate.&#34;);
+      flutterEngine.getActivityControlSurface().attachToActivity(this, host.getLifecycle());
+    }
+
+    platformPlugin = host.providePlatformPlugin(host.getActivity(), flutterEngine);
+
+    host.configureFlutterEngine(flutterEngine);
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>主要做了以下几件事：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>设置FlutterEngine，一般是新建一个</p>
+</li>
+<li>
+<p>把Engine和容器Activity关联</p>
+</li>
+<li>
+<p>新建一个PlatformPlugin</p>
+</li>
+<li>
+<p>engine初始化完毕，触发对应回调</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>其中，<code>FlutterActivityAndFragmentDelegate#setupFlutterEngine</code>行为比较复杂</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  /* package */ void setupFlutterEngine() {
+    Log.v(TAG, &#34;Setting up FlutterEngine.&#34;);
+
+    // First, check if the host wants to use a cached FlutterEngine.
+    String cachedEngineId = host.getCachedEngineId();
+    if (cachedEngineId != null) {
+      flutterEngine = FlutterEngineCache.getInstance().get(cachedEngineId);
+      isFlutterEngineFromHost = true;
+      if (flutterEngine == null) {
+        throw new IllegalStateException(
+            &#34;The requested cached FlutterEngine did not exist in the FlutterEngineCache: &#39;&#34;
+                + cachedEngineId
+                + &#34;&#39;&#34;);
+      }
+      return;
+    }
+
+    // Second, defer to subclasses for a custom FlutterEngine.
+    flutterEngine = host.provideFlutterEngine(host.getContext());
+    if (flutterEngine != null) {
+      isFlutterEngineFromHost = true;
+      return;
+    }
+
+    Log.v(
+        TAG,
+        &#34;No preferred FlutterEngine was provided. Creating a new FlutterEngine for&#34;
+            + &#34; this FlutterFragment.&#34;);
+    flutterEngine =
+        new FlutterEngine(
+            host.getContext(),
+            host.getFlutterShellArgs().toArray(),
+            /*automaticallyRegisterPlugins=*/ false,
+            /*willProvideRestorationData=*/ host.shouldRestoreAndSaveState());
+    isFlutterEngineFromHost = false;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里一般是第三种情况，直接新建一个Engine：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  public FlutterEngine(
+      @NonNull Context context,
+      @Nullable FlutterLoader flutterLoader,
+      @NonNull FlutterJNI flutterJNI,
+      @NonNull PlatformViewsController platformViewsController,
+      @Nullable String[] dartVmArgs,
+      boolean automaticallyRegisterPlugins,
+      boolean waitForRestorationData) {
+    AssetManager assetManager;
+    try {
+      assetManager = context.createPackageContext(context.getPackageName(), 0).getAssets();
+    } catch (NameNotFoundException e) {
+      assetManager = context.getAssets();
+    }
+    this.dartExecutor = new DartExecutor(flutterJNI, assetManager);
+    this.dartExecutor.onAttachedToJNI();
+
+    accessibilityChannel = new AccessibilityChannel(dartExecutor, flutterJNI);
+    keyEventChannel = new KeyEventChannel(dartExecutor);
+    lifecycleChannel = new LifecycleChannel(dartExecutor);
+    localizationChannel = new LocalizationChannel(dartExecutor);
+    mouseCursorChannel = new MouseCursorChannel(dartExecutor);
+    navigationChannel = new NavigationChannel(dartExecutor);
+    platformChannel = new PlatformChannel(dartExecutor);
+    restorationChannel = new RestorationChannel(dartExecutor, waitForRestorationData);
+    settingsChannel = new SettingsChannel(dartExecutor);
+    systemChannel = new SystemChannel(dartExecutor);
+    textInputChannel = new TextInputChannel(dartExecutor);
+
+    this.localizationPlugin = new LocalizationPlugin(context, localizationChannel);
+
+    this.flutterJNI = flutterJNI;
+    if (flutterLoader == null) {
+      flutterLoader = FlutterInjector.instance().flutterLoader();
+    }
+    flutterLoader.startInitialization(context.getApplicationContext());
+    flutterLoader.ensureInitializationComplete(context, dartVmArgs);
+
+    flutterJNI.addEngineLifecycleListener(engineLifecycleListener);
+    flutterJNI.setPlatformViewsController(platformViewsController);
+    flutterJNI.setLocalizationPlugin(localizationPlugin);
+    attachToJni();
+
+    // TODO(mattcarroll): FlutterRenderer is temporally coupled to attach(). Remove that coupling if
+    // possible.
+    this.renderer = new FlutterRenderer(flutterJNI);
+
+    this.platformViewsController = platformViewsController;
+    this.platformViewsController.onAttachedToJNI();
+
+    this.pluginRegistry =
+        new FlutterEngineConnectionRegistry(context.getApplicationContext(), this, flutterLoader);
+
+    if (automaticallyRegisterPlugins) {
+      registerPlugins();
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>主要做了以下几件事：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>新建Dart运行环境DartExecutor</p>
+</li>
+<li>
+<p>创建各种用于Flutter和Android通信的channel对象</p>
+</li>
+<li>
+<p>确认engine初始化完成（调用Native侧的初始化方法，执行Flutter engine的启动逻辑）</p>
+</li>
+<li>
+<p>插件注册</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p><code>flutterLoader.startInitialization</code>由于之前调用过，这里会直接返回。 <code>FlutterLoader#ensureInitializationComplete</code>则负责engine最后的准备工作：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  public void ensureInitializationComplete(
+      @NonNull Context applicationContext, @Nullable String[] args) {
+    if (initialized) {
+      return;
+    }
+    if (Looper.myLooper() != Looper.getMainLooper()) {
+      throw new IllegalStateException(
+          &#34;ensureInitializationComplete must be called on the main thread&#34;);
+    }
+    if (settings == null) {
+      throw new IllegalStateException(
+          &#34;ensureInitializationComplete must be called after startInitialization&#34;);
+    }
+    try {
+      InitResult result = initResultFuture.get();
+
+      List&lt;String&gt; shellArgs = new ArrayList&lt;&gt;();
+      shellArgs.add(&#34;--icu-symbol-prefix=_binary_icudtl_dat&#34;);
+
+      shellArgs.add(
+          &#34;--icu-native-lib-path=&#34;
+              + flutterApplicationInfo.nativeLibraryDir
+              + File.separator
+              + DEFAULT_LIBRARY);
+      if (args != null) {
+        Collections.addAll(shellArgs, args);
+      }
+
+      String kernelPath = null;
+      if (BuildConfig.DEBUG || BuildConfig.JIT_RELEASE) {
+        String snapshotAssetPath =
+            result.dataDirPath + File.separator + flutterApplicationInfo.flutterAssetsDir;
+        kernelPath = snapshotAssetPath + File.separator + DEFAULT_KERNEL_BLOB;
+        shellArgs.add(&#34;--&#34; + SNAPSHOT_ASSET_PATH_KEY + &#34;=&#34; + snapshotAssetPath);
+        shellArgs.add(&#34;--&#34; + VM_SNAPSHOT_DATA_KEY + &#34;=&#34; + flutterApplicationInfo.vmSnapshotData);
+        shellArgs.add(
+            &#34;--&#34; + ISOLATE_SNAPSHOT_DATA_KEY + &#34;=&#34; + flutterApplicationInfo.isolateSnapshotData);
+      } else {
+        shellArgs.add(
+            &#34;--&#34; + AOT_SHARED_LIBRARY_NAME + &#34;=&#34; + flutterApplicationInfo.aotSharedLibraryName);
+
+        // Most devices can load the AOT shared library based on the library name
+        // with no directory path.  Provide a fully qualified path to the library
+        // as a workaround for devices where that fails.
+        shellArgs.add(
+            &#34;--&#34;
+                + AOT_SHARED_LIBRARY_NAME
+                + &#34;=&#34;
+                + flutterApplicationInfo.nativeLibraryDir
+                + File.separator
+                + flutterApplicationInfo.aotSharedLibraryName);
+      }
+
+      shellArgs.add(&#34;--cache-dir-path=&#34; + result.engineCachesPath);
+      if (!flutterApplicationInfo.clearTextPermitted) {
+        shellArgs.add(&#34;--disallow-insecure-connections&#34;);
+      }
+      if (flutterApplicationInfo.domainNetworkPolicy != null) {
+        shellArgs.add(&#34;--domain-network-policy=&#34; + flutterApplicationInfo.domainNetworkPolicy);
+      }
+      if (settings.getLogTag() != null) {
+        shellArgs.add(&#34;--log-tag=&#34; + settings.getLogTag());
+      }
+
+      long initTimeMillis = SystemClock.uptimeMillis() - initStartTimestampMillis;
+
+      if (FlutterInjector.instance().shouldLoadNative()) {
+        FlutterJNI.nativeInit(
+            applicationContext,
+            shellArgs.toArray(new String[0]),
+            kernelPath,
+            result.appStoragePath,
+            result.engineCachesPath,
+            initTimeMillis);
+      }
+
+      initialized = true;
+    } catch (Exception e) {
+      Log.e(TAG, &#34;Flutter initialization failed.&#34;, e);
+      throw new RuntimeException(e);
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>主要是拼接各种参数，最终调用了一个native方法，让engine执行自己的初始化逻辑。</p>
+</div>
+<div class="paragraph">
+<p>至此，<code>FlutterActivityAndFragmentDelegate#onAttach</code>的逻辑终于走完了。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flutteractivityandfragmentdelegateonactivitycreated">FlutterActivityAndFragmentDelegate#onActivityCreated</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  void onActivityCreated(@Nullable Bundle bundle) {
+    Log.v(TAG, &#34;onActivityCreated. Giving framework and plugins an opportunity to restore state.&#34;);
+    ensureAlive();
+
+    Bundle pluginState = null;
+    byte[] frameworkState = null;
+    if (bundle != null) {
+      pluginState = bundle.getBundle(PLUGINS_RESTORATION_BUNDLE_KEY);
+      frameworkState = bundle.getByteArray(FRAMEWORK_RESTORATION_BUNDLE_KEY);
+    }
+
+    if (host.shouldRestoreAndSaveState()) {
+      flutterEngine.getRestorationChannel().setRestorationData(frameworkState);
+    }
+
+    if (host.shouldAttachEngineToActivity()) {
+      flutterEngine.getActivityControlSurface().onRestoreInstanceState(pluginState);
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>状态恢复相关，一般无需关注。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flutteractivitycreateflutterview">FlutterActivity#createFlutterView</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  @NonNull
+  private View createFlutterView() {
+    return delegate.onCreateView(
+        null /* inflater */, null /* container */, null /* savedInstanceState */);
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>继续：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  View onCreateView(
+      LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    Log.v(TAG, &#34;Creating FlutterView.&#34;);
+    ensureAlive();
+
+    if (host.getRenderMode() == RenderMode.surface) {
+      FlutterSurfaceView flutterSurfaceView =
+          new FlutterSurfaceView(
+              host.getActivity(), host.getTransparencyMode() == TransparencyMode.transparent);
+
+      host.onFlutterSurfaceViewCreated(flutterSurfaceView);
+
+      flutterView = new FlutterView(host.getActivity(), flutterSurfaceView);
+    } else {
+      FlutterTextureView flutterTextureView = new FlutterTextureView(host.getActivity());
+
+      host.onFlutterTextureViewCreated(flutterTextureView);
+
+      flutterView = new FlutterView(host.getActivity(), flutterTextureView);
+    }
+
+    flutterView.addOnFirstFrameRenderedListener(flutterUiDisplayListener);
+
+    flutterSplashView = new FlutterSplashView(host.getContext());
+    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+      flutterSplashView.setId(View.generateViewId());
+    } else {
+      flutterSplashView.setId(486947586);
+    }
+    flutterSplashView.displayFlutterViewWithSplash(flutterView, host.provideSplashScreen());
+
+    Log.v(TAG, &#34;Attaching FlutterEngine to FlutterView.&#34;);
+    flutterView.attachToFlutterEngine(flutterEngine);
+
+    return flutterSplashView;
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里会根据不同mode，创建不同类型的FlutterView，这个View承载了Flutter的UI在Android端的显示。</p>
+</div>
+<div class="paragraph">
+<p>此外，会创建一个<code>FlutterSplashView</code>作为启动阶段的闪屏。</p>
+</div>
+<div class="paragraph">
+<p>最后，<code>FlutterView#attachToFlutterEngine</code>会把FlutterView和FlutterEngine关联起来：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  public void attachToFlutterEngine(@NonNull FlutterEngine flutterEngine) {
+    Log.v(TAG, &#34;Attaching to a FlutterEngine: &#34; + flutterEngine);
+    if (isAttachedToFlutterEngine()) {
+      if (flutterEngine == this.flutterEngine) {
+        Log.v(TAG, &#34;Already attached to this engine. Doing nothing.&#34;);
+        return;
+      }
+      Log.v(
+          TAG,
+          &#34;Currently attached to a different engine. Detaching and then attaching&#34;
+              + &#34; to new engine.&#34;);
+      detachFromFlutterEngine();
+    }
+
+    this.flutterEngine = flutterEngine;
+
+    FlutterRenderer flutterRenderer = this.flutterEngine.getRenderer();
+    isFlutterUiDisplayed = flutterRenderer.isDisplayingFlutterUi();
+    renderSurface.attachToRenderer(flutterRenderer);
+    flutterRenderer.addIsDisplayingFlutterUiListener(flutterUiDisplayListener);
+
+    // in a way that Flutter understands.
+    if (Build.VERSION.SDK_INT &gt;= Build.VERSION_CODES.N) {
+      mouseCursorPlugin = new MouseCursorPlugin(this, this.flutterEngine.getMouseCursorChannel());
+    }
+    textInputPlugin =
+        new TextInputPlugin(
+            this,
+            this.flutterEngine.getTextInputChannel(),
+            this.flutterEngine.getPlatformViewsController());
+    localizationPlugin = this.flutterEngine.getLocalizationPlugin();
+    androidKeyProcessor =
+        new AndroidKeyProcessor(this, this.flutterEngine.getKeyEventChannel(), textInputPlugin);
+    androidTouchProcessor =
+        new AndroidTouchProcessor(this.flutterEngine.getRenderer(), /*trackMotionEvents=*/ false);
+    accessibilityBridge =
+        new AccessibilityBridge(
+            this,
+            flutterEngine.getAccessibilityChannel(),
+            (AccessibilityManager) getContext().getSystemService(Context.ACCESSIBILITY_SERVICE),
+            getContext().getContentResolver(),
+            this.flutterEngine.getPlatformViewsController());
+    accessibilityBridge.setOnAccessibilityChangeListener(onAccessibilityChangeListener);
+    resetWillNotDraw(
+        accessibilityBridge.isAccessibilityEnabled(),
+        accessibilityBridge.isTouchExplorationEnabled());
+
+    this.flutterEngine.getPlatformViewsController().attachAccessibilityBridge(accessibilityBridge);
+    this.flutterEngine
+        .getPlatformViewsController()
+        .attachToFlutterRenderer(this.flutterEngine.getRenderer());
+
+    textInputPlugin.getInputMethodManager().restartInput(this);
+
+    // Push View and Context related information from Android to Flutter.
+    sendUserSettingsToFlutter();
+    localizationPlugin.sendLocalesToFlutter(getResources().getConfiguration());
+    sendViewportMetricsToFlutter();
+
+    flutterEngine.getPlatformViewsController().attachToView(this);
+
+    // Notify engine attachment listeners of the attachment.
+    for (FlutterEngineAttachmentListener listener : flutterEngineAttachmentListeners) {
+      listener.onFlutterEngineAttachedToFlutterView(flutterEngine);
+    }
+
+    if (isFlutterUiDisplayed) {
+      flutterUiDisplayListener.onFlutterUiDisplayed();
+    }
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里主要是关联两个对象的字段，同时对一些必要的Plugin进行初始化。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutteractivityonstart">FlutterActivity#onStart</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  @Override
+  protected void onStart() {
+    super.onStart();
+    lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_START);
+    delegate.onStart();
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>核心逻辑在delegate里面：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  void onStart() {
+    Log.v(TAG, &#34;onStart()&#34;);
+    ensureAlive();
+    doInitialFlutterViewRun();
+  }
+
+
+  private void doInitialFlutterViewRun() {
+    if (host.getCachedEngineId() != null) {
+      return;
+    }
+
+    if (flutterEngine.getDartExecutor().isExecutingDart()) {
+      return;
+    }
+    String initialRoute = host.getInitialRoute();
+    if (initialRoute == null) {
+      initialRoute = getInitialRouteFromIntent(host.getActivity().getIntent());
+    }
+    Log.v(
+        TAG,
+        &#34;Executing Dart entrypoint: &#34;
+            + host.getDartEntrypointFunctionName()
+            + &#34;, and sending initial route: &#34;
+            + initialRoute);
+
+    if (initialRoute != null) {
+      flutterEngine.getNavigationChannel().setInitialRoute(initialRoute);
+    }
+
+    String appBundlePathOverride = host.getAppBundlePath();
+    if (appBundlePathOverride == null || appBundlePathOverride.isEmpty()) {
+      appBundlePathOverride = FlutterInjector.instance().flutterLoader().findAppBundlePath();
+    }
+
+    DartExecutor.DartEntrypoint entrypoint =
+        new DartExecutor.DartEntrypoint(
+            appBundlePathOverride, host.getDartEntrypointFunctionName());
+    flutterEngine.getDartExecutor().executeDartEntrypoint(entrypoint);
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可见其核心行为是启动dart虚拟机。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutteractivityonresume">FlutterActivity#onResume</h2>
+<div class="sectionbody">
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">  @Override
+  protected void onResume() {
+    super.onResume();
+    lifecycle.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
+    delegate.onResume();
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>同样看delegate的代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// io/flutter/embedding/android/FlutterActivityAndFragmentDelegate.java
+  void onResume() {
+    Log.v(TAG, &#34;onResume()&#34;);
+    ensureAlive();
+    flutterEngine.getLifecycleChannel().appIsResumed();
+  }</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里向Flutter发送了一个通知，宿主Activity处于onResume状态了。</p>
+</div>
+<div class="paragraph">
+<p>以上，就是Android Embedder层的启动流程。</p>
+</div>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" rel="tag">源码剖析</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/gitbook-install-record/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">gitbook安装中的一些问题</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/thinking-on-sprint/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">谈小步快跑</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Android on 赵裕的博客</title>
+    <link>/categories/android/</link>
+    <description>Recent content in Android on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 24 Apr 2020 23:51:25 +0800</lastBuildDate><atom:link href="/categories/android/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android P内联优化导致的一个诡异Bug</title>
+      <link>/articles/solve-of-android-p-inline-opt/</link>
+      <pubDate>Fri, 24 Apr 2020 23:51:25 +0800</pubDate>
+      
+      <guid>/articles/solve-of-android-p-inline-opt/</guid>
+      <description>问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------</description>
+    </item>
+    
+    <item>
+      <title>基于Android签名机制的文件安全下发方法</title>
+      <link>/articles/secure-file-transfer-base-on-android-signature/</link>
+      <pubDate>Thu, 05 Mar 2020 12:05:39 +0800</pubDate>
+      
+      <guid>/articles/secure-file-transfer-base-on-android-signature/</guid>
+      <description>问题背景 Android中存在大量需要动态下发文件的场景： 下发布局资源文件实现UI动态化 下发Dex文件、lua文件，实现局部功能的动态化 下发Android插件 下发多媒体资源等 等等 对于其中一些文件，如De</description>
+    </item>
+    
+    <item>
+      <title>Android安装包极限优化</title>
+      <link>/articles/opt-apk-size-by-remove-debuginfo/</link>
+      <pubDate>Fri, 17 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/opt-apk-size-by-remove-debuginfo/</guid>
+      <description>背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优</description>
+    </item>
+    
+    <item>
+      <title>全面了解Android热修复技术</title>
+      <link>/articles/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</link>
+      <pubDate>Sun, 10 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</guid>
+      <description>全面了解Android热修复技术 引言:本文全面地探讨了Android热修复技术的发展脉络，现状及其未来。 热修复技术概述 热修复技术在近年来飞速发展，尤其是在InstantRun方案推出之后，各种热修复技</description>
+    </item>
+    
+    <item>
+      <title>热补丁：Qzone方案在Dalvik虚拟机上的实现</title>
+      <link>/articles/re-bu-ding-qzonefang-an-zai-dalvikxu-ni-ji-shang-de-shi-xian/</link>
+      <pubDate>Mon, 21 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-bu-ding-qzonefang-an-zai-dalvikxu-ni-ji-shang-de-shi-xian/</guid>
+      <description>热补丁：Qzone方案在Dalvik虚拟机上的实现 详细分析了Qzone热修复方案在Dalvik平台的实现，包括插桩的由来及其实现。 Qzone热修复原理分析 Qzone热修复方案基于的是android de</description>
+    </item>
+    
+    <item>
+      <title>热修复之资源更新的实现</title>
+      <link>/articles/re-xiu-fu-zhi-zi-yuan-geng-xin-de-shi-xian/</link>
+      <pubDate>Thu, 17 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-xiu-fu-zhi-zi-yuan-geng-xin-de-shi-xian/</guid>
+      <description>热修复之资源更新的实现 本文分析了InstantRun的部分源码，并由此得出资源热修复的一种实现方法。 资源热修复 所谓资源热修复就是在不重新安装APP的情况下修改其资源，包括音频、图片，也包括布局、文字等</description>
+    </item>
+    
+    <item>
+      <title>热补丁：Tinker方案实现</title>
+      <link>/articles/re-bu-ding-tinkerfang-an-shi-xian/</link>
+      <pubDate>Thu, 03 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-bu-ding-tinkerfang-an-shi-xian/</guid>
+      <description>热补丁：Tinker方案实现 本文简单分析了Tinker的实现原理并对dex文件更新做了演示Demo。 Qzone方案与Tinker 在之前的博客里简单介绍了Qzone超级热补丁的原理与实现，本文介绍了腾讯</description>
+    </item>
+    
+    <item>
+      <title>热补丁：Qzone方案在Art虚拟机上的实现</title>
+      <link>/articles/re-bu-ding-qzonefang-an-zai-artxu-ni-ji-shang-de-shi-xian/</link>
+      <pubDate>Sun, 30 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-bu-ding-qzonefang-an-zai-artxu-ni-ji-shang-de-shi-xian/</guid>
+      <description>热补丁：Qzone方案在Art虚拟机上的实现 本文对Qzone的超级热补丁方案做了一个简单实现。 引子 当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打</description>
+    </item>
+    
+  </channel>
+</rss>

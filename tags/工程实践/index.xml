@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工程实践 on 赵裕的博客</title>
+    <link>/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/</link>
+    <description>Recent content in 工程实践 on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Mon, 25 May 2020 12:16:13 +0800</lastBuildDate><atom:link href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Android客户端远程调试方法</title>
+      <link>/articles/android-remote-debug-method/</link>
+      <pubDate>Mon, 25 May 2020 12:16:13 +0800</pubDate>
+      
+      <guid>/articles/android-remote-debug-method/</guid>
+      <description>在最近的需求开发中，会遇到一些兼容性问题，经常只能在特定ROM和Android版本上复现。由于测试和开发不在同一区域办公，往往需要通过物资穿梭车送手机。由此带来两点不便： 使用成本大，调试效率低，因为物</description>
+    </item>
+    
+    <item>
+      <title>设置Android全局可调试</title>
+      <link>/articles/android-make-debuggable/</link>
+      <pubDate>Thu, 07 May 2020 12:13:23 +0800</pubDate>
+      
+      <guid>/articles/android-make-debuggable/</guid>
+      <description>背景 最近要看一些系统打印的日志，发现需要开启debuggable标志，于是调研了一下。 实现 参考https://www.renyiwei.com/archives/1704.html[Android修改</description>
+    </item>
+    
+    <item>
+      <title>Android安装包优化</title>
+      <link>/articles/apk-size-opt-summary/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/apk-size-opt-summary/</guid>
+      <description>背景 安装包膨胀的原因 业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如： 使用的资源未经裁剪（如全量字体文件、分辨率过大的图片） 不合理的大资源（如大的视频、音</description>
+    </item>
+    
+    <item>
+      <title>自己动手写事件总线(EventBus)</title>
+      <link>/articles/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/</link>
+      <pubDate>Sun, 23 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/</guid>
+      <description>自己动手写事件总线(EventBus) 事件总线核心逻辑的实现。 EventBus的作用 Android中存在各种通信场景，如Activity之间的跳转，Activity与Fragment以及其他组件之间的</description>
+    </item>
+    
+    <item>
+      <title>自己动手写Android插件化框架</title>
+      <link>/articles/zi-ji-dong-shou-xie-androidcha-jian-hua-kuang-jia/</link>
+      <pubDate>Thu, 04 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zi-ji-dong-shou-xie-androidcha-jian-hua-kuang-jia/</guid>
+      <description>自己动手写Android插件化框架 最近在工作中接触到了Android插件内的开发，发现自己这种技术还缺乏最基本的了解，以至于在一些基本问题上浪费不少时间，如插件Context和主工程Context的区</description>
+    </item>
+    
+    <item>
+      <title>InstantRun原理浅析</title>
+      <link>/articles/instantrunyuan-li-qian-xi/</link>
+      <pubDate>Thu, 17 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/instantrunyuan-li-qian-xi/</guid>
+      <description>InstantRun原理浅析 本文从宏观上简要介绍了InstantRun的实现原理。 InstantRun概述 InstantRun是Android Studio2.0推出的新功能，旨在加快构建编译速度，提升</description>
+    </item>
+    
+  </channel>
+</rss>

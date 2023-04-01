@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>你真的需要单元测试吗? - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="你真的需要单元测试吗?" />
+<meta property="og:description" content="你真的需要单元测试吗? 博主最近在接触一些Android单元测试方面的工作，发现自己并没有体会到大多数文章所宣传的“单元测试会带来工作效率的巨大提升”之类的诸多好处，于是本着批判与自我批判的精神对单元测" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/ni-zhen-de-xu-yao-dan-yuan-ce-shi-ma/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2018-04-07T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="你真的需要单元测试吗?"/>
+<meta name="twitter:description" content="你真的需要单元测试吗? 博主最近在接触一些Android单元测试方面的工作，发现自己并没有体会到大多数文章所宣传的“单元测试会带来工作效率的巨大提升”之类的诸多好处，于是本着批判与自我批判的精神对单元测"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">你真的需要单元测试吗?</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-04-07T00:00:00Z">2018-04-07</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 2900 字，阅读需 6 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h1 id="你真的需要单元测试吗">你真的需要单元测试吗?</h1>
+<p>博主最近在接触一些Android单元测试方面的工作，发现自己并没有体会到大多数文章所宣传的“单元测试会带来工作效率的巨大提升”之类的诸多好处，于是本着批判与自我批判的精神对单元测试做了一番研究，以下言论仅代表个人观点，如果不足，欢迎指教。</p>
+<h2 id="单元测试不是用来找bug的">单元测试不是用来找Bug的</h2>
+<p>当你看到网上诸多关于单元测试的赞美时，仔细看看你就会发现很多说的其实是TDD(Test-Driven Development，测试驱动开发)，不幸的是大多数人并没有注意区分这两个概念。在<a href="http://blog.stevensanderson.com/2009/08/24/writing-great-unit-tests-best-and-worst-practises/">Writing Great Unit Tests: Best and Worst Practices</a>中，Steven Sanderson强烈表达了自己的观点：Unit testing is not about finding bugs。简单来说，当先写代码后写单元测试的时候，单元测试就成了一种发现Bug的手段，但作者根据其几十年的开发经验指出这种手段其实是十分低效的，因为即使每个功能模块都能正常工作，但是仍然不能保证模块之间、模块与用户环境之间能正确交互，而后者往往是Bug的主要来源。单元测试或许能找到一些Bug，但相比集成测试和系统测试就显得十分低效了。
+既然如此，那么单元测试为何又备受追捧呢？在<em>How Google Tests Software</em>中，三位谷歌的专家介绍了谷歌的软件测试之道，总而言之就是谷歌会在开发之初设计好单元测试（其实是用代码表达需求），在开发中不断迭代以通过全部的测试（其实是完成全部需求），最终交付给测试人员的软件已经经过一轮测试，如果还有集成后的Bug，就可以交给专业的测试人员发现了。这是一种典型的敏捷开发，可以看到单元测试扮演更多的是驱动开发的角色。
+作为技术标杆的谷歌已经全面引入了单元测试，那么我作为一个普通开发者为什么还要提出一番质疑呢？请看下一节。</p>
+<h2 id="单元测试的边际收益">单元测试的边际收益</h2>
+<p>在经济学领域，有一个著名的<strong>边际收益递减规律</strong>，指在投入生产要素后，每单位生产要素所能提供的产量增加发生递减（二阶导数为负）的现象。在本文讨论的场景中，投入产出如下（引自：<a href="https://voidint.github.io/post/2017/10/24/ut/">软件开发过程中值不值得写单元测试？ - voidint&rsquo;s blog</a>）：</p>
+<blockquote>
+<p>成本(投入)</p>
+<ul>
+<li>编写单元测试用例所额外付出的时间，短期内会拖慢项目进度。</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>收益(产出)</p>
+<ul>
+<li>提升代码质量。监督开发人员写出更加易于测试和可维护的代码。</li>
+<li>提升开发团队内部的协作效率。其他开发人员可以通过阅读单元测试用例来理解代码原作者的意图。</li>
+<li>保证功能实现的长期稳定。代码一旦发生与原功能意图不相符的变化，通过跑单元测试可以体现出来，即可以防止功能被无意识地破坏。</li>
+<li>提高自动化测试占比，降低其他测试方式上的投入。</li>
+</ul>
+</blockquote>
+<p>在经济学中，边际收益递减现象常出现于产量的短期分析中。结合对同事的咨询以及自己的调研，这个现象在软件开发领域同样适用。当我们需要写原型或者开发一个短期紧急需求的时候，（产品、运营人员）往往要求快速交付，并且由于代码规模有限也往往不会有太多Bug，在这种短期开发中如果引入单元测试往往会适得其反，投入了双倍的时间却没有明显的附加收益。而分析<em>How Google Tests Software</em>一书中最多提及的几个项目（Chrome,Android,Gmail）可以发现，单元测试（更准确说是Test-Driven Development）的成功案例往往都是一些<strong>架构设计良好，处于长期迭代开发，基本没有短期临时紧急需求</strong>的产品，项目初期的单元测试往往在几年后还能使用，复用率极高（私以为<strong>复用率某种程度上可以作为是否值得引入单元测试的标准</strong>）。而如果一个项目<strong>一开始没有引入单元测试、过时和糟糕的代码没有及时重构、临时短期需求偏多</strong>，往往就没有引入单元测试的必要了。</p>
+<h2 id="jake-wharton也头疼的单元测试">Jake Wharton也头疼的单元测试</h2>
+<p>Jake Wharton何许人也?答：诸多著名开源项目的作者，Android社区的旗帜人物：
+<img src="http://p2pe8gnn5.bkt.clouddn.com/jake%20wharton.png" alt="Jake Wharton Github Screenshot">
+Jake Wharton对于Android平台的单元测试也十分头痛（<a href="https://www.philosophicalhacker.com/2015/04/10/against-android-unit-tests/">Against Android Unit Tests</a>），其原因也是我调研并写下本文的原因。Android相对于其他开发环境有以下几个特点：</p>
+<ol>
+<li>大多数代码是在与Android环境（SDK）交互，逻辑往往放在后端</li>
+<li>UI与逻辑容易耦合，虽然MVP等模式的出现在尝试缓解这个问题</li>
+<li>版本众多（不同ROM），使用环境复杂（用户行为、网络波动等）导致具体环境的Bug远多于单个模块的Bug</li>
+</ol>
+<p>可以想象，当你投入大量精力，使用<a href="http://robolectric.org/">Robolectric</a>、<a href="http://site.mockito.org/">Mockito</a>等框架模拟出一个将数据库数据发往后台的单元测试并通过测试用例后，用户却因为切换网络等小概率场景触发了Bug，你会不会感叹我要这单测有何用？类似Android这种终端环境，其边际收益递减的临界点往往更容易达到，引入单元测试犹需谨慎。</p>
+<h2 id="你的代码能做单元测试吗">你的代码能做单元测试吗</h2>
+<p>结合上面的分析，哪些场景不适合做单元测试已经显而易见了，<a href="https://softwareengineering.stackexchange.com/questions/147055/when-is-unit-testing-inappropriate-or-unnecessary">When is unit testing inappropriate or unnecessary? [duplicate]</a>中一个高票回答做了如下总结：</p>
+<blockquote>
+<ol>
+<li>The code has no branches is trivial. A getter that returns 0 doesn&rsquo;t need to be tested, and changes will be covered by tests for its consumers.</li>
+</ol>
+</blockquote>
+<ol start="2">
+<li>The code simply passes through into a stable API. I&rsquo;ll assume that the standard library works properly.</li>
+<li>The code needs to interact with other deployed systems; then an integration test is called for.</li>
+<li>If the test of success/fail is something that is so difficult to quantify as to not be reliably measurable, such as steganography being unnoticeable to humans.</li>
+<li>If the test itself is an order of magnitude more difficult to write than the code.</li>
+<li>If the code is throw-away or placeholder code. If there&rsquo;s any doubt, test.</li>
+</ol>
+<p>在<a href="https://softwareengineering.stackexchange.com/questions/356236/definition-of-brittle-unit-tests/356238">Definition of brittle unit tests</a>中也有详细总结，都有一定参考价值。
+此外，有了适合单元测试的场景并不代表就有适合单元测试的代码。在TDD模式中，测试先于开发，所以开发部分的代码接口往往需要经过良好的设计和定义，最好能解耦各个模块，如此开发代码将能够完美匹配测试代码。但这种开发模式往往对开发经验、设计能力要求很高。能都达成此境界的已经是TDD的行家了。然而事实是对于没有单元测试经验的开发人员而言，往往没有意识到自己写的代码“不可测试”。以下面伪代码为例：</p>
+<pre tabindex="0"><code>object processObject(Object object) {
+    if (object == objectA) {
+        log.i(&#39;error 1 ....&#39;)
+        return object;
+    }
+    if (object == objectB) {
+        log.i(&#39;error 1 ....&#39;)
+        return object;
+    }
+    .....
+    return object;
+}
+</code></pre><p>开发人员在Debug的时候，能根据log信息快速定位问题，但对于测试来说就十分不友好了：返回值都一样。如果想要领会单元测试的优越性，短期的镇痛与适应似乎是不可避免的。</p>
+<h2 id="写在最后">写在最后</h2>
+<p>本文没有讨论TDD的各种优势，也没有讨论单元测试的最佳实践，是个人的一些总结，讨论的是单元测试的一些局限之处，或许有不足、有遗漏，又或者完全错误，<strong>欢迎拍砖</strong>。譬如，在stackoverflow上有一个关于是否值得做单元测试的问题就因为其争议性而被关闭回答，而又因为有其存在的历史意义而被一直锁定(locked)，感兴趣可以看看：</p>
+<p><img src="http://p2pe8gnn5.bkt.clouddn.com/Is%20Unit%20Testing%20worth%20the%20effort.png" alt="">
+链接：<a href="https://stackoverflow.com/questions/67299/is-unit-testing-worth-the-effort">Is Unit Testing worth the effort? - Stack Overflow</a></p>
+<p>本文讨论的只是单元测试（TDD）的局限性，在合适的场景中其作用是巨大的，尤其是轮子级、框架级和开源项目中，了解单元测试也大有裨益。比如，我在为ChatteBot提交代码时，就因为当时不了解单元测试的作用，只修改了代码Bug而没有修改测试代码的错误（测试代码写错真是没救了）。我也因此失去了成为一个5000+ star开源项目贡献者的机会&hellip;..
+<img src="http://p2pe8gnn5.bkt.clouddn.com/unit%20test%20example.png" alt=""></p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://www.philosophicalhacker.com/2015/04/10/against-android-unit-tests/">Against Android Unit Tests · Philosophical Hacker</a></li>
+<li><a href="https://softwareengineering.stackexchange.com/questions/147055/when-is-unit-testing-inappropriate-or-unnecessary">When is unit testing inappropriate or unnecessary? - Software Engineering Stack Exchange</a></li>
+<li><a href="https://softwareengineering.stackexchange.com/questions/66480/when-is-it-appropriate-to-not-unit-test/66487">tdd - When is it appropriate to not unit test? - Software Engineering Stack Exchange</a></li>
+<li><a href="https://softwareengineering.stackexchange.com/questions/356236/definition-of-brittle-unit-tests/356238">terminology - Definition of brittle unit tests - Software Engineering Stack Exchange</a></li>
+<li><a href="http://blog.stevensanderson.com/2009/08/24/writing-great-unit-tests-best-and-worst-practises/">Writing Great Unit Tests: Best and Worst Practices</a></li>
+<li><a href="https://stackoverflow.com/questions/16696412/what-to-unit-test-in-android-apps">what to unit test, in android apps - Stack Overflow</a></li>
+<li><a href="https://softwareengineering.stackexchange.com/questions/356236/definition-of-brittle-unit-tests/356238">Definition of brittle unit tests</a></li>
+<li><a href="https://voidint.github.io/post/2017/10/24/ut/">软件开发过程中值不值得写单元测试？ - voidint&rsquo;s blog</a></li>
+<li><a href="https://zh.wikipedia.org/wiki/%E5%A0%B1%E9%85%AC%E9%81%9E%E6%B8%9B">报酬递减 - 维基百科，自由的百科全书</a></li>
+<li><em>The Art of Unit Testing</em>, Roy Osherove</li>
+<li><em>How Google Tests Software</em>, James A. Whittaker / Jason Arbon / Jeff Carollo</li>
+</ul>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" rel="tag">开发思考</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/yi-zi-ji-dong-shou-xie-qu-kuai-lian/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">【译】自己动手写区块链</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/qu-kuai-lian-zhao-pin-xin-xi-pa-qu-yu-fen-xi/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">区块链招聘信息爬取与分析</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

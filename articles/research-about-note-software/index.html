@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>关于笔记软件的比较研究 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="关于笔记软件的比较研究" />
+<meta property="og:description" content="一、引言 工作以来，如何高效地整理自己的信息这个问题一直困扰着我。经常会遇到这种情况， 自己需要记录一个信息，但依稀记得自己记录过类似的信息，却又半天找不到。 举个例子，我发现一个学习C&#43;&#43;不错的网站，于是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/research-about-note-software/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2021-12-19T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="关于笔记软件的比较研究"/>
+<meta name="twitter:description" content="一、引言 工作以来，如何高效地整理自己的信息这个问题一直困扰着我。经常会遇到这种情况， 自己需要记录一个信息，但依稀记得自己记录过类似的信息，却又半天找不到。 举个例子，我发现一个学习C&#43;&#43;不错的网站，于是"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">关于笔记软件的比较研究</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2021-12-19T00:00:00Z">2021-12-19</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 5100 字，阅读需 11 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			
+<div id="outline-container-headline-1" class="outline-2">
+<h2 id="headline-1">
+一、引言
+</h2>
+<div id="outline-text-headline-1" class="outline-text-2">
+<p>工作以来，如何高效地整理自己的信息这个问题一直困扰着我。经常会遇到这种情况，
+自己需要记录一个信息，但依稀记得自己记录过类似的信息，却又半天找不到。
+举个例子，我发现一个学习C++不错的网站，于是在&#34;C++&#34;分类下面记录了这个条目，
+但是，不久之后发现之前在一个&#34;资源收集&#34;的分类下面也记录过。也就是说，这个学习C++的网站条目，
+既可以认为是C++这个大类下面的一个子类（学习资源），也可以认为是资源这个大类下面的一个子类（C++方面的学习资源）。
+知道最近，我才意思到这种树状的分类法是无法满足我的需要的，在后文“信息的拓扑结构”小节将会深入分析</p>
+<p>
+在思维导图（Mind Map）中，这个问题也颇为明显，思维导图有一个中心起始节点，
+鼓励使用者充分发散思维。但是，每个分支其实也是有可能存在联系的（比如因果关系），
+所以，一些脑体就提供了一个所谓“联系”的功能，可以连接两个节点。“联系”可以处理一些简单的关系，
+但是，如果信息足够庞大、彼此关系足够负责，这个功能也无法满足，因为脑图的中心是绝对的。</p>
+<p>
+实际上，市场早就发现了这个问题，The Brain就是这样一个软件，如其名字所昭示的：
+这个软件在以一种类似人脑的方式组织信息。</p>
+<p>
+顺着这条线索，我也市面上相关的笔记软件都做了一遍了解，也系统地梳理了自己对于工具、笔记软件工具、
+我的笔记软件工具这几个问题的思考。</p>
+<p>
+以上是本文的背景。</p>
+</div>
+</div>
+<div id="outline-container-headline-2" class="outline-2">
+<h2 id="headline-2">
+二、关于工具的几点思考
+</h2>
+<div id="outline-text-headline-2" class="outline-text-2">
+<div id="outline-container-headline-3" class="outline-3">
+<h3 id="headline-3">
+2.1 为什么需要工具
+</h3>
+<div id="outline-text-headline-3" class="outline-text-3">
+<blockquote>
+<p>假舆马者，非利足也，而致千里；假舟楫者，非能水也，而绝江河。君子生非异也，善假於物也。</p>
+<p>
+《荀子·劝学》</p>
+</blockquote>
+<p>
+我对于工具的理解非常简单：分担人的工作。农耕时代的各种工具很好地分担了人的体力工作，
+而信息时代的各种工具则更注重于分担人的脑力工作。</p>
+<p>
+比如日程管理和各种 TODO App，就很好地解放了大脑。计算机最初被发明出来也是为了完成人脑
+所不能处理的庞大运算量，恰如农耕时代的牛耕。</p>
+<p>
+虽然我们制造并使用工具的动机很简单，但是代替体力的工具和代替脑力的工具却存在着巨大的差异。
+比如说车轮，应该不会有人用六边形的轮子，因为客观的实践已经证明了原型是最好的解决方案。
+但是，到了脑力工具领域，这种客观性大大减弱，而主观意识大大增强。这也是为什么同样一个工具，
+市面上会存在几十、甚至几百种对应软件的原因（当然也存在一些经济因素在其中）。</p>
+</div>
+</div>
+<div id="outline-container-headline-4" class="outline-3">
+<h3 id="headline-4">
+2.2 人用工具，而非工具用人
+</h3>
+<div id="outline-text-headline-4" class="outline-text-3">
+<p>首先需要明确的一点是：使用工具的原始动机是提高自己的效率。如果过于追求工具的能力，
+甚至为了使用工具的某些工具而主动去创造使用场景，这就是本末倒置了。事实上，
+没有哪个工具和个体的人是完全匹配了，没有必要比理解、并熟练掌握工具的每一个功能。</p>
+</div>
+</div>
+<div id="outline-container-headline-5" class="outline-3">
+<h3 id="headline-5">
+2.3 好的工具可以适当地启发人
+</h3>
+<div id="outline-text-headline-5" class="outline-text-3">
+<p>辩证地看，也不能完全排斥工具的一些“附加功能”，很多时候，工具的创造者其实是比使用者更了解这个领域的，
+所以好的工具很多时候可以可以启发使用者，原来还可以这么做！</p>
+</div>
+</div>
+<div id="outline-container-headline-6" class="outline-3">
+<h3 id="headline-6">
+2.4 没有最好的工具，只有最合适的工具
+</h3>
+<div id="outline-text-headline-6" class="outline-text-3">
+<p>由于每个的知识背景不同，对于解决同一个问题的认知和接受能力也不不一样的。
+比如普通的职场白领，对于计算机的使用完全停留在应用层面，他们的只能接受Word这样的富文本编辑；
+与之对应的，程序员则更喜欢用Markdown之类的标记语言来管理文档。而Typora则试图用一种Word
+用户能接受的方式引入Markdown到普通电脑用户当中。</p>
+<p>
+后文在讨论笔记软件的时候，也会讨论到类似的情况。</p>
+</div>
+</div>
+<div id="outline-container-headline-7" class="outline-3">
+<h3 id="headline-7">
+2.5 实用大于精致，合适大于逼格
+</h3>
+<div id="outline-text-headline-7" class="outline-text-3">
+<p>继续上一个问题，在选择合适的工具这个问题上，有两个误区是要极力避免的。
+一是不要过于追求精致，我观察到很多宣传notion的人会过于强调这款软件的精致，
+我认为这样会破坏一些小白对于这个工具客观的认知。虽然美观很重要，但永远不应该是核心问题。
+二是不要为了逼格而使用一个你不能驾驭的软件，我相信真有人以至于是方向键在Vim里面控制光标。
+还是，那句话：合适自己的才是最好的。所谓合适，大概需要考虑以下几个问题：</p>
+<ul>
+<li>自己的学习能力和投入预期（时间成本），比如Vim、Emacs这种软件，即使是专业程序员也要经过长久的学习实践才能掌握</li>
+<li>自己的使用习惯，比如有的人（其实应该是大部分人）更习惯使用鼠标（如果你的Chrom扩展列表里有crxMouse之类的扩展），
+有的人则更习惯使用键盘（如果你的Chrom扩展列表里有Vimium之类的扩展）完成一切操作。</li>
+<li>自己在对于目标工具的特定述求：付费、免费？在线、本地？美观？</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-8" class="outline-3">
+<h3 id="headline-8">
+2.6 商业还是开源
+</h3>
+<div id="outline-text-headline-8" class="outline-text-3">
+<p>商业软件最大的好处的易用性，因为它只有足够易用才能被用户接受。但是，商业软件的局限性也很明显：</p>
+<ul>
+<li>存在风险：公司可能倒闭、产品可能停止维护、收费可能提高到你无法接受的水平，等等</li>
+<li>缺乏灵活性：因为商业软件做的事所有用户共同诉求的那个交集，并且尽可能降低使用门槛</li>
+</ul>
+<p>有些方面，对于普通用户来说可能是商业软件的优势，但对于程序员来说，毫无优势：</p>
+<ul>
+<li>更好的服务：普通用户只能通过客服解决问题，但是程序员可以通过社区、Issue等很多方式获得帮助，
+而且这种帮助可能质量更高：客服往往解决不了负责的问题，但是网络上却大神云集（如果他们愿意）</li>
+<li>更健壮的质量：我认为这是一种误解，实际上成熟的开源软件往往质量都非常高。</li>
+</ul>
+<p>最会，开源软件还有一个巨大的优势就是你可以从用户变成开发者，从而深度改进自己的工具（当然了，这需要非常高的门槛）。</p>
+<p>
+以上，就是我对于工具的基础认识。</p>
+<p>
+笔记软件其实是一个信息整理的工具，所以，在讨论完工具后，有必要再谈一下信息管理。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-9" class="outline-2">
+<h2 id="headline-9">
+三、对于信息整理的理解
+</h2>
+<div id="outline-text-headline-9" class="outline-text-2">
+<div id="outline-container-headline-10" class="outline-3">
+<h3 id="headline-10">
+3.1 信息的拓扑结构
+</h3>
+<div id="outline-text-headline-10" class="outline-text-3">
+<p>初级的信息是孤立的节点，这种节点很容易被遗忘。</p>
+<p>
+正常人肯定不会让信息分散在各处，所以大部分人会把信息分门别类地归纳好。但是，
+前面提到过，信息的分类不是绝对的，只要把范围扩到足够大，
+就很难找到一个满足“彼此独立，互相穷尽”的分类标准。而且，信息直接还存在着额外的关联。</p>
+<p>
+此外，我们的大脑也不是如此工作的，我们的大脑依靠突触连接产生记忆，是一种
+网状结构，这也是类似Roam Research、Obsidian之类的软件产生的原因。</p>
+</div>
+</div>
+<div id="outline-container-headline-11" class="outline-3">
+<h3 id="headline-11">
+3.2 信息与知识
+</h3>
+<div id="outline-text-headline-11" class="outline-text-3">
+<p>需要注意的是，对于个体的人来说，信息的价值其实是有限的，因为你能获取到的大部分信息
+其实都是公开的，只有把信息转化成了知识，才是有价值的的。</p>
+<p>
+有些笔记软件会让人往一个错误的方向走：收集信息，却不升华成知识。比如，
+OneNote可以自动备份公众号文章、印象笔记可以备份网页。我不是说这些功能没有价值，
+知识要注意所谓的信息陷阱。我曾经用OneNode收集了不少我觉得牛逼轰轰的文章，但之后
+一遍也没有看过，事实上，这样的文章每天都在产生，收集他们并不会让我变得更强。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-12" class="outline-2">
+<h2 id="headline-12">
+四、对于笔记软件的理解
+</h2>
+<div id="outline-text-headline-12" class="outline-text-2">
+<p>讲完了工具和信息整理，终于可以讨论信息整理的工具：笔记软件了。</p>
+<div id="outline-container-headline-13" class="outline-3">
+<h3 id="headline-13">
+4.1 多设备协同 &amp; 本地还是云端
+</h3>
+<div id="outline-text-headline-13" class="outline-text-3">
+<p>一般来说，普通用户更喜欢云端协同编辑，这是使用门槛最低的方式，但是个人认为存在以下风险：</p>
+<ul>
+<li>云端的东西安全性、迁移性无法保障（有些流氓软件就是希望锁死你）</li>
+<li>如果我希望自己写一些脚本（比如统计字数、词频）放在云端是无法做到的</li>
+<li>如果没有网络，我就不能编辑</li>
+</ul>
+<p>当然了，放在本地也会有一些问题：</p>
+<ul>
+<li>比如我在家里和公司各有一台电脑，我就得每天记得同步，否者无法衔接</li>
+</ul>
+<p>手动做这个事情实在太痛苦了。</p>
+<p>
+那么如何保持同步呢？我用过或者能想到的办法：</p>
+<ol>
+<li>使用“微云同步助手”之类的工具（定制性差，比如我不想备份 <code>.git</code> 目录）</li>
+<li>使用U盘（安全性差、而且需要定期做备份）</li>
+<li>放在服务器，可以在任意设备编辑（粘贴图片、预览之类的操作会麻烦一些，需要折腾）</li>
+<li>自己基于 rsync 写一个实时同步工具（看起来也不难，够用就行）</li>
+<li>写一个脚本，每天定时同步（Git Push），也会有问题（万一哪天下班早，回家还得等同步？）</li>
+</ol>
+<p>总的来说，我更看好思路4，应该有很多开源的实现了。</p>
+<p>
+还有一个问题是多设备协同，大部分商用笔记软件其实会支持移动设备，我个人其实不是很执着于此，
+因为移动设备的屏幕大小注定了无法提供PC等同的编辑体验。所以：如果需要编辑笔记，就做到电脑面前去。</p>
+</div>
+</div>
+<div id="outline-container-headline-14" class="outline-3">
+<h3 id="headline-14">
+4.2 版本管理
+</h3>
+<div id="outline-text-headline-14" class="outline-text-3">
+<p>普通用户或许没有各个概念，但是对于程序员来说，最好是对笔记做版本管理，
+可以大大降低笔记丢失的概率。</p>
+</div>
+</div>
+<div id="outline-container-headline-15" class="outline-3">
+<h3 id="headline-15">
+4.3 纯文本还是富文本
+</h3>
+<div id="outline-text-headline-15" class="outline-text-3">
+<p>如果使用了版本管理，那么做好用纯文本，因为版本管理工具无法很好地管理二进制形式的富文本。
+此外，大部分工具也对纯文本有更好的兼容性。</p>
+</div>
+</div>
+<div id="outline-container-headline-16" class="outline-3">
+<h3 id="headline-16">
+4.4 二进制资源
+</h3>
+<div id="outline-text-headline-16" class="outline-text-3">
+<p>笔记不可能只有问题，对于图片、视频类的资源，我认为应该和笔记部分隔离开，
+通过相对路径或者超链接的形式引用。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-17" class="outline-2">
+<h2 id="headline-17">
+五、已知笔记软件的比较
+</h2>
+<div id="outline-text-headline-17" class="outline-text-2">
+<p>以下，是我基于自身诉求对各种笔记软件的比较，每个人的出发点、认知不一样，仅作参考。</p>
+<div id="outline-container-headline-18" class="outline-3">
+<h3 id="headline-18">
+5.1 印象笔记、有道笔记、谷歌文档
+</h3>
+<div id="outline-text-headline-18" class="outline-text-3">
+<p>这类笔记我基本放弃了，原因:</p>
+<ul>
+<li>商业收费</li>
+<li>编辑器太弱（重度Vim用户）</li>
+<li>在线存储，没安全感</li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-19" class="outline-3">
+<h3 id="headline-19">
+5.2 The Brain / Notion
+</h3>
+<div id="outline-text-headline-19" class="outline-text-3">
+<p>
+The Brain理由同上，而且不是一般的贵。而且感觉因为太贵，导致用户不多，没有社区可言。</p>
+<p>
+Notion的在线、非Vim、商业收费都是我无法接受的。</p>
+</div>
+</div>
+<div id="outline-container-headline-20" class="outline-3">
+<h3 id="headline-20">
+5.3 Obsidian / Roam Research
+</h3>
+<div id="outline-text-headline-20" class="outline-text-3">
+<p>
+正式对Obsidian的了解，使我发现了原来网状结构已经被这么多软件实现了。但是，我还是放弃了这两款软件。
+Obsidian的对于我来说，虽然也有Vim插件，但相比evil还过于简陋，而且Markdown的表达力还是过于局限了，只适合一些简单的记录。
+Roam Research没有深入研究，因为我发现一个它的开源替代品（Org-roam）就是我想要的。</p>
+<p>
+也是从这里开始，我知道树状分类的局限性：</p>
+<ul>
+<li><a href="https://sspai.com/post/60802">从卡片链接到大脑联想，基于 Obsidian 的卡片盒笔记法实践</a></li>
+<li><a href="https://pmthinking.com/post/120">真正的思考技术：来自德国社会学 Niklas Luhmann 的 Zettelkasten 方法</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-headline-21" class="outline-3">
+<h3 id="headline-21">
+5.4 TiddlyWiki
+</h3>
+<div id="outline-text-headline-21" class="outline-text-3">
+<p>结合TiddlyMap + ReLink，我一度已经计划用TiddlyWiki作为自己的笔记软件了。
+只是恰好发现了Obsidian即Org-roam，才重新做了选择。 TiddlyMap正式让我眼前一亮，
+Tidder的概念也和卡片式笔记不谋而合。
+此外，我已经基于服务器实现了多设备同步（源文件放在服务器，然后启动一个Local Server，
+然后通过ssh转发端口到本地，就可以直接编辑了）。
+只是，TiddlyWiki的编辑器实在过于简陋，无法满足长时间的编辑，最终还是放弃了。</p>
+</div>
+</div>
+<div id="outline-container-headline-22" class="outline-3">
+<h3 id="headline-22">
+5.5 Logseq
+</h3>
+<div id="outline-text-headline-22" class="outline-text-3">
+<ul>
+<li><a href="https://github.com/logseq/logseq">https://github.com/logseq/logseq</a></li>
+</ul>
+<p>按照官网解释，这个软件受了Roam Research, Org Mode, Tiddlywiki and Workflowy
+的启发，Star数相当不错，而且是一个非常年轻的软件。</p>
+<p>
+但我盲猜应该不支持Vim风格的编辑。</p>
+<p>
+主要是，我已经看到了Org-mode的强大和生态，让我相信不需要去找Another Org-mode。</p>
+</div>
+</div>
+<div id="outline-container-headline-23" class="outline-3">
+<h3 id="headline-23">
+5.6 Org-roam
+</h3>
+<div id="outline-text-headline-23" class="outline-text-3">
+<ul>
+<li><a href="https://github.com/org-roam/org-roam">https://github.com/org-roam/org-roam</a></li>
+</ul>
+<p>我是通过 Org-Brain（The Brain）的开源实现发现Org-roam，
+Org-Brain的最大问题是可视化做的不好，而Org-roam-ui则一下吸引了我。
+Org-brain的作者也是使用过TiddlyWiki之后放弃了： <a href="https://kungsgeten.github.io/org-brain.html">org-brain</a></p>
+<p>
+经过一晚上的学习之后，我已经能使用了，完全解决了我之前的一些痛点，这就是我要找的工具了。
+读完<a href="https://www.orgroam.com/manual.html">Org-roam的使用手册</a>之后，基本既可以使用了。其实，只要有诉求，就非常容易理解这些功能的作用了。
+此外，像<a href="https://github.com/org-roam/org-roam-bibtex">org-roam-bibtex</a>这样的功能，基本确定是我不需要的，直接不关注即可。</p>
+<p>
+一些教程和讨论：</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=AyhPmypHDEw">YouTube上有一个推荐教程</a></li>
+<li><a href="https://emacs-china.org/t/org-roam-v2-org-roam-ui/17806">Org-roam(v2) 以及 org-roam-ui 的使用姿势</a></li>
+</ul>
+<p>由于我用的是 Spacemacs，它内置的Org-roam还没有升级到V2，结合作者的介绍（<a href="https://blog.jethro.dev/posts/org_roam_v2/">Releasing Org-roam v2</a>）来看，
+还是升级到V2再使用比较好，没必要学习一个行将淘汰的V1，于是折腾了一番：
+主要讨论在这个帖子： <a href="https://org-roam.discourse.group/t/v2-and-spacemacs/1676">V2 and spacemacs</a> ，一开始用gnohz的方法（就是模仿Spacemac的配置，
+见<a href="https://github.com/syl20bnr/spacemacs/blob/548edefcce52cf626927c7806c01796cf66b0410/layers/%2Bemacs/org/packages.el#L923">https://github.com/syl20bnr/spacemacs/blob/548edefcce52cf626927c7806c01796cf66b0410/layers/%2Bemacs/org/packages.el#L923</a>），自定义Layer，
+结果问题比较多，回来Gp741提供了一个方法，只需要修改 <code>.spacemacs</code> 即可，
+于是采用了第二个方案。</p>
+</div>
+</div>
+</div>
+</div>
+<div id="outline-container-headline-24" class="outline-2">
+<h2 id="headline-24">
+六、研究结论
+</h2>
+<div id="outline-text-headline-24" class="outline-text-2">
+<p>还有一些没讨论到的，比如 <a href="https://github.com/foambubble/foam">Foam</a>，我也无需再研究了。回到开头的论断：合适就好，关键是要
+确认是否真的合适。我的选择不不具有普适性的，毕竟大部分人没有Emacs、Vim的使用经验，
+但是对于我来说，这是习以为常的，而且对于一个将使用十几年的笔记软件来说，强大与易用比学习门槛重要多了。</p>
+<p>
+说来惭愧，我在找到TiddlyMap之前，还以为没有类似的软件，一度以为可以自己实现一个，
+没想到拔出萝卜带出泥，这个领域早已经被各路大神和创业者玩烂了，只能说：</p>
+<img src="http://images.vimerzhao.top/brain-001.jpg" alt="http://images.vimerzhao.top/brain-001.jpg" title="http://images.vimerzhao.top/brain-001.jpg" width="200px"/>
+<p>
+工具终究是工具，关键还是要有人的思考。</p>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/change-input-method-with-left-shift/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">定制Mac的输入法切换按键为左Shift</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/the-born-of-a-book/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">一本书的诞生</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

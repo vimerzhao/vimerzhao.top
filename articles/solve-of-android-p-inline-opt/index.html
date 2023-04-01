@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android P内联优化导致的一个诡异Bug - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android P内联优化导致的一个诡异Bug" />
+<meta property="og:description" content="问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/solve-of-android-p-inline-opt/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2020-04-24T23:51:25+08:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android P内联优化导致的一个诡异Bug"/>
+<meta name="twitter:description" content="问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android P内联优化导致的一个诡异Bug</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-04-24T23:51:25&#43;08:00">2020-04-24</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/android/" rel="category">Android</a>
+	</span>
+</div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3500 字，阅读需 7 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_问题背景">问题背景</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现<strong>启动闪退</strong>。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题分析">问题分析</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_分析日志">分析日志</h3>
+<div class="paragraph">
+<p>首先，我们自然而然看了下Crash日志，如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>    --------- beginning of crash
+2020-04-16 09:19:07.724 31492-31596/? E/AndroidRuntime: FATAL EXCEPTION: PriorityExecutor #1
+    Process: com.example.脱敏:脱敏00, PID: 31492
+    java.lang.RuntimeException: An error occured while executing doInBackground()
+        at com.youzu.android.framework.task.PriorityAsyncTask$2.done(PriorityAsyncTask.java:87)
+        at java.util.concurrent.FutureTask.finishCompletion(FutureTask.java:383)
+        at java.util.concurrent.FutureTask.setException(FutureTask.java:252)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:271)
+        at com.youzu.android.framework.task.PriorityRunnable.run(PriorityRunnable.java:16)
+        at java.util.concurrent.ThreadPoolExecutor.processTask(ThreadPoolExecutor.java:1187)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1152)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+        at java.lang.Thread.run(Thread.java:784)
+     Caused by: java.lang.NullPointerException: Attempt to invoke virtual method &#39;java.lang.String java.net.URI.toString()&#39; on a null object reference
+        at com.youzu.android.framework.http.HttpHandler.sendRequest(HttpHandler.java:183)
+        at com.youzu.android.framework.http.HttpHandler.doInBackground(HttpHandler.java:212)
+        at com.youzu.android.framework.http.HttpHandler.doInBackground(HttpHandler.java:52)
+        at com.youzu.android.framework.task.PriorityAsyncTask$1.call(PriorityAsyncTask.java:74)
+        at java.util.concurrent.FutureTask.run(FutureTask.java:266)
+        at com.youzu.android.framework.task.PriorityRunnable.run(PriorityRunnable.java:16)
+        at java.util.concurrent.ThreadPoolExecutor.processTask(ThreadPoolExecutor.java:1187)
+        at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1152)
+        at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+        at java.lang.Thread.run(Thread.java:784)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>是游戏里面产生的Crash，这时候问题就产生了：为什么debug包可以正常启动，release包就不行呢？</p>
+</div>
+<div class="paragraph">
+<p>经过反复测试，我们发现是<code>debuggable</code>这个字段在作祟。那么问题就变成了：为什么我们宿主的<code>debuggable</code>为<code>false</code>时会导致被加载的游戏Crash？</p>
+</div>
+<div class="paragraph">
+<p>同时，在Crash日志之外，我们还发现一个系统打印的<code>Error</code>级别的日志：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Maybe bug 77342775, looking for Lorg/apache/http/HttpEntity; 0x14021040[continuous;main space (region space)] defined in /system/framework/org.apache.http.legacy.boot.jar/0xe8aa5300
+  with loader: com.tencent.脱敏.core.脱敏ClassLoader/0xdfa67020[hit:continuous;main space (region space)];java.lang.BootClassLoader/0xe8aa0260
+  in interface table for Ljava/util/concurrent/locks/ReentrantLock; 0x6f101c78[image;/data/dalvik-cache/arm/system@framework@boot.art;+;0x6f080000] defined in /system/framework/core-oj.jar/0xe8aa3380 ifcount=2
+  with loader BootClassLoader
+  iface #0: java.util.concurrent.locks.Lock
+  iface #1: java.io.Serializable</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>但是我们逆向了这个游戏之后，发现这几个类根本对应不上！！<code>HttpEntity</code>和<code>Lock</code>没有任何关联。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_缩小范围">缩小范围</h3>
+<div class="paragraph">
+<p>一时没有头绪，于是我们做了以下实验来缩小问题范围：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>release包加载，debug包覆盖安装，打开游戏失败</p>
+</li>
+<li>
+<p>debug包加载，release包覆盖安装，打开游戏成功</p>
+</li>
+<li>
+<p>8.0加载，打开成功；9.0加载，打开失败</p>
+</li>
+<li>
+<p>华为9.0、小米9.0均会出现这个错误</p>
+</li>
+<li>
+<p>其他游戏release包加载后也能打开</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>由此可以得出三个结论：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>这个问题产生的位置是加载，而不是打开</p>
+</li>
+<li>
+<p>这个问题是Android P普遍存在的一个问题</p>
+</li>
+<li>
+<p>问题游戏包一定有什么特殊的代码存在(Apache)</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>第二点意味着我们可以从Android的源码里面挖掘一些信息了！！！</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_发现突破点">发现突破点</h3>
+<div class="paragraph">
+<p>既然是加载阶段的问题，那我们就比较一下加载阶段的产物，果然有重大发现：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2020-04/inline-01.png" alt="inline 01"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这时候，我们在审视一下之前的日志：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Maybe bug 77342775, looking for Lorg/apache/http/HttpEntity; 0x14021040[continuous;main space (region space)] defined in /system/framework/org.apache.http.legacy.boot.jar/0xe8aa5300
+  with loader: com.tencent.脱敏.core.脱敏ClassLoader/0xdfa67020[hit:continuous;main space (region space)];java.lang.BootClassLoader/0xe8aa0260
+  in interface table for Ljava/util/concurrent/locks/ReentrantLock; 0x6f101c78[image;/data/dalvik-cache/arm/system@framework@boot.art;+;0x6f080000] defined in /system/framework/core-oj.jar/0xe8aa3380 ifcount=2
+  with loader BootClassLoader
+  iface #0: java.util.concurrent.locks.Lock
+  iface #1: java.io.Serializable</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个日志可以在源码里面找到，以下是相关代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">// http://androidxref.com/9.0.0_r3/xref/art/runtime/debug_print.cc#132
+void DumpB77342775DebugData(ObjPtr&lt;mirror::Class&gt; target_class, ObjPtr&lt;mirror::Class&gt; src_class) {
+  ......
+  LOG(ERROR) &lt;&lt; &#34;Maybe bug 77342775, looking for &#34; &lt;&lt; target_descriptor
+      &lt;&lt; &#34; &#34; &lt;&lt; target_class.Ptr() &lt;&lt; &#34;[&#34; &lt;&lt; DescribeSpace(target_class) &lt;&lt; &#34;]&#34;
+      &lt;&lt; &#34; defined in &#34; &lt;&lt; target_class-&gt;GetDexFile().GetLocation()
+      &lt;&lt; &#34;/&#34; &lt;&lt; static_cast&lt;const void*&gt;(&amp;target_class-&gt;GetDexFile())
+      &lt;&lt; &#34;\n  with loader: &#34; &lt;&lt; DescribeLoaders(target_class-&gt;GetClassLoader(), target_descriptor);
+  if (target_class-&gt;IsInterface()) {
+    ObjPtr&lt;mirror::IfTable&gt; iftable = src_class-&gt;GetIfTable();
+    CHECK(iftable != nullptr);
+    size_t ifcount = iftable-&gt;Count();
+    LOG(ERROR) &lt;&lt; &#34;  in interface table for &#34; &lt;&lt; source_descriptor
+        &lt;&lt; &#34; &#34; &lt;&lt; src_class.Ptr() &lt;&lt; &#34;[&#34; &lt;&lt; DescribeSpace(src_class) &lt;&lt; &#34;]&#34;
+        &lt;&lt; &#34; defined in &#34; &lt;&lt; src_class-&gt;GetDexFile().GetLocation()
+        &lt;&lt; &#34;/&#34; &lt;&lt; static_cast&lt;const void*&gt;(&amp;src_class-&gt;GetDexFile())
+        &lt;&lt; &#34; ifcount=&#34; &lt;&lt; ifcount
+        &lt;&lt; &#34;\n  with loader &#34; &lt;&lt; DescribeLoaders(src_class-&gt;GetClassLoader(), source_descriptor);
+  ......
+}  // namespace art
+
+
+// http://androidxref.com/9.0.0_r3/xref/art/runtime/common_throws.cc#272
+void ThrowIncompatibleClassChangeErrorClassForInterfaceSuper(ArtMethod* method,
+                                                             ObjPtr&lt;mirror::Class&gt; target_class,
+                                                             ObjPtr&lt;mirror::Object&gt; this_object,
+                                                             ArtMethod* referrer) {
+  // Referrer is calling interface_method on this_object, however, the interface_method isn&#39;t
+  // implemented by this_object.
+  CHECK(this_object != nullptr);
+  std::ostringstream msg;
+  msg &lt;&lt; &#34;Class &#39;&#34; &lt;&lt; mirror::Class::PrettyDescriptor(this_object-&gt;GetClass())
+      &lt;&lt; &#34;&#39; does not implement interface &#39;&#34; &lt;&lt; mirror::Class::PrettyDescriptor(target_class)
+      &lt;&lt; &#34;&#39; in call to &#39;&#34;
+      &lt;&lt; ArtMethod::PrettyMethod(method) &lt;&lt; &#34;&#39;&#34;;
+  DumpB77342775DebugData(target_class, this_object-&gt;GetClass());
+  ThrowException(&#34;Ljava/lang/IncompatibleClassChangeError;&#34;,
+                 referrer != nullptr ? referrer-&gt;GetDeclaringClass() : nullptr,
+                 msg.str().c_str());
+}
+
+
+// http://androidxref.com/9.0.0_r3/xref/art/runtime/entrypoints/entrypoint_utils-inl.h#432
+template&lt;InvokeType type, bool access_check&gt;
+inline ArtMethod* FindMethodFromCode(uint32_t method_idx,
+                                     ObjPtr&lt;mirror::Object&gt;* this_object,
+                                     ArtMethod* referrer,
+                                     Thread* self) {
+  ClassLinker* const class_linker = Runtime::Current()-&gt;GetClassLinker();
+  constexpr ClassLinker::ResolveMode resolve_mode =
+      access_check ? ClassLinker::ResolveMode::kCheckICCEAndIAE
+                   : ClassLinker::ResolveMode::kNoChecks;
+  ArtMethod* resolved_method;
+  ......
+        // It is an interface.
+        if (access_check) {
+          if (!method_reference_class-&gt;IsAssignableFrom(h_this-&gt;GetClass())) {
+            ThrowIncompatibleClassChangeErrorClassForInterfaceSuper(resolved_method,
+                                                                    method_reference_class,
+                                                                    h_this.Get(),
+                                                                    referrer);
+            return nullptr;  // Failure.
+          }
+        }
+  ......
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>同时，结合谷歌官方文档关于Android P的一项变更：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>在 Android 6.0 中，我们移除了对 Apache HTTP 客户端的支持。从 Android 9 开始，该内容库已从 bootclasspath 中移除，且默认情况下应用无法使用它。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>至此，问题似乎有了一个靠谱的怀疑方向：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>被加载的游戏包内置了一个Apache的jar包，但是里面什么也没有，纯粹为了编译，我们加载的时候这个jar包里面的类发生了内联优化，真正打开的时候，我们又去模拟系统把真正的Apache的jar包放在最前面，这样游戏包就会拿着发生了内联的方法索引，去没有做相同内联优化的系统的Apache的jar包里面寻找对应方法，由此发生了错误。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>这样，<code>Maybe bug 77342775</code>这个错误，为什么发生在Android 9版本，为什么debug包被release覆盖安装后没问题、为什么odex的大小发生了变化、为什么其他游戏包没有问题就都可以解释了。</p>
+</div>
+<div class="paragraph">
+<p>但是不是这样呢?</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_系统安装">系统安装</h3>
+<div class="paragraph">
+<p>如果是这样，系统安装为什么没问题呢？于是，我们抓取了系统安装、debug加载、release加载的日志，如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>//系统安装
+I/dex2oat: /system/bin/dex2oat --input-vdex-fd=-1 --output-vdex-fd=31 --compiler-filter=speed-profile -j4 --classpath-dir=/data/app/com.tencent.tmgp.youzu.脱敏-oJz4mDEvj93nM4l8cFRHMA== --class-loader-context=PCL[/system/framework/org.apache.http.legacy.boot.jar] --generate-mini-debug-info --compact-dex-level=none --compilation-reason=install
+
+// debug加载
+I/dex2oat: The ClassLoaderContext is a special shared library.
+I/dex2oat: /system/bin/dex2oat --debuggable -j4 --debuggable --generate-mini-debug-info --dex-file=/data/user/0/com.example.脱敏/脱敏/com.tencent.tmgp.youzu.脱敏/apk/base-1.apk --output-vdex-fd=64 --oat-fd=66 --oat-location=/data/user/0/com.example.脱敏/脱敏/com.tencent.tmgp.youzu.脱敏/apk/oat/arm/base-1.odex --compiler-filter=quicken --class-loader-context=&amp; --compilation-reason=dynamic-load
+I/dex2oat: runtime mdmPath /system/emui/base/jar/Mdm/hw_mdm_framework.jar
+W/dex2oat: Accessing hidden field Landroid/graphics/drawable/Drawable;-&gt;DEFAULT_TINT_MODE:Landroid/graphics/PorterDuff$Mode; (dark greylist, linking)
+I/dex2oat: dex2oat took 1.719s (3.040s cpu) (threads: 4) arena alloc=252KB (258240B) java alloc=5MB (5400672B) native alloc=6MB (7064328B) free=4MB (4994296B)
+
+//release加载
+I/dex2oat: The ClassLoaderContext is a special shared library.
+I/dex2oat: /system/bin/dex2oat -j4 --dex-file=/data/user/0/com.example.脱敏/脱敏/com.tencent.tmgp.youzu.脱敏/apk/base-1.apk --output-vdex-fd=55 --oat-fd=57 --oat-location=/data/user/0/com.example.脱敏/脱敏/com.tencent.tmgp.youzu.脱敏/apk/oat/arm/base-1.odex --compiler-filter=quicken --class-loader-context=&amp; --compilation-reason=dynamic-load
+I/dex2oat: runtime mdmPath /system/emui/base/jar/Mdm/hw_mdm_framework.jar
+W/dex2oat: Accessing hidden field Landroid/graphics/drawable/Drawable;-&gt;DEFAULT_TINT_MODE:Landroid/graphics/PorterDuff$Mode; (dark greylist, linking)
+I/dex2oat: dex2oat took 2.276s (3.511s cpu) (threads: 4) arena alloc=376KB (385944B) java alloc=5MB (5384288B) native alloc=10MB (10731936B) free=3MB (3423840B)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过查阅资料，我们发现<code>--debuggable</code>这个参数，会阻止内联，所以debug包一直没有暴露这个问题，而系统之所以没有这个问题就在于<code>--class-loader-context</code>这个字段，系统安装直接把真正的jar的路径作为上下文传过去了，所以就算内联索引也是能对上号了，我们就惨了～</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_问题解决">问题解决</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果猜想正确，那么有以下几个方向：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>让游戏方不要把这个仅用于编译的jar包打包进去</p>
+</li>
+<li>
+<p>我们也传一个<code>--class-loader-context</code>的上下文</p>
+</li>
+<li>
+<p>禁用dex2oat</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>首先第一个不太现实，第二个和第三个本质都是要修改Runtime的变量，第三个相对来说会简单一些（第二个的传递路径极其复杂，源码直接把我看懵逼了）。可能有人会觉得这个能力是系统提供的，禁用的是不是会影响性能？</p>
+</div>
+<div class="paragraph">
+<p>我们查阅Android 10的行为变更会发现以下信息：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Android 运行时 (ART) 不再从应用进程调用 dex2oat。这项变更意味着 ART 将仅接受系统生成的 OAT 文件。</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>可能，谷歌也觉察到了开发者的各种骚操作会破坏用户体验，于是干脆不提供给应用进程了，本着<strong>先解决，后优化</strong>的思想，我们选择了第三种方案。</p>
+</div>
+<div class="paragraph">
+<p>通过ART的源码可知：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// jni.h
+jint GetJavaVM(JavaVM** vm) {
+    return functions-&gt;GetJavaVM(this, vm);
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>可以通过这个jni方法拿到ART虚拟机的指针，进一步拿到运行时的指针。再看一下运行时的结构</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// http://androidxref.com/9.0.0_r3/xref/art/runtime/runtime.h#840
+
+ private:
+  ...
+  static constexpr uint32_t kCalleeSaveSize = 6u;
+
+  // 64 bit so that we can share the same asm offsets for both 32 and 64 bits.
+  uint64_t callee_save_methods_[kCalleeSaveSize];
+  GcRoot&lt;mirror::Throwable&gt; pre_allocated_OutOfMemoryError_;
+  GcRoot&lt;mirror::Throwable&gt; pre_allocated_NoClassDefFoundError_;
+  ArtMethod* resolution_method_;
+  ArtMethod* imt_conflict_method_;
+  // Unresolved method has the same behavior as the conflict method, it is used by the class linker
+  // for differentiating between unfilled imt slots vs conflict slots in superclasses.
+  ArtMethod* imt_unimplemented_method_;
+
+  // Special sentinel object used to invalid conditions in JNI (cleared weak references) and
+  // JDWP (invalid references).
+  GcRoot&lt;mirror::Object&gt; sentinel_;
+
+  InstructionSet instruction_set_;
+  QuickMethodFrameInfo callee_save_method_frame_infos_[kCalleeSaveSize];
+
+  CompilerCallbacks* compiler_callbacks_;
+  bool is_zygote_;
+  bool must_relocate_;
+  bool is_concurrent_gc_enabled_;
+  bool is_explicit_gc_disabled_;
+  bool dex2oat_enabled_;
+  bool image_dex2oat_enabled_;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>我们要修改的<code>dex2oat_enabled_</code>前面有一些变量，于是我们可以用<code>指针+偏移</code>拿到这个变量的指针地址，进而赋值，具体操作见这篇文章 <a href="https://fucknmb.com/2018/12/30/art-dex2oat%E5%8A%A0%E8%BD%BD%E5%8A%A0%E9%80%9F%E6%B5%85%E6%9E%90/">art dex2oat 加载加速浅析</a>。</p>
+</div>
+<div class="paragraph">
+<p>这个解法也存在一些风险，就是如果厂商修改了这个结构体，我们的偏移就错了，因此存在一定的兼容性问题。但是，也可以做一些校验预警，比如<code>InstructionSet</code>的结构如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>enum class InstructionSet {
+  kNone,
+  kArm,
+  kArm64,
+  kThumb2,
+  kX86,
+  kX86_64,
+  kMips,
+  kMips64,
+  kLast = kMips64
+};</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>那么如果指针偏移错了，那么<code>instruction_set_</code>的值也很难落在<code>0~7</code>这个区间</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_复盘总结">复盘总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本文的分析总结处于一个上帝视角，其实解决这个问题的过程中，我和另外一个同事也是饱受煎熬，花了将近一周的时间才从千头万绪中找到真相。尤其是分析问题原因的时候，由于<strong>错误日志和原因之间的联系并不是那么明显</strong>，很多推测也无法立刻验证，中间的很多尝试由于篇幅都没有写出来，最后是<strong>反复通过阅读Android的源码和做对比实验才找到原因</strong>。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考文章">参考文章</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://developer.android.com/about/versions/pie/android-9.0-changes-28">行为变更：以 API 级别 28 及更高级别为目标的应用  |   Android 开发者</a></p>
+</li>
+<li>
+<p><a href="https://developer.android.com/about/versions/10/behavior-changes-10?hl=zh-cn">行为变更：以 API 29 及更高级别为目标平台的应用  |   Android 开发者</a></p>
+</li>
+<li>
+<p><a href="https://blog.csdn.net/u011339364/article/details/103909478">Android老版本httpclient高版本兼容_移动开发_u011339364的专栏-CSDN博客</a></p>
+</li>
+<li>
+<p><a href="https://github.com/WeMobileDev/article/blob/master/ART%E4%B8%8B%E7%9A%84%E6%96%B9%E6%B3%95%E5%86%85%E8%81%94%E7%AD%96%E7%95%A5%E5%8F%8A%E5%85%B6%E5%AF%B9Android%E7%83%AD%E4%BF%AE%E5%A4%8D%E6%96%B9%E6%A1%88%E7%9A%84%E5%BD%B1%E5%93%8D%E5%88%86%E6%9E%90.md">article/ART下的方法内联策略及其对Android热修复方案的影响分析.md</a></p>
+</li>
+<li>
+<p><a href="https://fucknmb.com/2019/04/04/Android-Q-BaseDexClassLoader%E5%8F%98%E5%8A%A8/">Android Q BaseDexClassLoader 变动| 区长</a></p>
+</li>
+<li>
+<p><a href="https://fucknmb.com/2019/04/03/%E8%B0%88%E8%B0%88Android-P%E8%A1%8C%E4%B8%BA%E5%8F%98%E6%9B%B4%E4%B8%8E%E5%86%85%E8%81%94%E4%BC%98%E5%8C%96/">谈谈 Android P 行为变更与内联优化 | 区长</a></p>
+</li>
+<li>
+<p><a href="https://developer.android.com/guide/topics/manifest/application-element.html#vmSafeMode">application  |   Android 开发者  |   Android Developers</a></p>
+</li>
+<li>
+<p><a href="https://canyie.github.io/2020/02/15/fast-load-dex-on-art-runtime/">一种在ART上快速加载dex的方法 - 残页的小博客</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s?__biz=MzI0MjgxMjU0Mg==&amp;mid=2247488357&amp;idx=1&amp;sn=d393bd028dfbf87998b80e06ca24bc94&amp;scene=21#wechat_redirect">通告 | Android P新增检测项 应用热修复受重大影响</a></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>update: 2021-06-08</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>尝试在修改JavaVM的字段之前做类型校验</p>
+</li>
+<li>
+<p>直接修改 <code>bootclasspath</code> 的 jar 包加载顺序是否也可以解决这个问题（兼容性更好）</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" rel="tag">技术精选</a>
+		</li>
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/bugfix/" rel="tag">BugFix</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/virtualbox-lose-64-bit/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Windows10下VirtualBox不支持64位</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/base-and-skill-of-presentation/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">表达的世界观基础与方法论建设</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

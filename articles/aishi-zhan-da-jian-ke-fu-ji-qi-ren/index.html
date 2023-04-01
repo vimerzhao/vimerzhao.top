@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>&#39;AI实战:搭建客服机器人&#39; - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="&#39;AI实战:搭建客服机器人&#39;" />
+<meta property="og:description" content="&lsquo;AI实战:搭建客服机器人&rsquo; 本文简要介绍了但前客服机器人的发展情况，并实际开发了一个Demo作为演示。 客服机器人 随着科技发展，廉价劳动力正在不断被淘汰。客服机器人就是这样一个例" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/aishi-zhan-da-jian-ke-fu-ji-qi-ren/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2017-07-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="&#39;AI实战:搭建客服机器人&#39;"/>
+<meta name="twitter:description" content="&lsquo;AI实战:搭建客服机器人&rsquo; 本文简要介绍了但前客服机器人的发展情况，并实际开发了一个Demo作为演示。 客服机器人 随着科技发展，廉价劳动力正在不断被淘汰。客服机器人就是这样一个例"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">&#39;AI实战:搭建客服机器人&#39;</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-07-29T00:00:00Z">2017-07-29</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3500 字，阅读需 7 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h1 id="ai实战搭建客服机器人">&lsquo;AI实战:搭建客服机器人&rsquo;</h1>
+<p>本文简要介绍了但前客服机器人的发展情况，并实际开发了一个Demo作为演示。</p>
+<h2 id="客服机器人">客服机器人</h2>
+<p>随着科技发展，廉价劳动力正在不断被淘汰。客服机器人就是这样一个例子，具体参见<a href="http://www.tmtpost.com/2537691.html">巨头、创业者都在搞的人工智能客服，真能取代人力？</a>
+苹果的Siri，微软的小冰都极具战略意义。而作为一家电商，阿里巴巴也开发了自己的客服机器人：阿里小蜜，并在购物、招聘等场合投入使用。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogalibaba_xiaomi.png" alt="">
+腾讯有QQ小冰，并且正在开发自己的客服机器人平台
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtencetn_csr.png" alt="">
+而市场上，已经有智齿科技、网易七鱼等解决方案
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogwangyiqiyu.png" alt="">
+只是价格不菲。
+由此可见，客服机器人也因为人工智能的大热而进入产业化。而本文就试图实现一个类似的客服机器人。</p>
+<h2 id="问题分析">问题分析</h2>
+<p>制作一个客服机器人，可以说这是一个非常笼统的需求。如果沿着这个思路去做，我们会发现，已经有不少可以直接集成的平台。比如网易七鱼，如下图：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogqiyu_demo.jpg" alt="">
+通过注册帐号，集成SDK，在后台添加知识库，我只用了20分钟就搭建好了一个客服系统。但这样也有很多问题，比如很多细节被隐藏、数据需要走别人的服务器以及高昂的价格等，所以这不是我们需要的解决方案。
+将问题分解下，可以用下图表示
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogcsr_structure.png" alt="">
+用户在前台(网页或手机)提问，后台进行处理，处理的核心无非是回答接收到的问题，所以，客服机器人的核心是回答问题，于是提炼出了第一个关键词：<strong>问答系统</strong>，其核心在于同一个问题有很多不同的提问方式，我们的问答系统需要正确地理解这个问题；在正确的理解问题之后，我们面临第二个问题：如何回答，程序是不能凭空产生回答的，他需要有一个知识库，就像大脑需要经常读书、储备知识一样。于是，提炼出了第二个关键词：<strong>知识库</strong>。
+通过以上梳理，我们明确了问题的核心，接下来进行解决！</p>
+<h2 id="问答系统选型">问答系统选型</h2>
+<p>我们需要一个问答系统，通过百度、Google进行查找，我们可以找到很多解决方案，最后我决定选用<a href="https://github.com/gunthercox/ChatterBot">ChatterBot</a>，主要有以下原因：</p>
+<ol>
+<li>文档齐全，<a href="https://chatterbot.readthedocs.io/en/stable/">https://chatterbot.readthedocs.io</a></li>
+<li>功能对口，ChatterBot is a machine learning, conversational dialog engine for creating chat bots</li>
+<li>性能优异，后文会涉及</li>
+</ol>
+<p>其实，选型是最困难的一步。需要不断的试错、尝试、否定、证明等，就像爱迪生在发明灯泡前尝试了几千次一样。
+关于ChatterBot的使用不做赘述，因为文档十分齐全。以下是一个简单例子，结合注释十分容易理解：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">## !/usr/bin/python3.5</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 导入库</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ListTrainer
+</span></span><span style="display:flex;"><span>my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;Training demo&#34;</span>)
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>set_trainer(ListTrainer)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 训练集</span>
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>train([
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;嗳，渡边君，真喜欢我?&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;那还用说?&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;那么，可依得我两件事?&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">&#34;三件也依得&#34;</span>,
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    print(my_bot<span style="color:#f92672">.</span>get_response(input(<span style="color:#e6db74">&#34;&gt;&#34;</span>)))
+</span></span></code></pre></div><p>运行结果</p>
+<pre tabindex="0"><code>$ python3.5   chatrobot.py
+&gt;真的喜欢？
+那还用说?
+&gt;可依我两件事
+三件也依得
+</code></pre><p>可见，ChatterBot对于问题的分析还是很有一定鲁棒性的。</p>
+<h2 id="制作知识库">制作知识库</h2>
+<p>具体的制作方法由上一节选用的问答系统决定，如ChatterBot可以通过脚本注入sqlite数据库(关闭只读模式)作为知识库，所以我可以写一个脚本来把知识库注入sqlite数据库，这里我选用的是腾讯招聘的FAQ页面：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogtencent_faq.png" alt="">
+注入代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">## !/usr/bin/python3.5</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ListTrainer
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;腾讯招聘FAQ&#34;</span>)
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>set_trainer(ListTrainer)
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>train([
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;提前批针对哪些岗位的招聘？&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;提前批面向2018年应届毕业生，开放软件开发、技术运营、安全技术、软件测试、技术研究等技术类岗位，以及游戏策划、游戏运营岗位。&#34;</span>
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>train([
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;什么时候面试？以什么样的形式面试？&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;简历通过筛选就会被发起面试，将会在7月27日-9月8日安排电话面试或视频面试，部分同学会被邀请至北上广深的办公大厦进行现场面试，我们将报销来回路费和住宿费用，请同学们保持手机畅通，并留意短信和邮件通知。考虑到筛选简历的时间，建议投递简历的时间为7月27日-8月25日。&#34;</span>
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>train([
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;意向事业群的选择有什么用处？&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;提前批中，你所选择的意向事业群会优先看到你的简历。而在正式校招中，意向事业群只作为参考，并不会完全按照意愿分配。如果你有强烈想加入某一个事业群的意愿，提前批是唯一可以主动选择事业群的机会。如果你的简历没有通过意向事业群的筛选，一样有机会被其他事业群发起面试。建议在面试时询问面试官所在的事业群，以免发生不必要的误会。&#34;</span>
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>train([
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;如果提前批失败了会影响之后的正式校招么？&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;如果提前批面试失败，或是未被发起面试，都会自动转为参加正式校招的对应岗位，也可以修改应聘岗位。正式校招不受影响。 需要说明的是，提前批未通过的面试记录将会留在系统中，供后续面试官参考。&#34;</span>
+</span></span><span style="display:flex;"><span>])
+</span></span><span style="display:flex;"><span>my_bot<span style="color:#f92672">.</span>train([
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;其他岗位什么时候开始招聘？&#34;</span>,
+</span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;其他岗位将在8月初全面开放投递，涵盖产品、市场、设计、职能等众多岗位，大家可以持续关注“腾讯招聘”微信公众号，将在第一时间推送。也可关注校招官网join.qq.com的更新。&#34;</span>
+</span></span><span style="display:flex;"><span>])
+</span></span></code></pre></div><p>运行之后我们就可以看到目录下生成了一个<code>db.sqlite3</code>文件，这就是我们的知识库了！接下来，我们写一个脚本测试一下，注意打开只读模式，否则ChatterBot会不断学习，修改知识库，而这个过程实际不应该让用户来参与，所以应该关闭！测试脚本如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">## !/usr/bin/python3.5</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot <span style="color:#f92672">import</span> ChatBot
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> chatterbot.trainers <span style="color:#f92672">import</span> ListTrainer
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 建议打开只读，防止修改数据库</span>
+</span></span><span style="display:flex;"><span>my_bot <span style="color:#f92672">=</span> ChatBot(<span style="color:#e6db74">&#34;FAQ Demo&#34;</span>, read_only<span style="color:#f92672">=</span><span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## test</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>    print(my_bot<span style="color:#f92672">.</span>get_response(input(<span style="color:#e6db74">&#34;&gt;&#34;</span>)))
+</span></span></code></pre></div><p>运行结果：</p>
+<pre tabindex="0"><code>$python3.5   faq-terminal.py
+ &gt;面试形式
+ 简历通过筛选就会被发起面试，将会在7月27日-9月8日安排电话面试或视频面试，部分同学会被邀请至北上广深的办公大厦进行现场面试，我们将报销来回路费和住宿费用，请同学们保持手机畅通，并留意短信和邮件通知。考虑到筛选简历的时间，建议投递简历的时间为7月27日-8月25日。
+ &gt;选择事业群的用处
+ 提前批中，你所选择的意向事业群会优先看到你的简历。而在正式校招中，意向事业群只作为参考，并不会完全按照意愿分配。如果你有强烈想加入某一个事业群的意愿，提前批是唯一可以主动选择事业群的机会。如果你的简历没有通过意向事业群的筛选，一样有机会被其他事业群发起面试。建议在面试时询问面试官所在的事业群，以免发生不必要的误会。
+ &gt;
+</code></pre><p>可以看到，虽然问题稍有变化，但是还是得到了正确答案。</p>
+<h2 id="搭建前端后台">搭建前端后台</h2>
+<p>通过前面的努力，我们成功解决了核心问题，接下来就好办了！用户反馈的渠道一般是手机或者网页，所以我们要为之前的成果搭建一个前端，也就是完成下图的左半边，这里只是用于演示，所以我们直接用Socket传输数据。客户端代码：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MainActivity</span> <span style="color:#66d9ef">extends</span> AppCompatActivity <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Button mSendMessage<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EditText mQuestion<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> TextView mAnswer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> EditText mIP<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">protected</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>Bundle savedInstanceState<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">onCreate</span><span style="color:#f92672">(</span>savedInstanceState<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        setContentView<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">layout</span><span style="color:#f92672">.</span><span style="color:#a6e22e">activity_main</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        mSendMessage <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Button<span style="color:#f92672">)</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">send_message</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        mQuestion <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>EditText<span style="color:#f92672">)</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">question</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        mAnswer <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>TextView<span style="color:#f92672">)</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">answer</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        mIP <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>EditText<span style="color:#f92672">)</span> findViewById<span style="color:#f92672">(</span>R<span style="color:#f92672">.</span><span style="color:#a6e22e">id</span><span style="color:#f92672">.</span><span style="color:#a6e22e">ip_info</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        mSendMessage<span style="color:#f92672">.</span><span style="color:#a6e22e">setOnClickListener</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> View<span style="color:#f92672">.</span><span style="color:#a6e22e">OnClickListener</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">onClick</span><span style="color:#f92672">(</span>View v<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                mAnswer<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;查询中.....&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(){</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                            Socket socket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Socket<span style="color:#f92672">(</span>mIP<span style="color:#f92672">.</span><span style="color:#a6e22e">getText</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(),</span> <span style="color:#ae81ff">8085</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            OutputStream os <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span><span style="color:#a6e22e">getOutputStream</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            os<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>mQuestion<span style="color:#f92672">.</span><span style="color:#a6e22e">getText</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>                            os<span style="color:#f92672">.</span><span style="color:#a6e22e">flush</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            socket<span style="color:#f92672">.</span><span style="color:#a6e22e">shutdownOutput</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#75715e">// Java代码真是罗嗦
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                            InputStream is <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span><span style="color:#a6e22e">getInputStream</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            InputStreamReader reader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>is<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            BufferedReader bufReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span>reader<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            String s <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">final</span> StringBuffer sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#66d9ef">while</span><span style="color:#f92672">((</span>s <span style="color:#f92672">=</span> bufReader<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                                sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                            runOnUiThread<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Runnable<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                                <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>                                <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                                    mAnswer<span style="color:#f92672">.</span><span style="color:#a6e22e">setText</span><span style="color:#f92672">(</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>                                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>                            <span style="color:#75715e">//注：实际开发中需要放到finally中
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                            bufReader<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            reader<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            is<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            os<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                            socket<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>UnknownHostException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;未知主机&#34;</span><span style="color:#f92672">,</span> mIP<span style="color:#f92672">.</span><span style="color:#a6e22e">getText</span><span style="color:#f92672">().</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>                            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                            Log<span style="color:#f92672">.</span><span style="color:#a6e22e">e</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;IO错误&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;-------------&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>服务器端我们需要通过Java来调用Python脚本，将接收到的前台消息传入问答系统处理，然后获取系统输出反馈到前端。这一部分的本质就是Socket通信，比较简单，不做赘述，后台代码如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">ServerThread</span> <span style="color:#66d9ef">extends</span> Thread<span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Socket socket<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">//在构造中得到要单独会话的socket
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">ServerThread</span><span style="color:#f92672">(</span>Socket socket<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> socket<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span><span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        InputStreamReader reader <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        BufferedReader bufReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        OutputStream os <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            reader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>socket<span style="color:#f92672">.</span><span style="color:#a6e22e">getInputStream</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            bufReader <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span>reader<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            String s <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            StringBuffer sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuffer<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span><span style="color:#f92672">((</span>s <span style="color:#f92672">=</span> bufReader<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            Date date <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Date<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            DateFormat format <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> SimpleDateFormat<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;HH:mm:ss&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            String time <span style="color:#f92672">=</span> format<span style="color:#f92672">.</span><span style="color:#a6e22e">format</span><span style="color:#f92672">(</span>date<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\033[32m&#34;</span><span style="color:#f92672">+</span> time <span style="color:#f92672">+</span><span style="color:#e6db74">&#34;--&gt; \033[0m&#34;</span> <span style="color:#f92672">+</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//关闭输入流
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            socket<span style="color:#f92672">.</span><span style="color:#a6e22e">shutdownInput</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 开始调用python脚本
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            String<span style="color:#f92672">[]</span> command <span style="color:#f92672">=</span> <span style="color:#f92672">{</span><span style="color:#e6db74">&#34;python3.5&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;faq-server.py&#34;</span><span style="color:#f92672">,</span>  sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">()};</span>
+</span></span><span style="display:flex;"><span>            Process process <span style="color:#f92672">=</span> Runtime<span style="color:#f92672">.</span><span style="color:#a6e22e">getRuntime</span><span style="color:#f92672">().</span><span style="color:#a6e22e">exec</span><span style="color:#f92672">(</span>command<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// 实际开发时要设定阻塞时间限制
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            process<span style="color:#f92672">.</span><span style="color:#a6e22e">waitFor</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            BufferedReader screenOutput <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BufferedReader<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> InputStreamReader<span style="color:#f92672">(</span>process<span style="color:#f92672">.</span><span style="color:#a6e22e">getInputStream</span><span style="color:#f92672">()));</span>
+</span></span><span style="display:flex;"><span>            String line<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            StringBuilder builder <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">((</span>line <span style="color:#f92672">=</span> screenOutput<span style="color:#f92672">.</span><span style="color:#a6e22e">readLine</span><span style="color:#f92672">())</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                builder<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>line<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>builder<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            String response <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;Answer:&#34;</span> <span style="color:#f92672">+</span> builder<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">//返回给客户端数据
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            os <span style="color:#f92672">=</span> socket<span style="color:#f92672">.</span><span style="color:#a6e22e">getOutputStream</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            os<span style="color:#f92672">.</span><span style="color:#a6e22e">write</span><span style="color:#f92672">(</span>response<span style="color:#f92672">.</span><span style="color:#a6e22e">getBytes</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>            os<span style="color:#f92672">.</span><span style="color:#a6e22e">flush</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            socket<span style="color:#f92672">.</span><span style="color:#a6e22e">shutdownOutput</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>Exception e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">finally</span><span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>reader <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    reader<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>bufReader <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    bufReader<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span><span style="color:#f92672">(</span>os <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    os<span style="color:#f92672">.</span><span style="color:#a6e22e">close</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MultiThreadServer</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            ServerSocket serverSocket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServerSocket<span style="color:#f92672">(</span><span style="color:#ae81ff">8085</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">//accept方法会阻塞，直到有客户端与之建立连接
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                Socket socket <span style="color:#f92672">=</span> serverSocket<span style="color:#f92672">.</span><span style="color:#a6e22e">accept</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                ServerThread serverThread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ServerThread<span style="color:#f92672">(</span>socket<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                serverThread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span><span style="color:#f92672">(</span>Exception e<span style="color:#f92672">){</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><p>后台开始监听：</p>
+<pre tabindex="0"><code>$java   MultiThreadServer
+</code></pre><p>最终效果：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogfaq-demo.gif" alt=""></p>
+<h2 id="小插曲">小插曲</h2>
+<p>本来实现前后端通信是最容易的部分，但是一开始把电脑和手机都连在公司WiFi的时候，竟然出现了找不到路由的奇怪错误，弄得我一直以为是自己代码出了问题，花了几个钟头！！最后才知道是公司WiFi的安全措施，使得无法通过代码在公司网络上随便传包（还有这种操作）！！后来连在自己租的腾讯云服务器又发现连接超时。最后改成电脑开WiFi，手机连入电脑WiFi果然好了。自己还是too young,sometimes naive啊！
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogguestwifi-problem.png" alt=""></p>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/zhang-shang-da-gong-di-er-ban-yi-jing-pin-fen-xi-yu-cao-tu/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">掌上大工第二版（一）：竞品分析与草图</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/re-bu-ding-qzonefang-an-zai-artxu-ni-ji-shang-de-shi-xian/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">热补丁：Qzone方案在Art虚拟机上的实现</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

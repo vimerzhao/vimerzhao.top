@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>随笔 on 赵裕的博客</title>
+    <link>/tags/%E9%9A%8F%E7%AC%94/</link>
+    <description>Recent content in 随笔 on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sat, 20 Aug 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E9%9A%8F%E7%AC%94/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于自我介绍的一点感想</title>
+      <link>/articles/impression-on-self-introduction/</link>
+      <pubDate>Sat, 20 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/impression-on-self-introduction/</guid>
+      <description>最近半年，因为参加一些活动，经常需要写个自我介绍，不由生发出一些感想。 其时自我介绍也是有分类的，比如刚上大学，又或者加入新的团队，自我介绍更多是让别人 了解 自己。 而在校期间的社团选拔、工作后的各种面试，</description>
+    </item>
+    
+    <item>
+      <title>无限风光在险峰</title>
+      <link>/articles/infinite-scenery-in-the-dangerous-peak/</link>
+      <pubDate>Sun, 08 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/infinite-scenery-in-the-dangerous-peak/</guid>
+      <description>夫夷以近，则游者众；险以远，则至者少。 而世之奇伟、瑰怪，非常之观，常在于险远， 而人之所罕至焉，故非有志者不能至也 王安石《游褒禅山记》 最近读了一本书：《筚路维艰》，豆瓣9.6分。读完很受震憾，也开始决定</description>
+    </item>
+    
+    <item>
+      <title>在疫情与裁员的阴影下继续生长</title>
+      <link>/articles/under-epidemic-and-layoffs/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/under-epidemic-and-layoffs/</guid>
+      <description>遇到什么困难也不要怕，微笑着面对它，消除恐惧的最好办法就是面对恐惧，坚持就是胜利，奥利给！ 最近由于各种原因（工作、练习五笔、懒）没有持续写作，想想这样还是不好，以后还是每周拿出一些时间进行自省。 对于一</description>
+    </item>
+    
+    <item>
+      <title>从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</title>
+      <link>/articles/from-reactnative-to-flutter/</link>
+      <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/from-reactnative-to-flutter/</guid>
+      <description>零、黎明的前夜 2007年，苹果公司推出了第一代 iPhone，其搭载的 iPhone OS1.0 即是日后 iOS 系统 的前身。次年，谷歌也推出了其酝酿已久的智能手机操作系统 Android 1.0。也就是在这一 年的 8 月，PhoneGap 诞生了。Ph</description>
+    </item>
+    
+    <item>
+      <title>一本书的诞生</title>
+      <link>/articles/the-born-of-a-book/</link>
+      <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/the-born-of-a-book/</guid>
+      <description>零、背景 今天(2022-01-12)对我来说应该算是一个特别的日子，自己花了小半年撰写的《Flutter内核源码剖析》终于出版了。 思来想去，还是应该写点什么。毕竟，这件事情倾注了自己不少心血，一条简简</description>
+    </item>
+    
+    <item>
+      <title>拿来主义与实证精神</title>
+      <link>/articles/all-takenism-and-positivism/</link>
+      <pubDate>Sun, 20 Dec 2020 19:49:29 +0800</pubDate>
+      
+      <guid>/articles/all-takenism-and-positivism/</guid>
+      <description>由于工作原因，最近经常需要调研业界方案，因为很多很多东西没有必要重复造轮子，如果别人已经把问题解决了，那么直接使用是没啥问题的，这大概就是所谓的拿来主义。 其实纵观历史，尤其是近代，拿来主义其实不少，马</description>
+    </item>
+    
+    <item>
+      <title>做工具要有&#34;码德&#34;</title>
+      <link>/articles/moral-of-developing-tools/</link>
+      <pubDate>Thu, 10 Dec 2020 19:47:27 +0800</pubDate>
+      
+      <guid>/articles/moral-of-developing-tools/</guid>
+      <description>最近在搞别的事情，没时间写公众号了，不过遇到值得写的，还是要草草记录一下的。 这周经历了一件比较奇葩的事情，大致时间线如下： 周四下午的时候，发现自己一个脚本使用的maven发布功能有一个奇怪的问题：正常</description>
+    </item>
+    
+    <item>
+      <title>谈小步快跑</title>
+      <link>/articles/thinking-on-sprint/</link>
+      <pubDate>Wed, 18 Nov 2020 19:45:41 +0800</pubDate>
+      
+      <guid>/articles/thinking-on-sprint/</guid>
+      <description>突然觉得需要好好理解一下小步快跑的含义，因为最近的工作就是一个需要小步快跑的工作。 经过一段时间的摸索之后，我觉得当前工作可以分为四个阶段： 接入，踩一遍可能遇到的坑，积累开发经验，证明性能和跨平台的可行</description>
+    </item>
+    
+    <item>
+      <title>自我奋斗与历史进程</title>
+      <link>/articles/self-struggle-and-historical-itinerary/</link>
+      <pubDate>Fri, 09 Oct 2020 20:18:33 +0800</pubDate>
+      
+      <guid>/articles/self-struggle-and-historical-itinerary/</guid>
+      <description>一 人生的道路虽然漫长，但要紧处常常只有几步，特别是当人年轻的时候。 没有一个人的生活道路是笔直的，没有岔道的，有些岔道口譬如政治上岔道口，个人生活上的岔道口，你走错一步，可以影响人生的一个时期，也可以影</description>
+    </item>
+    
+    <item>
+      <title>拾屋记</title>
+      <link>/articles/clean-my-room/</link>
+      <pubDate>Sun, 21 Jun 2020 20:16:53 +0800</pubDate>
+      
+      <guid>/articles/clean-my-room/</guid>
+      <description>最近要搬家，周末收拾了下，记录一点感悟。 破窗效应 本来整洁有序的房间，因为一两次松懈，或是没有及时把用过的物品归回原位，或是没有及时清理产生的垃圾，就形成了一扇破窗。破窗的产生导致了自己对周围环境要求的</description>
+    </item>
+    
+    <item>
+      <title>不气盛叫年轻人吗？</title>
+      <link>/articles/2020-youth-day/</link>
+      <pubDate>Mon, 04 May 2020 20:16:02 +0800</pubDate>
+      
+      <guid>/articles/2020-youth-day/</guid>
+      <description>这两天，被bilibili献给新一代的演讲《后浪》刷屏了，其实这是我们的老传统了，在这样一个意义重大的节日，讲一部分的真话，来刻意迎合一部分人的爽点。作为一个B站的中度用户，其实我是有点不喜欢的，但不</description>
+    </item>
+    
+    <item>
+      <title>老版《三国演义》中的曹操</title>
+      <link>/articles/sanguo-caocao/</link>
+      <pubDate>Sat, 02 May 2020 20:14:57 +0800</pubDate>
+      
+      <guid>/articles/sanguo-caocao/</guid>
+      <description>近来看了一篇鲍国安先生在拍摄《三国演义》期间的创作手记，不禁感慨这才是一个演员的自我修养呀，比现在这些小鲜肉不知道高到哪里去了。这篇手记如果湮没在各种混杂的信息中实在太可惜，故此整理出来，也可警示自己</description>
+    </item>
+    
+    <item>
+      <title>博客往事</title>
+      <link>/articles/history-of-my-blog/</link>
+      <pubDate>Sun, 15 Mar 2020 19:41:05 +0800</pubDate>
+      
+      <guid>/articles/history-of-my-blog/</guid>
+      <description>周末花了点时间，把废置了的域名 www.vimerzhao.top 重新折腾了一下，同时将之前写过的博客迁移到了自己的服务器上。 借此机会，也以博客为脉络谈谈最近几年的技术经历吧。 CSDN 我大概是15年开始接触编程的，现在能找到的最早的博客是1</description>
+    </item>
+    
+    <item>
+      <title>红利永远都在的</title>
+      <link>/articles/there-are-chances-somewhere/</link>
+      <pubDate>Mon, 10 Feb 2020 20:12:59 +0800</pubDate>
+      
+      <guid>/articles/there-are-chances-somewhere/</guid>
+      <description>今天有个同事在群里分享了一件事情，他面试的一个人独立开发了一个多开app的应用（一种能让某台手机同时打开多个相同app技术，常见的如微信双开），去年年底已经实现了日入1000~2000的水平，实属让人</description>
+    </item>
+    
+    <item>
+      <title>成为一个完整的社会人</title>
+      <link>/articles/base-ability/</link>
+      <pubDate>Thu, 06 Feb 2020 20:11:55 +0800</pubDate>
+      
+      <guid>/articles/base-ability/</guid>
+      <description>引言 本文是笔者的一些自我反思，工作一年半以来，不足之处的复盘。整理成文，以告过往，以警将来，希望对别人亦有所帮助。 本文将一个完整的社会人应该具备的能力分成了两大类：必修和选修。和大学里面的课程类似，必</description>
+    </item>
+    
+    <item>
+      <title>信息、思考、知识</title>
+      <link>/articles/model-of-thinking/</link>
+      <pubDate>Mon, 25 Nov 2019 20:01:28 +0800</pubDate>
+      
+      <guid>/articles/model-of-thinking/</guid>
+      <description>最近在思考的一个问题，当一件热点事件发生的时候，如何能够透过各种声音看到问题的本质，并给出客观、全面的评价，这其实是一件非常困难的事情，我觉得必须具备三要素。 知识 知识就像机器学习里面的训练集。放到具体</description>
+    </item>
+    
+    <item>
+      <title>网易裁员碎碎念</title>
+      <link>/articles/about-netease-staff/</link>
+      <pubDate>Sun, 24 Nov 2019 19:59:50 +0800</pubDate>
+      
+      <guid>/articles/about-netease-staff/</guid>
+      <description>这两天被一篇文章刷屏了，即 网易裁员，让保安把身患绝症的我赶出公司。我在网易亲身经历的噩梦！ 。 + 正好这周上了一门课叫《独立思考》，里面提到了认识真相的五大阻力： 从众心理 认知偏见 情绪干扰 思维局限 逻辑谬误 这</description>
+    </item>
+    
+    <item>
+      <title>在腾讯实习一年，我学到了什么</title>
+      <link>/articles/zai-teng-xun-shi-xi-yi-nian-wo-xue-dao-liao-shi-yao/</link>
+      <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zai-teng-xun-shi-xi-yi-nian-wo-xue-dao-liao-shi-yao/</guid>
+      <description>在腾讯实习一年，我学到了什么 去年大概也是这个时候，我有幸拿到了去腾讯实习的offer。 6月底，我欣然前去，到现在刚好一年时间，马上要回学校了，我觉得该写点什么，因为这是一个很特殊的时间点，我站在学校和</description>
+    </item>
+    
+    <item>
+      <title>四年前写的《大学规划》</title>
+      <link>/articles/si-nian-qian-xie-de-da-xue-gui-hua/</link>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/si-nian-qian-xie-de-da-xue-gui-hua/</guid>
+      <description>四年前写的《大学规划》 四年前刚进大学的时候，辅导员要我们每个人写一篇对大学的规划，找了好久才找到，为了避免以后遗失，在此留个备份吧！ 九月，余辞桑梓，求学大工。朝辞渡口，夕至大连。经陆空之周折，历亲友之</description>
+    </item>
+    
+    <item>
+      <title>杂记：初到深圳</title>
+      <link>/articles/za-ji-chu-dao-shen-zhen/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/za-ji-chu-dao-shen-zhen/</guid>
+      <description>杂记：初到深圳 雄关漫道真如铁，而今迈步从头越。 其实是再来深圳 去年6月底，第一次来深，有同学一起，和批量入职的实习生同住中转酒店，然后又稀里糊涂和别人合租，住的离公司颇远，每次上下班40分钟，熬了三个月</description>
+    </item>
+    
+  </channel>
+</rss>

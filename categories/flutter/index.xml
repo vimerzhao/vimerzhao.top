@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Flutter on 赵裕的博客</title>
+    <link>/categories/flutter/</link>
+    <description>Recent content in Flutter on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 26 May 2021 09:54:17 +0800</lastBuildDate><atom:link href="/categories/flutter/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flutter PlatformView大小异常导致闪退锁屏</title>
+      <link>/articles/record-a-flutter-platform-view-bug/</link>
+      <pubDate>Wed, 26 May 2021 09:54:17 +0800</pubDate>
+      
+      <guid>/articles/record-a-flutter-platform-view-bug/</guid>
+      <description>最近在Flutter中嵌入WebView的时候，遇到一个奇怪的Bug，不仅闪退，还会导致应用锁屏，现状如下（在当前页面卡顿很久，然后黑屏、锁屏…​…​）： 抓到的错误日志如下： + 分析之后发现是使用Vir</description>
+    </item>
+    
+  </channel>
+</rss>

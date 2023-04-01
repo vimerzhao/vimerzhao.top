@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具 on 赵裕的博客</title>
+    <link>/tags/%E5%B7%A5%E5%85%B7/</link>
+    <description>Recent content in 工具 on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 19 Dec 2021 00:00:00 +0000</lastBuildDate><atom:link href="/tags/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>关于笔记软件的比较研究</title>
+      <link>/articles/research-about-note-software/</link>
+      <pubDate>Sun, 19 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/research-about-note-software/</guid>
+      <description>一、引言 工作以来，如何高效地整理自己的信息这个问题一直困扰着我。经常会遇到这种情况， 自己需要记录一个信息，但依稀记得自己记录过类似的信息，却又半天找不到。 举个例子，我发现一个学习C++不错的网站，于是</description>
+    </item>
+    
+    <item>
+      <title>定制Mac的输入法切换按键为左Shift</title>
+      <link>/articles/change-input-method-with-left-shift/</link>
+      <pubDate>Mon, 08 Nov 2021 12:56:59 +0800</pubDate>
+      
+      <guid>/articles/change-input-method-with-left-shift/</guid>
+      <description>目前，自己用的是搜狗输入法和Spacemacs，发现高概率偶现一个问题： 每次都要重启Emacs才能解决，十分蛋疼！！！ 于是，想着是不是只有搜狗+Emacs才会有这个问题，因为： 其他场景（包括Vim）都</description>
+    </item>
+    
+    <item>
+      <title>Android Sutdio开发C&#43;&#43;项目踩坑记录</title>
+      <link>/articles/developing-cpp-with-android-sutdio/</link>
+      <pubDate>Mon, 01 Nov 2021 18:32:39 +0800</pubDate>
+      
+      <guid>/articles/developing-cpp-with-android-sutdio/</guid>
+      <description>背景 由于工作性质关系，后面主要是基于C++开发，日常构建、运行、调试的宿主是Android设备。 由于example工程的设计，可以方便地通过Android Studio构建这个工程并运行在Android</description>
+    </item>
+    
+    <item>
+      <title>如何提高中文输入的效率</title>
+      <link>/articles/improve-efficiency-by-shuangpin/</link>
+      <pubDate>Mon, 11 Oct 2021 16:57:09 +0800</pubDate>
+      
+      <guid>/articles/improve-efficiency-by-shuangpin/</guid>
+      <description>最近写文章和文档的频率比较高，发现常规的全拼输入法的打字速度完全跟不上大脑想表达的速度。于是，想着要不要学一学五笔，调研尝试一番之后发现不太理想，原因有二： 五笔的学习成本比较高 五笔最具优势的场景是看着</description>
+    </item>
+    
+    <item>
+      <title>现阶段（2021年10月）对于Vim和Emacs的思考</title>
+      <link>/articles/thinking-about-vim-and-emacs/</link>
+      <pubDate>Sun, 10 Oct 2021 22:24:00 +0800</pubDate>
+      
+      <guid>/articles/thinking-about-vim-and-emacs/</guid>
+      <description>最近由于在工作调整，加上国庆节，时间稍微宽裕一点，于是重新启动了对Emacs的学习，这次稍微找到了点感觉：包括使用的感觉和对Emacs的理解。 为什么一直对Emacs念念不忘？作为一个使用了多年Vim的</description>
+    </item>
+    
+    <item>
+      <title>Hugo&#43;Asciidoc配置记录</title>
+      <link>/articles/configure-hugo-asciidoc-blog/</link>
+      <pubDate>Sat, 08 May 2021 19:41:53 +0800</pubDate>
+      
+      <guid>/articles/configure-hugo-asciidoc-blog/</guid>
+      <description>【2021-05-08】今天参考几篇文章，完成了Hugo博客的配置，特此记录一下： 搭建教程 Blogging with Asciidoctor and Hugo | Gabriel Arazas Better Hugo/AsciiDoc HTML - ratfactor diguage/www.diguage.com: &amp;#34;地瓜哥&amp;#34;博客网 使用 Hugo 搭建博客 - &amp;#34;地瓜哥&amp;#34;博客网 Mainroad/README.md</description>
+    </item>
+    
+    <item>
+      <title>gitbook安装中的一些问题</title>
+      <link>/articles/gitbook-install-record/</link>
+      <pubDate>Fri, 13 Nov 2020 15:50:24 +0800</pubDate>
+      
+      <guid>/articles/gitbook-install-record/</guid>
+      <description>在新的iMac上安装gitbook后，一直无法使用，提示错误如下： Installing GitBook 3.2.3 if (cb) cb.apply(this, arguments) TypeError: cb.apply is not a function at /usr/local/lib/node_modules/gitbook-cli/node_modules/npmi/node_modules/npm/node_modules/graceful-fs/polyfills.js:267:18 at FSReqCallback.oncomplete (fs.js:169:5) 查找诸多问题后，最终确定是新版本的问题，可以通过nvm这个工具控制node的版本，npm不需要关心</description>
+    </item>
+    
+    <item>
+      <title>Mac外接显示器问题处理记录</title>
+      <link>/articles/macbook-external-display/</link>
+      <pubDate>Thu, 29 Oct 2020 15:46:57 +0800</pubDate>
+      
+      <guid>/articles/macbook-external-display/</guid>
+      <description>背景 最近双十一，买了一台AOC的外接显示器，4K分辨率。为了达到最大的使用体验，处理了一些问题，在此记录。 睡眠唤醒 一开始用type-c的线连接，发现每次电脑睡眠后，重新唤醒时外接屏幕无法唤醒，打开显示</description>
+    </item>
+    
+    <item>
+      <title>解决MacBook2018过热问题</title>
+      <link>/articles/macbook-over-hot/</link>
+      <pubDate>Tue, 19 May 2020 10:21:13 +0800</pubDate>
+      
+      <guid>/articles/macbook-over-hot/</guid>
+      <description>最近搬工位后给MacBook接了一个外接显示器，放在正中间，但是发现发热很严重。在查阅资料和尝试之后，发现把充电口和显示器接口放在右边比较好。左边好像有个Bug，能不用还是不要用了。 参考： Mac过热降</description>
+    </item>
+    
+    <item>
+      <title>Mac OSX配置记录</title>
+      <link>/articles/mac-osx-config-record/</link>
+      <pubDate>Mon, 04 May 2020 12:33:35 +0800</pubDate>
+      
+      <guid>/articles/mac-osx-config-record/</guid>
+      <description>浏览器 下载Chrome 按键映射 下载Karabiner-Elements，按照 配置，就是自己习惯的键位了。 禁用大写锁定: “System Preferences” -&amp;gt; “Keyboard” -&amp;gt; “Modifier K</description>
+    </item>
+    
+    <item>
+      <title>Windows10下VirtualBox不支持64位</title>
+      <link>/articles/virtualbox-lose-64-bit/</link>
+      <pubDate>Mon, 20 Apr 2020 10:20:21 +0800</pubDate>
+      
+      <guid>/articles/virtualbox-lose-64-bit/</guid>
+      <description>参考https://www.4spaces.org/windows-10-virtualbox-no-64bit/[解决Windows10中Virtualbox安装虚拟机没有64位选项(N种情形盘点)</description>
+    </item>
+    
+    <item>
+      <title>代码相似性检测工具</title>
+      <link>/articles/software-similarity-tester/</link>
+      <pubDate>Tue, 14 Apr 2020 12:33:16 +0800</pubDate>
+      
+      <guid>/articles/software-similarity-tester/</guid>
+      <description>背景 最近由于工作需要，想找一个能够检查代码相似性的工具。这种工具主要有两个应用： 代码自身的冗余检查 查重，例如检查学生的编程作业是否有抄袭 工具 最后找到了两个工具sim和moss，具体实现算法还没有研究，</description>
+    </item>
+    
+    <item>
+      <title>我的tmux使用手册</title>
+      <link>/articles/my-tmux-manual/</link>
+      <pubDate>Sun, 05 Apr 2020 12:33:00 +0800</pubDate>
+      
+      <guid>/articles/my-tmux-manual/</guid>
+      <description>基础概念 Session：用来概括一个任务，是一组窗口的集合。通过在任务开始前创建一个Session，在该Session中进行任务，之后通过断开Session来暂时中断任务，此时与任务相关的状态都会保存</description>
+    </item>
+    
+    <item>
+      <title>Git工程化最佳实践</title>
+      <link>/articles/git-practice/</link>
+      <pubDate>Fri, 13 Dec 2019 12:32:25 +0800</pubDate>
+      
+      <guid>/articles/git-practice/</guid>
+      <description>本文导读 本文对应的 git-standardize 项目地址 https://github.com/vimerzhao/git-standardize 问题背景 大部分程序员对于Git的理解还停留在 git add . git commit -m &amp;#34;update&amp;#34; git pull git push 的阶段，但这在实际项目开发中是远远不够的。 + 举一个简单的例子，现在我们需要过滤所有修复bug的提交，该怎</description>
+    </item>
+    
+    <item>
+      <title>Git内部原理剖析</title>
+      <link>/articles/git-internals/</link>
+      <pubDate>Tue, 26 Nov 2019 12:31:51 +0800</pubDate>
+      
+      <guid>/articles/git-internals/</guid>
+      <description>导读 为什么写这篇文章 写这篇文章的本意有二: 工作安排原因，常有同事询问我一些关于 Git 的问题，总觉得自己解释的不够透彻，因此觉得有必要深入了解一下。 目前中文的 Git 教程往往本末倒置， 一味从版本管理工具的角度去堆</description>
+    </item>
+    
+    <item>
+      <title>YouGlish介绍</title>
+      <link>/articles/introduction-of-youglish/</link>
+      <pubDate>Sat, 23 Nov 2019 12:31:31 +0800</pubDate>
+      
+      <guid>/articles/introduction-of-youglish/</guid>
+      <description>YouGlish是干嘛的呢？它的官网已经说的很清楚了: Use YouTube to improve your English pronunciation. Real people, real situations. 发现这个网站的起因是笔者在准备技术分享的时候涉及到一个专业名词 VSync ，这个词是 Vertical Sync的缩写，算是一个技术专有名词，用 YouGlish 一搜就</description>
+    </item>
+    
+    <item>
+      <title>LinuxMint配置指南</title>
+      <link>/articles/linuxmintpei-zhi-zhi-nan/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxmintpei-zhi-zhi-nan/</guid>
+      <description>LinuxMint配置指南 LinuxMint使用记录 工具集 图像编辑 Pinta基本够用，可在软件管理器下载。 配置 添加图标 以百度脑图为例，在/home/username/.local/share/appl</description>
+    </item>
+    
+    <item>
+      <title>Hexo配置指南</title>
+      <link>/articles/hexopei-zhi-zhi-nan/</link>
+      <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/hexopei-zhi-zhi-nan/</guid>
+      <description>Hexo配置指南 本文记录了笔者的Hexo配置，持续更新中～ 功能增强 文章加密 对于部分隐私文章，进行加密。使用插件hexo-blog-encrypt 在Hexo根目录的package.json中添加&amp;quo</description>
+    </item>
+    
+    <item>
+      <title>LinuxMint修改程序图标分类</title>
+      <link>/articles/linuxmintxiu-gai-cheng-xu-tu-biao-fen-lei/</link>
+      <pubDate>Fri, 10 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxmintxiu-gai-cheng-xu-tu-biao-fen-lei/</guid>
+      <description>LinuxMint修改程序图标分类 本文记录了如何修改开始菜单中图标的分类。 问题 平时一般用lantern翻墙，但是每次安装之后在开始菜单这个程序都没被归类，而是单独分类到其他这个目录,如下： 十分别扭。 修</description>
+    </item>
+    
+    <item>
+      <title>LinuxMint Mate中WiFi自动关闭问题</title>
+      <link>/articles/linuxmint-matezhong-wifizi-dong-guan-bi-wen-ti/</link>
+      <pubDate>Fri, 22 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxmint-matezhong-wifizi-dong-guan-bi-wen-ti/</guid>
+      <description>LinuxMint Mate中WiFi自动关闭问题 在安装了LinuxMint Mate后，发现WiFi经常自动关闭，花了一点时间发现了解决办法，记录下来以防再次掉坑。 LinuxMint主流的桌面版本有Cinnamon、M</description>
+    </item>
+    
+    <item>
+      <title>Vim键盘布局的起源</title>
+      <link>/articles/vimjian-pan-bu-ju-de-qi-yuan/</link>
+      <pubDate>Sun, 25 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/vimjian-pan-bu-ju-de-qi-yuan/</guid>
+      <description>Vim键盘布局的起源 谈了一些关于键盘布局的东西。 Vim的键盘布局 用过Vim编辑器的人都知道，要从插入模式转到正常模式需要用Esc键，并且两种模式的切换在编辑文本时大量存在。但奇怪的是，Esc的位置在键</description>
+    </item>
+    
+    <item>
+      <title>VirtualBox下Debian增强功能的安装</title>
+      <link>/articles/virtualboxxia-debianzeng-qiang-gong-neng-de-an-zhuang/</link>
+      <pubDate>Wed, 14 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/virtualboxxia-debianzeng-qiang-gong-neng-de-an-zhuang/</guid>
+      <description>VirtualBox下Debian增强功能的安装 本文记录了如何为VirtualBox里面的Debian虚拟机安装增强功能。 问题记录 之前写过一篇博客记录了VirtualBox下安装增强功能的问题，是在U</description>
+    </item>
+    
+    <item>
+      <title>借助Vim宏处理重复工作</title>
+      <link>/articles/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</guid>
+      <description>借助Vim宏处理重复工作 记录了一个用Vim宏处理重复操作的例子。 最近写博客时遇到一个问题： 我有一些图片，它们除了图片名的序号不同，比如 launcher-01-debug.png launcher-02-debug.png launcher-03-debug.png launcher-04-debug.png &amp;hellip; 其余都相同 现在我需要把这些图片写在博客里，我该怎么做呢？</description>
+    </item>
+    
+    <item>
+      <title>与VirtualBox下Linux虚拟机共享文件</title>
+      <link>/articles/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</guid>
+      <description>与VirtualBox下Linux虚拟机共享文件 记录了如何与VirtualBox下的Linux虚拟机共享文件。 最近，需要在Ubuntu虚拟机里面调试HotSpot，截了些图需要在本机上处理一下，所以需</description>
+    </item>
+    
+    <item>
+      <title>VirtualBox下虚拟电脑没有光驱</title>
+      <link>/articles/virtualboxxia-xu-ni-dian-nao-mei-you-guang-qu/</link>
+      <pubDate>Sun, 28 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/virtualboxxia-xu-ni-dian-nao-mei-you-guang-qu/</guid>
+      <description>VirtualBox下虚拟电脑没有光驱 记录了VirtualBox虚拟电脑安装增强功能时提示没有光驱的问题。 由于编译openjdk的需要，安装了Ubuntu12.04，但是在安装增强功能时候却遇到了以下</description>
+    </item>
+    
+    <item>
+      <title>GVim中GLib-GObject-WARNING问题的解决办法</title>
+      <link>/articles/gvimzhong-glib-gobject-warningwen-ti-de-jie-jue-ban-fa/</link>
+      <pubDate>Sat, 29 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/gvimzhong-glib-gobject-warningwen-ti-de-jie-jue-ban-fa/</guid>
+      <description>GVim中GLib-GObject-WARNING问题的解决办法 本文记录了一个在命令行启动GVim时遇到的问题及其解决办法。 问题 今天发现在命令行模式下启动GVim会出现一个小问题： zhaoyu@Dell ~ $ vim .vim (gvim:12853): GLib-GObject-WARNING **: cannot retrieve</description>
+    </item>
+    
+    <item>
+      <title>纪念一个：博客全自动管理</title>
+      <link>/articles/ji-nian-yi-ge-bo-ke-quan-zi-dong-guan-li/</link>
+      <pubDate>Sat, 29 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/ji-nian-yi-ge-bo-ke-quan-zi-dong-guan-li/</guid>
+      <description>纪念一个：博客全自动管理 本文记录了我的博客使用进阶之路。 首先感慨一下自己两年以来使用博客的经历。最初，我在CSDN上注册了帐号，并开始写一些中二的技术博客： 后来又转战博客园，因为CSDN的强行植入广告</description>
+    </item>
+    
+    <item>
+      <title>Vim的哲学</title>
+      <link>/articles/vimde-zhe-xue/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/vimde-zhe-xue/</guid>
+      <description>Vim的哲学 本文记录了我在现阶段对Vim的一些思考。 我用过的开发工具 回想起来，我大概是在大一的寒假快要结束的时候接触了编程语言，我还记得自己按照教程，用gcc编译并输出了HelloWorld。当时，我</description>
+    </item>
+    
+  </channel>
+</rss>

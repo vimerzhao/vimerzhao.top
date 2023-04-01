@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Flutter源码剖析(二):源码的阅读与调试环境配置 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Flutter源码剖析(二):源码的阅读与调试环境配置" />
+<meta property="og:description" content="综述 Flutter从架构上来说有3部分： 用Dart写的Framework层，面向开发者 用Java/Kotlin写的Embdder层（For Android，iOS是OC/Swift），纯Flutter A" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/flutter-source-code-analyze-2/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2020-11-05T12:23:13+08:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flutter源码剖析(二):源码的阅读与调试环境配置"/>
+<meta name="twitter:description" content="综述 Flutter从架构上来说有3部分： 用Dart写的Framework层，面向开发者 用Java/Kotlin写的Embdder层（For Android，iOS是OC/Swift），纯Flutter A"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Flutter源码剖析(二):源码的阅读与调试环境配置</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-11-05T12:23:13&#43;08:00">2020-11-05</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 1800 字，阅读需 4 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_综述">综述</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutter从架构上来说有3部分：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>用Dart写的Framework层，面向开发者</p>
+</li>
+<li>
+<p>用Java/Kotlin写的Embdder层（For Android，iOS是OC/Swift），纯Flutter App不需要关心</p>
+</li>
+<li>
+<p>用C++写的Engine层，提供Dart运行环境和底层绘制能力</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>针对每个部分，对应的源码阅读环境不同，调试方法也不同。</p>
+</div>
+<div class="paragraph">
+<p>对于阅读环境，最重要的是能够正确地完成<strong>调用/定义的跳转</strong>。</p>
+</div>
+<div class="paragraph">
+<p>对于调试环境，最重要的是能够设置<strong>断点，单步执行</strong>。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_framework环境配置">Framework环境配置</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Framework的环境设置比较简单。</p>
+</div>
+<div class="sect2">
+<h3 id="_源码阅读">源码阅读</h3>
+<div class="paragraph">
+<p>Framework的代码在 <a href="https://github.com/flutter/flutter" class="bare">https://github.com/flutter/flutter</a> 下面，直接Clone下来。</p>
+</div>
+<div class="paragraph">
+<p>亲测安装了Flutter插件的Android Studio是最好的阅读工具，直接打开<code>./packages/flutter</code> 目录，然后<code>flutter pub get</code>即可。</p>
+</div>
+<div class="paragraph">
+<p>这一步可能报错，主要是一些的版本冲突，按照信息解决即可。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_源码调试">源码调试</h3>
+<div class="paragraph">
+<p>通过<code>Flutter Acttach</code>按钮即可开始调试，但是如果要调试启动部分的Dart代码，用<code>Debug</code>而不是<code>Run</code>来启动程序：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-dart-debug.png" alt="flutter dart debug"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_embedder环境配置">Embedder环境配置</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Embedder的环境稍微复杂一点。</p>
+</div>
+<div class="sect2">
+<h3 id="_源码阅读_2">源码阅读</h3>
+<div class="paragraph">
+<p>Embedder的代码在engine的<code>./shell/platform</code>下面：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>tree -L 1
+.
+├── BUILD.gn
+├── android
+├── common
+├── config.gni
+├── darwin
+├── embedder
+├── fuchsia
+├── glfw
+├── linux
+└── windows</pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-setup-sdk.png" alt="flutter setup sdk"/>
+</div>
+</div>
+<div class="paragraph">
+<p>用AS直接打开<code>android</code>目录即可，打开后会发现代码都无法解析对，这样就没法跳转了！！！</p>
+</div>
+<div class="paragraph">
+<p>首先把根目录设置为<code>Source</code>类型：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter_embedder.png" alt="flutter embedder"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这时候只剩<code>androidx</code>无法解析了:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-androidx.png" alt="flutter androidx"/>
+</div>
+</div>
+<div class="paragraph">
+<p>发现旁边一个目录已经声明了依赖，于是按照提示，建立一个<code>local.properties</code>文件，指出本地sdk路径即可，然后执行Gradle命令，拉取更新：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter_embedder-fix.png" alt="flutter embedder fix"/>
+</div>
+</div>
+<div class="paragraph">
+<p>后来查看文档，发现其实另外一个目录已经有这些依赖了，直接在工程设置页面添加一个<code>classpath</code>即可：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>../third_party/android_embedding_dependencies/</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这个目录是在engine外，buildroot下的，应该是之前<code>gclient sync</code>的时候就解析<code>build.gradle</code>拉下来的。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_源码调试_2">源码调试</h3>
+<div class="paragraph">
+<p>如果在打开Flutter的工程，打开Andorid的Activity是解析错误的：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-view.png" alt="flutter view"/>
+</div>
+</div>
+<div class="paragraph">
+<p>需要以android作为根目录单独打开，然后通过<code>Run/Debug</code>按钮再次启动即可：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-embedder-debug.png" alt="flutter embedder debug"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这里单独打开工程无需担心如何集成Flutter，gradle脚本已经搞定了。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_engine环境配置">Engine环境配置</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Engine的配置是最复杂的。</p>
+</div>
+<div class="sect2">
+<h3 id="_源码阅读_3">源码阅读</h3>
+<div class="paragraph">
+<p>把gn工具在<code>src/out</code> 目录生成的<code>compile_commands.json</code>文件移到<code>src/flutter</code>目录下，然后用CLion打开这个文件就可以正确索引Engine的C++代码了。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter-engine-clion.png" alt="flutter engine clion"/>
+</div>
+</div>
+<div class="paragraph">
+<p>该文件是预编译生成的索引，其他编辑器也可以支持，当然用CLion是最方便的。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_源码调试_3">源码调试</h3>
+<div class="paragraph">
+<p>官方提供了gdb的调试方法，但是没有文档，按照代码注释的文档，也无法运行成功，一直报下面的错误：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Could not find platform independent libraries &lt;prefix&gt;
+Could not find platform dependent libraries &lt;exec_prefix&gt;
+Consider setting $PYTHONHOME to &lt;prefix&gt;[:&lt;exec_prefix&gt;]
+ImportError: No module named site</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>看到网上有人已经在用lldb调试了，于是也按照这个思路成功了，</p>
+</div>
+<div class="paragraph">
+<p>首先是把Android SDK的<code>lldb-server</code> push到设备，建立一个信道，通过<code>run-as</code>绕过权限问题：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash"># 注意换成自己的包名
+adb push lldb-server /data/local/tmp/lldb-server
+
+adb shell run-as com.example.flutter_demo \
+cp -F /data/local/tmp/lldb-server /data/data/com.example.flutter_demo/lldb-server
+
+adb shell run-as com.example.flutter_demo \
+chmod a+x /data/data/com.example.flutter_demo/lldb-server
+
+adb shell &#34;run-as com.example.flutter_demo sh -c &#39;/data/data/com.example.flutter_demo/lldb-server platform --server --listen unix-abstract:///data/data/com.example.flutter_demo/debug.socket&#39;&#34;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过以上几步已经建立可以调试的通道了，然后启动lldb，attach到指定进程（通过进程id），然后添加符号表：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">adb shell pidof com.example.flutter_demo
+lldb
+(下面是lldb环境)
+(lldb) platform select remote-android
+(lldb) platform connect unix-abstract-connect:///data/data/com.example.flutter_demo/debug.socket
+(lldb) process attach -p 25382
+(lldb) add-dsym ~/WorkProject/flutter_source_code/src/out/android_debug_unopt/libflutter.so</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>之前就注意到构建目录下的这个so非常大，打包的so不过10M，这个接近300M，应该是存在大量调试信息。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/flutter_gdb.png" alt="flutter gdb"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这里有两个坑：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>lldb进去之后，进程会挂起，必须用<code>c/continue</code>来恢复，不然无法触发逻辑，也就无法触发断点</p>
+</li>
+<li>
+<p>必须在<code>System.loadLibrary</code>之后才能添加符号表，否则失败，如果还是失败，就把以上流程重试一遍～</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>除此之外，还要注意，必须是源码编译的engine打包的apk才可以进行native调试，否则会报错：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">(lldb) add-dsym ~/WorkProject/flutter_source_code/src/out/android_debug_unopt/libflutter.so
+error: symbol file &#39;/Users/vimerzhao/WorkProject/flutter_source_code/src/out/android_debug_unopt/libflutter.so&#39; does not match any existing module</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如此，便可以开始调试了，下面演示在帧刷新位置设置断点，然后触发：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/lldb-flutter-success-demo.png" alt="lldb flutter success demo"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_总结">总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以上便是Flutter源码阅读/调试环境的搭建，欲善其事，先利其器，后面就要开始真刀真枪撸源码了。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考">参考</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/flutter/engine/blob/master/sky/tools/flutter_gdb#L13">engine/flutter_gdb at master · flutter/engine</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flutter/flutter/wiki/Debugging-the-engine">Debugging the engine · flutter/flutter Wiki</a></p>
+</li>
+<li>
+<p><a href="https://flutter.dev/docs/testing/debugging">Debugging Flutter apps - Flutter</a></p>
+</li>
+<li>
+<p><a href="https://flutter.dev/docs/testing/code-debugging">Debugging Flutter apps programmatically - Flutter</a></p>
+</li>
+<li>
+<p><a href="https://flutter.dev/docs/testing/oem-debuggers">Using an OEM debugger - Flutter</a></p>
+</li>
+<li>
+<p><a href="http://weishu.me/2017/01/14/how-to-debug-android-native-framework-source/">如何调试Android Native Framework</a></p>
+</li>
+<li>
+<p><a href="https://fucknmb.com/2019/12/06/Flutter-Engine-C-%E6%BA%90%E7%A0%81%E8%B0%83%E8%AF%95%E5%88%9D%E6%8E%A2/">Flutter Engine C++ 源码调试初探</a></p>
+</li>
+<li>
+<p></p>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;"/>
+<col style="width: 33.3333%;"/>
+<col style="width: 33.3334%;"/>
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">[Android 调试桥 (adb)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Android 开发者</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Android Developers](<a href="https://developer.android.com/studio/command-line/adb" class="bare">https://developer.android.com/studio/command-line/adb</a>)</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" rel="tag">源码剖析</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/macbook-external-display/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Mac外接显示器问题处理记录</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/best-android-projector/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">最好的Android投屏工具</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

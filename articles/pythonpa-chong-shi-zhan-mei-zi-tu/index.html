@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>&#39;Python爬虫实战:妹子图&#39; - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="&#39;Python爬虫实战:妹子图&#39;" />
+<meta property="og:description" content="&lsquo;Python爬虫实战:妹子图&rsquo; 本文记录了一些爬虫的基础知识，并实现了一个50行左右的爬虫脚本。 前言 看了一些Python的语法后打算做一个小项目练手，打发一下时间。爬虫比较容易" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/pythonpa-chong-shi-zhan-mei-zi-tu/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2017-07-02T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="&#39;Python爬虫实战:妹子图&#39;"/>
+<meta name="twitter:description" content="&lsquo;Python爬虫实战:妹子图&rsquo; 本文记录了一些爬虫的基础知识，并实现了一个50行左右的爬虫脚本。 前言 看了一些Python的语法后打算做一个小项目练手，打发一下时间。爬虫比较容易"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">&#39;Python爬虫实战:妹子图&#39;</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-07-02T00:00:00Z">2017-07-02</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 2200 字，阅读需 5 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h1 id="python爬虫实战妹子图">&lsquo;Python爬虫实战:妹子图&rsquo;</h1>
+<p>本文记录了一些爬虫的基础知识，并实现了一个50行左右的爬虫脚本。</p>
+<h2 id="前言">前言</h2>
+<p>看了一些Python的语法后打算做一个小项目练手，打发一下时间。爬虫比较容易上手，加之Python十分适合写爬虫，于是花了半天时间写了一个爬虫，在此记录一下。</p>
+<h2 id="工具">工具</h2>
+<p>Python比较爽的一点就是开源社区为其贡献了无数高质量的第三方库，可以将程序员从繁琐的细节中解放出来，更加专注于自己的目标。在这里需要安装两个库</p>
+<pre tabindex="0"><code>sudo pip3 install requests
+sudo pip3 install beautifulsoup4
+</code></pre><p><code>requests</code>用于网络请求，<code>beautifulsoup4</code>用于html解析。</p>
+<blockquote>
+<p>这里不得不感慨一下，自己一年多前曾经用Java爬取过窝工教务处的网页，当时网络请求以及html解析均是用原生API写的，不仅浪费时间，而且经常出错，当时花了一天多，而今天可能就是一个小时的功夫就完成了，虽然部分是因为当时还Too Young，但也不得不承认Python在提高效率方面的巨大优势。</p>
+</blockquote>
+<h2 id="开始爬虫">开始爬虫</h2>
+<h3 id="第一步分析">第一步：分析</h3>
+<p>对于本次任务，只需做两件事：1.找到图片；2.下载图片。关键是如何找到图片，这就需要分析目标网站：<a href="http://www.mzitu.com/">妹子图</a>。观察首页可以看到每个套图都有一张预览图，而一个页面由若干个套图的入口（图片预览和文字链接）组成。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu01.png" alt=""></p>
+<p>翻到最下方发现有若干页面选择
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu03.png" alt=""></p>
+<p>点进一个套图之后，发现每个页面显示一张图片，下方会显示本套图一共多少页。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu02.png" alt=""></p>
+<p>针对套图中的某一页，在新标签页打开图片，上方的url地址就是我们的目标了
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu04.png" alt=""></p>
+<p>从图片的url地址以及刚才的分析来看，这个网站还是十分有规律的，适合新手练习。</p>
+<h3 id="第二步获取网页">第二步：获取网页</h3>
+<p>需要注意的是，由于涉及网络和文件读写操作，在Linux环境需要在<code>root</code>下运行（亲测命令行需要，PyCharm不需要）。
+接下来正式开始，尽量用代码表达。初次练习，可以用增量式的方法（完成一个功能，验证正确性后在此基础上开发下一个）：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 爬取目标</span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 设置报头，Http协议</span>
+</span></span><span style="display:flex;"><span>header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
+</span></span><span style="display:flex;"><span>main_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(url, headers <span style="color:#f92672">=</span> header)
+</span></span><span style="display:flex;"><span>print(main_page<span style="color:#f92672">.</span>text)
+</span></span></code></pre></div><p>通过以上4行代码就可以获取得到首页内容
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu05.png" alt=""></p>
+<h3 id="第三步解析网页">第三步：解析网页</h3>
+<p>分析可以发现，这个网站的每页的url其实就是<code>www.mzitu.com/n/</code>，其中n是数字，n为1的时候会重定向到<code>www.mzitu.com</code>，所以我们可以设置一个n的最大值，不超过网页实际最大值即可，如此就可实现网页的跳转了，而不用模拟点击了翻页的按钮。
+我们比较关心的内容是套图的入口地址，再对网页进行分析，可以发现，所有链接都在一个<code>id</code>为<code>pins</code>的<code>ul</code>里面，如此便可获取该页面全部套图的入口地址了。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu-7.png" alt=""></p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#75715e">#!/usr/bin/env python3</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">import</span> requests
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> bs4 <span style="color:#f92672">import</span> BeautifulSoup
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 爬取目标</span>
+</span></span><span style="display:flex;"><span>url <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;http://www.mzitu.com/page/&#39;</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 设置报头，Http协议</span>
+</span></span><span style="display:flex;"><span>header <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#39;User-Agent&#39;</span> : <span style="color:#e6db74">&#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;</span>}
+</span></span><span style="display:flex;"><span><span style="color:#75715e">## 爬取的预览页面数量</span>
+</span></span><span style="display:flex;"><span>preview_page_cnt <span style="color:#f92672">=</span> <span style="color:#ae81ff">2</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> cur_page <span style="color:#f92672">in</span> range(<span style="color:#ae81ff">1</span>, int(preview_page_cnt)<span style="color:#f92672">+</span><span style="color:#ae81ff">1</span>):
+</span></span><span style="display:flex;"><span>    cur_url <span style="color:#f92672">=</span> url <span style="color:#f92672">+</span> str(cur_page)
+</span></span><span style="display:flex;"><span>    cur_page <span style="color:#f92672">=</span> requests<span style="color:#f92672">.</span>get(cur_url, headers <span style="color:#f92672">=</span> header)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## 解析网页</span>
+</span></span><span style="display:flex;"><span>    soup <span style="color:#f92672">=</span> BeautifulSoup(cur_page<span style="color:#f92672">.</span>text, <span style="color:#e6db74">&#39;html.parser&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">## 图片入口和文字入口取一个即可</span>
+</span></span><span style="display:flex;"><span>    preview_link_list <span style="color:#f92672">=</span> soup<span style="color:#f92672">.</span>find(id<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;pins&#39;</span>)<span style="color:#f92672">.</span>find_all(<span style="color:#e6db74">&#39;a&#39;</span>, target<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;_blank&#39;</span>)[<span style="color:#ae81ff">1</span>::<span style="color:#ae81ff">2</span>]
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> link <span style="color:#f92672">in</span> preview_link_list:
+</span></span><span style="display:flex;"><span>        print(link)
+</span></span></code></pre></div><p>结果如下，可以看到，现在已经获取到每个套图的入口地址了。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu08.png" alt=""></p>
+<h3 id="第四步解析套图网页">第四步：解析套图网页</h3>
+<p>每个网页显示套图中的一张图片，所以我们需要做两件事：1.分析有多少图片（即网页）2.每个图片的地址（即右键选择“在新标签页打开”时的地址）。
+分析可以发现，页面数量在<code>class</code>为<code>pagenavi</code>的<code>div</code>里面，而图片地址在<code>class</code>为<code>main-image</code>的<code>div</code>里面，并且每个每个网页格式一致：<code>www.mzitu.com/套图id/n</code>，其中n为不超过图片数量的一个数字。
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu09.png" alt=""></p>
+<pre tabindex="0"><code>#!/usr/bin/env python3
+import requests
+from bs4 import BeautifulSoup
+
+## 爬取目标
+url = &#39;http://www.mzitu.com/page/&#39;
+parser = &#39;html.parser&#39;
+## 设置报头，Http协议
+header = {&#39;User-Agent&#39; : &#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;}
+## 爬取的预览页面数量
+preview_page_cnt = 2
+for cur_page in range(1, int(preview_page_cnt)+1):
+    cur_url = url + str(cur_page)
+    cur_page = requests.get(cur_url, headers = header)
+    ## 解析网页
+    soup = BeautifulSoup(cur_page.text, parser)
+    ## 图片入口和文字入口取一个即可
+    preview_link_list = soup.find(id=&#39;pins&#39;).find_all(&#39;a&#39;, target=&#39;_blank&#39;)[1::2]
+    for link in preview_link_list:
+        link = link[&#39;href&#39;]
+        soup = BeautifulSoup(requests.get(link).text, parser)
+        ## 获取图片数量
+        pic_cnt = soup.find(&#39;div&#39;, class_=&#39;pagenavi&#39;).find_all(&#39;a&#39;)[4].get_text()
+        ## 遍历获取每页图片的地址
+        for pic_index in range(1, int(pic_cnt)+1):
+            pic_link = link + &#39;/&#39; + str(pic_index)
+            cur_page = requests.get(pic_link, headers = header)
+            soup = BeautifulSoup(cur_page.text, parser)
+            pic_src = soup.find(&#39;div&#39;, &#39;main-image&#39;).find(&#39;img&#39;)[&#39;src&#39;]
+            print(pic_src)
+</code></pre><p>运行之后如下：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu10.png" alt=""></p>
+<h3 id="第五步下载图片">第五步：下载图片</h3>
+<p>主要涉及文件读写，比较简单，添加之后完整代码如下：</p>
+<pre tabindex="0"><code>#!/usr/bin/env python3
+import requests
+from bs4 import BeautifulSoup
+import os
+
+## 爬取目标
+url = &#39;http://www.mzitu.com/page/&#39;
+parser = &#39;html.parser&#39;
+cur_path = os.getcwd() + &#39;/&#39;
+
+## 设置报头，Http协议
+header = {
+    &#39;User-Agent&#39;: &#39;Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.104 Safari/537.36&#39;}
+## 爬取的预览页面数量
+preview_page_cnt = 2
+for cur_page in range(1, int(preview_page_cnt) + 1):
+    cur_url = url + str(cur_page)
+    cur_page = requests.get(cur_url, headers=header)
+    ## 解析网页
+    soup = BeautifulSoup(cur_page.text, parser)
+    ## 图片入口和文字入口取一个即可
+    preview_link_list = soup.find(id=&#39;pins&#39;).find_all(&#39;a&#39;, target=&#39;_blank&#39;)[1::2]
+    for link in preview_link_list:
+        dir_name = link.get_text().strip().replace(&#39;?&#39;, &#39;&#39;)
+        link = link[&#39;href&#39;]
+        soup = BeautifulSoup(requests.get(link).text, parser)
+
+        ## 获取图片数量
+        pic_cnt = soup.find(&#39;div&#39;, class_=&#39;pagenavi&#39;).find_all(&#39;a&#39;)[4].get_text()
+        ## 创建目录
+        pic_path = cur_path + dir_name
+        if os.path.exists(pic_path):
+            print(&#39;directory exist!&#39;)
+        else:
+            os.mkdir(pic_path)
+        os.chdir(pic_path)  ## 进入目录，开始下载
+        print(&#39;下载&#39; + dir_name + &#39;...&#39;)
+        ## 遍历获取每页图片的地址
+        for pic_index in range(1, int(pic_cnt) + 1):
+            pic_link = link + &#39;/&#39; + str(pic_index)
+            cur_page = requests.get(pic_link, headers=header)
+            soup = BeautifulSoup(cur_page.text, parser)
+            pic_src = soup.find(&#39;div&#39;, &#39;main-image&#39;).find(&#39;img&#39;)[&#39;src&#39;]
+            pic_name = pic_src.split(&#39;/&#39;)[-1]
+            f = open(pic_name, &#39;wb&#39;)
+            f.write(requests.get(pic_src, headers=header).content)
+            f.close()
+        os.chdir(cur_path)  ## 完成下载，退出目录
+print(&#39;下载完成&#39;)    
+</code></pre><h3 id="第六步爬取图片">第六步：爬取图片</h3>
+<p>如下：
+<img src="http://ond7j4cnz.bkt.clouddn.com/blogmzitu-demo.gif" alt=""></p>
+<h2 id="总结">总结</h2>
+<p>人生苦短，我用Python。何况我是泽学家。</p>
+<h2 id="2018-4-11更新">2018-4-11更新</h2>
+<p>本文在知乎上浏览量还是很多的，也发现评论区也很多人反应无法抓取，今天我又看了一下，发现妹子图已经开始屏蔽爬虫了，一番探索之后发现其识别爬虫的手段是判断<code>Referer</code>字段，这个字段是用来判断请求的来源，正常我们都是从主页进去的，所以能够加载图片，如下：
+<img src="http://p2pe8gnn5.bkt.clouddn.com/Peek%202018-04-11%2021-32.gif" alt=""></p>
+<p>如果我们直接输入一个图片地址就会被认为是爬虫：
+<img src="http://p2pe8gnn5.bkt.clouddn.com/Peek%202018-04-11%2021-43.gif" alt=""></p>
+<p>因为请求的<code>Referer</code>字段为空,所以代码运行之后是这样：
+<img src="http://p2pe8gnn5.bkt.clouddn.com/2018-04-11-21-17-24.png" alt=""></p>
+<p>处理方法也很简单，增加一个不断更新<code>Referer</code>字段的函数，然后每次请求前调用就可以绕过这个拦截了：</p>
+<pre tabindex="0"><code>....
+def update_header(referer):
+    header[&#39;Referer&#39;] = &#39;{}&#39;.format(referer)
+....
+            pic_src = soup.find(&#39;div&#39;, &#39;main-image&#39;).find(&#39;img&#39;)[&#39;src&#39;]
+            pic_name = pic_src.split(&#39;/&#39;)[-1]
+            update_header(pic_src)
+            f = open(pic_name, &#39;wb&#39;)
+            f.write(requests.get(pic_src, headers=header).content)
+            f.close()
+....
+</code></pre><p>绕过之后就可以正常下载了：
+<img src="http://p2pe8gnn5.bkt.clouddn.com/2018-04-11%2021-18-04.png" alt=""></p>
+<p>以后可能还有新的反爬虫机制，所以代码放在了Gists做长期管理，地址：<a href="https://gist.github.com/vimerzhao/8485f89978aba2e7d9a0f8d82c371643">vimerzhao/mzitu_spider.py</a></p>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/vimjian-pan-bu-ju-de-qi-yuan/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Vim键盘布局的起源</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/activityzhi-jie-tui-chu-ying-yong-xian-xiang/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Activity直接退出应用现象</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

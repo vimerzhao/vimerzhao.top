@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Flutter源码剖析(一):源码获取与构建 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Flutter源码剖析(一):源码获取与构建" />
+<meta property="og:description" content="概述 本文介绍了Flutter源码的获取与构建，后面会另有文章介绍Flutter源码的版本管理、开发环境搭建等主题。 准备工作 Flutter源码分为两个部分： flutter/flutter是框架层，为开发" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/flutter-source-code-analyze-1/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2020-10-29T12:23:10+08:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flutter源码剖析(一):源码获取与构建"/>
+<meta name="twitter:description" content="概述 本文介绍了Flutter源码的获取与构建，后面会另有文章介绍Flutter源码的版本管理、开发环境搭建等主题。 准备工作 Flutter源码分为两个部分： flutter/flutter是框架层，为开发"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Flutter源码剖析(一):源码获取与构建</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-10-29T12:23:10&#43;08:00">2020-10-29</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3000 字，阅读需 6 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_概述">概述</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>本文介绍了Flutter源码的获取与构建，后面会另有文章介绍Flutter源码的版本管理、开发环境搭建等主题。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_准备工作">准备工作</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Flutter源码分为两个部分：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><a href="https://github.com/flutter/flutter">flutter/flutter</a>是框架层，为开发者提供各种接口，主要是dart代码。</p>
+</li>
+<li>
+<p><a href="https://github.com/flutter/engine">flutter/engine</a>是引擎层，负责Flutter的渲染以及宿主的交互。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>相关依赖的安装可参考官方文档：https://github.com/flutter/flutter/wiki/Setting-up-the-Engine-development-environment[Setting up the Engine development environment · flutter/flutter Wiki]。以我的Mac为例，如JDK等一般都已经安装，无需担心。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_源码下载">源码下载</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><code>flutter/flutter</code>可以直接通过git下载，但是<code>flutter/engine</code>需要通过<code>gclient</code>工具获取，因为<code>engine</code>有很多依赖，<code>gclient</code>可以很好地处理这些依赖，简化源码管理流程。</p>
+</div>
+<div class="paragraph">
+<p>首先，新建一个目录，下载<code>flutter</code>框架代码：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ mkdir flutter_source_code
+$ cd flutter_source_code
+$ git clone https://github.com/flutter/flutter.git
+Cloning into &#39;flutter&#39;...
+remote: Enumerating objects: 12, done.
+remote: Counting objects: 100% (12/12), done.
+remote: Compressing objects: 100% (12/12), done.
+remote: Total 272396 (delta 0), reused 6 (delta 0), pack-reused 272384
+Receiving objects: 100% (272396/272396), 116.98 MiB | 2.48 MiB/s, done.
+Resolving deltas: 100% (210440/210440), done.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>获取<code>depot_tools</code>工具（这个一开始是用来管理<code>chromium</code>源码的）：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+Cloning into &#39;depot_tools&#39;...
+remote: Sending approximately 34.14 MiB ...
+remote: Total 40539 (delta 27803), reused 40539 (delta 27803)
+Receiving objects: 100% (40539/40539), 34.14 MiB | 5.04 MiB/s, done.
+Resolving deltas: 100% (27803/27803), done.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>设置环境变量（每次构建之前都要设置，也可以写入系统配置）：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">export PATH=$PATH:`pwd`/depot_tools</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>开始拉取代码（这一步比较耗时）</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ gclient sync                                                                                               [18:04:43]
+
+......
+
+remote: Enumerating objects: 25, done.
+remote: Counting objects: 100% (25/25), done.
+remote: Compressing objects: 100% (22/22), done.
+remote: Total 209672 (delta 10), reused 13 (delta 3), pack-reused 209647
+Receiving objects: 100% (209672/209672), 196.61 MiB | 3.74 MiB/s, done.
+Resolving deltas: 100% (153791/153791), done.
+Syncing projects:  31% (33/104) src/third_party/vulkan
+[0:03:59] Still working on:
+[0:03:59]   src/ios_tools
+[0:03:59]   src/third_party/angle
+[0:03:59]   src/third_party/dart
+[0:03:59]   src/third_party/icu
+
+......
+
+[0:12:48] Still working on:
+[0:12:48]   src/third_party/dart
+
+Syncing projects: 100% (104/104), done.
+Running hooks: 100% ( 9/ 9) dart package config
+________ running &#39;vpython src/flutter/tools/run_third_party_dart.py&#39; in &#39;/Users/vimerzhao/WorkProject/flutter_source_code&#39;
+Resolving dependencies... (1.7s)
++ charcode 1.1.3
++ collection 1.14.13
++ meta 1.2.3
++ package_config 1.9.3
++ path 1.7.0
++ pub_semver 1.4.4
++ source_span 1.7.0
++ string_scanner 1.0.5
++ term_glyph 1.1.0
++ yaml 2.2.1
+Changed 10 dependencies!</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>需要注意的是，<code>Syncing projects: 100% (104/104), done</code>之后，会继续下载一些大文件，可能命令行没有输出，一定不能强制退出，可以通过资源管理器查看网络的流量，确定<code>cipd</code>是否在下载：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="http://images.vimerzhao.top/gclient-sync-cipd.png" alt="gclient sync cipd"/>
+</div>
+</div>
+<div class="paragraph">
+<p>（因为git不是很擅长下载大文件，所以产生了cipd这个程序来做这些工作）</p>
+</div>
+<div class="paragraph">
+<p>此时的目录结构：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ tree -L 1
+.
+├── depot_tools # 源码管理工具
+├── flutter     # flutter framework目录
+└── src         # flutter engine以及相关依赖所在目录</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>framework的版本和engine的版本是一一对应的，framework的分支规则如下：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>stable</code>是当前的稳定分支，无特殊情况，推荐开发者使用该分支作为flutter sdk</p>
+</li>
+<li>
+<p><code>master</code>包含最新的特性，但是不稳定</p>
+</li>
+<li>
+<p>每个版本会打上对应的tag</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>截止到 2020-10-29 ,最新的较稳定版本是 1.22.0，于是我们也先切到这个版本（不是必选的，但是个人认为：基于一个明确的版本编译和修改源代码似乎更合适）。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cd flutter
+$ git checkout 1.22.0
+$ cat bin/internal/engine.version
+5babba6c4d25fa237bbf755ab85c9a0c50b3c6ec</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>engine.version</code>这个文件指定了framework对应的engine版本，接下来，我们进入engine目录切换到这次commit。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cd ../src/flutter
+$ git reset --hard 5babba6c4d25fa237bbf755ab85c9a0c50b3c6ec
+HEAD is now at 5babba6c4 Flutter 1.22.0-12.3.pre engine cherrypicks (#21466)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>此时，我们需要执行以下命令：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ gclient sync --with_branch_heads --with_tags
+Syncing projects: 100% (104/104), done.
+......
+Running hooks: 100% ( 8/ 8) dart package config
+......
+Running hooks: 100% (8/8), done.</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>后面这两个参数的含义比较晦涩，参考Chromium的说明，其含义是：</p>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>Checkout all the submodules at their branch DEPS revisions</p>
+</div>
+</blockquote>
+</div>
+<div class="paragraph">
+<p>因为切换分支之后，某些依赖的版本可能有更改，所以需要再次sync一下，直接在<code>src/flutter</code>目录执行即可。</p>
+</div>
+<div class="paragraph">
+<p>以上就完成了源码环境的搭建，下面正式开始编译。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_源码编译">源码编译</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>首先我们退回到src目录，然后通过<code>gn</code>生成<code>ninja</code>需要的元数据：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ cd ..
+$ pwd
+/Users/vimerzhao/WorkProject/flutter_source_code/src
+$ ./flutter/tools/gn --unoptimized --android --runtime-mode debug --android-cpu arm
+Generating GN files in: out/android_debug_unopt
+Generating Xcode projects took 75ms
+Done. Made 438 targets from 197 files in 1960ms</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>对于编译参数，https://github.com/flutter/flutter/wiki/Compiling-the-engine[Compiling the engine · flutter/flutter Wiki]有详细介绍，在此不做赘述，这里我构建的是一个未优化、Android平台、debug版本、arm 32位的 engine。</p>
+</div>
+<div class="paragraph">
+<p>此时，查看out目录，可以看到：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ls out/
+android_debug_unopt   compile_commands.json</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>compile_commands.json</code>可以作为IDE的索引文件，提供类/函数/变量的跳转等能力，后面会说到。</p>
+</div>
+<div class="paragraph">
+<p>然后就可以开始正式的编译了：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ ninja -C out/android_debug_unopt
+ninja: Entering directory `out/android_debug_unopt&#39;
+[38/3844] ACTION //flutter/shell/platform/android:flutter_shell_java(//build/toolchain/android:clang_arm)
+警告: ../../third_party/android_tools/sdk/build-tools/30.0.1/core-lambda-stubs.jar(java/lang/invoke/LambdaMetafactory.class): 主版本 53 比 52 新, 此编译器
+支持最新的主版本。
+  建议升级此编译器。
+注: 某些输入文件使用或覆盖了已过时的 API。
+注: 有关详细信息, 请使用 -Xlint:deprecation 重新编译。
+1 个警告
+[3844/3844] STAMP obj/default.stamp
+
+$ ls out/android_debug_unopt                                                                 [19:35:15]
+all.xcodeproj                                 flutter_embedding_debug-sources.jar.md5.stamp lib.stripped
+args.gn                                       flutter_embedding_debug.jar                   libflutter.so
+armeabi_v7a_debug.jar                         flutter_embedding_debug.jar.md5.stamp         libflutter.so.TOC
+armeabi_v7a_debug.pom                         flutter_embedding_debug.pom                   obj
+build.ninja                                   flutter_icu                                   toolchain.ninja
+build.ninja.d                                 flutter_patched_sdk                           vm_outline_strong.dill
+clang_x64                                     gen                                           vm_platform_strong.dill
+flutter.jar                                   gyp-mac-tool                                  vm_platform_strong.dill.d
+flutter_embedding_debug-sources.jar           icudtl.dat                                    zip_archives</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中，<code>flutter_embedding_debug.jar</code>是Android嵌入层代码，<code>libflutter.so</code>是flutter的引擎层代码，通过这两个文件，可以在Android工程混合接入Flutter代码。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_源码使用">源码使用</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>创建一个工程：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-bash" data-lang="bash">$ pwd
+/Users/vimerzhao/WorkProject/flutter_source_code
+$ ls
+depot_tools flutter     src
+$ ./flutter/bin/flutter create flutter_demo
+Downloading Dart SDK from Flutter engine 5babba6c4d25fa237bbf755ab85c9a0c50b3c6ec...
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  172M  100  172M    0     0  4381k      0  0:00:40  0:00:40 --:--:-- 4723k
+Building flutter tool...
+Downloading Material fonts...                                       0.5s
+Downloading Gradle Wrapper...                                       0.1s
+Downloading package sky_engine...                                   0.3s
+Downloading flutter_patched_sdk tools...                            2.7s
+Downloading flutter_patched_sdk_product tools...                    2.1s
+Downloading darwin-x64 tools...                                     8.2s
+Downloading libimobiledevice...                                     0.0s
+Downloading usbmuxd...                                              0.7s
+Downloading libplist...                                             0.0s
+Downloading openssl...                                              0.2s
+
+......
+Creating project flutter_demo...
+  flutter_demo/ios/Runner.xcworkspace/contents.xcworkspacedata (created)
+  flutter_demo/ios/Runner.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist (created)
+
+  ......
+
+  flutter_demo/.idea/runConfigurations/main_dart.xml (created)
+  flutter_demo/.idea/libraries/Dart_SDK.xml (created)
+  flutter_demo/.idea/libraries/KotlinJavaRuntime.xml (created)
+  flutter_demo/.idea/modules.xml (created)
+  flutter_demo/.idea/workspace.xml (created)
+Running &#34;flutter pub get&#34; in flutter_demo...                        2.3s
+Wrote 71 files.
+
+All done!
+
+......
+
+Run &#34;flutter doctor&#34; for information about installing additional components.
+
+In order to run your application, type:
+
+  $ cd flutter_demo
+  $ flutter run</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>使用flutter并指定本地engine运行（不指定则会拉远程的、已经构建好的engine）。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">$  ../flutter/bin/flutter run --local-engine-src-path ~/WorkProject/flutter_source_code/src --local-engine=android_debug_unopt
+No Flutter engine build found at /Users/vimerzhao/WorkProject/flutter_source_code/src/out/host_debug_unopt.
+
+$ ../flutter/bin/flutter run --local-engine-src-path ~/WorkProject/flutter_source_code/src --local-engine=host_debug_unopt
+Launching lib/main.dart on DUK AL20 in debug mode...
+Oops; flutter has exited unexpectedly: &#34;Invalid argument(s): Cannot find executable for
+/Users/vimerzhao/WorkProject/flutter_source_code/src/out/host_debug_unopt/dart-sdk/bin/dart.&#34;.
+A crash report has been written to /Users/vimerzhao/WorkProject/flutter_source_code/flutter_demo/flutter_02.log.
+...
+FAILURE: Build failed with an exception
+* Where:
+Script &#39;/Users/vimerzhao/WorkProject/flutter_source_code/flutter/packages/flutter_tools/gradle/flutter.gradle&#39; line: 904
+* What went wrong:
+Execution failed for task &#39;:app:compileFlutterBuildDebug&#39;.
+&gt; Process &#39;command &#39;/Users/vimerzhao/WorkProject/flutter_source_code/flutter/bin/flutter&#39;&#39; finished with non-zero exit value 1
+* Try:
+Run with --stacktrace option to get the stack trace. Run with --info or --debug option to get more log output. Run with --scan to get full insights.
+* Get more help at https://help.gradle.org
+BUILD FAILED in 1s
+Running Gradle task &#39;assembleDebug&#39;...
+Running Gradle task &#39;assembleDebug&#39;... Done                         1.8s
+https://git.io/JTDf0
+
+$../flutter/bin/flutter run --local-engine-src-path ~/WorkProject/flutter_source_code/src --local-engine=h
+ost_debug_unopt
+Launching lib/main.dart on DUK AL20 in debug mode...
+Error: Error when reading &#39;../src/out/host_debug_unopt/gen/frontend_server.dart.snapshot&#39;: No such file or directory
+the Dart compiler exited unexpectedly.
+the Dart compiler exited unexpectedly.
+Running Gradle task &#39;assembleDebug&#39;...</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>总的来说，遇到一些官方文档上没有提到的问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>输入<code>android_debug_unopt</code> 却提示找不到 <code>host_debug_unopt</code>，这个莫名其妙，只能先改一下之前构建的文件夹名称了。</p>
+</li>
+<li>
+<p>找不到<code>dart-sdk</code>，flutter会下载到<code>bin/cache</code>目录，只能自己手动copy一份到报错的目录。</p>
+</li>
+<li>
+<p>找不到<code>frontend_server.dart.snapshot</code>，在flutter目录用<code>find . -name &#34;frontend_server.dart.snapshot&#34;</code>找到，然后手动copy一份。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>解决这三个问题之后，终于可以运行了。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-console" data-lang="console">$ ../flutter/bin/flutter run --local-engine-src-path ~/WorkProject/flutter_source_code/src --local-engine=host_debug_unopt
+Launching lib/main.dart on DUK AL20 in debug mode...
+Running Gradle task &#39;assembleDebug&#39;...
+Running Gradle task &#39;assembleDebug&#39;... Done                        18.1s
+✓ Built build/app/outputs/flutter-apk/app-debug.apk.
+Installing build/app/outputs/flutter-apk/app.apk...                 3.5s
+Waiting for DUK AL20 to report its views...                          8ms
+Syncing files to device DUK AL20...                                210ms
+Flutter run key commands.
+r Hot reload. 🔥🔥🔥
+R Hot restart.
+h Repeat this help message.
+d Detach (terminate &#34;flutter run&#34; but leave application running).
+c Clear the screen
+q Quit (terminate the application on the device).
+An Observatory debugger and profiler on DUK AL20 is available at: http://127.0.0.1:63146/LE7Uc6cshds=/
+D/AwareBitmapCacher(24977): handleInit switch not opened pid=24977
+
+Application finished.</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_总结">总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以上完成源码的获取与构建，那么：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>如何高效率的编辑源码？用Vim/VS Code还是Android Studio？</p>
+</li>
+<li>
+<p>如何构建自己的版本？同时，如何保持和官方代码保持同步？</p>
+</li>
+<li>
+<p>如何修改框架层代码并重新编译？</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>等等。</p>
+</div>
+<div class="paragraph">
+<p>其实问题还有很多，后面再一一讲解。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考">参考</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://gityuan.com/2019/08/03/flutter_engine_setup/">搭建Flutter Engine源码编译环境</a></p>
+</li>
+<li>
+<p><a href="https://fucknmb.com/2019/02/26/Flutter-Engine-%E7%BC%96%E8%AF%91%E6%8C%87%E5%8C%97/">Flutter Engine 编译指北</a></p>
+</li>
+<li>
+<p><a href="http://zhengxiaoyong.com/2019/03/16/Flutter-Engine%E4%B8%8ESDK%E7%9A%84%E5%AE%9A%E5%88%B6%E5%8C%96%E4%B8%8E%E7%BC%96%E8%AF%91/">Flutter Engine与SDK的定制化与编译</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flutter/flutter/wiki/Setting-up-the-Engine-development-environment">Setting up the Engine development environment · flutter/flutter Wiki</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flutter/flutter/wiki/Compiling-the-engine">Compiling the engine · flutter/flutter Wiki</a></p>
+</li>
+<li>
+<p><a href="https://github.com/flutter/flutter/wiki/The-flutter-tool">The flutter tool · flutter/flutter Wiki</a></p>
+</li>
+<li>
+<p><a href="https://www.chromium.org/developers/how-tos/depottools">Using depot_tools - The Chromium Projects</a></p>
+</li>
+<li>
+<p><a href="https://www.chromium.org/developers/how-tos/get-the-code/working-with-release-branches">Working with Release Branches - The Chromium Projects</a></p>
+</li>
+<li>
+<p><a href="https://chromium.googlesource.com/chromium/src/+/master/docs/cipd.md">CIPD for chromium dependencies</a></p>
+</li>
+<li>
+<p><a href="https://ninja-build.org/">Ninja, a small build system with a focus on speed</a></p>
+</li>
+<li>
+<p><a href="https://gn.googlesource.com/gn/">gn - Git at Google</a></p>
+</li>
+</ul>
+</div>
+<div class="quoteblock">
+<blockquote>
+<div class="paragraph">
+<p>更多相关内容可访问我的博客：http://vimerzhao.top/</p>
+</div>
+<div class="paragraph">
+<p>或</p>
+</div>
+<div class="paragraph">
+<p>关注我的公众号:<code>V大师在一号线</code></p>
+</div>
+</blockquote>
+</div>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" rel="tag">源码剖析</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/maoxuan-kernel/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">毛选精读（一）内核：《实践论》与《矛盾论》</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/macbook-external-display/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Mac外接显示器问题处理记录</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android安装包极限优化 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android安装包极限优化" />
+<meta property="og:description" content="背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/opt-apk-size-by-remove-debuginfo/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2020-01-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android安装包极限优化"/>
+<meta name="twitter:description" content="背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android安装包极限优化</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-01-17T00:00:00Z">2020-01-17</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/android/" rel="category">Android</a>
+	</span>
+</div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3600 字，阅读需 8 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_背景">背景</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>目前Android安装包的优化方法论比较成熟，比如</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>混淆代码（Proguard、AndResGuard）</p>
+</li>
+<li>
+<p>移除不在使用的代码和资源</p>
+</li>
+<li>
+<p>对于音频、图片等使用更轻量的格式</p>
+</li>
+<li>
+<p>等等</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这些方法都比较常规，在项目成熟后优化的空间也比较有限。以应用宝为例，目前（2020年1月）项目代码中Java文件8040个，代码行数约143万行，最终生成的  release包 <strong>9.33M</strong>。可以优化的空间极为有限，而且由于维护较差，分析已经废弃的代码和资源其实非常耗时耗力。本文的方案可以使应用宝在现有基础上立刻减少约 <strong>700k</strong> 安装包大小，收益十分可观，而且对于一个项目， <strong>代码量越大，效果越明显</strong> 。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_原理">原理</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们在开发中经常会去看Crash日志来定位问题，如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>W/System.err: java.lang.NullPointerException
+W/System.err:     at b.a.a.a.a(Test.java:26)
+W/System.err:     at com.tencent.androidfactory.MainActivity.onCreate(MainActivity.java:15)
+W/System.err:     at android.app.Activity.performCreate(Activity.java:7458)
+W/System.err:     at android.app.Activity.performCreate(Activity.java:7448)
+W/System.err:     at android.app.Instrumentation.callActivityOnCreate(Instrumentation.java:1286)
+......</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后通过 map 文件找到 对应的类:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>com.tencent.androidfactory.Test -&gt; b.a.a.a:
+    14:14:void &lt;init&gt;() -&gt; &lt;init&gt;
+    23:69:void test() -&gt; a
+    16:17:void log() -&gt; b
+    20:21:void log1() -&gt; c</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里为什么要把类名和方法名用杂乱无章的字符代替呢？一方面原因就是后者 <strong>更精简，在dex文件中占用的空间更小</strong>，但这不是今天讨论的重点。上面Crash信息的后面指明了Crash的具体位置是第 26 行，<strong>这是不是说明了dex存在一些信息，指明了字节码位置到源代码位置的信息</strong>，进一步，我们是不是可以参考上面混淆之后通过map映射找到原来的类的做法，<strong>把字节码位置到源代码位置的信息作为map存在本地！！</strong></p>
+</div>
+<div class="paragraph">
+<p>这里需要指出Dex文件存在一个 <code>debugItemInfo</code> 的区域，记录了指令集位置到行号的信息，正是因为这些信息的存在，我们才能做单步调试等操作，这也是这个命名的由来。</p>
+</div>
+<div class="paragraph">
+<p>以应用宝为例，130万行代码都要保存这个映射信息的话其实占用的空间是很大的（也就是上面优化掉的那部分）。</p>
+</div>
+<div class="paragraph">
+<p>其实，优化掉这部分信息已经有一些工具支持了：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Proguard工具开启优化后默认不保留这个信息，除非设置了 <code>-keepattributes LineNumberTable</code></p>
+</li>
+<li>
+<p>facebook的 <a href="https://github.com/facebook/redex">redex</a> 也有类似功能，配置<code>drop_line_numbers</code></p>
+</li>
+<li>
+<p>最近字节跳动开源了一个https://github.com/bytedance/ByteX[ByteX]，也有类似能力，配置 <code>deleteLineNumber</code></p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>蚂蚁金服的https://juejin.im/post/5be9485a51882516b937785f[支付宝 App 构建优化解析：Android 包大小极致压缩]也直接提到了这种做法，但问题也很明显、很严重，<strong>会丢失行号信息（低版本都是-1，高版本是指令集位置），导致Crash无法排查</strong>，此外，每个版本也需要做兼容，但是该文章并未详细描述，本文正是填补这部分空白。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_实现">实现</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>首先，Java层的Crash上报都是通过自定义 <code>Thread.setDefaultUncaughtExceptionHandler</code> 的 <code>uncaughtException(Thread thread, Throwable throwable)</code> 方法实现的，下面以http://androidxref.com/4.4_r1/[Android 4.4]的源码为例，分析下底层原理。</p>
+</div>
+<div class="paragraph">
+<p><code>Throwable</code>的每个构建函数都有一个<code> fillInStackTrace();</code>调用，具体逻辑如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/**
+ * Records the stack trace from the point where this method has been called
+ * to this {@code Throwable}. This method is invoked by the {@code Throwable} constructors.
+ *
+ * &lt;p&gt;This method is public so that code (such as an RPC system) which catches
+ * a {@code Throwable} and then re-throws it can replace the construction-time stack trace
+ * with a stack trace from the location where the exception was re-thrown, by &lt;i&gt;calling&lt;/i&gt;
+ * {@code fillInStackTrace}.
+ *
+ * &lt;p&gt;This method is non-final so that non-Java language implementations can disable VM stack
+ * traces for their language. Filling in the stack trace is relatively expensive.
+ * &lt;i&gt;Overriding&lt;/i&gt; this method in the root of a language&#39;s exception hierarchy allows the
+ * language to avoid paying for something it doesn&#39;t need.
+ *
+ * @return this {@code Throwable} instance.
+ */
+public Throwable fillInStackTrace() {
+    if (stackTrace == null) {
+        return this; // writableStackTrace was false.
+    }
+    // Fill in the intermediate representation.
+    stackState = nativeFillInStackTrace();
+    // Mark the full representation as in need of update.
+    stackTrace = EmptyArray.STACK_TRACE_ELEMENT;
+    return this;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中，<code>stackState</code>就包含了指令集位置信息（the intermediate representation），该对象会被传递给下面的natvie方法解出具体行号：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/*
+ * Creates an array of StackTraceElement objects from the data held
+ * in &#34;stackState&#34;.
+ */
+private static native StackTraceElement[] nativeGetStackTrace(Object stackState);</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>于是我们的思路就是 <strong>Hook住上报的位置，通过反射拿到指令集位置，在Crash上报前把指令集位置赋值给无意义的行号</strong>（理论上高版本在没有<code>debugItemInfo</code>时，已经默认是指令集位置而不是-1了）。这里比较坑的是 <code>stackState</code>的类型，其定义如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/**
+ * An intermediate representation of the stack trace.  This field may
+ * be accessed by the VM; do not rename.
+ */
+private transient volatile Object stackState;</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在不同版本上，该对象的数据类型都不一样。</p>
+</div>
+<div class="sect2">
+<h3 id="_4_0华为畅玩4c版本4_4_4">4.0(华为畅玩4C，版本4.4.4):</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2020-01/apk-4.0.png" alt="apk 4.0"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_5_0华为p8_lite版本5_0_2">5.0(华为P8 Lite，版本5.0.2):</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2020-01/apk-5.0.png" alt="apk 5.0"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_6_0三星galaxy_s7版本6_0_1">6.0(三星GALAXY S7，版本6.0.1):</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2020-01/apk-6.0.png" alt="apk 6.0"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_7_0三星galaxy_c7版本7_0">7.0+(三星GALAXY C7，版本7.0)</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2020-01/apk-7.0.png" alt="apk 7.0"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这里是第一个比较坑的地方，有的是int数组，有的是long数组，有的是Object数组的第一/最后一项，而且指令集位置有的在一起，有的是间隔的，确实比较坑，需要适配兼容。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_8_0">8.0</h3>
+<div class="paragraph">
+<p>8.0有一个问题，异常处理系统初始化时会执行如下逻辑：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// 代码版本：Android8.0，文件名称：RuntimeInit.java
+protected static final void commonInit() {
+    if (DEBUG) Slog.d(TAG, &#34;Entered RuntimeInit!&#34;);
+
+    /*
+     * set handlers; these apply to all threads in the VM. Apps can replace
+     * the default handler, but not the pre handler.
+     */
+    Thread.setUncaughtExceptionPreHandler(new LoggingHandler());
+    Thread.setDefaultUncaughtExceptionHandler(new KillApplicationHandler());
+
+    ......
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>其中 <code>Thread.setUncaughtExceptionPreHandler(new LoggingHandler());</code> 是该版本新增的，会在<code>uncaughtException</code> 之前调用，<code>LoggingHandler</code> 会导致<code>Throwable#getInternalStackTrace</code>被调用，该方法逻辑如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>/**
+ * Returns an array of StackTraceElement. Each StackTraceElement
+ * represents a entry on the stack.
+ */
+private StackTraceElement[] getInternalStackTrace() {
+    if (stackTrace == EmptyArray.STACK_TRACE_ELEMENT) {
+        stackTrace = nativeGetStackTrace(stackState);
+        stackState = null; // Let go of intermediate representation.
+        return stackTrace;
+    } else if (stackTrace == null) {
+        return EmptyArray.STACK_TRACE_ELEMENT;
+    } else {
+      return stackTrace;
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>因此，8.0以上版本在Hook默认的 <code>UncaughtExceptionHandler</code> 时，<code>stackState</code>信息<strong>已经丢失了！！</strong>我的解决办法是 反射Hook掉<code>Thread#uncaughtExceptionPreHandler</code> 字段，使 <code>LoggingHandler</code> 被覆盖</p>
+</div>
+<div class="paragraph">
+<p>但是在9.0会有以下错误</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Accessing hidden field Ljava/lang/Thread;-&gt;uncaughtExceptionPreHandler:Ljava/lang/Thread$UncaughtExceptionHandler; (dark greylist, reflection)
+java.lang.NoSuchFieldException: No field uncaughtExceptionPreHandler in class Ljava/lang/Thread; (declaration of &#39;java.lang.Thread&#39; appears in /system/framework/core-oj.jar)
+     at java.lang.Class.getDeclaredField(Native Method)
+     at top.vimerzhao.testremovelineinfo.ExceptionHookUtils.init(ExceptionHookUtils.java:18)
+     ......</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过类似https://github.com/tiann/FreeReflection[FreeReflection]目前可以突破这个限制，因此Android 9+ 的机型依然可以使用这个方案。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_深入">深入</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>这里再详细介绍下底层获取行号的逻辑，首先<code>Throwable</code> 会调用到一个native方法（这里的注释信息讲的很清楚，注意看）：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>//http://androidxref.com/4.4_r1/xref/dalvik/vm/native/dalvik_system_VMStack.cpp
+
+/*
+ * public static int fillStackTraceElements(Thread t, StackTraceElement[] stackTraceElements)
+ *
+ * Retrieve a partial stack trace of the specified thread and return
+ * the number of frames filled.  Returns 0 on failure.
+ */
+static void Dalvik_dalvik_system_VMStack_fillStackTraceElements(const u4* args,
+    JValue* pResult)
+{
+    Object* targetThreadObj = (Object*) args[0];
+    ArrayObject* steArray = (ArrayObject*) args[1];
+    size_t stackDepth;
+    int* traceBuf = getTraceBuf(targetThreadObj, &amp;stackDepth);
+
+    if (traceBuf == NULL)
+        RETURN_PTR(NULL);
+
+    /*
+     * Set the raw buffer into an array of StackTraceElement.
+     */
+    if (stackDepth &gt; steArray-&gt;length) {
+        stackDepth = steArray-&gt;length;
+    }
+    dvmFillStackTraceElements(traceBuf, stackDepth, steArray);
+    free(traceBuf);
+    RETURN_INT(stackDepth);
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>该方法计算行信息的是<code>dvmFillStackTraceElements</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>// http://androidxref.com/4.4_r1/xref/dalvik/vm/Exception.cpp
+
+/*
+ * Fills the StackTraceElement array elements from the raw integer
+ * data encoded by dvmFillInStackTrace().
+ *
+ * &#34;intVals&#34; points to the first {method,pc} pair.
+ */
+void dvmFillStackTraceElements(const int* intVals, size_t stackDepth, ArrayObject* steArray)
+{
+    unsigned int i;
+
+    /* init this if we haven&#39;t yet */
+    if (!dvmIsClassInitialized(gDvm.classJavaLangStackTraceElement))
+        dvmInitClass(gDvm.classJavaLangStackTraceElement);
+
+    /*
+     * Allocate and initialize a StackTraceElement for each stack frame.
+     * We use the standard constructor to configure the object.
+     */
+    for (i = 0; i &lt; stackDepth; i++) {
+        Object* ste = dvmAllocObject(gDvm.classJavaLangStackTraceElement,ALLOC_DEFAULT);
+        if (ste == NULL) {
+            return;
+        }
+
+        Method* meth = (Method*) *intVals++;
+        int pc = *intVals++;
+
+        int lineNumber;
+        if (pc == -1)      // broken top frame?
+            lineNumber = 0;
+        else
+            lineNumber = dvmLineNumFromPC(meth, pc);
+
+        ......
+        /*
+         * Invoke:
+         *  public StackTraceElement(String declaringClass, String methodName,
+         *      String fileName, int lineNumber)
+         * (where lineNumber==-2 means &#34;native&#34;)
+         */
+        JValue unused;
+        dvmCallMethod(dvmThreadSelf(), gDvm.methJavaLangStackTraceElement_init,
+            ste, &amp;unused, className, methodName, fileName, lineNumber);
+
+        ......
+        dvmSetObjectArrayElement(steArray, i, ste);
+    }
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>由此可知，默认行号可能是0，否则通过 <code>dvmLineNumFromPC</code> 获取具体信息：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>//http://androidxref.com/4.4_r1/xref/dalvik/vm/interp/Stack.cpp
+
+/*
+ * Determine the source file line number based on the program counter.
+ * &#34;pc&#34; is an offset, in 16-bit units, from the start of the method&#39;s code.
+ *
+ * Returns -1 if no match was found (possibly because the source files were
+ * compiled without &#34;-g&#34;, so no line number information is present).
+ * Returns -2 for native methods (as expected in exception traces).
+ */
+int dvmLineNumFromPC(const Method* method, u4 relPc)
+{
+    const DexCode* pDexCode = dvmGetMethodCode(method);
+
+    if (pDexCode == NULL) {
+        if (dvmIsNativeMethod(method) &amp;&amp; !dvmIsAbstractMethod(method))
+            return -2;
+        return -1;      /* can happen for abstract method stub */
+    }
+
+    LineNumFromPcContext context;
+    memset(&amp;context, 0, sizeof(context));
+    context.address = relPc;
+    // A method with no line number info should return -1
+    context.lineNum = -1;
+
+    dexDecodeDebugInfo(method-&gt;clazz-&gt;pDvmDex-&gt;pDexFile, pDexCode,
+            method-&gt;clazz-&gt;descriptor,
+            method-&gt;prototype.protoIdx,
+            method-&gt;accessFlags,
+            lineNumForPcCb, NULL, &amp;context);
+
+    return context.lineNum;
+}</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>由此可知，默认行号还可能是-2/-1，而 <code>dexDecodeDebugInfo</code> 里面就是具体的解析信息了，不做深入分析（太复杂了，给看懵逼了~）。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_效果">效果</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以一台Android6.0的魅族为例，我的Demo部分日志如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>01-14 10:17:42.525 845-868/? I/ExceptionHookUtils: succeed [28, 12, 12, 5, 6]
+01-14 10:17:42.525 845-868/? I/ExceptionHookUtils: set top.vimerzhao.testremovelineinfo.a from -1 to 28
+01-14 10:17:42.526 845-868/? I/ExceptionHookUtils: set top.vimerzhao.testremovelineinfo.a from -1 to 12
+01-14 10:17:42.526 845-868/? I/ExceptionHookUtils: set top.vimerzhao.testremovelineinfo.a from -1 to 12
+01-14 10:17:42.526 845-868/? I/ExceptionHookUtils: set top.vimerzhao.testremovelineinfo.MainActivity$a from -1 to 5
+01-14 10:17:42.526 845-868/? I/ExceptionHookUtils: set java.lang.Thread from 818 to 6</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>通过 <code>dexdump</code> 工具可以导出一个行号到指令集位置的map文件，部分信息如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>  Virtual methods   -
+    #0              : (in Ltop/vimerzhao/testremovelineinfo/MainActivity$a;)
+      name          : &#39;run&#39;
+      type          : &#39;()V&#39;
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 2
+      ins           : 1
+      outs          : 1
+      insns size    : 9 16-bit code units
+      catches       : (none)
+      positions     :
+        0x0000 line=17 // 这里小于且最接近5
+        0x0008 line=18
+      locals        :
+        0x0000 - 0x0009 reg=1 this Ltop/vimerzhao/testremovelineinfo/MainActivity$a;
+  source_file_idx   : 0 ()
+...
+
+  Virtual methods   -
+    #0              : (in Ltop/vimerzhao/testremovelineinfo/a;)
+      name          : &#39;a&#39;
+      type          : &#39;()V&#39;
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 3
+      ins           : 1
+      outs          : 2
+      insns size    : 21 16-bit code units
+      catches       : (none)
+      positions     :
+        0x0000 line=15
+        0x0007 line=16
+        0x000c line=17 // 这里小于且最接近12
+        0x000f line=18
+        0x0014 line=19
+      locals        :
+        0x0000 - 0x0015 reg=2 this Ltop/vimerzhao/testremovelineinfo/a;
+    #1              : (in Ltop/vimerzhao/testremovelineinfo/a;)
+      name          : &#39;b&#39;
+      type          : &#39;()V&#39;
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 3
+      ins           : 1
+      outs          : 2
+      insns size    : 21 16-bit code units
+      catches       : (none)
+      positions     :
+        0x0000 line=22
+        0x0007 line=23
+        0x000c line=24 // 这里小于且最接近12
+        0x000f line=25
+        0x0014 line=26
+      locals        :
+        0x0000 - 0x0015 reg=2 this Ltop/vimerzhao/testremovelineinfo/a;
+    #2              : (in Ltop/vimerzhao/testremovelineinfo/a;)
+      name          : &#39;c&#39;
+      type          : &#39;()V&#39;
+      access        : 0x0001 (PUBLIC)
+      code          -
+      registers     : 4
+      ins           : 1
+      outs          : 2
+      insns size    : 48 16-bit code units
+      catches       : (none)
+      positions     :
+        0x0000 line=29
+        0x0007 line=30
+        0x000c line=31
+        0x0011 line=32
+        0x0016 line=33
+        0x001b line=34
+        0x001c line=35   // 这里小于且最接近28
+        0x001f line=36
+        0x0024 line=37
+        0x0029 line=38
+        0x002c line=39
+        0x002f line=41
+      locals        :
+        0x001c - 0x0030 reg=1 a Ljava/lang/Object;
+        0x0000 - 0x0030 reg=3 this Ltop/vimerzhao/testremovelineinfo/a;
+  source_file_idx   : 0 ()</pre>
+</div>
+</div>
+<div class="paragraph">
+<p>这里我加了一些注释，通过指令集位置，我们成功找到了行号，而查看Demo源代码也确实如此： <span class="image"><img src="https://github.com/vimerzhao/images/raw/master/2020-01/Snipaste_2020-01-14_11-21-31.png" alt="Snipaste 2020 01 14 11 21 31"/></span></p>
+</div>
+<div class="paragraph">
+<p>所以，上报后Crash的排查问题也可以解决了。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_总结">总结</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>以上，是对改该方案的具体实现的分析，有了以上信息，代码自然水到渠成了（100行左右～），不做赘述。</p>
+</div>
+<div class="paragraph">
+<p>个人认为这个方案可以作为安装包优化的最后一根救命稻草，但本身入侵性较强，除非被KPI所逼迫，走头无路，否则不必剑走偏锋。</p>
+</div>
+<div class="paragraph">
+<p>有次吃饭时，我提到这个方法，大家觉得1M的事情，何必费这么大功夫，但有时候KPI就是KPI，你可以觉得这1M没有必要，老板也可以觉得招你这个人没有必要。</p>
+</div>
+<div class="paragraph">
+<p>（逃～）</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/meme/raw/master/v_.jpg" alt="v "/>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考">参考</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://androidxref.com/4.4_r1/xref/libcore/luni/src/main/java/java/lang/Throwable.java">java/java/lang/Throwable.java-4.4</a></p>
+</li>
+<li>
+<p><a href="http://androidxref.com/8.0.0_r4/xref/frameworks/base/core/java/com/android/internal/os/RuntimeInit.java">RuntimeInit.java-8.0</a></p>
+</li>
+<li>
+<p><a href="http://androidxref.com/8.0.0_r4/xref/libcore/ojluni/src/main/java/java/lang/Thread.java">Thread.java-8.0</a></p>
+</li>
+<li>
+<p><a href="http://gityuan.com/2016/06/24/app-crash/">理解Android Crash处理流程 - Gityuan博客 | 袁辉辉的技术博客</a></p>
+</li>
+<li>
+<p><a href="https://juejin.im/post/5be9485a51882516b937785f">支付宝 App 构建优化解析：Android 包大小极致压缩 - 掘金</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" rel="tag">技术精选</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/learn-writing-by-zhouzuoluo/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">读书:《学会写作》</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/amusing-ourselves-to-death/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">读书:《娱乐至死》</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

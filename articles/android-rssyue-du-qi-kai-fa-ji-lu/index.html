@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Android RSS阅读器开发记录 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Android RSS阅读器开发记录" />
+<meta property="og:description" content="Android RSS阅读器开发记录 本文的时间跨度比较长，全程记录了我完成一个RSS阅读器的经历，包括踩过的坑以及自己的一些思考。 背景介绍 大概大一的时候我就见过RSS，但一直没明白这东西是干嘛的。很长一段时间自己都" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/android-rssyue-du-qi-kai-fa-ji-lu/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2017-11-18T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Android RSS阅读器开发记录"/>
+<meta name="twitter:description" content="Android RSS阅读器开发记录 本文的时间跨度比较长，全程记录了我完成一个RSS阅读器的经历，包括踩过的坑以及自己的一些思考。 背景介绍 大概大一的时候我就见过RSS，但一直没明白这东西是干嘛的。很长一段时间自己都"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Android RSS阅读器开发记录</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-11-18T00:00:00Z">2017-11-18</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3000 字，阅读需 6 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h1 id="android-rss阅读器开发记录">Android RSS阅读器开发记录</h1>
+<p>本文的时间跨度比较长，全程记录了我完成一个<strong>RSS阅读器</strong>的经历，包括踩过的坑以及自己的一些思考。</p>
+<h2 id="背景介绍">背景介绍</h2>
+<p>大概大一的时候我就见过RSS，但一直没明白这东西是干嘛的。很长一段时间自己都觉得没办法很高效地获取信息，使用微信公众号、微博、新闻客户端等虽然能保证时新性，但很多内容都不是我想要的；一些网站很不错，如每个编程语言的官网、知名社区、优质博客等，但是过于分散，而且更新频率不定，RSS正好解决了这个问题。
+那么什么是RSS，参考维基百科的定义：</p>
+<blockquote>
+<p>RSS（简易信息聚合）是一种消息来源格式规范，用以聚合经常发布更新数据的网站，例如博客文章、新闻、音频或视频的网摘。RSS文件（或称做摘要、网络摘要、或频更新，提供到频道）包含全文或是节录的文字，再加上发布者所订阅之网摘数据和授权的元数据。</p>
+</blockquote>
+<p>简而言之，通过RSS我可以定制信息来源，而不用去我关注的网站逐一检查是否有内容更新。
+其实，市场上已经有一些类似的APP，如Palabre（下图）、红板报等，但毕竟面对的还是所有群体，对于我来说里面99%的内容是不需要的。比如，我需要订阅的可能就是Python.ory等非常专业的网站的内容，集中在编程领域，显然不会有公司专门来做这个一个产品，毕竟受众太少了。
+<img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-18palabre.jpg" alt="">
+可能网上也有Android RSS阅读器的开源项目，但是就我的调查而言，应该没有特别优秀的（GitHub上1000+star），而且这个东西的实现也不算复杂，正好最近在学习Kotlin，正好可以用来练手。
+基于以上这些背景，我开始开发这个APP了，大学几年，做过不少程序，但随着经历的增多，每次写代码时都会有不同的关注点，下文会多次提及。</p>
+<h2 id="设计实现">设计实现</h2>
+<p>以前，记得自己大一时写过博弈论的仿真程序，还有贪吃蛇游戏，大概500-1000行，都放在一个文件里面。程序跑着突然发现缺了一个重要的逻辑，又删掉重写。当有了足够积累之后会发现，实现一个项目首先要做的是规划。当然我这个工程不算庞大，可能随便打打草稿就行。一个真正复杂的项目肯定需要更规范的计划。
+一番整理之后，可将这个APP分解为几个问题：</p>
+<ul>
+<li>如何设计UI，需要为RSS分类</li>
+<li>使用过程中需要动态添加/删除RSS源，如何做到</li>
+<li>RSS最终是服务器的XML数据，如何实现网络通信，如何解析XML</li>
+<li>每个RSS条目其实对应一个网页，用Android原生的WebView浏览网页效果能接受吗</li>
+</ul>
+<h3 id="ui设计">UI设计</h3>
+<p>最终的效果如下：
+<img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-18rssreader-01.jpg" alt="">
+<img src="http://ond7j4cnz.bkt.clouddn.com/2017-11-18rssreader-02.jpg" alt="">
+在侧边栏实现一级分类（按照主题分类如新闻资讯、编程语言、网络&hellip;..），在每个页面的顶部实现二级分类（如编程语言可以分为Kotlin、Python、C++&hellip;..）点击二级分类后会刷新列表，每个二级分类对应着一组RSS，如上图对应的配置为</p>
+<pre tabindex="0"><code>{
+    &#34;category&#34;: &#34;编程语言&#34;,
+        &#34;websites&#34;: [
+        {
+            &#34;tag&#34;: &#34;Kotlin&#34;,
+            &#34;url&#34;: [
+                &#34;https://kotliner.cn/api/rss/latest&#34;,
+                &#34;https://blog.kotliner.cn/atom.xml&#34;
+            ]
+        },
+        {
+            &#34;tag&#34;: &#34;Python&#34;,
+            &#34;url&#34;: [
+                &#34;https://www.python.org/dev/peps/peps.rss/&#34;
+            ]
+        }
+    ]
+}
+</code></pre><p>这个一段JSON格式的数据，下一节详细解释。
+关于界面设计，是模仿Palabre的，曾经看过一句话：</p>
+<blockquote>
+<p>模仿是最真诚的赞美</p>
+</blockquote>
+<p>Palabre的UI却是挺好看。</p>
+<blockquote>
+<p>碎岁念：UI设计得好不好？是否人性化？其实是设计的事情，Linus曾说让我设计界面，我宁可去死。但我觉得自己还是有必要系统了解下此方面的知识，毕竟过去、现在以及将来自己都可能要去独立开发项目，从技术的优化到用户界面的设计都要亲自操刀，所以还是要注意积累，总感觉书到用时方恨少。</p>
+</blockquote>
+<h3 id="数据源debug版">数据源(debug版)</h3>
+<p>这里所说的数据源并不是RSS的数据源，而是一份配置文件，可以想象APP安装之后就不能修改了，而我每次在PC端发现一个好网站后总不能就去手机上把RSS地址手动输入吧，如果有一天我换手机了这些辛辛苦苦收集的RSS源怎么迁移？
+所以一个比较好的方法就是把RSS源（一系列URL地址）放在服务器端，APP本地下载一份，每次启动后都下载一次（可以自己设置是否经常更新），检查版本是否更新（有一个version字段），如果有就替换本地的，下次启动就能用新的RSS源了，这样的好处是这个RSS源列表和APP本身解耦了，如果需要修改RSS源列表只需要在服务器修改就行了，也不会有备份问题了。
+以上是自己的一个想法，在开发初这个优先级并不是很高，因为可能改变策略，所以放在最后实现。目前，我们把这个RSS源列表文件放<code>assets</code>目录打包进APP就行了，这样的好处是可以先解决其他更基础的问题。
+如下是一个测试用的RSS源列表文件（字段都是自己按需定义的）：</p>
+<pre tabindex="0"><code>{
+  &#34;theme&#34;: &#34;tech&#34;,
+  &#34;author&#34;: &#34;zhaoyu&#34;,
+  &#34;email&#34;: &#34;dutzhaoyu@gmail.com&#34;,
+  &#34;version&#34;: &#34;0.01&#34;,
+  &#34;contents&#34;: [
+    {
+      &#34;category&#34;: &#34;综合版块&#34;,
+      &#34;websites&#34;: [
+        {
+          &#34;tag&#34;: &#34;业界资讯&#34;,
+          &#34;url&#34;: [
+            &#34;http://blog.jobbole.com/feed/&#34;
+          ]
+        },
+        {
+          &#34;tag&#34;: &#34;个人博客&#34;,
+          &#34;url&#34;: [
+            &#34;https://www.liaoxuefeng.com/feed/articles&#34;
+          ]
+        }
+      ]
+    },
+    {
+      &#34;category&#34;: &#34;编程语言&#34;,
+      &#34;websites&#34;: [
+        {
+          &#34;tag&#34;: &#34;Kotlin&#34;,
+          &#34;url&#34;: [
+            &#34;https://kotliner.cn/api/rss/latest&#34;,
+            &#34;https://blog.kotliner.cn/atom.xml&#34;
+          ]
+        },
+        {
+          &#34;tag&#34;: &#34;Python&#34;,
+          &#34;url&#34;: [
+            &#34;https://www.python.org/dev/peps/peps.rss/&#34;
+          ]
+        }
+      ]
+    }
+  ]
+}
+</code></pre><h3 id="网络通信">网络通信</h3>
+<p>在一开始，我想要不要使用一个网络通信库，以前自己做的APP都是自己写个方法请求数据，经过面试、实习的洗礼，明白了熟悉主流开源库的重要性，但是目前还没有想法，因为这里无论是下载RSS源列表，还是拿到一个RSS源后下载XML数据，传输的数据都很小，而且Kotlin的网络编程比Java简洁很多，所以暂时没有使用网络库，因为</p>
+<ul>
+<li>网络传输不频繁</li>
+<li>传输数据很小
+如果后面需要用也可以进行修改，为了尽快作出项目原型，这里直接用Kotlin原生API，两行代码即可。</li>
+</ul>
+<h3 id="json与xml解析">JSON与XML解析</h3>
+<p>几个月前，我面试阿里（因为已经确定去腾讯了当然也没认真准备面试）时就被问到过JSON与XML的区别，当时自己说XML比JSON笨重，恍惚间记得网上如此说过。这两天一接触才发现自己回答的如此错误，具体区别可参考：</p>
+<ul>
+<li><a href="https://www.zhihu.com/question/20738607">为什么XML这么笨重的数据结构仍在广泛应用？ - 知乎</a></li>
+<li>[XML和JSON的客观比较])(<a href="http://www.reqianduan.com/801.html">http://www.reqianduan.com/801.html</a>)</li>
+<li><a href="https://my.oschina.net/u/242764/blog/84258">json与xml的区别</a>
+非常考要深度与广度的一个问题，当时竟然毫无察觉。
+言归正传，如上面所说RSS源列表我定义了JSON表示，而具体到一个RSS的数据则是XML的，所以需要解析这两种格式。之所以不用一种（用XML表示RSS源列表，或者通过rss2json这样的网站把RSS转成JSON格式的）是为了跟深刻的体会两者的特点。
+其实一个项目做完，如果完全是自己兴趣使然的话，我觉得有两点必须做好</li>
+</ul>
+<ol>
+<li>每一个技术点都做足调研，做好技术选型，这样才能学到最多的东西</li>
+<li>最后的产品必须精益求精，每个环节都尽力优化</li>
+</ol>
+<p>JSON和XML的解析当然可以自己实现，但是考虑到开发效率和性能，开源库当然时更好的选择，JSON和XML的开源解析库有很多，大家可以自己搜索比较，选择合适自己的。最后我用gson进行JSON解析，用dom4j进行XML解析。关于开源库的使用也要做好三点：</p>
+<ol>
+<li>快速熟悉同一功能开源库的特点，选择合适自己业务的库</li>
+<li>能够通过阅读文档快速上手，如XML解析就需要对XPATH语法有所了解，而我之前并没有接触过</li>
+<li>最好花时间阅读源码，通过源码可以学习成功项目的长处、更好地服务自己的业务，如果不阅读源码，库开源的意义就大打折扣了</li>
+</ol>
+<h3 id="详情浏览">详情浏览</h3>
+<h3 id="代码重构-设计模式">代码重构-设计模式</h3>
+<h3 id="性能优化">性能优化</h3>
+<p>初始化顺序</p>
+<h3 id="缓存优化">缓存优化</h3>
+<h3 id="代码重构-android规范">代码重构-Android规范</h3>
+<h3 id="数据源release版">数据源(release版)</h3>
+<h2 id="工程拓展">工程拓展</h2>
+<h3 id="日志上报">日志上报</h3>
+<h3 id="单元测试">单元测试</h3>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/linuxmintxiu-gai-cheng-xu-tu-biao-fen-lei/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">LinuxMint修改程序图标分类</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/java-urllei-cai-keng-zhi-nan/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Java URL类踩坑指南</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

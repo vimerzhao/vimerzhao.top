@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>CMAKE on 赵裕的博客</title>
+    <link>/tags/cmake/</link>
+    <description>Recent content in CMAKE on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 07 Jun 2022 00:00:00 +0000</lastBuildDate><atom:link href="/tags/cmake/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AndroidStudio使用Cmake3.18.1的坑</title>
+      <link>/articles/use-cmake-3.18.1-in-android-studio/</link>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/use-cmake-3.18.1-in-android-studio/</guid>
+      <description>Android Studio的SDK Manager默认支持的Cmake版本只有3个： 但是，使用3.18版本的Cmake时，大概率遇到 Invalid revision 的错误： 这个错误的原因是Google官方提供的Cmake制品不规范，而低版本G</description>
+    </item>
+    
+  </channel>
+</rss>

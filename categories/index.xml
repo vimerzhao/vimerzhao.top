@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on 赵裕的博客</title>
+    <link>/categories/</link>
+    <description>Recent content in Categories on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Wed, 26 May 2021 09:54:17 +0800</lastBuildDate><atom:link href="/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Flutter</title>
+      <link>/categories/flutter/</link>
+      <pubDate>Wed, 26 May 2021 09:54:17 +0800</pubDate>
+      
+      <guid>/categories/flutter/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Android</title>
+      <link>/categories/android/</link>
+      <pubDate>Fri, 24 Apr 2020 23:51:25 +0800</pubDate>
+      
+      <guid>/categories/android/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

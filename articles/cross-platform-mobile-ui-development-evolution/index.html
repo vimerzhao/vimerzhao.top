@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Flutter:移动端跨平台技术演进之路 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Flutter:移动端跨平台技术演进之路" />
+<meta property="og:description" content="导读 本文约4688字，阅读可能需要15分钟。 最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著). 从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/cross-platform-mobile-ui-development-evolution/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2019-11-06T12:21:29+08:00" />
+<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="Flutter:移动端跨平台技术演进之路"/>
+<meta name="twitter:description" content="导读 本文约4688字，阅读可能需要15分钟。 最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著). 从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Flutter:移动端跨平台技术演进之路</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2019-11-06T12:21:29&#43;08:00">2019-11-06</time>
+	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 6400 字，阅读需 13 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<div class="sect1">
+<h2 id="_导读">导读</h2>
+<div class="sectionbody">
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-21_21-48-26.png" alt="Snipaste 2019 11 21 21 48 26"/>
+</div>
+</div>
+<div class="paragraph">
+<p>本文约4688字，阅读可能需要15分钟。</p>
+</div>
+<div class="paragraph">
+<p><strong>最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著).</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-08_20-13-54.png" alt="Snipaste 2019 11 08 20 13 54"/>
+</div>
+</div>
+<div class="paragraph">
+<p>从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上了一个定语：“移动端”。而由上图也可窥见一二：移动端跨平台技术几乎和移动端本身的历史一样长。跨平台技术之所以生命力如此强大，个人认为有以下几个原因：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p><strong>开发效率</strong> : 这也是跨平台技术出现的初衷，理想状态下，一次开发，多端运行，组件复用，提升效率。</p>
+<div class="ulist">
+<ul>
+<li>
+<p>对于管理者，跨平台可以降低用人成本，避免了同时养两个（Android/iOS）开发团队的现状</p>
+</li>
+<li>
+<p>对于开发者，跨平台可以降低学习成本，只需要了解一套框架，就可以实现双端开发，提升了自我价值</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p><strong>业务价值</strong> : 跨平台开发成本更低，适合产品的快速验证，待功能稳定后再进行性能体验上的优化</p>
+</li>
+<li>
+<p><strong>二级生态</strong> : 举一个例子，JVM在操作系统上建立了自己的二级生态，所有的Java开发者只需要面向JVM编程和优化，可以忽视操作系统的存在。在原生、底层的平台上做一层封装，以很小的性能损失为代价，为开发者带来巨大的效率提升，这在软件工业是屡见不鲜的。二级生态有重要的战略意义，掌握了二级生态，就掌握了话语权和影响力。所以Facebook和Google都在发力。</p>
+</li>
+<li>
+<p><strong>平台能力</strong> : 乘上第三点，跨平台还有一个好处就是拥有了自己的生态就可以开放自己的能力，制定游戏规则让其他开发者参与，典型有小程序（微信/QQ/支付宝）、快应用等</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>跨平台好处颇多，但挑战也不少，主要集中在以下四个方面：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>研发效率</p>
+<div class="ulist">
+<ul>
+<li>
+<p>工具支持程度：补全、提示、构建管理等</p>
+</li>
+<li>
+<p>Debug是否方便，错误日志是否详细</p>
+</li>
+<li>
+<p>文档完备、项目活跃</p>
+</li>
+<li>
+<p>隐藏平台差异，如React Native需要大量桥接工作</p>
+</li>
+<li>
+<p>开发语言生态，js生态庞大，开发者众，Dart则名不见经传</p>
+</li>
+<li>
+<p>等等</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>动态化</p>
+<div class="ulist">
+<ul>
+<li>
+<p>iOS禁止，但国内平台普遍需要</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>多端一致性</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Web方案无法还原体验</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>性能</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Web方案UI绘制效率低，网络流量消耗高</p>
+</li>
+<li>
+<p>游戏引擎耗电严重，不能应用在普通应用开发中</p>
+</li>
+<li>
+<p>SDK引入导致的安装包增量</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_历史行程">历史行程</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在过去的十多年间，主流的(不考虑一些小众、没有取得成功的方案)移动端跨平台技术经历了三次变革：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Hybrid，代表有：Ionic/Cordova</p>
+</li>
+<li>
+<p>OEM Wrapper，代表有：React Native/Weex</p>
+</li>
+<li>
+<p>自渲染，代表有：Flutter</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>从时间上看，这三种方案不是孤立的，既有对前人不足之处的改进（如UI绘制策略），也有对优秀思想的继承（如React的思想）。如果站在更高的高度上，我们会看到这些方案并不是在移动端独立演进的。在移动端普及之前，PC端已经积累了很多成熟的方案，对于移动端的探索起到了指导作用，仔细比较一下会发现每一种方案都能找到已有方案的影子，只不过结合了移动端的特点做了定制。 无论哪种跨平台方案，都要回答两个问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>UI如何绘制</p>
+</li>
+<li>
+<p>逻辑（包括用户交互的逻辑和与宿主系统通讯的逻辑）如何响应</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>对于这两个问题，Hybrid给出的答案是webview+js，OEM Wrapper给出的是VirtualDOM转Native组件+js，自渲染（Flutter）给出的答案是Skia+Dart。下文开始详述。</p>
+</div>
+<div class="sect2">
+<h3 id="_hybrid">Hybrid</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/texingfenxi.png" alt="texingfenxi"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>架构图.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/hybrid.PNG" alt="hybrid"/>
+</div>
+</div>
+<div class="paragraph">
+<p>Hybrid是客户端跨平台技术的第一个阶段，核心原理是 + 将原生的接口封装后暴露给 JavaScript，可以运行在系统自带的 WebView中或者其他内核中。这种方案在上文提到的评价体系里表现如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>开发效率</p>
+<div class="ulist">
+<ul>
+<li>
+<p>对前端开发者友好，背靠前端庞大的JavaScript生态</p>
+</li>
+<li>
+<p>涉及到Native调用的部分不可避免要熟悉Android/iOS</p>
+</li>
+<li>
+<p>能力受限于桥接层，扩展性弱</p>
+</li>
+<li>
+<p>在移动端开发，调试和错误日志并不是很友好</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>动态化</p>
+<div class="ulist">
+<ul>
+<li>
+<p>Web天生自带动态能力</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>多端一致性</p>
+<div class="ulist">
+<ul>
+<li>
+<p>浏览器内核的渲染独立于系统组件，无法保证原生体验</p>
+</li>
+<li>
+<p>涉及宿主的问题，需要开发者处理，做不到完全屏蔽</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>性能</p>
+<div class="ulist">
+<ul>
+<li>
+<p>受限于网络环境，比Native更加消耗流量</p>
+</li>
+<li>
+<p>受限于浏览器、系统平台特性</p>
+</li>
+<li>
+<p><strong>渲染性能</strong> ，Webview性能差</p>
+</li>
+<li>
+<p>特别指出:对于列表的支持差，移动端几乎全是列表（feed流）</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>评价：Hybrid是矛盾的结合体，HTML/CSS 过于复杂导致性能问题，但其实这正是 Web 最大的优势所在，因为 Web 最初的目的就是显示文档，如果你想显示丰富的图文排版，虽然 iOS/Android 都有富文本组件，但比起 CSS 差太远了，所以在很多 Native 应用中是不可避免要嵌 Web 的（比如很多运营活动的页面，存在周期短，开发时间短，样式丰富繁多，适合H5开发）。</p>
+</div>
+<div class="paragraph">
+<p>既然Web强大的的绘制能力限制了其在移动端的性能，那么能不能对此进行优化?
+这是一个很重要的问题，很多看起来无关的方案都是基于这种思想发源来的：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>React Native使用系统组件封装，可以认为是把原来的浏览器内核换成了一个简化版的内核：一个不能做物理渲染，只能转换成有限原生组件的内核。</p>
+</li>
+<li>
+<p>Flutter的 Engine 模块也可以认为是一个浏览器内核的角色！事实上Flutter的前身Sky就是打算基于一个精简的Chromium内核来实现跨平台。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_oem_wrapper">OEM Wrapper</h3>
+<div class="paragraph">
+<p><strong>架构图.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/oem.PNG" alt="oem"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>React Native架构图.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-16_16-15-28.png" alt="Snipaste 2019 11 16 16 15 28"/>
+</div>
+</div>
+<div class="paragraph">
+<p>大概到了2015年，经历了各种Hybrid方案割据混战长达数年后，Facebook推出了React Native，这种方案迎合了大前端的趋势，一经推出就备受关注。核心改变是抛弃了低效的浏览器内核渲染，转而使用自己的DSL生成中间格式，进而映射到对应的平台。 + 其实这个方案其实也算不上什么创举，在PC时代，https://www.eclipse.org/swt/[The Standard Widget Toolkit]采用的就是这种方案（当然要做到React Native这种水平，非Facebook级别的公司不能为也）：</p>
+</div>
+<div class="paragraph">
+<p><strong>From SWT官网.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-16_16-52-04.png" alt="Snipaste 2019 11 16 16 52 04"/>
+</div>
+</div>
+<div class="paragraph">
+<p>React Native         在评价体系表现如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>开发效率</p>
+<div class="ulist">
+<ul>
+<li>
+<p>在Web基础上引进了React等能力，符合前端大趋势</p>
+</li>
+<li>
+<p>版本变动频繁，需要开发者自己优化，工作量大</p>
+</li>
+<li>
+<p>与Native交互需要开发者自己支持，维护成本高</p>
+</li>
+<li>
+<p>文档不完善、调试信息、错误日志提示不够友好</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>动态化</p>
+<div class="ulist">
+<ul>
+<li>
+<p>可以支持</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>多端一致性</p>
+<div class="ulist">
+<ul>
+<li>
+<p>渲染成各自平台的组件，可以保证Native的体验</p>
+</li>
+<li>
+<p>由于渲染依赖原生控件，不同平台的控件需要单独维护，并且当系统更新时，社区控件可能会滞后</p>
+</li>
+<li>
+<p>其控件系统也会受到原生UI系统限制，例如，在Android中，手势冲突消歧规则是固定的，这在使用不同人写的控件嵌套时，手势冲突问题将会变得非常棘手</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>性能</p>
+<div class="ulist">
+<ul>
+<li>
+<p>稍差于Native，但远好于Hybrid</p>
+</li>
+<li>
+<p>渲染时需要JavaScript和原生之间通信，在有些场景如拖动可能会因为通信频繁导致卡顿</p>
+</li>
+<li>
+<p>JavaScript为脚本语言，执行时需要JIT，执行效率和AOT代码仍有差距。</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>评价：使用类前端的语法，但又不在浏览器内核直接绘制，而是转成Native控件，交由系统绘制。这样既保留了前端这套开发体系，又最大限度保证了渲染的性能。咋一看，React Native解决了 Hybrid 技术的痛点：渲染性能，又充分发挥了Hybrid 的优势：前端技术栈。但就在2018年，Airbnb和Udacity相继宣布弃用React Native,Facebook也宣布要大规模重构React Native,导致其前景堪忧，比起React Native的美好愿景，其在开发过程中需要踩的坑更多，长期的维护成本也很高，反而降低了开发效率，此外，库的增量也不容忽视。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_自渲染">自渲染</h3>
+<div class="paragraph">
+<p><strong>架构图.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/flutter.PNG" alt="flutter"/>
+</div>
+</div>
+<div class="paragraph">
+<p>Flutter 在评价体系表现如下：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>开发效率</p>
+<div class="ulist">
+<ul>
+<li>
+<p>开发工具完备，提供了VS Code（最流行的编辑器），Intellij IDEA 插件</p>
+</li>
+<li>
+<p>Google背书，文档完备，社区较完备</p>
+</li>
+<li>
+<p>Dart语言本身有上手成本，没有前端的生态，但Dart语言本身是及其优秀的</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>动态化</p>
+<div class="ulist">
+<ul>
+<li>
+<p>动态性不足，为了保证UI绘制性能，自绘UI系统一般都会采用AOT模式编译其发布包</p>
+</li>
+<li>
+<p>可能涉及安全政策，Flutter Release目前不支持</p>
+</li>
+<li>
+<p>国内开发者正在做积极探索</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>多端一致性</p>
+<div class="ulist">
+<ul>
+<li>
+<p>自绘制UI，提供了Material Design和Cupertino两种风格的Widget</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>性能</p>
+<div class="ulist">
+<ul>
+<li>
+<p>性能和Native绘制一样</p>
+</li>
+</ul>
+</div>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>评价：Flutter站在前人的肩膀上，取长（React的状态管理、Web的自绘制UI、React Native的HotReload等）补短（与Native通信的Channel机制、自渲染、完备的开发工具链），并且有Google作为作为支撑，在跨平台领域后发制人，是目前最被看好的方案。</p>
+</div>
+<div class="paragraph">
+<p>关于Dart，在开发者踩了十几年坑之后，Google和Microsoft两大巨头似乎看清了需要一种新的、更现代、更适合UI开发的编程语言来重新建立秩序。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-16_20-22-00.png" alt="Snipaste 2019 11 16 20 22 00"/>
+</div>
+</div>
+<div class="paragraph">
+<p>谷歌要推Dart，微软要推Rust，这两门语言的年龄比很多开发者的从业年龄都要小，大概是要以牺牲一代开发者为代价换取一个没有历史包袱（做梦）的新生态吧（手动狗头）。</p>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_flutter初探">Flutter初探</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_flutter技术架构">Flutter技术架构</h3>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/FlutterSystemArchitecture01.png" alt="FlutterSystemArchitecture01"/>
+</div>
+</div>
+<div class="paragraph">
+<p>在Framework层，有以下内容</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Foundation</code> 底层库</p>
+</li>
+<li>
+<p>负责UI绘制和交互处理的 <code>Animation</code> 、 <code>Paint</code> 等模块</p>
+</li>
+<li>
+<p>基于上面的接口实现的基础组件 <code>Widgets</code></p>
+</li>
+<li>
+<p>基于组件实现的 <code>Material</code> 风格组件（Google推荐）和 <code>Cupertino</code> 风格组件（iOS风格）</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>在Engine层，有以下内容</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>Skia</code> 图形处理库</p>
+</li>
+<li>
+<p><code>Dart</code> 运行时</p>
+</li>
+<li>
+<p><code>Text</code> 文字排版引擎</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>这张图和Android自身的架构很像</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://developer.android.com/guide/platform/images/android-stack_2x.png" alt="android stack 2x"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这种设计符合Unix哲学的 <strong>正交性</strong> 原则（计算机网络中的OSI模型也是），可以很好地屏蔽每一个层的细节，接下来我们基于这个架构图讨论几个问题</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Flutter如何绘制UI</p>
+</li>
+<li>
+<p>为什么选择Dart</p>
+</li>
+<li>
+<p>如何和Native交互</p>
+</li>
+<li>
+<p>HotReload与动态化</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_gui_framework">GUI Framework</h3>
+<div class="paragraph">
+<p>在开始下文之前，需要介绍一下现代GUI框架的模型，无论是Web、PC、移动端、游戏开发，都是基于这种框架工作</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-17_13-51-11.png" alt="Snipaste 2019 11 17 13 51 11"/>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Widgets（控件，也叫 View Tree），它是用于描述用户界面原始数据的树状结构。通常这一层根本不关心绘制，它只关心用户对数据的操作。</p>
+</li>
+<li>
+<p>Render Tree，它是一种更为抽象的树状数据结构，一般来说它是和上一步的 View Tree结构相同，并且它不关心原始数据，只关心控件的布局和大小。通过这一步计算出控件布局后才能真正地确定控件的外观。</p>
+</li>
+<li>
+<p>Layer Tree 跟 Render Tree是相对应的，这一步会主动触发 Render Tree中每个元素的外观渲染，在已知控件大小和位置的情况下决定每个控件的真正外观。但 Layer Tree的树状结构不是和 Render Tree一一对应的，Layer Tree有可能因为 Layer合并优化导致一层的 Render Tree叶子节点最终只对应一个 Layer。</p>
+</li>
+<li>
+<p>在已经决定好控件的大小位置以及长相后，剩下的工作就需要把这些东西组合起来显示到屏幕上。这一步原理比较简单，就是将前一步的 Layer合并成一张 Bitmap，这是一种最简单的图像存储形式。将 Bitmap光栅化后便可以提交给 GPU渲染。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>比如Android开发都很熟悉的 <code>measure layout draw</code> 就和前三层吻合，有了原始数据还不够，屏幕只关心每个像素点的值，所以最后要进行一次光栅化，历史已经证明这种模型是目前来说相对高效的GUI方案。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_flutter如何绘制ui">Flutter如何绘制UI</h3>
+<div class="paragraph">
+<p>有了以上背景，我们来看Flutter的UI绘制过程。</p>
+</div>
+<div class="paragraph">
+<p><strong>Flutter绘制流程1.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/FlutterSystemArchitecture02.png" alt="FlutterSystemArchitecture02"/>
+</div>
+</div>
+<div class="paragraph">
+<p><strong>Flutter绘制流程2.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/FlutterSystemArchitecture03.png" alt="FlutterSystemArchitecture03"/>
+</div>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>GPU发出 Vsync 信号，Dart捕获后就开始一帧的绘制。</p>
+</li>
+<li>
+<p>Throttle: 用来做节流，防止短时间内重复调用，提高性能。</p>
+</li>
+<li>
+<p>Compositor: 这一步进行 Layer合成，决定某一块具体显示哪一个 Layer的数据，可以额外的计算开支。</p>
+</li>
+<li>
+<p>GL or Vulkan: 这一阶段过后得到的将是一份矢量图数据，在进行光栅化后提交给 GPU执行渲染即可。</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_为什么选择dart">为什么选择Dart</h3>
+<div class="paragraph">
+<p>官方解释：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Developer productivity</p>
+<div class="ulist">
+<ul>
+<li>
+<p>JIT + AOT</p>
+</li>
+<li>
+<p>Dart开发团队对于Flutter支持粒度很大</p>
+</li>
+</ul>
+</div>
+</li>
+<li>
+<p>Object-orientation</p>
+</li>
+<li>
+<p>Predictable, high performance</p>
+</li>
+<li>
+<p>Fast allocation.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>其他声音：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Dart 的性能更好，对高帧率下的视图数据计算很有帮助。</p>
+</li>
+<li>
+<p>多生代无锁垃圾回收器，专门为UI框架中常见的大量Widgets对象创建和销毁优化</p>
+</li>
+<li>
+<p>Native Binding，在 Android上，v8的 Native Binding可以很好地实现，但是 iOS上的 JavaScriptCore不可以，所以如果使用 JavaScript，Flutter 基础框架的代码模式就很难统一了。而 Dart的 Native Binding可以很好地通过 Dart Lib实现。</p>
+</li>
+<li>
+<p>Fuchsia OS（谷歌的野心：5G + IOT）　</p>
+</li>
+<li>
+<p>Dart是类型安全的语言，拥有完善的包管理和诸多特性。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>关于IOT，国内已经有开发者尝试在树莓派上使用Flutter了。</p>
+</div>
+<div class="paragraph">
+<p>总的来说，想要挑战JavaScript的地位还是很难的，JavaScript虽然有很多缺陷，但庞大的生态已经为自己建立了稳固的堡垒。</p>
+</div>
+<div class="paragraph">
+<p>有一个关于Lisp的笑话，我觉得也可以改个Dart版本的：某小偷偷了美国国防部机密软件的源码的最后几页打算拿回去好好研究，但等他真的打开时发现是这样</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-16_20-32-51.png" alt="Snipaste 2019 11 16 20 32 51"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_如何和native交互">如何和Native交互</h3>
+<div class="paragraph">
+<p>通过 Platform Channel机制进行通信，常用的 Platform Channel主要有三种</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>BasicMessageChannel：传递字符串和半结构化数据</p>
+</li>
+<li>
+<p>MethodChannel：方法调用</p>
+</li>
+<li>
+<p>EventChannel：数据流的通信</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>每种Channel具有三个重要的成员变量：</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>name: String类型，代表Channel的名字，也是其唯一标识符。</p>
+</li>
+<li>
+<p>messager：BinaryMessenger类型，代表消息信使，是消息的发送与接收的工具。</p>
+</li>
+<li>
+<p>codec: MessageCodec类型或MethodCodec类型，代表消息的编解码器。</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p><strong>对常见的Channel进一步封装成Plugin.</strong></p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="https://github.com/vimerzhao/images/raw/master/2019-11/Snipaste_2019-11-17_18-23-39.png" alt="Snipaste 2019 11 17 18 23 39"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_hotreload与动态化">HotReload与动态化</h3>
+<div class="paragraph">
+<p>Flutter的HotReload确实让人耳目一新，但这东西可能只是对于客户端开发比较稀奇，从Instant Run到freeline，开发者一直希望能提高项目构建速度，更快地看到代码改动的结果，从原理上来说，只要这门语言及其所在平台支持解释执行（or JIT）和增量编译就可以做到很好的HotReload效果，flutter的这一个特性算是填上了之前Android开发的一个坑，创举肯定是算不上的。 至于动态化，可以算是国内开发者的刚需了，Flutter之前移除了对动态化的支持，可能是担心iOS的政策原因，目前不少开发者也对Flutter展开了研究，后面应该有一批魔改方案。 + Flutter的HotReload过程：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>首先会扫描代码，找到上次编译之后有变化的Dart代码；</p>
+</li>
+<li>
+<p>将这些变化的Dart代码转化为增量的Dart Kernel文件；</p>
+</li>
+<li>
+<p>将增量的Dart Kernel文件发送到正在移动设备上运行的Dart VM；</p>
+</li>
+<li>
+<p>触发widgets树的重新建立、重新布局、重新绘制</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>不能使用的场景（所以对这个功能不能过于乐观，业务复杂之后能用的场景就不会太多）：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>代码出现编译错误的不能使用 Hot Reload</p>
+</li>
+<li>
+<p>Widget的状态更改不能使用 Hot Reload</p>
+</li>
+<li>
+<p>在 Flutter 中，全局变量和静态字段被视为状态，因此在 Hot Reload 期间不会重新初始化。</p>
+</li>
+<li>
+<p>修改通用类型声明时</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_评价">评价</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>从Hybrid到Flutter，突破性的创新是不会有的，每一个特性、功能都是扎扎实实演进过来的，这也是标题的本意，Flutter能否成为大前端的答案尚未可知，谷歌布的局又有多大也不清楚，核心还是要把握住发展脉络，对新事物保持警惕和清醒。浪潮退去才知道谁在裸泳，有一天Flutter的替代者来了，才知道谁是API boy（哭泣脸）。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_参考">参考</h2>
+<div class="sectionbody">
+<div class="ulist">
+<ul>
+<li>
+<p><a href="http://www.ionic.wang/article-index-id-58.html">Web App Hybrid App和 Native App的区别</a></p>
+</li>
+<li>
+<p><a href="https://zhuanlan.zhihu.com/p/36367760">跨端开发面面谈之基于WebView的Hybrid开发模式 - 知乎</a></p>
+</li>
+<li>
+<p><a href="https://www.eclipse.org/swt/">SWT: The Standard Widget Toolkit | The Eclipse Foundation</a></p>
+</li>
+<li>
+<p><a href="http://blog.ilibrary.me/2016/12/25/react-native-internal">深入理解react-native | 垂钓江湖</a></p>
+</li>
+<li>
+<p><a href="https://medium.com/airbnb-engineering/react-native-at-airbnb-f95aa460be1c">React Native at Airbnb - Airbnb Engineering &amp; Data Science - Medium</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/3HrT7Q6nXLJB6EV6vnYPwA">Airbnb的React Native之路（下）</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s?%5F%5Fbiz=MzUxOTE5MTY4MQ==&amp;mid=2247484120&amp;idx=1&amp;sn=45aa69a9c633a004d6ac27fa90f7f550&amp;chksm=f9fc2f36ce8ba62029b28d51cb9bb30c40ad00ced1962affcef9291862752d8a2a448c6bdf0e&amp;scene=21#wechat_redirect">Airbnb 的 React Native 之路（上）</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s?%5F%5Fbiz=MzUxMzcxMzE5Ng==&amp;mid=2247489072&amp;idx=1&amp;sn=9a4c57da4c3c3bf8ca0e83df988b79dc&amp;chksm=f951a373ce262a6568a1462837ab833bab5a1f3880c4bf8be14f70865a2c0099d7e5bcb12f3f#rd">FB正在大规模重构React Native，预计今年发布</a></p>
+</li>
+<li>
+<p><a href="https://www.infoq.cn/article/2018%2F07%2FUdacity-Abandon-React-Native">Udacity也弃用React Native了 ！-InfoQ</a></p>
+</li>
+<li>
+<p><a href="https://engineering.udacity.com/react-native-a-retrospective-from-the-mobile-engineering-team-at-udacity-89975d6a8102">React Native: A retrospective from the mobile-engineering team at Udacity</a></p>
+</li>
+<li>
+<p><a href="https://learnku.com/articles/29481">Flutter 基础（一）移动开发的跨平台技术演进 | Flutter 技术社区</a></p>
+</li>
+<li>
+<p><a href="https://fex.baidu.com/blog/2015/05/cross-mobile/">聊聊移动端跨平台开发的各种技术 - FEX</a></p>
+</li>
+<li>
+<p><a href="https://mp.weixin.qq.com/s/UZQU-PWM5JEb3dYtZKT6Cw">跨平台技术演进及Flutter未来</a></p>
+</li>
+<li>
+<p><a href="http://blog.cnbang.net/tech/3605/">闲聊 Flutter « bang’s blog</a></p>
+</li>
+<li>
+<p><a href="https://www.21cto.com/article/2130">Flutter在2019年会有怎样的表现 - 21CTO - 从程序员到技术官</a></p>
+</li>
+<li>
+<p><a href="https://docs.google.com/presentation/d/1cw7A4HbvM_Abv320rVgPVGiUP2msVs7tfGbkgdrTy0I/edit#slide=id.gbb3c3233b_0_213">Flutter System Architecture - Google 幻灯片</a></p>
+</li>
+<li>
+<p><a href="https://medium.com/saugo360/flutters-rendering-engine-a-tutorial-part-1-e9eff68b825d">Flutter’s Rendering Engine: A Tutorial — Part 1 - SAUGO 360 - Medium</a></p>
+</li>
+<li>
+<p><a href="https://medium.com/flutter/why-flutter-doesnt-use-oem-widgets-94746e812510">Why Flutter doesn’t use OEM widgets - Flutter - Medium</a></p>
+</li>
+<li>
+<p><a href="https://tech.meituan.com/2018/08/09/waimai-flutter-practice.html">Flutter原理与实践 - 美团技术团队</a></p>
+</li>
+<li>
+<p><a href="https://stephenwzl.github.io/2018/05/14/flutter-principle/">Flutter原理简解 · stephenwzl</a></p>
+</li>
+<li>
+<p><a href="https://stephenwzl.github.io/2018/11/06/gui-framework-inside/">GUI Framework Inside · stephenwzl</a></p>
+</li>
+<li>
+<p><a href="https://gmtc.infoq.cn/2019/beijing/schedule">GMTC全球大前端技术大会（北京站）2019</a></p>
+</li>
+<li>
+<p><a href="https://flutter.dev/docs/resources/faq">FAQ - Flutter</a></p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+		</div>
+    <br>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+		<footer class="post__footer">
+			
+<div class="post__tags tags clearfix">
+	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
+	<ul class="tags__list">
+		<li class="tags__item">
+			<a class="tags__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" rel="tag">技术精选</a>
+		</li>
+	</ul>
+</div>
+		</footer>
+	</article>
+</main>
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		👈微信公众号：赵裕，欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/financing-introduction/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">小白的理财入门课</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/introduction-of-youglish/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">YouGlish介绍</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/talks/flutter-design-impl-evolution/">Flutter设计、实现与演进</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/impression-on-self-introduction/">关于自我介绍的一点感想</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/upgrade-xiaomi6-rom-manually/">小米6刷机记录</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-of-goolge-io-06-12/">GoogleIO活动后记</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-cmake-3.18.1-in-android-studio/">AndroidStudio使用Cmake3.18.1的坑</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

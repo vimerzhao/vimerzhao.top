@@ -1,0 +1,1605 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>赵裕的博客</title>
+    <link>/</link>
+    <description>Recent content on 赵裕的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 26 Mar 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>文章</title>
+      <link>/article-archive/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/article-archive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>演讲</title>
+      <link>/talk-archive/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/talk-archive/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>课程</title>
+      <link>/courses/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/courses/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>作品</title>
+      <link>/works/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/works/</guid>
+      <description>一、著书 1.1 《Flutter内核源码剖析》 See: 《Flutter内核源码剖析（异步图书出品）》(赵裕)【摘要 书评 试读】- 京东图书
+二、软件 </description>
+    </item>
+    
+    <item>
+      <title>资源</title>
+      <link>/resource/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/resource/</guid>
+      <description>博客 Reid Hoffman - Entrepreneur. Investor. Strategist. Fabrice Bellard&amp;rsquo;s Home Page </description>
+    </item>
+    
+    <item>
+      <title>关于</title>
+      <link>/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/about/</guid>
+      <description>重要时刻 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-04-01</description>
+    </item>
+    
+    <item>
+      <title>Flutter设计、实现与演进</title>
+      <link>/talks/flutter-design-impl-evolution/</link>
+      <pubDate>Sun, 26 Mar 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/talks/flutter-design-impl-evolution/</guid>
+      <description> </description>
+    </item>
+    
+    <item>
+      <title>关于自我介绍的一点感想</title>
+      <link>/articles/impression-on-self-introduction/</link>
+      <pubDate>Sat, 20 Aug 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/impression-on-self-introduction/</guid>
+      <description>最近半年，因为参加一些活动，经常需要写个自我介绍，不由生发出一些感想。 其时自我介绍也是有分类的，比如刚上大学，又或者加入新的团队，自我介绍更多是让别人 了解 自己。 而在校期间的社团选拔、工作后的各种面试，</description>
+    </item>
+    
+    <item>
+      <title>小米6刷机记录</title>
+      <link>/articles/upgrade-xiaomi6-rom-manually/</link>
+      <pubDate>Fri, 17 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/upgrade-xiaomi6-rom-manually/</guid>
+      <description>手头的开发机是小米6，升级到MIUI11（Android9）之后，官方貌似也停止了对其的升级。 另一方面，也想为将来真机调试积累点经验，于是研究了下如何刷机。 刷机这种行为，最佳选择自然是Google Pi</description>
+    </item>
+    
+    <item>
+      <title>GoogleIO活动后记</title>
+      <link>/articles/record-of-goolge-io-06-12/</link>
+      <pubDate>Sun, 12 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/record-of-goolge-io-06-12/</guid>
+      <description>一、 前几周，收到了Google I/O Extended的分享邀请，也没多想就答应了，一是自己之前没有此类经历，想着去体验下肯定是不亏的； 二是自认为在Flutter（乃至跨平台这个领域），我还是相对有不少经验</description>
+    </item>
+    
+    <item>
+      <title>AndroidStudio使用Cmake3.18.1的坑</title>
+      <link>/articles/use-cmake-3.18.1-in-android-studio/</link>
+      <pubDate>Tue, 07 Jun 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/use-cmake-3.18.1-in-android-studio/</guid>
+      <description>Android Studio的SDK Manager默认支持的Cmake版本只有3个： 但是，使用3.18版本的Cmake时，大概率遇到 Invalid revision 的错误： 这个错误的原因是Google官方提供的Cmake制品不规范，而低版本G</description>
+    </item>
+    
+    <item>
+      <title>无限风光在险峰</title>
+      <link>/articles/infinite-scenery-in-the-dangerous-peak/</link>
+      <pubDate>Sun, 08 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/infinite-scenery-in-the-dangerous-peak/</guid>
+      <description>夫夷以近，则游者众；险以远，则至者少。 而世之奇伟、瑰怪，非常之观，常在于险远， 而人之所罕至焉，故非有志者不能至也 王安石《游褒禅山记》 最近读了一本书：《筚路维艰》，豆瓣9.6分。读完很受震憾，也开始决定</description>
+    </item>
+    
+    <item>
+      <title>如何高效阅读书籍</title>
+      <link>/articles/how-to-read/</link>
+      <pubDate>Wed, 04 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/how-to-read/</guid>
+      <description>一、导语 为什么要读书?一般来说动机可以分为以下3类： 纯粹获取信息 在获取信息的基础上内化为自己的能力，比如：修正自己的思想、应用在实践中 陶冶情操、消遣，多适用于文学类书籍 二、如何读书 在探讨这个问题之前，</description>
+    </item>
+    
+    <item>
+      <title>在疫情与裁员的阴影下继续生长</title>
+      <link>/articles/under-epidemic-and-layoffs/</link>
+      <pubDate>Sat, 16 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/under-epidemic-and-layoffs/</guid>
+      <description>遇到什么困难也不要怕，微笑着面对它，消除恐惧的最好办法就是面对恐惧，坚持就是胜利，奥利给！ 最近由于各种原因（工作、练习五笔、懒）没有持续写作，想想这样还是不好，以后还是每周拿出一些时间进行自省。 对于一</description>
+    </item>
+    
+    <item>
+      <title>C&#43;&#43;函数调用栈回溯初探</title>
+      <link>/articles/cpp-function-callstack-backtrace-1/</link>
+      <pubDate>Sun, 10 Apr 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cpp-function-callstack-backtrace-1/</guid>
+      <description>背景 之前在解决一个Flutter Engine的C++ Crash问题时，就曾受困于一个问题：如何回溯C++的 函数调用栈？最近频繁使用C++的过程中，这个诉求日益突出。 遂下定决心彻底解决之。 过程 在stac</description>
+    </item>
+    
+    <item>
+      <title>从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</title>
+      <link>/articles/from-reactnative-to-flutter/</link>
+      <pubDate>Sun, 16 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/from-reactnative-to-flutter/</guid>
+      <description>零、黎明的前夜 2007年，苹果公司推出了第一代 iPhone，其搭载的 iPhone OS1.0 即是日后 iOS 系统 的前身。次年，谷歌也推出了其酝酿已久的智能手机操作系统 Android 1.0。也就是在这一 年的 8 月，PhoneGap 诞生了。Ph</description>
+    </item>
+    
+    <item>
+      <title>一本书的诞生</title>
+      <link>/articles/the-born-of-a-book/</link>
+      <pubDate>Sat, 15 Jan 2022 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/the-born-of-a-book/</guid>
+      <description>零、背景 今天(2022-01-12)对我来说应该算是一个特别的日子，自己花了小半年撰写的《Flutter内核源码剖析》终于出版了。 思来想去，还是应该写点什么。毕竟，这件事情倾注了自己不少心血，一条简简</description>
+    </item>
+    
+    <item>
+      <title>关于笔记软件的比较研究</title>
+      <link>/articles/research-about-note-software/</link>
+      <pubDate>Sun, 19 Dec 2021 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/research-about-note-software/</guid>
+      <description>一、引言 工作以来，如何高效地整理自己的信息这个问题一直困扰着我。经常会遇到这种情况， 自己需要记录一个信息，但依稀记得自己记录过类似的信息，却又半天找不到。 举个例子，我发现一个学习C++不错的网站，于是</description>
+    </item>
+    
+    <item>
+      <title>定制Mac的输入法切换按键为左Shift</title>
+      <link>/articles/change-input-method-with-left-shift/</link>
+      <pubDate>Mon, 08 Nov 2021 12:56:59 +0800</pubDate>
+      
+      <guid>/articles/change-input-method-with-left-shift/</guid>
+      <description>目前，自己用的是搜狗输入法和Spacemacs，发现高概率偶现一个问题： 每次都要重启Emacs才能解决，十分蛋疼！！！ 于是，想着是不是只有搜狗+Emacs才会有这个问题，因为： 其他场景（包括Vim）都</description>
+    </item>
+    
+    <item>
+      <title>Android Sutdio开发C&#43;&#43;项目踩坑记录</title>
+      <link>/articles/developing-cpp-with-android-sutdio/</link>
+      <pubDate>Mon, 01 Nov 2021 18:32:39 +0800</pubDate>
+      
+      <guid>/articles/developing-cpp-with-android-sutdio/</guid>
+      <description>背景 由于工作性质关系，后面主要是基于C++开发，日常构建、运行、调试的宿主是Android设备。 由于example工程的设计，可以方便地通过Android Studio构建这个工程并运行在Android</description>
+    </item>
+    
+    <item>
+      <title>如何提高中文输入的效率</title>
+      <link>/articles/improve-efficiency-by-shuangpin/</link>
+      <pubDate>Mon, 11 Oct 2021 16:57:09 +0800</pubDate>
+      
+      <guid>/articles/improve-efficiency-by-shuangpin/</guid>
+      <description>最近写文章和文档的频率比较高，发现常规的全拼输入法的打字速度完全跟不上大脑想表达的速度。于是，想着要不要学一学五笔，调研尝试一番之后发现不太理想，原因有二： 五笔的学习成本比较高 五笔最具优势的场景是看着</description>
+    </item>
+    
+    <item>
+      <title>日常开发尽量使用英文</title>
+      <link>/articles/try-to-use-english-everywhere/</link>
+      <pubDate>Mon, 11 Oct 2021 10:49:57 +0800</pubDate>
+      
+      <guid>/articles/try-to-use-english-everywhere/</guid>
+      <description>以后在日常开发中尽量使用英文，主要包括： 使用英文命名目录 使用英文写代码注释 为什么要这么做？ 主要是为了提高操作和编辑效率。举例： 在切换目录的时候，有的工具能自动在多个目录间跳转（比如zsh下的cd命令）</description>
+    </item>
+    
+    <item>
+      <title>现阶段（2021年10月）对于Vim和Emacs的思考</title>
+      <link>/articles/thinking-about-vim-and-emacs/</link>
+      <pubDate>Sun, 10 Oct 2021 22:24:00 +0800</pubDate>
+      
+      <guid>/articles/thinking-about-vim-and-emacs/</guid>
+      <description>最近由于在工作调整，加上国庆节，时间稍微宽裕一点，于是重新启动了对Emacs的学习，这次稍微找到了点感觉：包括使用的感觉和对Emacs的理解。 为什么一直对Emacs念念不忘？作为一个使用了多年Vim的</description>
+    </item>
+    
+    <item>
+      <title>关于过去一年的思考（2020/9～2021/9）</title>
+      <link>/articles/thinking-about-past-one-year/</link>
+      <pubDate>Tue, 05 Oct 2021 17:39:41 +0800</pubDate>
+      
+      <guid>/articles/thinking-about-past-one-year/</guid>
+      <description>去年这个时候，刚刚活水（即公司内部的岗位调动）到新的部门，当时写了一篇《自我奋斗与历史进程》，里面提到了接下来一年的目标： 交付更有价值的工作成果 成体系地输出自己的影响力 对周遭的变化有更强的控制和适应能</description>
+    </item>
+    
+    <item>
+      <title>抽丝剥茧：Flutter Engine隐藏的一个惊天Bug</title>
+      <link>/articles/fix-a-serious-flutter-engine-multithread-bug/</link>
+      <pubDate>Sun, 08 Aug 2021 15:53:53 +0800</pubDate>
+      
+      <guid>/articles/fix-a-serious-flutter-engine-multithread-bug/</guid>
+      <description>零、背景介绍 Flutter技术在微视内经过大半年的探索，已经从存量业务的改造尝试阶段，开始进入增量业务的承接阶段。横版视频的为你推荐就是这样一个场景，原Native体验如下： 使用Flutter完成新业</description>
+    </item>
+    
+    <item>
+      <title>大道至简：Flutter嵌套滑动冲突解决之路</title>
+      <link>/articles/flutter-nested-scroll-conflict/</link>
+      <pubDate>Thu, 27 May 2021 19:22:48 +0800</pubDate>
+      
+      <guid>/articles/flutter-nested-scroll-conflict/</guid>
+      <description>背景与挑战 为了充分验证Flutter在UI开发上的完备性（能Cover住足够复杂的场景），我们选择了微视端内最复杂的页面之一的个人页进行改造，其UI形态如下。 用户1: 用户2: 观察可以发现，对于UI层面</description>
+    </item>
+    
+    <item>
+      <title>Flutter PlatformView大小异常导致闪退锁屏</title>
+      <link>/articles/record-a-flutter-platform-view-bug/</link>
+      <pubDate>Wed, 26 May 2021 09:54:17 +0800</pubDate>
+      
+      <guid>/articles/record-a-flutter-platform-view-bug/</guid>
+      <description>最近在Flutter中嵌入WebView的时候，遇到一个奇怪的Bug，不仅闪退，还会导致应用锁屏，现状如下（在当前页面卡顿很久，然后黑屏、锁屏…​…​）： 抓到的错误日志如下： + 分析之后发现是使用Vir</description>
+    </item>
+    
+    <item>
+      <title>Hugo&#43;Asciidoc配置记录</title>
+      <link>/articles/configure-hugo-asciidoc-blog/</link>
+      <pubDate>Sat, 08 May 2021 19:41:53 +0800</pubDate>
+      
+      <guid>/articles/configure-hugo-asciidoc-blog/</guid>
+      <description>【2021-05-08】今天参考几篇文章，完成了Hugo博客的配置，特此记录一下： 搭建教程 Blogging with Asciidoctor and Hugo | Gabriel Arazas Better Hugo/AsciiDoc HTML - ratfactor diguage/www.diguage.com: &amp;#34;地瓜哥&amp;#34;博客网 使用 Hugo 搭建博客 - &amp;#34;地瓜哥&amp;#34;博客网 Mainroad/README.md</description>
+    </item>
+    
+    <item>
+      <title>拿来主义与实证精神</title>
+      <link>/articles/all-takenism-and-positivism/</link>
+      <pubDate>Sun, 20 Dec 2020 19:49:29 +0800</pubDate>
+      
+      <guid>/articles/all-takenism-and-positivism/</guid>
+      <description>由于工作原因，最近经常需要调研业界方案，因为很多很多东西没有必要重复造轮子，如果别人已经把问题解决了，那么直接使用是没啥问题的，这大概就是所谓的拿来主义。 其实纵观历史，尤其是近代，拿来主义其实不少，马</description>
+    </item>
+    
+    <item>
+      <title>做工具要有&#34;码德&#34;</title>
+      <link>/articles/moral-of-developing-tools/</link>
+      <pubDate>Thu, 10 Dec 2020 19:47:27 +0800</pubDate>
+      
+      <guid>/articles/moral-of-developing-tools/</guid>
+      <description>最近在搞别的事情，没时间写公众号了，不过遇到值得写的，还是要草草记录一下的。 这周经历了一件比较奇葩的事情，大致时间线如下： 周四下午的时候，发现自己一个脚本使用的maven发布功能有一个奇怪的问题：正常</description>
+    </item>
+    
+    <item>
+      <title>AndroidStudio-Profile工具导致的一个奇怪问题</title>
+      <link>/articles/android-profile-tool-bug-record/</link>
+      <pubDate>Thu, 10 Dec 2020 12:36:32 +0800</pubDate>
+      
+      <guid>/articles/android-profile-tool-bug-record/</guid>
+      <description>在使用AndroidStudio里面的Profile查看内存占用时，发现一个奇怪的现象： 应用启动后Native内存猛增，即使一个空的App也是如此，按理说不应该。于是用adb工具导出了一次内存： adb shell dumpsys</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(四):flutter run流程解析</title>
+      <link>/articles/flutter-source-code-analyze-4/</link>
+      <pubDate>Sun, 22 Nov 2020 12:23:18 +0800</pubDate>
+      
+      <guid>/articles/flutter-source-code-analyze-4/</guid>
+      <description>关于flutter run flutter run负责执行构建一个flutter工程，输出产物到对应设备，并负责提供基本的交互控制，使用效果如下： $ flutter run Launching lib/main.dart on COL AL10 in debug mode... Running Gradle task &amp;#39;assembleDebug&amp;#39;... Running Gradle task &amp;#39;assembleDebug&amp;#39;... Done 23.8s ✓ Built build/app/outputs/flutter-apk/app-debug.apk. Installing build/app/outputs/flutter-apk/app.apk... 13.7s Waiting for COL AL10 to report its views... 7ms Syncing files</description>
+    </item>
+    
+    <item>
+      <title>谈小步快跑</title>
+      <link>/articles/thinking-on-sprint/</link>
+      <pubDate>Wed, 18 Nov 2020 19:45:41 +0800</pubDate>
+      
+      <guid>/articles/thinking-on-sprint/</guid>
+      <description>突然觉得需要好好理解一下小步快跑的含义，因为最近的工作就是一个需要小步快跑的工作。 经过一段时间的摸索之后，我觉得当前工作可以分为四个阶段： 接入，踩一遍可能遇到的坑，积累开发经验，证明性能和跨平台的可行</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(三):Flutter-Android-Embedder启动流程</title>
+      <link>/articles/flutter-source-code-analyze-3/</link>
+      <pubDate>Sun, 15 Nov 2020 12:23:15 +0800</pubDate>
+      
+      <guid>/articles/flutter-source-code-analyze-3/</guid>
+      <description>概述 Flutter的启动包括Embedder、Engine、Framework三部分，本文仅描述Android平台的Embdder模块的启动流程。Flutter通常通过启动一个FlutterActiv</description>
+    </item>
+    
+    <item>
+      <title>gitbook安装中的一些问题</title>
+      <link>/articles/gitbook-install-record/</link>
+      <pubDate>Fri, 13 Nov 2020 15:50:24 +0800</pubDate>
+      
+      <guid>/articles/gitbook-install-record/</guid>
+      <description>在新的iMac上安装gitbook后，一直无法使用，提示错误如下： Installing GitBook 3.2.3 if (cb) cb.apply(this, arguments) TypeError: cb.apply is not a function at /usr/local/lib/node_modules/gitbook-cli/node_modules/npmi/node_modules/npm/node_modules/graceful-fs/polyfills.js:267:18 at FSReqCallback.oncomplete (fs.js:169:5) 查找诸多问题后，最终确定是新版本的问题，可以通过nvm这个工具控制node的版本，npm不需要关心</description>
+    </item>
+    
+    <item>
+      <title>最好的Android投屏工具</title>
+      <link>/articles/best-android-projector/</link>
+      <pubDate>Thu, 12 Nov 2020 15:48:51 +0800</pubDate>
+      
+      <guid>/articles/best-android-projector/</guid>
+      <description>背景 之前一直用Chrome的Vysor插件做投屏，最近这个插件无法使用了 手机连着USB，放在桌子里面，拿起来操作很不方便，胳膊肘疼 于是调研了下可选的投屏方案 AirDroid过于庞大，还要收费，而且公司</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(二):源码的阅读与调试环境配置</title>
+      <link>/articles/flutter-source-code-analyze-2/</link>
+      <pubDate>Thu, 05 Nov 2020 12:23:13 +0800</pubDate>
+      
+      <guid>/articles/flutter-source-code-analyze-2/</guid>
+      <description>综述 Flutter从架构上来说有3部分： 用Dart写的Framework层，面向开发者 用Java/Kotlin写的Embdder层（For Android，iOS是OC/Swift），纯Flutter A</description>
+    </item>
+    
+    <item>
+      <title>Mac外接显示器问题处理记录</title>
+      <link>/articles/macbook-external-display/</link>
+      <pubDate>Thu, 29 Oct 2020 15:46:57 +0800</pubDate>
+      
+      <guid>/articles/macbook-external-display/</guid>
+      <description>背景 最近双十一，买了一台AOC的外接显示器，4K分辨率。为了达到最大的使用体验，处理了一些问题，在此记录。 睡眠唤醒 一开始用type-c的线连接，发现每次电脑睡眠后，重新唤醒时外接屏幕无法唤醒，打开显示</description>
+    </item>
+    
+    <item>
+      <title>Flutter源码剖析(一):源码获取与构建</title>
+      <link>/articles/flutter-source-code-analyze-1/</link>
+      <pubDate>Thu, 29 Oct 2020 12:23:10 +0800</pubDate>
+      
+      <guid>/articles/flutter-source-code-analyze-1/</guid>
+      <description>概述 本文介绍了Flutter源码的获取与构建，后面会另有文章介绍Flutter源码的版本管理、开发环境搭建等主题。 准备工作 Flutter源码分为两个部分： flutter/flutter是框架层，为开发</description>
+    </item>
+    
+    <item>
+      <title>毛选精读（一）内核：《实践论》与《矛盾论》</title>
+      <link>/articles/maoxuan-kernel/</link>
+      <pubDate>Sat, 17 Oct 2020 23:44:11 +0800</pubDate>
+      
+      <guid>/articles/maoxuan-kernel/</guid>
+      <description>概述 个人认为，读毛选应该先读《实践论》和《矛盾论》，这两篇发表于1937年下旬的文章，上承土地革命战争（1927～1937），下启启抗日战争和解放战争。在过往的十年里，共产党先后经历了右倾机会主义和左</description>
+    </item>
+    
+    <item>
+      <title>为什么读毛选以及怎么读毛选</title>
+      <link>/articles/why-and-how-read-maoxuan/</link>
+      <pubDate>Sat, 10 Oct 2020 23:41:01 +0800</pubDate>
+      
+      <guid>/articles/why-and-how-read-maoxuan/</guid>
+      <description>为什么读 领袖发家史、中国近代史 首先，《毛选》可以说是领袖的一本自传，也从侧面反映了近代中国从第一次国内革命战争时期到文化大革命时期，70年波澜壮阔的历史。 领袖曾在17岁作诗： 《七绝·改诗赠父亲》 孩儿立</description>
+    </item>
+    
+    <item>
+      <title>自我奋斗与历史进程</title>
+      <link>/articles/self-struggle-and-historical-itinerary/</link>
+      <pubDate>Fri, 09 Oct 2020 20:18:33 +0800</pubDate>
+      
+      <guid>/articles/self-struggle-and-historical-itinerary/</guid>
+      <description>一 人生的道路虽然漫长，但要紧处常常只有几步，特别是当人年轻的时候。 没有一个人的生活道路是笔直的，没有岔道的，有些岔道口譬如政治上岔道口，个人生活上的岔道口，你走错一步，可以影响人生的一个时期，也可以影</description>
+    </item>
+    
+    <item>
+      <title>Android系统服务的注册缓存机制分析</title>
+      <link>/articles/android-system-service-cache-analyze/</link>
+      <pubDate>Fri, 21 Aug 2020 12:18:22 +0800</pubDate>
+      
+      <guid>/articles/android-system-service-cache-analyze/</guid>
+      <description>本文说明 本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解</description>
+    </item>
+    
+    <item>
+      <title>拾屋记</title>
+      <link>/articles/clean-my-room/</link>
+      <pubDate>Sun, 21 Jun 2020 20:16:53 +0800</pubDate>
+      
+      <guid>/articles/clean-my-room/</guid>
+      <description>最近要搬家，周末收拾了下，记录一点感悟。 破窗效应 本来整洁有序的房间，因为一两次松懈，或是没有及时把用过的物品归回原位，或是没有及时清理产生的垃圾，就形成了一扇破窗。破窗的产生导致了自己对周围环境要求的</description>
+    </item>
+    
+    <item>
+      <title>读书:《吃掉那只青蛙》</title>
+      <link>/articles/eat-that-frog/</link>
+      <pubDate>Sat, 20 Jun 2020 09:44:18 +0800</pubDate>
+      
+      <guid>/articles/eat-that-frog/</guid>
+      <description>笔记 C01 明确目标 第一步：明确你究竟想要什么 第二步：把你的目标写下来 第三步：为你的目标设定一个完成的最后期限 第四步：为了实现目标，把你所能想到的、所有要完成的事项都列在一个清单上 第五步：进一步梳理整个清单</description>
+    </item>
+    
+    <item>
+      <title>Android客户端远程调试方法</title>
+      <link>/articles/android-remote-debug-method/</link>
+      <pubDate>Mon, 25 May 2020 12:16:13 +0800</pubDate>
+      
+      <guid>/articles/android-remote-debug-method/</guid>
+      <description>在最近的需求开发中，会遇到一些兼容性问题，经常只能在特定ROM和Android版本上复现。由于测试和开发不在同一区域办公，往往需要通过物资穿梭车送手机。由此带来两点不便： 使用成本大，调试效率低，因为物</description>
+    </item>
+    
+    <item>
+      <title>读书:《时间管理：如何充分利用你的24小时》</title>
+      <link>/articles/the-skinny-on-time-management/</link>
+      <pubDate>Sat, 23 May 2020 09:43:08 +0800</pubDate>
+      
+      <guid>/articles/the-skinny-on-time-management/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>解决MacBook2018过热问题</title>
+      <link>/articles/macbook-over-hot/</link>
+      <pubDate>Tue, 19 May 2020 10:21:13 +0800</pubDate>
+      
+      <guid>/articles/macbook-over-hot/</guid>
+      <description>最近搬工位后给MacBook接了一个外接显示器，放在正中间，但是发现发热很严重。在查阅资料和尝试之后，发现把充电口和显示器接口放在右边比较好。左边好像有个Bug，能不用还是不要用了。 参考： Mac过热降</description>
+    </item>
+    
+    <item>
+      <title>插件化技术的演进之路</title>
+      <link>/articles/evolution-of-plugin-framework/</link>
+      <pubDate>Wed, 13 May 2020 12:14:43 +0800</pubDate>
+      
+      <guid>/articles/evolution-of-plugin-framework/</guid>
+      <description>序言 关于本次分享 今天要和大家分享的是Android的插件化技术，这在Android中其实是一个相对来说比较复杂，历史悠久，内容庞杂的知识，不是今天一个小时能讲完的，所以我今天也是有选择地分享一些我认为</description>
+    </item>
+    
+    <item>
+      <title>设置Android全局可调试</title>
+      <link>/articles/android-make-debuggable/</link>
+      <pubDate>Thu, 07 May 2020 12:13:23 +0800</pubDate>
+      
+      <guid>/articles/android-make-debuggable/</guid>
+      <description>背景 最近要看一些系统打印的日志，发现需要开启debuggable标志，于是调研了一下。 实现 参考https://www.renyiwei.com/archives/1704.html[Android修改</description>
+    </item>
+    
+    <item>
+      <title>不气盛叫年轻人吗？</title>
+      <link>/articles/2020-youth-day/</link>
+      <pubDate>Mon, 04 May 2020 20:16:02 +0800</pubDate>
+      
+      <guid>/articles/2020-youth-day/</guid>
+      <description>这两天，被bilibili献给新一代的演讲《后浪》刷屏了，其实这是我们的老传统了，在这样一个意义重大的节日，讲一部分的真话，来刻意迎合一部分人的爽点。作为一个B站的中度用户，其实我是有点不喜欢的，但不</description>
+    </item>
+    
+    <item>
+      <title>Mac OSX配置记录</title>
+      <link>/articles/mac-osx-config-record/</link>
+      <pubDate>Mon, 04 May 2020 12:33:35 +0800</pubDate>
+      
+      <guid>/articles/mac-osx-config-record/</guid>
+      <description>浏览器 下载Chrome 按键映射 下载Karabiner-Elements，按照 配置，就是自己习惯的键位了。 禁用大写锁定: “System Preferences” -&amp;gt; “Keyboard” -&amp;gt; “Modifier K</description>
+    </item>
+    
+    <item>
+      <title>老版《三国演义》中的曹操</title>
+      <link>/articles/sanguo-caocao/</link>
+      <pubDate>Sat, 02 May 2020 20:14:57 +0800</pubDate>
+      
+      <guid>/articles/sanguo-caocao/</guid>
+      <description>近来看了一篇鲍国安先生在拍摄《三国演义》期间的创作手记，不禁感慨这才是一个演员的自我修养呀，比现在这些小鲜肉不知道高到哪里去了。这篇手记如果湮没在各种混杂的信息中实在太可惜，故此整理出来，也可警示自己</description>
+    </item>
+    
+    <item>
+      <title>记一个博客刷新的Bug</title>
+      <link>/articles/blog-refresh-bugfix/</link>
+      <pubDate>Thu, 30 Apr 2020 10:20:44 +0800</pubDate>
+      
+      <guid>/articles/blog-refresh-bugfix/</guid>
+      <description>之前通过教程草草建立了一个博客，后来申请到了备案号，于是更新了代码，但是Gunicorn操作不是很熟悉，导致重启服务后出现了如下问题： 备案号时有时无，今天又要添加公安备案号，于是打算查查这个问题，发现</description>
+    </item>
+    
+    <item>
+      <title>Android P源码构建记录</title>
+      <link>/articles/android-p-source-code-build/</link>
+      <pubDate>Wed, 29 Apr 2020 12:11:29 +0800</pubDate>
+      
+      <guid>/articles/android-p-source-code-build/</guid>
+      <description>缘由 最近在追查一个dex2oat的问题时，看源码觉得有些地方不单步调试或者加些日志，实在是不方便，另外由于最近的工作和Framework层打交道比较多，也有必要搞个源码环境，趁机深入学习一下。 虚拟机 一</description>
+    </item>
+    
+    <item>
+      <title>表达的世界观基础与方法论建设</title>
+      <link>/articles/base-and-skill-of-presentation/</link>
+      <pubDate>Sat, 25 Apr 2020 20:13:50 +0800</pubDate>
+      
+      <guid>/articles/base-and-skill-of-presentation/</guid>
+      <description>编号004。 核心内容。 为什么想讲这个主题，起因之一就是自己第一次做技术分享时效果就很差，后面自己对此进行了一些反思。除此之外，自己也听过不少其他人（主要是技术同学）的分享，也会发现一些不足之处。所以我</description>
+    </item>
+    
+    <item>
+      <title>Android P内联优化导致的一个诡异Bug</title>
+      <link>/articles/solve-of-android-p-inline-opt/</link>
+      <pubDate>Fri, 24 Apr 2020 23:51:25 +0800</pubDate>
+      
+      <guid>/articles/solve-of-android-p-inline-opt/</guid>
+      <description>问题背景 最近，我们的业务在动态加载一款第三方游戏时出现了奇怪的现象，本地开发测试体验良好，但是使用CI构建的正式包体验时会出现启动闪退。 问题分析 分析日志 首先，我们自然而然看了下Crash日志，如下： ---------</description>
+    </item>
+    
+    <item>
+      <title>Windows10下VirtualBox不支持64位</title>
+      <link>/articles/virtualbox-lose-64-bit/</link>
+      <pubDate>Mon, 20 Apr 2020 10:20:21 +0800</pubDate>
+      
+      <guid>/articles/virtualbox-lose-64-bit/</guid>
+      <description>参考https://www.4spaces.org/windows-10-virtualbox-no-64bit/[解决Windows10中Virtualbox安装虚拟机没有64位选项(N种情形盘点)</description>
+    </item>
+    
+    <item>
+      <title>代码相似性检测工具</title>
+      <link>/articles/software-similarity-tester/</link>
+      <pubDate>Tue, 14 Apr 2020 12:33:16 +0800</pubDate>
+      
+      <guid>/articles/software-similarity-tester/</guid>
+      <description>背景 最近由于工作需要，想找一个能够检查代码相似性的工具。这种工具主要有两个应用： 代码自身的冗余检查 查重，例如检查学生的编程作业是否有抄袭 工具 最后找到了两个工具sim和moss，具体实现算法还没有研究，</description>
+    </item>
+    
+    <item>
+      <title>记一次诡异的Bug</title>
+      <link>/articles/a-weird-bug-record/</link>
+      <pubDate>Mon, 13 Apr 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/a-weird-bug-record/</guid>
+      <description>背景 上周四的时候，发了一个maven，结果报ExceptionInInitializerError错误： java.lang.ExceptionInInitializerError at repackage.aw.̍(ProGuard:43) at com.tencent.sandbox.PluginHelper.applicationAttachBaseContext(ProGuard:160) ...... Caused by: java.lang.IllegalArgumentException: Illegal pattern character &amp;#39;V&amp;#39; at java.text.SimpleDateFormat.compile(SimpleDateFormat.java:870) at java.text.SimpleDateFormat.initialize(SimpleDateFormat.java:684) at java.text.SimpleDateFormat.&amp;lt;init&amp;gt;(SimpleDateFormat.java:623) at java.text.SimpleDateFormat.&amp;lt;init&amp;gt;(SimpleDateFormat.java:598) at</description>
+    </item>
+    
+    <item>
+      <title>twint源码阅读笔记</title>
+      <link>/articles/read-twint/</link>
+      <pubDate>Sun, 05 Apr 2020 23:48:26 +0800</pubDate>
+      
+      <guid>/articles/read-twint/</guid>
+      <description>介绍 twint全称Twitter Intelligence Tool，是一个twitter爬虫工具。官方介绍如下： Twint is an advanced Twitter scraping tool written in Python that allows for scraping Tweets from Twitter profiles without using Twitter’s API. Twint utilizes Twitter’s search operators to let you scrape Tweets from specific users, scrape Tweets relating to certain</description>
+    </item>
+    
+    <item>
+      <title>我的tmux使用手册</title>
+      <link>/articles/my-tmux-manual/</link>
+      <pubDate>Sun, 05 Apr 2020 12:33:00 +0800</pubDate>
+      
+      <guid>/articles/my-tmux-manual/</guid>
+      <description>基础概念 Session：用来概括一个任务，是一组窗口的集合。通过在任务开始前创建一个Session，在该Session中进行任务，之后通过断开Session来暂时中断任务，此时与任务相关的状态都会保存</description>
+    </item>
+    
+    <item>
+      <title>读书:《演说之禅》</title>
+      <link>/articles/presentation-zen/</link>
+      <pubDate>Sun, 05 Apr 2020 09:32:45 +0800</pubDate>
+      
+      <guid>/articles/presentation-zen/</guid>
+      <description>概览 这本书的副标题叫做&amp;#34;`职场必知的幻灯片秘技`&amp;#34;，但感觉有点不合适，在我看来，书里提倡的思想只有真正的大师才能用，但是在职场，很多时候还是要按照规矩来。如果不是绝对的权利压制，还是不</description>
+    </item>
+    
+    <item>
+      <title>给DroidPlugin添加概览屏幕</title>
+      <link>/articles/add-recent-task-for-droidplugin/</link>
+      <pubDate>Thu, 02 Apr 2020 09:59:32 +0800</pubDate>
+      
+      <guid>/articles/add-recent-task-for-droidplugin/</guid>
+      <description>背景 DroidPlugin默认不支持多任务： VirtualApp是支持的： 方案 其实参考的就是VirtualApp的实现，它的核心代码是： // com.lody.virtual.client.hook.proxies.am.HCallbackStub IBinder token = ActivityThread.ActivityClientRecord.token.get(r); ...... int taskId = IActivityManager.getTaskForActivity.call( ActivityManagerNative.getDefault.call(), token, false); 其实就是反射调用ActivityMa</description>
+    </item>
+    
+    <item>
+      <title>读书:《运动饮食1:9》</title>
+      <link>/articles/sports-and-diet/</link>
+      <pubDate>Sun, 29 Mar 2020 09:31:36 +0800</pubDate>
+      
+      <guid>/articles/sports-and-diet/</guid>
+      <description>疫情期间基本荒废了之前的锻炼成果，最近要开始恢复锻炼了，所以选了一本书温习下基本知识。 纯运动无法减肥 胖的本质是吃的太多，摄入&amp;gt;消耗 有氧运动会促进食欲，影响减肥效果 不要神化基础代谢 运动如果以减肥为</description>
+    </item>
+    
+    <item>
+      <title>Android混淆问题一则</title>
+      <link>/articles/android-proguard-problem/</link>
+      <pubDate>Tue, 24 Mar 2020 09:56:45 +0800</pubDate>
+      
+      <guid>/articles/android-proguard-problem/</guid>
+      <description>问题 dex包里面的build.gradle通过api引用了一个包，同事主工程调用dex包里面的方法抛出ClassNotFoundException。 分析 使用AS的Analyze APK发现该类其实是存在</description>
+    </item>
+    
+    <item>
+      <title>记一次AbstractMethodError</title>
+      <link>/articles/abstractmethoderror-solve/</link>
+      <pubDate>Tue, 24 Mar 2020 09:55:46 +0800</pubDate>
+      
+      <guid>/articles/abstractmethoderror-solve/</guid>
+      <description>最近在灰度的时候发现了一个Error： 详细信息如下： 结合机型分布，可以判断是部分ROM自己的修改导致的问题(因为已经走到系统Api里面了)。 最后直接catch住了，因为触发的机型其实很少，灰度15w，</description>
+    </item>
+    
+    <item>
+      <title>读书:《俞军产品方法论》</title>
+      <link>/articles/yujun-product-methodology/</link>
+      <pubDate>Sun, 22 Mar 2020 09:30:19 +0800</pubDate>
+      
+      <guid>/articles/yujun-product-methodology/</guid>
+      <description>正文 这两周利用零散时间粗读了《俞军产品方法论》一书，在查阅资料的时候发现这本书的豆瓣评分从一开始的8.8(2019-12-24)变成了现在(2020-03-22)的7.9，也是比较符合我自己的阅读感受</description>
+    </item>
+    
+    <item>
+      <title>Proguard导致的NoSuchMethodException问题排查</title>
+      <link>/articles/proguard-result-in-nosuchmethodexception/</link>
+      <pubDate>Mon, 16 Mar 2020 09:54:14 +0800</pubDate>
+      
+      <guid>/articles/proguard-result-in-nosuchmethodexception/</guid>
+      <description>背景 之前项目的混淆配置一直没开启Proguard的优化选项 -dontoptimize 最近为了做安装包优化，把这行注释掉了 #-dontoptimize 问题 于是项目里的各种优化配置开始生效了，但是测试反馈了一个Bug：悬浮窗的搜索框点击之后没有反应了。 排</description>
+    </item>
+    
+    <item>
+      <title>博客往事</title>
+      <link>/articles/history-of-my-blog/</link>
+      <pubDate>Sun, 15 Mar 2020 19:41:05 +0800</pubDate>
+      
+      <guid>/articles/history-of-my-blog/</guid>
+      <description>周末花了点时间，把废置了的域名 www.vimerzhao.top 重新折腾了一下，同时将之前写过的博客迁移到了自己的服务器上。 借此机会，也以博客为脉络谈谈最近几年的技术经历吧。 CSDN 我大概是15年开始接触编程的，现在能找到的最早的博客是1</description>
+    </item>
+    
+    <item>
+      <title>客户端调试日志编码之道</title>
+      <link>/articles/zen-of-android-debug-log/</link>
+      <pubDate>Thu, 05 Mar 2020 12:09:38 +0800</pubDate>
+      
+      <guid>/articles/zen-of-android-debug-log/</guid>
+      <description>日志分很多种了，这里针对的是客户端的、开发调试用的日志，为什么要加这两个限制呢？ 后台日志都在服务器，开发容易操作，客户端日志大部分在本机，有的测试甚至不会捞日志，开发想帮忙都鞭长莫及 开发调试的日志，其</description>
+    </item>
+    
+    <item>
+      <title>基于Android签名机制的文件安全下发方法</title>
+      <link>/articles/secure-file-transfer-base-on-android-signature/</link>
+      <pubDate>Thu, 05 Mar 2020 12:05:39 +0800</pubDate>
+      
+      <guid>/articles/secure-file-transfer-base-on-android-signature/</guid>
+      <description>问题背景 Android中存在大量需要动态下发文件的场景： 下发布局资源文件实现UI动态化 下发Dex文件、lua文件，实现局部功能的动态化 下发Android插件 下发多媒体资源等 等等 对于其中一些文件，如De</description>
+    </item>
+    
+    <item>
+      <title>B站2月份创作者分析</title>
+      <link>/articles/bilibili-report-2020-02/</link>
+      <pubDate>Sun, 01 Mar 2020 19:57:34 +0800</pubDate>
+      
+      <guid>/articles/bilibili-report-2020-02/</guid>
+      <description>Welcome Star and Issues: vimerzhao/BilibiliReport 各区投稿比例 前三： 游戏 生活 影视 头部区域细分比例 Top1000视频分布 稿件时长分布 每日投稿趋势 24小时投稿分布 结论 超过60%的创作发生在游戏区和生活区 播放最多的是代表视听的音乐区和娱乐区 但是收</description>
+    </item>
+    
+    <item>
+      <title>UnsatisfiedLinkError...is32-bit instead of 64-bit问题解决</title>
+      <link>/articles/solve-unsatisfiedlinkerror-is-32-bit-instead-of-64-bit/</link>
+      <pubDate>Fri, 28 Feb 2020 09:52:52 +0800</pubDate>
+      
+      <guid>/articles/solve-unsatisfiedlinkerror-is-32-bit-instead-of-64-bit/</guid>
+      <description>背景 在做沙箱动态化时遇到一个问题： 请假其他同事之后发现是因为Android高版本上，默认是64-bit的方式运行，而某些游戏是32-bit的，所以出现了冲突，解决办法就是强制使用32-bit的，而不是</description>
+    </item>
+    
+    <item>
+      <title>读书:《小岛经济学》</title>
+      <link>/articles/how-an-economy-grows-and-why-it-crashes/</link>
+      <pubDate>Sun, 16 Feb 2020 09:27:34 +0800</pubDate>
+      
+      <guid>/articles/how-an-economy-grows-and-why-it-crashes/</guid>
+      <description>如果将这本书仅仅看作经济学的入门读物，我觉得有失公允，因为这本书对于当下的很多经济现象做了深刻的剖析，且非常鲜明的表达了自己的观点。 + From:推荐序 概览 一开始以为这本书是入门读物，读完有三点感受： 前</description>
+    </item>
+    
+    <item>
+      <title>防止WebView因为GC被回收</title>
+      <link>/articles/keep-webview-from-gc/</link>
+      <pubDate>Tue, 11 Feb 2020 09:47:55 +0800</pubDate>
+      
+      <guid>/articles/keep-webview-from-gc/</guid>
+      <description>今天遇到一个问题，前端反映说我们共同约定的一个隐藏WebView无法调试，现象如下： 可以看到，小测试这个Tab一出现就消失了，但是同样的代码放在测试Demo里面就没问题，分析之后发现是实际工程里面产生</description>
+    </item>
+    
+    <item>
+      <title>Android安装包优化</title>
+      <link>/articles/apk-size-opt-summary/</link>
+      <pubDate>Tue, 11 Feb 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/apk-size-opt-summary/</guid>
+      <description>背景 安装包膨胀的原因 业务的增加、产品的演进是安装包大小增加的本质原因。但是在演进之路上，由于一些所谓的技术债务，如： 使用的资源未经裁剪（如全量字体文件、分辨率过大的图片） 不合理的大资源（如大的视频、音</description>
+    </item>
+    
+    <item>
+      <title>红利永远都在的</title>
+      <link>/articles/there-are-chances-somewhere/</link>
+      <pubDate>Mon, 10 Feb 2020 20:12:59 +0800</pubDate>
+      
+      <guid>/articles/there-are-chances-somewhere/</guid>
+      <description>今天有个同事在群里分享了一件事情，他面试的一个人独立开发了一个多开app的应用（一种能让某台手机同时打开多个相同app技术，常见的如微信双开），去年年底已经实现了日入1000~2000的水平，实属让人</description>
+    </item>
+    
+    <item>
+      <title>成为一个完整的社会人</title>
+      <link>/articles/base-ability/</link>
+      <pubDate>Thu, 06 Feb 2020 20:11:55 +0800</pubDate>
+      
+      <guid>/articles/base-ability/</guid>
+      <description>引言 本文是笔者的一些自我反思，工作一年半以来，不足之处的复盘。整理成文，以告过往，以警将来，希望对别人亦有所帮助。 本文将一个完整的社会人应该具备的能力分成了两大类：必修和选修。和大学里面的课程类似，必</description>
+    </item>
+    
+    <item>
+      <title>读书:《娱乐至死》</title>
+      <link>/articles/amusing-ourselves-to-death/</link>
+      <pubDate>Sat, 01 Feb 2020 09:24:31 +0800</pubDate>
+      
+      <guid>/articles/amusing-ourselves-to-death/</guid>
+      <description>今天要和大家分享的书是尼尔·波兹曼的《娱乐至死》。娱乐至死，这个词我们或多或少都有耳闻，虽然这本书出版于1985年，并且讨论的目标主要是电视机娱乐，但直到互联网时代，这个观念才逐渐为人所熟知。用书中的</description>
+    </item>
+    
+    <item>
+      <title>Android安装包极限优化</title>
+      <link>/articles/opt-apk-size-by-remove-debuginfo/</link>
+      <pubDate>Fri, 17 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/opt-apk-size-by-remove-debuginfo/</guid>
+      <description>背景 目前Android安装包的优化方法论比较成熟，比如 混淆代码（Proguard、AndResGuard） 移除不在使用的代码和资源 对于音频、图片等使用更轻量的格式 等等 这些方法都比较常规，在项目成熟后优</description>
+    </item>
+    
+    <item>
+      <title>读书:《学会写作》</title>
+      <link>/articles/learn-writing-by-zhouzuoluo/</link>
+      <pubDate>Thu, 16 Jan 2020 09:21:10 +0800</pubDate>
+      
+      <guid>/articles/learn-writing-by-zhouzuoluo/</guid>
+      <description>最近利用两个周末的时间读完了一本书，叫《学会写作》，豆瓣信息如下： 作者: 粥左罗 + 出版社: 人民邮电出版社 + 出品方: 智元微库 OPEN MIND + 副标题: 自我进阶的高效方法 + 出版年: 2019-5 + 页数: 280 + 定价: 59元 + 装帧: 平装</description>
+    </item>
+    
+    <item>
+      <title>警惕Proguard内联优化导致Crash堆栈信息丢失</title>
+      <link>/articles/proguard-inline-optimieze-make-stacktrace-loss/</link>
+      <pubDate>Mon, 13 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/proguard-inline-optimieze-make-stacktrace-loss/</guid>
+      <description>背景 最近在处理异常时遇到一个诡异的问题：自己的Demo里面混淆一个类后，打印Crash堆栈时这个类里面的调用点直接失踪了！ 下面用测试代码说明。 测试代码 // MainActivity.java public class MainActivity extends AppCompatActivity { @Override protected void onCreate(Bundle savedInstanceState) { super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); new Test().fun1(); } } // Test.java public class Test</description>
+    </item>
+    
+    <item>
+      <title>研究|2019鬼畜区热点事件分析</title>
+      <link>/articles/2019-vichiku-summary-2/</link>
+      <pubDate>Sat, 11 Jan 2020 19:53:53 +0800</pubDate>
+      
+      <guid>/articles/2019-vichiku-summary-2/</guid>
+      <description>不小心把markdown删了，看公众号吧： 研究 | 2019鬼畜区热点事件分析</description>
+    </item>
+    
+    <item>
+      <title>通过7万条视频数据看2019年B站鬼畜区发生了什么</title>
+      <link>/articles/2019-vichiku-summary/</link>
+      <pubDate>Sun, 05 Jan 2020 19:51:58 +0800</pubDate>
+      
+      <guid>/articles/2019-vichiku-summary/</guid>
+      <description>前言 鬼畜就是通过对严肃正经话题进行解剖后通过重复，再创作等形式用以达到颠覆经典、解构传统、张扬个性、强化焦点、讽刺社会的一种艺术形式。 引自百度百科 作为常年混迹于B站鬼畜区的潜水怪，今天心血来潮，趁着周</description>
+    </item>
+    
+    <item>
+      <title>2019年终总结</title>
+      <link>/articles/2019-end/</link>
+      <pubDate>Wed, 01 Jan 2020 20:02:29 +0800</pubDate>
+      
+      <guid>/articles/2019-end/</guid>
+      <description>水逆的上半年 上半年其实是相当平淡的，回头想想，有很多事情可以去做，只是当时囿于那个环境和心态，不能下定决心去做。工作上经历了很多变动，很多老同事离开了团队，甚至组织架构也发生了变动，自己也在一次次的动</description>
+    </item>
+    
+    <item>
+      <title>读书:《刻意练习》</title>
+      <link>/articles/pead/</link>
+      <pubDate>Sat, 28 Dec 2019 09:19:39 +0800</pubDate>
+      
+      <guid>/articles/pead/</guid>
+      <description>这本书豆瓣评分7.9，最大的问题就是信息密度太低，大概就是一篇几千字的公众号文章能讲明白的事情，作者却用了大量篇幅去举例，导致这个命题的信息量膨胀成了一本书。此外，这本的结构划分也不是很合理，导致很多</description>
+    </item>
+    
+    <item>
+      <title>读书:《乡土中国》</title>
+      <link>/articles/earthbound-china/</link>
+      <pubDate>Sun, 22 Dec 2019 09:18:06 +0800</pubDate>
+      
+      <guid>/articles/earthbound-china/</guid>
+      <description>概览 本书是费孝通1937年在云南教书时，从《乡村社会学》这门课的讲义中整理而来，书中的观点都是作者实地考察和教学思考的结果，充分分析了乡村社会的特点及其成因，豆瓣评分9.2，当之无愧的大师之作。不同于</description>
+    </item>
+    
+    <item>
+      <title>文档编写的术与道</title>
+      <link>/articles/tao-and-art-of-writing-tech-docs/</link>
+      <pubDate>Thu, 19 Dec 2019 19:38:07 +0800</pubDate>
+      
+      <guid>/articles/tao-and-art-of-writing-tech-docs/</guid>
+      <description>文档的范围很广，本文特指 开发人员撰写的包含基本产品背景和主要技术设计的文档 。 世界观 为什么要写技术文档 对于这个问题，我个人觉得很容易回答，写技术文档可以帮助团队完成 当前的信息共享和长期的知识传承 。对于个</description>
+    </item>
+    
+    <item>
+      <title>Git工程化最佳实践</title>
+      <link>/articles/git-practice/</link>
+      <pubDate>Fri, 13 Dec 2019 12:32:25 +0800</pubDate>
+      
+      <guid>/articles/git-practice/</guid>
+      <description>本文导读 本文对应的 git-standardize 项目地址 https://github.com/vimerzhao/git-standardize 问题背景 大部分程序员对于Git的理解还停留在 git add . git commit -m &amp;#34;update&amp;#34; git pull git push 的阶段，但这在实际项目开发中是远远不够的。 + 举一个简单的例子，现在我们需要过滤所有修复bug的提交，该怎</description>
+    </item>
+    
+    <item>
+      <title>修改遗留代码的艺术</title>
+      <link>/articles/working-effectively-with-legacy-code/</link>
+      <pubDate>Mon, 02 Dec 2019 19:35:55 +0800</pubDate>
+      
+      <guid>/articles/working-effectively-with-legacy-code/</guid>
+      <description>导语 之前内部的一次技术分享，为了防止PPT弄丢，特意整理成了文章，由于我的PPT风格比较简洁，所以额外加了一些批注。 + 注意这里图片缩小了，可以 新标签页打开图片 查看高清图。 正文 1. 2. 3. 4. 5. 6. 7 这页其实还内</description>
+    </item>
+    
+    <item>
+      <title>Git内部原理剖析</title>
+      <link>/articles/git-internals/</link>
+      <pubDate>Tue, 26 Nov 2019 12:31:51 +0800</pubDate>
+      
+      <guid>/articles/git-internals/</guid>
+      <description>导读 为什么写这篇文章 写这篇文章的本意有二: 工作安排原因，常有同事询问我一些关于 Git 的问题，总觉得自己解释的不够透彻，因此觉得有必要深入了解一下。 目前中文的 Git 教程往往本末倒置， 一味从版本管理工具的角度去堆</description>
+    </item>
+    
+    <item>
+      <title>信息、思考、知识</title>
+      <link>/articles/model-of-thinking/</link>
+      <pubDate>Mon, 25 Nov 2019 20:01:28 +0800</pubDate>
+      
+      <guid>/articles/model-of-thinking/</guid>
+      <description>最近在思考的一个问题，当一件热点事件发生的时候，如何能够透过各种声音看到问题的本质，并给出客观、全面的评价，这其实是一件非常困难的事情，我觉得必须具备三要素。 知识 知识就像机器学习里面的训练集。放到具体</description>
+    </item>
+    
+    <item>
+      <title>网易裁员碎碎念</title>
+      <link>/articles/about-netease-staff/</link>
+      <pubDate>Sun, 24 Nov 2019 19:59:50 +0800</pubDate>
+      
+      <guid>/articles/about-netease-staff/</guid>
+      <description>这两天被一篇文章刷屏了，即 网易裁员，让保安把身患绝症的我赶出公司。我在网易亲身经历的噩梦！ 。 + 正好这周上了一门课叫《独立思考》，里面提到了认识真相的五大阻力： 从众心理 认知偏见 情绪干扰 思维局限 逻辑谬误 这</description>
+    </item>
+    
+    <item>
+      <title>YouGlish介绍</title>
+      <link>/articles/introduction-of-youglish/</link>
+      <pubDate>Sat, 23 Nov 2019 12:31:31 +0800</pubDate>
+      
+      <guid>/articles/introduction-of-youglish/</guid>
+      <description>YouGlish是干嘛的呢？它的官网已经说的很清楚了: Use YouTube to improve your English pronunciation. Real people, real situations. 发现这个网站的起因是笔者在准备技术分享的时候涉及到一个专业名词 VSync ，这个词是 Vertical Sync的缩写，算是一个技术专有名词，用 YouGlish 一搜就</description>
+    </item>
+    
+    <item>
+      <title>Flutter:移动端跨平台技术演进之路</title>
+      <link>/articles/cross-platform-mobile-ui-development-evolution/</link>
+      <pubDate>Wed, 06 Nov 2019 12:21:29 +0800</pubDate>
+      
+      <guid>/articles/cross-platform-mobile-ui-development-evolution/</guid>
+      <description>导读 本文约4688字，阅读可能需要15分钟。 最早的跨平台开发(摘自《Apache Cordova移动应用开发实战》王亚飞，王洪飞编著). 从广义上来说，跨平台技术早于移动端的出现。因此，本文标题前面也加上</description>
+    </item>
+    
+    <item>
+      <title>小白的理财入门课</title>
+      <link>/articles/financing-introduction/</link>
+      <pubDate>Sat, 02 Nov 2019 09:16:19 +0800</pubDate>
+      
+      <guid>/articles/financing-introduction/</guid>
+      <description>发刊词:未来穷人更穷,富人更富 钱背后的含义?贫富差距(基尼系数) 教育 寒门再难出贵子 概率学显示,85%状元都是城镇户口 父母的资源决定了子女的眼界等 医疗 有钱能让人获得更多的&amp;#34;`隐形福利`&amp;#34;</description>
+    </item>
+    
+    <item>
+      <title>LinuxMint配置指南</title>
+      <link>/articles/linuxmintpei-zhi-zhi-nan/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxmintpei-zhi-zhi-nan/</guid>
+      <description>LinuxMint配置指南 LinuxMint使用记录 工具集 图像编辑 Pinta基本够用，可在软件管理器下载。 配置 添加图标 以百度脑图为例，在/home/username/.local/share/appl</description>
+    </item>
+    
+    <item>
+      <title>重新认识Markdown</title>
+      <link>/articles/zhong-xin-ren-shi-markdown/</link>
+      <pubDate>Thu, 02 May 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zhong-xin-ren-shi-markdown/</guid>
+      <description>重新认识Markdown 最近在调研文档写作工具，对 Markdown 有了一些新的思考。 Markdown 的优势 毫无疑问，Markdown 是流行的，个人认为有以下几个原因： 容易上手，设计得对新手非常友好，把最常用的十几个样式抽离出来，</description>
+    </item>
+    
+    <item>
+      <title>Hexo配置指南</title>
+      <link>/articles/hexopei-zhi-zhi-nan/</link>
+      <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/hexopei-zhi-zhi-nan/</guid>
+      <description>Hexo配置指南 本文记录了笔者的Hexo配置，持续更新中～ 功能增强 文章加密 对于部分隐私文章，进行加密。使用插件hexo-blog-encrypt 在Hexo根目录的package.json中添加&amp;quo</description>
+    </item>
+    
+    <item>
+      <title>有哪些值得坚持的好习惯</title>
+      <link>/articles/you-na-xie-zhi-de-jian-chi-de-hao-xi-guan/</link>
+      <pubDate>Sun, 21 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/you-na-xie-zhi-de-jian-chi-de-hao-xi-guan/</guid>
+      <description>有哪些值得坚持的好习惯 唯有自律，才能自由。 每天Check 七点之前起床，理想时间是6点 早起喝一杯水，白开水、一整杯。 出门之前倒垃圾 时间充裕就去锻炼，然后洗个澡，开始一天 坚持吃早点，不要油腻辛辣，要五谷杂</description>
+    </item>
+    
+    <item>
+      <title>健身是一场修行</title>
+      <link>/articles/jian-shen-shi-yi-chang-xiu-xing/</link>
+      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/jian-shen-shi-yi-chang-xiu-xing/</guid>
+      <description>健身是一场修行 如题 健身是一场修行 是向过往决裂 凡不能坚持者 皆是有所贪图或是担忧 是渴望八块腹肌的优越 又或者内疚于一杯奶茶的热量 但能坚持下来的 都是发自内心的需要 把健身当成人生的一部分 去认识自己 认识每一块肌肉</description>
+    </item>
+    
+    <item>
+      <title>程序员健身指南</title>
+      <link>/articles/cheng-xu-yuan-jian-shen-zhi-nan/</link>
+      <pubDate>Sun, 24 Feb 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cheng-xu-yuan-jian-shen-zhi-nan/</guid>
+      <description>程序员健身指南 坚持健身一个半月，虽然时间不算长，但按照目前的感觉来说，这次应该不会半途而废了，而且这一段时间，利用周末时间学习了不少关于健身的知识，因此觉得有必要整理沉淀一波了，都是入门级知识，适合想</description>
+    </item>
+    
+    <item>
+      <title>&#39;android:excludeFromRecents踩坑指南&#39;</title>
+      <link>/articles/android-excludefromrecentscai-keng-zhi-nan/</link>
+      <pubDate>Sun, 30 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/android-excludefromrecentscai-keng-zhi-nan/</guid>
+      <description>&amp;lsquo;android:excludeFromRecents踩坑指南&amp;rsquo; 工作中遇到的一个小问题，记录一下。 现象 从Activity A跳转到B，B的launchMode设置为singleI</description>
+    </item>
+    
+    <item>
+      <title>自己动手写事件总线(EventBus)</title>
+      <link>/articles/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/</link>
+      <pubDate>Sun, 23 Dec 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/</guid>
+      <description>自己动手写事件总线(EventBus) 事件总线核心逻辑的实现。 EventBus的作用 Android中存在各种通信场景，如Activity之间的跳转，Activity与Fragment以及其他组件之间的</description>
+    </item>
+    
+    <item>
+      <title>【小程序&#43;云开发】实战：一天搭建小型论坛</title>
+      <link>/articles/xiao-cheng-xu-yun-kai-fa-shi-zhan-yi-tian-da-jian-xiao-xing-lun-tan/</link>
+      <pubDate>Sun, 25 Nov 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/xiao-cheng-xu-yun-kai-fa-shi-zhan-yi-tian-da-jian-xiao-xing-lun-tan/</guid>
+      <description>【小程序+云开发】实战：一天搭建小型论坛 笔者最近涉猎了小程序相关的知识，于是利用周末时间开发了一款类似于同事的小程序，深度体验了小程序云开发模式提供的云函数、数据库、存储三大能力。关于云开发，可参考文</description>
+    </item>
+    
+    <item>
+      <title>自己动手写Android插件化框架</title>
+      <link>/articles/zi-ji-dong-shou-xie-androidcha-jian-hua-kuang-jia/</link>
+      <pubDate>Thu, 04 Oct 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zi-ji-dong-shou-xie-androidcha-jian-hua-kuang-jia/</guid>
+      <description>自己动手写Android插件化框架 最近在工作中接触到了Android插件内的开发，发现自己这种技术还缺乏最基本的了解，以至于在一些基本问题上浪费不少时间，如插件Context和主工程Context的区</description>
+    </item>
+    
+    <item>
+      <title>源码阅读环境OpenGrok搭建</title>
+      <link>/articles/yuan-ma-yue-du-huan-jing-opengrokda-jian/</link>
+      <pubDate>Sun, 23 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/yuan-ma-yue-du-huan-jing-opengrokda-jian/</guid>
+      <description>源码阅读环境OpenGrok搭建 工欲善其事，必先利其器。 导语 阅读源码最常见操作的就是在函数/方法的调用与定义之间跳转，对于只有大部分源码来说，都可以通过ctags+vim获得比较好的体验，但对于And</description>
+    </item>
+    
+    <item>
+      <title>bat批处理简介：Windows自动化之道</title>
+      <link>/articles/batpi-chu-li-jian-jie-windowszi-dong-hua-zhi-dao/</link>
+      <pubDate>Sun, 09 Sep 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/batpi-chu-li-jian-jie-windowszi-dong-hua-zhi-dao/</guid>
+      <description>bat批处理简介：Windows自动化之道 重复的工作交给代码。 导语 最近在工作中遇到一些纯粹重复的工作，最终都通过脚本方式达到了自动化，大大提高效率。比如之前每次发布zip包都需要手动编译lua文件、替</description>
+    </item>
+    
+    <item>
+      <title>新手程序员的恶习：不了解自己调用的API</title>
+      <link>/articles/xin-shou-cheng-xu-yuan-de-e-xi-bu-liao-jie-zi-ji-diao-yong-de-api/</link>
+      <pubDate>Mon, 20 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/xin-shou-cheng-xu-yuan-de-e-xi-bu-liao-jie-zi-ji-diao-yong-de-api/</guid>
+      <description>新手程序员的恶习：不了解自己调用的API 记录了自己在第一个需求灰度后的一些感受。 在自己的第一个需求灰度后，发现Crash率严重超标，虽然排查之后发现主要是其他人合入的需求导致的，但也确实发现了两个自己</description>
+    </item>
+    
+    <item>
+      <title>【Android开发】TextView中getText()方法踩坑指南</title>
+      <link>/articles/androidkai-fa-textviewzhong-gettext-fang-fa-cai-keng-zhi-nan/</link>
+      <pubDate>Fri, 03 Aug 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/androidkai-fa-textviewzhong-gettext-fang-fa-cai-keng-zhi-nan/</guid>
+      <description>【Android开发】TextView中getText()方法踩坑指南 本文记录了在使用TextView的getText()方法时，由于编码不规范导致的诡异问题。 问题背景 大意可以描述为以下一段代码： public class</description>
+    </item>
+    
+    <item>
+      <title>在腾讯实习一年，我学到了什么</title>
+      <link>/articles/zai-teng-xun-shi-xi-yi-nian-wo-xue-dao-liao-shi-yao/</link>
+      <pubDate>Tue, 12 Jun 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zai-teng-xun-shi-xi-yi-nian-wo-xue-dao-liao-shi-yao/</guid>
+      <description>在腾讯实习一年，我学到了什么 去年大概也是这个时候，我有幸拿到了去腾讯实习的offer。 6月底，我欣然前去，到现在刚好一年时间，马上要回学校了，我觉得该写点什么，因为这是一个很特殊的时间点，我站在学校和</description>
+    </item>
+    
+    <item>
+      <title>四年前写的《大学规划》</title>
+      <link>/articles/si-nian-qian-xie-de-da-xue-gui-hua/</link>
+      <pubDate>Wed, 09 May 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/si-nian-qian-xie-de-da-xue-gui-hua/</guid>
+      <description>四年前写的《大学规划》 四年前刚进大学的时候，辅导员要我们每个人写一篇对大学的规划，找了好久才找到，为了避免以后遗失，在此留个备份吧！ 九月，余辞桑梓，求学大工。朝辞渡口，夕至大连。经陆空之周折，历亲友之</description>
+    </item>
+    
+    <item>
+      <title>区块链招聘信息爬取与分析</title>
+      <link>/articles/qu-kuai-lian-zhao-pin-xin-xi-pa-qu-yu-fen-xi/</link>
+      <pubDate>Wed, 18 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/qu-kuai-lian-zhao-pin-xin-xi-pa-qu-yu-fen-xi/</guid>
+      <description>区块链招聘信息爬取与分析 最近在研究区块链，闲来无事抓取了拉勾网上450条区块链相关的招聘信息。过程及结果如下。 拉勾网爬取 首先是从拉勾网爬取数据，用的requests库。拉勾网的反爬虫做的还是比较好的，</description>
+    </item>
+    
+    <item>
+      <title>你真的需要单元测试吗?</title>
+      <link>/articles/ni-zhen-de-xu-yao-dan-yuan-ce-shi-ma/</link>
+      <pubDate>Sat, 07 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/ni-zhen-de-xu-yao-dan-yuan-ce-shi-ma/</guid>
+      <description>你真的需要单元测试吗? 博主最近在接触一些Android单元测试方面的工作，发现自己并没有体会到大多数文章所宣传的“单元测试会带来工作效率的巨大提升”之类的诸多好处，于是本着批判与自我批判的精神对单元测</description>
+    </item>
+    
+    <item>
+      <title>【译】自己动手写区块链</title>
+      <link>/articles/yi-zi-ji-dong-shou-xie-qu-kuai-lian/</link>
+      <pubDate>Sun, 01 Apr 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/yi-zi-ji-dong-shou-xie-qu-kuai-lian/</guid>
+      <description>【译】自己动手写区块链 目前大多数对于区块链的文章都是停留在概念性的描述，大肆宣扬其颠覆性，本文则反其道行之，以一个程序员的视角，通过300行代码，快速实现了一个区块链原型。虽然没有覆盖区块链的全部内容</description>
+    </item>
+    
+    <item>
+      <title>计算机程序中 Bug 的类型大全与历史</title>
+      <link>/articles/ji-suan-ji-cheng-xu-zhong-bug-de-lei-xing-da-quan-yu-li-shi/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/ji-suan-ji-cheng-xu-zhong-bug-de-lei-xing-da-quan-yu-li-shi/</guid>
+      <description>计算机程序中 Bug 的类型大全与历史 美国计算机科学家、图灵奖获得者詹姆斯·尼古拉·格雷(Jim Gray)，在他的著名的论文“Why do computers stop and what can be done about it?”中首次提出了程序bug的类型，比如玻尔bug(Bo</description>
+    </item>
+    
+    <item>
+      <title>杂记：初到深圳</title>
+      <link>/articles/za-ji-chu-dao-shen-zhen/</link>
+      <pubDate>Thu, 08 Mar 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/za-ji-chu-dao-shen-zhen/</guid>
+      <description>杂记：初到深圳 雄关漫道真如铁，而今迈步从头越。 其实是再来深圳 去年6月底，第一次来深，有同学一起，和批量入职的实习生同住中转酒店，然后又稀里糊涂和别人合租，住的离公司颇远，每次上下班40分钟，熬了三个月</description>
+    </item>
+    
+    <item>
+      <title>每日一题：A Regular Expression Matcher</title>
+      <link>/articles/mei-ri-yi-ti-a-regular-expression-matcher/</link>
+      <pubDate>Fri, 09 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/mei-ri-yi-ti-a-regular-expression-matcher/</guid>
+      <description>每日一题：A Regular Expression Matcher 选自Beautiful Code第一章：A Regular Expression Matcher。 Task &amp;amp; Background (节选自Beautiful Code) In 1998, Rob Pike and I were writing The Practice of Programming (Addison-Wesley). The last chapter of the book, “Notation,” collected a number of examples where good notation led to better programs and better</description>
+    </item>
+    
+    <item>
+      <title>每日一题：100 doors</title>
+      <link>/articles/mei-ri-yi-ti-100-doors/</link>
+      <pubDate>Wed, 07 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/mei-ri-yi-ti-100-doors/</guid>
+      <description>每日一题：100 doors 选自100 doors - Rosetta Code Task There are 100 doors in a row that are all initially closed.You make 100 passes by the doors.The first time through, visit every door and toggle the door (if the door is closed, open it;if it is open, close it).The second time, only visit every 2nd door(door #2, #4, #6, &amp;hellip;),and toggle it.The third time, visit every 3rd door(door #3, #6, #9, &amp;hellip;), etc,until you only visit the 100th door. Answer the question: what state are the doors in after the</description>
+    </item>
+    
+    <item>
+      <title>对于成长瓶颈的思考</title>
+      <link>/articles/dui-yu-cheng-chang-ping-jing-de-si-kao/</link>
+      <pubDate>Wed, 24 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/dui-yu-cheng-chang-ping-jing-de-si-kao/</guid>
+      <description>对于成长瓶颈的思考 初学编程，感觉每天都有新的收获，每天都有新的目标。可是一段时间后，掌握了几门语言，实现了几个项目，开始认识到代码是写不完的，很多工作都是重复的或者已经有人做过的。简单的已经会了，想要</description>
+    </item>
+    
+    <item>
+      <title>Android6.0源码编译教程</title>
+      <link>/articles/android6-0yuan-ma-bian-yi-jiao-cheng/</link>
+      <pubDate>Wed, 17 Jan 2018 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/android6-0yuan-ma-bian-yi-jiao-cheng/</guid>
+      <description>Android6.0源码编译教程 第一次成功编译了Android的源码，记录一下。 回忆 这是我第二次尝试去编译Android的源码，第一次是半年前，当时刚刚拿到去腾讯实习的Offer，虽然当时会一些And</description>
+    </item>
+    
+    <item>
+      <title>2017年终总结</title>
+      <link>/articles/2017nian-zhong-zong-jie/</link>
+      <pubDate>Sun, 31 Dec 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/2017nian-zhong-zong-jie/</guid>
+      <description>2017年终总结 12月31日，宜批判一番。 在去年的年终总结里，我给2017年定了一些目标，但后来系统坏了，当时备份做的不好，于是那份总结也丢了。虽然今天找回来，但上面的小目标算是基本没实现。不过现在看</description>
+    </item>
+    
+    <item>
+      <title>Java URL类踩坑指南</title>
+      <link>/articles/java-urllei-cai-keng-zhi-nan/</link>
+      <pubDate>Sun, 26 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/java-urllei-cai-keng-zhi-nan/</guid>
+      <description>Java URL类踩坑指南 java.net.URL类的几个细节问题。 背景介绍 最近再做一个RSS阅读工具给自己用，其中一个环节是从服务器端获取一个包含了RSS源列表的json文件，再根据这个json文件下载、解</description>
+    </item>
+    
+    <item>
+      <title>Android RSS阅读器开发记录</title>
+      <link>/articles/android-rssyue-du-qi-kai-fa-ji-lu/</link>
+      <pubDate>Sat, 18 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/android-rssyue-du-qi-kai-fa-ji-lu/</guid>
+      <description>Android RSS阅读器开发记录 本文的时间跨度比较长，全程记录了我完成一个RSS阅读器的经历，包括踩过的坑以及自己的一些思考。 背景介绍 大概大一的时候我就见过RSS，但一直没明白这东西是干嘛的。很长一段时间自己都</description>
+    </item>
+    
+    <item>
+      <title>LinuxMint修改程序图标分类</title>
+      <link>/articles/linuxmintxiu-gai-cheng-xu-tu-biao-fen-lei/</link>
+      <pubDate>Fri, 10 Nov 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxmintxiu-gai-cheng-xu-tu-biao-fen-lei/</guid>
+      <description>LinuxMint修改程序图标分类 本文记录了如何修改开始菜单中图标的分类。 问题 平时一般用lantern翻墙，但是每次安装之后在开始菜单这个程序都没被归类，而是单独分类到其他这个目录,如下： 十分别扭。 修</description>
+    </item>
+    
+    <item>
+      <title>Android音视频播放器开发（二）：MVP模式实践</title>
+      <link>/articles/androidyin-shi-pin-bo-fang-qi-kai-fa-er-mvpmo-shi-shi-jian/</link>
+      <pubDate>Mon, 16 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/androidyin-shi-pin-bo-fang-qi-kai-fa-er-mvpmo-shi-shi-jian/</guid>
+      <description>Android音视频播放器开发（二）：MVP模式实践 本文主要针对上一篇博客的代码进行重构，并简单阐述了使用MVP模式的好处。 以音乐播放部分为例，下图是未重构的代码结构： 虽然还算清晰，但是拓展性很差。经</description>
+    </item>
+    
+    <item>
+      <title>Android音视频播放器开发（一）：功能实现</title>
+      <link>/articles/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/</link>
+      <pubDate>Mon, 16 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/androidyin-shi-pin-bo-fang-qi-kai-fa-yi-gong-neng-shi-xian/</guid>
+      <description>Android音视频播放器开发（一）：功能实现 本文主要介绍了一个简单的Android音视频播放器的功能模块实现。 概述 本文主要介绍开发一个Android音视频播放器的功能实现，包括4个模块：音乐列表，视</description>
+    </item>
+    
+    <item>
+      <title>Android划词翻译</title>
+      <link>/articles/androidhua-ci-fan-yi/</link>
+      <pubDate>Tue, 10 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/androidhua-ci-fan-yi/</guid>
+      <description>Android划词翻译 通过复制实现单词查找，更加节省时间。 问题背景 个人经常用BCC News这个APP看新闻，但是遇到陌生词汇时总需要在APP内复制单词，再到另外一个词典应用内查找，如下： 十分不方便。 在</description>
+    </item>
+    
+    <item>
+      <title>LinuxMint Mate中WiFi自动关闭问题</title>
+      <link>/articles/linuxmint-matezhong-wifizi-dong-guan-bi-wen-ti/</link>
+      <pubDate>Fri, 22 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxmint-matezhong-wifizi-dong-guan-bi-wen-ti/</guid>
+      <description>LinuxMint Mate中WiFi自动关闭问题 在安装了LinuxMint Mate后，发现WiFi经常自动关闭，花了一点时间发现了解决办法，记录下来以防再次掉坑。 LinuxMint主流的桌面版本有Cinnamon、M</description>
+    </item>
+    
+    <item>
+      <title>阿里、360校招面试总结</title>
+      <link>/articles/a-li-360xiao-zhao-mian-shi-zong-jie/</link>
+      <pubDate>Sat, 16 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/a-li-360xiao-zhao-mian-shi-zong-jie/</guid>
+      <description>阿里、360校招面试总结 背景：笔者八月份处于实习考核阶段时投了阿里和360的Android开发，虽然九月初已确定实习留用，但仍然抱着丰富经历的心态参加了阿里和360的面试，虽然结果平平，但也有不少收获</description>
+    </item>
+    
+    <item>
+      <title>全面了解Android热修复技术</title>
+      <link>/articles/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</link>
+      <pubDate>Sun, 10 Sep 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/quan-mian-liao-jie-androidre-xiu-fu-ji-zhu/</guid>
+      <description>全面了解Android热修复技术 引言:本文全面地探讨了Android热修复技术的发展脉络，现状及其未来。 热修复技术概述 热修复技术在近年来飞速发展，尤其是在InstantRun方案推出之后，各种热修复技</description>
+    </item>
+    
+    <item>
+      <title>Presentation的一个误区</title>
+      <link>/articles/presentationde-yi-ge-wu-qu/</link>
+      <pubDate>Mon, 28 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/presentationde-yi-ge-wu-qu/</guid>
+      <description>Presentation的一个误区 做技术分享的一次事故及其中得到的教训。 今天做了一个技术分享，感觉效果不是很好。我思考了一下，排除分享的主题是自己无法决定的。一个很大的错误在于自己把需要展示的内容分散</description>
+    </item>
+    
+    <item>
+      <title>Dalvik之类加载源码分析</title>
+      <link>/articles/dalvikzhi-lei-jia-zai-yuan-ma-fen-xi/</link>
+      <pubDate>Sat, 26 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/dalvikzhi-lei-jia-zai-yuan-ma-fen-xi/</guid>
+      <description>Dalvik之类加载源码分析 基于Kitkat源码粗线条地分析了Dalvik虚拟机类的加载过程。 Java类加载 在Java的世界里，所有类的加载，都由java.lang.ClassLoader来负责。Cl</description>
+    </item>
+    
+    <item>
+      <title>热补丁：Qzone方案在Dalvik虚拟机上的实现</title>
+      <link>/articles/re-bu-ding-qzonefang-an-zai-dalvikxu-ni-ji-shang-de-shi-xian/</link>
+      <pubDate>Mon, 21 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-bu-ding-qzonefang-an-zai-dalvikxu-ni-ji-shang-de-shi-xian/</guid>
+      <description>热补丁：Qzone方案在Dalvik虚拟机上的实现 详细分析了Qzone热修复方案在Dalvik平台的实现，包括插桩的由来及其实现。 Qzone热修复原理分析 Qzone热修复方案基于的是android de</description>
+    </item>
+    
+    <item>
+      <title>Andfix源码解析</title>
+      <link>/articles/andfixyuan-ma-jie-xi/</link>
+      <pubDate>Sun, 20 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/andfixyuan-ma-jie-xi/</guid>
+      <description>Andfix源码解析 本文介绍了Andfix热修复框架的原理及实现代码。 Andfix概述 Andfix是阿里开源的一套热修复框架，效果如下 （注意我一直在点击，下发补丁后发生了变化&amp;hellip;&amp;hell</description>
+    </item>
+    
+    <item>
+      <title>匿名内部类导致热补丁Crash</title>
+      <link>/articles/ni-ming-nei-bu-lei-dao-zhi-re-bu-ding-crash/</link>
+      <pubDate>Sun, 20 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/ni-ming-nei-bu-lei-dao-zhi-re-bu-ding-crash/</guid>
+      <description>匿名内部类导致热补丁Crash 本文记录了匿名内部类可能导致的热补丁Crash及其原因。 问题描述 新建工程 新建一个工程，集成Andfix（设置权限、添加gradle、自定义Application），同时在</description>
+    </item>
+    
+    <item>
+      <title>InstantRun原理浅析</title>
+      <link>/articles/instantrunyuan-li-qian-xi/</link>
+      <pubDate>Thu, 17 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/instantrunyuan-li-qian-xi/</guid>
+      <description>InstantRun原理浅析 本文从宏观上简要介绍了InstantRun的实现原理。 InstantRun概述 InstantRun是Android Studio2.0推出的新功能，旨在加快构建编译速度，提升</description>
+    </item>
+    
+    <item>
+      <title>热修复之资源更新的实现</title>
+      <link>/articles/re-xiu-fu-zhi-zi-yuan-geng-xin-de-shi-xian/</link>
+      <pubDate>Thu, 17 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-xiu-fu-zhi-zi-yuan-geng-xin-de-shi-xian/</guid>
+      <description>热修复之资源更新的实现 本文分析了InstantRun的部分源码，并由此得出资源热修复的一种实现方法。 资源热修复 所谓资源热修复就是在不重新安装APP的情况下修改其资源，包括音频、图片，也包括布局、文字等</description>
+    </item>
+    
+    <item>
+      <title>20行代码搭建微信聊天机器人</title>
+      <link>/articles/20xing-dai-ma-da-jian-wei-xin-liao-tian-ji-qi-ren/</link>
+      <pubDate>Thu, 03 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/20xing-dai-ma-da-jian-wei-xin-liao-tian-ji-qi-ren/</guid>
+      <description>20行代码搭建微信聊天机器人 介绍了如何用20行Python搭建一个微信聊天机器人，并讨论了其可能的拓展方向。 引子 在之前一边文章中介绍客服机器人：AI实战:搭建客服机器人，本文将在此基础上制作一个聊天机</description>
+    </item>
+    
+    <item>
+      <title>热补丁：Tinker方案实现</title>
+      <link>/articles/re-bu-ding-tinkerfang-an-shi-xian/</link>
+      <pubDate>Thu, 03 Aug 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-bu-ding-tinkerfang-an-shi-xian/</guid>
+      <description>热补丁：Tinker方案实现 本文简单分析了Tinker的实现原理并对dex文件更新做了演示Demo。 Qzone方案与Tinker 在之前的博客里简单介绍了Qzone超级热补丁的原理与实现，本文介绍了腾讯</description>
+    </item>
+    
+    <item>
+      <title>如何关闭网页悬浮窗</title>
+      <link>/articles/ru-he-guan-bi-wang-ye-xuan-fu-chuang/</link>
+      <pubDate>Mon, 31 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/ru-he-guan-bi-wang-ye-xuan-fu-chuang/</guid>
+      <description>如何关闭网页悬浮窗 如何巧妙关闭网页的悬浮窗。 最近在查找资料时发现一个网页，需要注册才能查看，我记得豆瓣也有类似的悬浮窗，但是可以点击右上角的小叉号关闭，但这个竟然不能关闭！！ 作为一个程序员此时当然应该</description>
+    </item>
+    
+    <item>
+      <title>热补丁：Qzone方案在Art虚拟机上的实现</title>
+      <link>/articles/re-bu-ding-qzonefang-an-zai-artxu-ni-ji-shang-de-shi-xian/</link>
+      <pubDate>Sun, 30 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/re-bu-ding-qzonefang-an-zai-artxu-ni-ji-shang-de-shi-xian/</guid>
+      <description>热补丁：Qzone方案在Art虚拟机上的实现 本文对Qzone的超级热补丁方案做了一个简单实现。 引子 当一个App发布之后，突然发现了一个严重bug需要进行紧急修复，这时候公司各方就会忙得焦头烂额：重新打</description>
+    </item>
+    
+    <item>
+      <title>&#39;AI实战:搭建客服机器人&#39;</title>
+      <link>/articles/aishi-zhan-da-jian-ke-fu-ji-qi-ren/</link>
+      <pubDate>Sat, 29 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/aishi-zhan-da-jian-ke-fu-ji-qi-ren/</guid>
+      <description>&amp;lsquo;AI实战:搭建客服机器人&amp;rsquo; 本文简要介绍了但前客服机器人的发展情况，并实际开发了一个Demo作为演示。 客服机器人 随着科技发展，廉价劳动力正在不断被淘汰。客服机器人就是这样一个例</description>
+    </item>
+    
+    <item>
+      <title>掌上大工第二版（一）：竞品分析与草图</title>
+      <link>/articles/zhang-shang-da-gong-di-er-ban-yi-jing-pin-fen-xi-yu-cao-tu/</link>
+      <pubDate>Tue, 25 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/zhang-shang-da-gong-di-er-ban-yi-jing-pin-fen-xi-yu-cao-tu/</guid>
+      <description>掌上大工第二版（一）：竞品分析与草图 对于掌上大工这个APP最近的思考以及重写的规划。 为何重写 掌上大工这个APP是我在学习Android三个月之后的第一个实战项目，在过去一段时间也算帮了我不少忙，我首先</description>
+    </item>
+    
+    <item>
+      <title>Activity直接退出应用现象</title>
+      <link>/articles/activityzhi-jie-tui-chu-ying-yong-xian-xiang/</link>
+      <pubDate>Fri, 14 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/activityzhi-jie-tui-chu-ying-yong-xian-xiang/</guid>
+      <description>Activity直接退出应用现象 Activity的退出顺序应该类似一个栈，但最近一次开发中却发现Activity直接退出了应用，这是为什么呢？ 开发Android应用时，系统一般会维护一个回退栈，比如从</description>
+    </item>
+    
+    <item>
+      <title>&#39;Python爬虫实战:妹子图&#39;</title>
+      <link>/articles/pythonpa-chong-shi-zhan-mei-zi-tu/</link>
+      <pubDate>Sun, 02 Jul 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/pythonpa-chong-shi-zhan-mei-zi-tu/</guid>
+      <description>&amp;lsquo;Python爬虫实战:妹子图&amp;rsquo; 本文记录了一些爬虫的基础知识，并实现了一个50行左右的爬虫脚本。 前言 看了一些Python的语法后打算做一个小项目练手，打发一下时间。爬虫比较容易</description>
+    </item>
+    
+    <item>
+      <title>Vim键盘布局的起源</title>
+      <link>/articles/vimjian-pan-bu-ju-de-qi-yuan/</link>
+      <pubDate>Sun, 25 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/vimjian-pan-bu-ju-de-qi-yuan/</guid>
+      <description>Vim键盘布局的起源 谈了一些关于键盘布局的东西。 Vim的键盘布局 用过Vim编辑器的人都知道，要从插入模式转到正常模式需要用Esc键，并且两种模式的切换在编辑文本时大量存在。但奇怪的是，Esc的位置在键</description>
+    </item>
+    
+    <item>
+      <title>VirtualBox下Debian增强功能的安装</title>
+      <link>/articles/virtualboxxia-debianzeng-qiang-gong-neng-de-an-zhuang/</link>
+      <pubDate>Wed, 14 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/virtualboxxia-debianzeng-qiang-gong-neng-de-an-zhuang/</guid>
+      <description>VirtualBox下Debian增强功能的安装 本文记录了如何为VirtualBox里面的Debian虚拟机安装增强功能。 问题记录 之前写过一篇博客记录了VirtualBox下安装增强功能的问题，是在U</description>
+    </item>
+    
+    <item>
+      <title>Linux下配置JDK版本教程</title>
+      <link>/articles/linuxxia-pei-zhi-jdkban-ben-jiao-cheng/</link>
+      <pubDate>Mon, 12 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/linuxxia-pei-zhi-jdkban-ben-jiao-cheng/</guid>
+      <description>Linux下配置JDK版本教程 记录了Linux配置JDK版本的方法。 最近，在自己的Ubuntu虚拟及上发现一个奇怪的问题，Java源文件可以编译但不能运行，检查发现原来是编译出来的版本高于JRE的版本</description>
+    </item>
+    
+    <item>
+      <title>关于应届生项目经验的思考</title>
+      <link>/articles/guan-yu-ying-jie-sheng-xiang-mu-jing-yan-de-si-kao/</link>
+      <pubDate>Sat, 03 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/guan-yu-ying-jie-sheng-xiang-mu-jing-yan-de-si-kao/</guid>
+      <description>关于应届生项目经验的思考 关于应届生找实习、找工作时项目经验的一些思考。 为什么要有项目经验 功利地说，去面试的时候，如果你一个项目也没有，面试官会觉得你并不是很喜欢编程这份工作，导致面试的时候无话可谈，如</description>
+    </item>
+    
+    <item>
+      <title>2017阿里实习生面试总结</title>
+      <link>/articles/2017a-li-shi-xi-sheng-mian-shi-zong-jie/</link>
+      <pubDate>Fri, 02 Jun 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/2017a-li-shi-xi-sheng-mian-shi-zong-jie/</guid>
+      <description>2017阿里实习生面试总结 阿里面试记录的整理以及一些自己的总结。 5-18 晚上突然接到短信，叫我去预约面试时间。真是一脸蒙蔽，真不知道自己那个笔试怎么过的。。。不过既然拿到面试机会了，就作为一次锻炼自己、了解</description>
+    </item>
+    
+    <item>
+      <title>借助Vim宏处理重复工作</title>
+      <link>/articles/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/jie-zhu-vimhong-chu-li-zhong-fu-gong-zuo/</guid>
+      <description>借助Vim宏处理重复工作 记录了一个用Vim宏处理重复操作的例子。 最近写博客时遇到一个问题： 我有一些图片，它们除了图片名的序号不同，比如 launcher-01-debug.png launcher-02-debug.png launcher-03-debug.png launcher-04-debug.png &amp;hellip; 其余都相同 现在我需要把这些图片写在博客里，我该怎么做呢？</description>
+    </item>
+    
+    <item>
+      <title>学习HotSpot（一）：Launcher</title>
+      <link>/articles/xue-xi-hotspot-yi-launcher/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/xue-xi-hotspot-yi-launcher/</guid>
+      <description>学习HotSpot（一）：Launcher 《Java虚拟机精讲》学习笔记：剖析HotSpot的Launcher。 HotSpot源码目录 可以用tree命令查看源码层次，对源码层次有一定印象有助于学习每个</description>
+    </item>
+    
+    <item>
+      <title>与VirtualBox下Linux虚拟机共享文件</title>
+      <link>/articles/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</link>
+      <pubDate>Mon, 29 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/yu-virtualboxxia-linuxxu-ni-ji-gong-xiang-wen-jian/</guid>
+      <description>与VirtualBox下Linux虚拟机共享文件 记录了如何与VirtualBox下的Linux虚拟机共享文件。 最近，需要在Ubuntu虚拟机里面调试HotSpot，截了些图需要在本机上处理一下，所以需</description>
+    </item>
+    
+    <item>
+      <title>OpenJDK7u40编译与调试实战</title>
+      <link>/articles/openjdk7u40bian-yi-yu-diao-shi-shi-zhan/</link>
+      <pubDate>Sun, 28 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/openjdk7u40bian-yi-yu-diao-shi-shi-zhan/</guid>
+      <description>OpenJDK7u40编译与调试实战 记录了第一次编译调试OpenJDK的经过。 JDK与OpenJDK的关系 简单来说，OpenJDK是OracleJDK（也就是我们平时用的Java JDK，由Oracle</description>
+    </item>
+    
+    <item>
+      <title>VirtualBox下虚拟电脑没有光驱</title>
+      <link>/articles/virtualboxxia-xu-ni-dian-nao-mei-you-guang-qu/</link>
+      <pubDate>Sun, 28 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/virtualboxxia-xu-ni-dian-nao-mei-you-guang-qu/</guid>
+      <description>VirtualBox下虚拟电脑没有光驱 记录了VirtualBox虚拟电脑安装增强功能时提示没有光驱的问题。 由于编译openjdk的需要，安装了Ubuntu12.04，但是在安装增强功能时候却遇到了以下</description>
+    </item>
+    
+    <item>
+      <title>操作系统上机总结</title>
+      <link>/articles/cao-zuo-xi-tong-shang-ji-zong-jie/</link>
+      <pubDate>Mon, 22 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cao-zuo-xi-tong-shang-ji-zong-jie/</guid>
+      <description>操作系统上机总结 记录了操作系统上机的内容以及一点小小的思考。 题目 如下图： 解答 所有的代码都放在CodeBin/OS-Lab目录下。 实验一：进程管理 关于fork的概念理解之后代码不难写，CSAPP讲的很清</description>
+    </item>
+    
+    <item>
+      <title>2017腾讯实习生面试总结</title>
+      <link>/articles/2017teng-xun-shi-xi-sheng-mian-shi-zong-jie/</link>
+      <pubDate>Fri, 19 May 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/2017teng-xun-shi-xi-sheng-mian-shi-zong-jie/</guid>
+      <description>2017腾讯实习生面试总结 之前腾讯面试的记录，明天要参加阿里远程面试了，今天整理一下，以防积压！ 4-23 昨晚收到面试通知，明天面。之前一直没消息，还以为挂了。也给自己提了个醒，时刻准备才能占据主动，所以要高</description>
+    </item>
+    
+    <item>
+      <title>GVim中GLib-GObject-WARNING问题的解决办法</title>
+      <link>/articles/gvimzhong-glib-gobject-warningwen-ti-de-jie-jue-ban-fa/</link>
+      <pubDate>Sat, 29 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/gvimzhong-glib-gobject-warningwen-ti-de-jie-jue-ban-fa/</guid>
+      <description>GVim中GLib-GObject-WARNING问题的解决办法 本文记录了一个在命令行启动GVim时遇到的问题及其解决办法。 问题 今天发现在命令行模式下启动GVim会出现一个小问题： zhaoyu@Dell ~ $ vim .vim (gvim:12853): GLib-GObject-WARNING **: cannot retrieve</description>
+    </item>
+    
+    <item>
+      <title>纪念一个：博客全自动管理</title>
+      <link>/articles/ji-nian-yi-ge-bo-ke-quan-zi-dong-guan-li/</link>
+      <pubDate>Sat, 29 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/ji-nian-yi-ge-bo-ke-quan-zi-dong-guan-li/</guid>
+      <description>纪念一个：博客全自动管理 本文记录了我的博客使用进阶之路。 首先感慨一下自己两年以来使用博客的经历。最初，我在CSDN上注册了帐号，并开始写一些中二的技术博客： 后来又转战博客园，因为CSDN的强行植入广告</description>
+    </item>
+    
+    <item>
+      <title>大端（Big Endian）与小端（Little Endian）</title>
+      <link>/articles/da-duan-big-endian-yu-xiao-duan-little-endian/</link>
+      <pubDate>Thu, 27 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/da-duan-big-endian-yu-xiao-duan-little-endian/</guid>
+      <description>大端（Big Endian）与小端（Little Endian） 本文记录了计算机中存在的两种数据存储模式及其对网络编程的影响。 内存抽象 在较高层次上，可以把内存抽象成一个很大的数组。唯一不同的是，一个元素(</description>
+    </item>
+    
+    <item>
+      <title>TCP连接的建立与释放</title>
+      <link>/articles/tcplian-jie-de-jian-li-yu-shi-fang/</link>
+      <pubDate>Fri, 21 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/tcplian-jie-de-jian-li-yu-shi-fang/</guid>
+      <description>TCP连接的建立与释放 本文通过实际抓包验证了TCP连接建立与释放的方式。 关于计算机网络 我在大三上修了计算机网络这门课，这门课真是我大学最差的记忆之一。教授这门课的老师水平很低，以至于辅导员安排另一位老</description>
+    </item>
+    
+    <item>
+      <title>C语言实现IPv6抓包程序</title>
+      <link>/articles/cyu-yan-shi-xian-ipv6zhua-bao-cheng-xu/</link>
+      <pubDate>Wed, 19 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cyu-yan-shi-xian-ipv6zhua-bao-cheng-xu/</guid>
+      <description>C语言实现IPv6抓包程序 本文记录了如何借助libpcap实现一个简单的抓包程序。 准备 对于实现一个抓包程序，最重要的是熟悉每种协议。熟悉协议包括两部分：每个协议具体字段的意义和每个协议在C语言中对应的</description>
+    </item>
+    
+    <item>
+      <title>笔试总结：LINE2018实习生（软件工程师）</title>
+      <link>/articles/bi-shi-zong-jie-line2018shi-xi-sheng-ruan-jian-gong-cheng-shi/</link>
+      <pubDate>Tue, 18 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/bi-shi-zong-jie-line2018shi-xi-sheng-ruan-jian-gong-cheng-shi/</guid>
+      <description>笔试总结：LINE2018实习生（软件工程师） 2018LINE实习生笔试题总结。 今晚LINE和头条的笔试时间冲突，还是选了LINE，因为打算体验一次笔试答题。 简答题 第一题问的是中断是什么，为什么要有中</description>
+    </item>
+    
+    <item>
+      <title>Vim的哲学</title>
+      <link>/articles/vimde-zhe-xue/</link>
+      <pubDate>Thu, 13 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/vimde-zhe-xue/</guid>
+      <description>Vim的哲学 本文记录了我在现阶段对Vim的一些思考。 我用过的开发工具 回想起来，我大概是在大一的寒假快要结束的时候接触了编程语言，我还记得自己按照教程，用gcc编译并输出了HelloWorld。当时，我</description>
+    </item>
+    
+    <item>
+      <title>笔试总结：携程2018实习生（安卓开发工程师）</title>
+      <link>/articles/bi-shi-zong-jie-xi-cheng-2018shi-xi-sheng-an-zhuo-kai-fa-gong-cheng-shi/</link>
+      <pubDate>Tue, 11 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/bi-shi-zong-jie-xi-cheng-2018shi-xi-sheng-an-zhuo-kai-fa-gong-cheng-shi/</guid>
+      <description>笔试总结：携程2018实习生（安卓开发工程师） 时间：2017-4-11，19：00～21：00。 选择题 10个数学智力题，10个Android题。数学智力题花了半个钟头，感觉还是有几题没把握，结果没想到</description>
+    </item>
+    
+    <item>
+      <title>Build Your Own Lisp中的闲言碎语</title>
+      <link>/articles/build-your-own-lispzhong-de-xian-yan-sui-yu/</link>
+      <pubDate>Sat, 08 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/build-your-own-lispzhong-de-xian-yan-sui-yu/</guid>
+      <description>Build Your Own Lisp中的闲言碎语 Build Your Own Lisp中的一些摘录。 前不久，读完了Build Your Own Lisp。作者用C语言写了一个简单的Lisp解释器，代码之精妙、设计之优雅确实让我受益匪浅！ 不过，除了跟着作者写代码，</description>
+    </item>
+    
+    <item>
+      <title>关于C/C&#43;&#43;中指针自增运算符的思考</title>
+      <link>/articles/guan-yu-c-c-zhong-zhi-zhen-zi-zeng-yun-suan-fu-de-si-kao/</link>
+      <pubDate>Thu, 06 Apr 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/guan-yu-c-c-zhong-zhi-zhen-zi-zeng-yun-suan-fu-de-si-kao/</guid>
+      <description>关于C/C++中指针自增运算符的思考 本文记录了C/C++中指针自增运算的一些微妙特性。 问题引入 C代码： #include &amp;lt;stdio.h&amp;gt; int main(int argc, char const* argv[]) { int a = 1, *p = &amp;amp;a; ++++p; ++p++; return 0; } C++代码： #include &amp;lt;bits/stdc++.h&amp;gt; int main(int argc, char const* argv[]) { int a = 1, *p = &amp;amp;a; ++++p; ++p++; return 0; } 编</description>
+    </item>
+    
+    <item>
+      <title>踩坑记：LinuxMint18字体变为楷体的修复</title>
+      <link>/articles/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/</link>
+      <pubDate>Sat, 25 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cai-keng-ji-linuxmint18zi-ti-bian-wei-kai-ti-de-xiu-fu/</guid>
+      <description>踩坑记：LinuxMint18字体变为楷体的修复 本文记录了一次修复系统字体的经历。 起因 起因很奇怪，本来打算今天把动态规划算法好好研究一番，结果一大早起来发现中文输入法消失了！因为之前有次发生这种情况是</description>
+    </item>
+    
+    <item>
+      <title>时间复杂度计算类题目两则</title>
+      <link>/articles/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/</link>
+      <pubDate>Sat, 25 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/shi-jian-fu-za-du-ji-suan-lei-ti-mu-liang-ze/</guid>
+      <description>时间复杂度计算类题目两则 本文记录了两则具有代表性的算法复杂度计算题目。 题目1 分析以下代码的时间复杂度: for (int i = 0; i &amp;lt; n; i++) { for (int j = 0; j &amp;lt; i; j++) { for (int k = 0; k &amp;lt; j; k++) { // operations } } } 注：以上代码只作示意，未详细</description>
+    </item>
+    
+    <item>
+      <title>踩坑记：从C&#43;&#43;变量到Java引用</title>
+      <link>/articles/cai-keng-ji-cong-c-bian-liang-dao-javayin-yong/</link>
+      <pubDate>Fri, 24 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cai-keng-ji-cong-c-bian-liang-dao-javayin-yong/</guid>
+      <description>踩坑记：从C++变量到Java引用 本文介绍了Java和C++中变量名（对象类型）的细微差别。 问题引入 问题的产生自另一个题目: 请实现一种数据结构SetOfStacks，由多个栈组成，其中每个栈的大小为s</description>
+    </item>
+    
+    <item>
+      <title>外排序</title>
+      <link>/articles/wai-pai-xu/</link>
+      <pubDate>Mon, 20 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/wai-pai-xu/</guid>
+      <description>外排序 初探如何对大规模数据进行排序。 问题 问题描述很简单，如何对大规模数据进行排序，比如说一个30G的文件。 分析 解决这个问题主要要解决两件事。第一件就是大文件显然无法一次读入内存，所以只能一次读入一部分</description>
+    </item>
+    
+    <item>
+      <title>&#39;C语言中不带{}的代码块&#39;</title>
+      <link>/articles/cyu-yan-zhong-bu-dai-de-dai-ma-kuai/</link>
+      <pubDate>Thu, 16 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cyu-yan-zhong-bu-dai-de-dai-ma-kuai/</guid>
+      <description>&amp;lsquo;C语言中不带{}的代码块&amp;rsquo; 本文讨论了C99中的一个新特性：不带{}的代码块。以及阅读编程语言教程的一种新思路。 问题 在阅读C Primer Plus325页时遇到以下一句话： 先前曾提到C99</description>
+    </item>
+    
+    <item>
+      <title>C语言宏展开的顺序问题</title>
+      <link>/articles/cyu-yan-hong-zhan-kai-de-shun-xu-wen-ti/</link>
+      <pubDate>Tue, 14 Mar 2017 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/cyu-yan-hong-zhan-kai-de-shun-xu-wen-ti/</guid>
+      <description>C语言宏展开的顺序问题 本文记录了作者遇到的一个关于C语言宏展开顺序的问题及其解释。 问题 这是我在阅读The C Puzzle Book一书中遇到的一个问题，为了简化问题，我写了以下一段代码 #include &amp;lt;stdio.h&amp;gt; #define TEST(x) x*5 #define PR(x) printf(#x &amp;#34; = %d&amp;#34;, x) #define PRINT1(x) PR(x);printf(&amp;#34;\n&amp;#34;)</description>
+    </item>
+    
+    <item>
+      <title>2016年终总结</title>
+      <link>/articles/2016nian-zhong-zong-jie/</link>
+      <pubDate>Sat, 31 Dec 2016 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/2016nian-zhong-zong-jie/</guid>
+      <description>2016年终总结 2016年的最后一天，按照惯例，我该写点什么。 嗯，时间过得真快。刚刚把自己的空间、朋友圈、微博翻了一遍。发现这一年确实是最平淡的一年了，没用一会功夫就看完了。其实，我自己也感受到了，这</description>
+    </item>
+    
+    <item>
+      <title>转专业纪</title>
+      <link>/articles/change-major-record/</link>
+      <pubDate>Sat, 11 Jul 2015 20:05:57 +0800</pubDate>
+      
+      <guid>/articles/change-major-record/</guid>
+      <description>人生的道路虽然漫长，但紧要处常常只有几步，特别是当年轻的时候。没有一个人的生活道路是笔直的，没有岔道的，有些岔道口，比如政治上的岔道口，事业上的岔道口，个人生活上的岔道口，你走错一步，可以影响人生的一</description>
+    </item>
+    
+  </channel>
+</rss>
