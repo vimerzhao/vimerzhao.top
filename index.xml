@@ -6,7 +6,7 @@
     <description>Recent content on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文章</title>
       <link>/article-archive/</link>
@@ -60,6 +60,15 @@
       
       <guid>/about/</guid>
       <description>重要时刻 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-04-01</description>
+    </item>
+    
+    <item>
+      <title>移动客户端的时代过去了吗？</title>
+      <link>/articles/is-the-era-of-mobile-clients-over/</link>
+      <pubDate>Wed, 12 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/is-the-era-of-mobile-clients-over/</guid>
+      <description>一 刚进公司的时候（2018年）我的职位还叫做“移动客户端工程师”，后来公司做了一次通道（工种）合并，把这个职位和“PC客户端”做了合并，统一归类为“客户端开发”。个人感觉，可能是由于当时PC端的式微，</description>
     </item>
     
     <item>

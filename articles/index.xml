@@ -6,7 +6,16 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 12 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>移动客户端的时代过去了吗？</title>
+      <link>/articles/is-the-era-of-mobile-clients-over/</link>
+      <pubDate>Wed, 12 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/is-the-era-of-mobile-clients-over/</guid>
+      <description>一 刚进公司的时候（2018年）我的职位还叫做“移动客户端工程师”，后来公司做了一次通道（工种）合并，把这个职位和“PC客户端”做了合并，统一归类为“客户端开发”。个人感觉，可能是由于当时PC端的式微，</description>
+    </item>
+    
     <item>
       <title>色彩空间与取色器错误</title>
       <link>/articles/color-picker-bug-on-imac/</link>
