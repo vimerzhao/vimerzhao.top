@@ -68,7 +68,7 @@
       <pubDate>Wed, 12 Apr 2023 00:00:00 +0000</pubDate>
       
       <guid>/articles/is-the-era-of-mobile-clients-over/</guid>
-      <description>一 刚进公司的时候（2018年）我的职位还叫做“移动客户端工程师”，后来公司做了一次通道（工种）合并，把这个职位和“PC客户端”做了合并，统一归类为“客户端开发”。个人感觉，可能是由于当时PC端的式微，</description>
+      <description>一 刚进公司的时候（2018年）我的职位还叫作“移动客户端工程师”，后来公司做了一次通道（工种）合并，把这个职位和“PC客户端”做了合并，统一归类为“客户端开发”。个人感觉，可能是由于当时PC端的式微，</description>
     </item>
     
     <item>
@@ -420,6 +420,15 @@
       
       <guid>/articles/android-system-service-cache-analyze/</guid>
       <description>本文说明 本文虽名为《Android系统服务的注册缓存机制分析》，但主要记录的是笔者最近解决一个单机型Bug的经历。在解决这个Bug的过程中，我对于Android系统服务的注册缓存机制也有了更深入的了解</description>
+    </item>
+    
+    <item>
+      <title>技术人员的写作指南</title>
+      <link>/articles/the-technician_s-guide-to-writing/</link>
+      <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/the-technician_s-guide-to-writing/</guid>
+      <description>本文详细论述了3个问题： 为什么技术人员需要坚持写作？–动机篇。 需要做哪些准备？–准备篇。 写作的长期实践中应该注意哪些问题？–技巧篇。 动机篇 有人说费曼学习法的本质就是：“通过向别人清楚地解说一件事，来确</description>
     </item>
     
     <item>
