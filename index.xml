@@ -6,7 +6,7 @@
     <description>Recent content on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 12 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 29 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文章</title>
       <link>/article-archive/</link>
@@ -60,6 +60,15 @@
       
       <guid>/about/</guid>
       <description>重要时刻 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-04-01</description>
+    </item>
+    
+    <item>
+      <title>修理一个电池老化的按摩枕</title>
+      <link>/articles/repairing-a-massage-pillow-with-a-dead-battery/</link>
+      <pubDate>Sat, 29 Apr 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/repairing-a-massage-pillow-with-a-dead-battery/</guid>
+      <description>之前在用的一个按摩枕，最近感觉明显不好用了。具体表现为：充电一晚上，按摩十分钟。 主观猜测，可能是电池老化。 于是，我就想：能不能不用电池，直接连电源就能用！ 具体实施分以下几个步骤： 拆外包装：虽然是拉链封</description>
     </item>
     
     <item>
@@ -428,7 +437,7 @@
       <pubDate>Mon, 20 Jul 2020 00:00:00 +0000</pubDate>
       
       <guid>/articles/the-technician_s-guide-to-writing/</guid>
-      <description>本文详细论述了3个问题： 为什么技术人员需要坚持写作？–动机篇。 需要做哪些准备？–准备篇。 写作的长期实践中应该注意哪些问题？–技巧篇。 动机篇 有人说费曼学习法的本质就是：“通过向别人清楚地解说一件事，来确</description>
+      <description>本文详细论述了3个问题： 为什么技术人员需要坚持写作？–动机篇。 需要做哪些准备？–准备篇。 写作的长期实践中应该注意哪些问题？–技巧篇。 一、动机篇 有人说费曼学习法的本质就是：“通过向别人清楚地解说一件事，</description>
     </item>
     
     <item>

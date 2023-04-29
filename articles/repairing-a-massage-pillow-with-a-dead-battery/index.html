@@ -4,19 +4,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>给DroidPlugin添加概览屏幕 - 赵裕的博客</title>
+	<title>修理一个电池老化的按摩枕 - 赵裕的博客</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="给DroidPlugin添加概览屏幕" />
-<meta property="og:description" content="背景 DroidPlugin默认不支持多任务： VirtualApp是支持的： 方案 其实参考的就是VirtualApp的实现，它的核心代码是： // com.lody.virtual.client.hook.proxies.am.HCallbackStub IBinder token = ActivityThread.ActivityClientRecord.token.get(r); ...... int taskId = IActivityManager.getTaskForActivity.call( ActivityManagerNative.getDefault.call(), token, false); 其实就是反射调用ActivityMa" />
+		<meta property="og:title" content="修理一个电池老化的按摩枕" />
+<meta property="og:description" content="之前在用的一个按摩枕，最近感觉明显不好用了。具体表现为：充电一晚上，按摩十分钟。 主观猜测，可能是电池老化。 于是，我就想：能不能不用电池，直接连电源就能用！ 具体实施分以下几个步骤： 拆外包装：虽然是拉链封" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/articles/add-recent-task-for-droidplugin/" /><meta property="article:section" content="articles" />
-<meta property="article:published_time" content="2020-04-02T09:59:32+08:00" />
-<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+<meta property="og:url" content="/articles/repairing-a-massage-pillow-with-a-dead-battery/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2023-04-29T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-04-29T22:21:16+08:00" />
 
 		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="给DroidPlugin添加概览屏幕"/>
-<meta name="twitter:description" content="背景 DroidPlugin默认不支持多任务： VirtualApp是支持的： 方案 其实参考的就是VirtualApp的实现，它的核心代码是： // com.lody.virtual.client.hook.proxies.am.HCallbackStub IBinder token = ActivityThread.ActivityClientRecord.token.get(r); ...... int taskId = IActivityManager.getTaskForActivity.call( ActivityManagerNative.getDefault.call(), token, false); 其实就是反射调用ActivityMa"/>
+<meta name="twitter:title" content="修理一个电池老化的按摩枕"/>
+<meta name="twitter:description" content="之前在用的一个按摩枕，最近感觉明显不好用了。具体表现为：充电一晚上，按摩十分钟。 主观猜测，可能是电池老化。 于是，我就想：能不能不用电池，直接连电源就能用！ 具体实施分以下几个步骤： 拆外包装：虽然是拉链封"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -108,172 +108,37 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">给DroidPlugin添加概览屏幕</h1>
+			<h1 class="post__title">修理一个电池老化的按摩枕</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2020-04-02T09:59:32&#43;08:00">2020-04-02</time>
-	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-04-29T00:00:00Z">2023-04-29</time>
+	<time class="meta__text" datetime="2023-04-29T22:21:16&#43;08:00">(最后修改: 2023-04-29)</time></div></div>
 		</header>
 		
     <span style="color:grey; font-size: 0.9em">本文约 800 字，阅读需 2 分钟。</span>
     <p/><div class="content post__content clearfix">
-			<div class="sect1">
-<h2 id="_背景">背景</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>DroidPlugin默认不支持多任务：</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="https://github.com/vimerzhao/images/raw/master/2020-04/dp-demo.gif" alt="dp demo"/>
-</div>
-</div>
-<div class="paragraph">
-<p>VirtualApp是支持的：</p>
-</div>
-<div class="imageblock">
-<div class="content">
-<img src="https://github.com/vimerzhao/images/raw/master/2020-04/vp-demo.gif" alt="vp demo"/>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_方案">方案</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>其实参考的就是VirtualApp的实现，它的核心代码是：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>// com.lody.virtual.client.hook.proxies.am.HCallbackStub
-
-IBinder token = ActivityThread.ActivityClientRecord.token.get(r);
-......
-int taskId = IActivityManager.getTaskForActivity.call(
-        ActivityManagerNative.getDefault.call(),
-        token,
-        false);</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>其实就是反射调用<code>ActivityManagerNative#gDefault</code>的<code>getTaskForActivity</code>方法，其中<code>token</code>是一个关键参数。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_踩坑">踩坑</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>看上去似乎很简单，但还是踩了两个坑，其他细节上的实现按下不表。</p>
-</div>
-<div class="sect2">
-<h3 id="_taskid恒为0">TaskId恒为0</h3>
-<div class="paragraph">
-<p>自己对着实现了一段代码，结果<code>taskId</code>一直是0，花了一晚上加一上午都没想明白，后来同事说他因为其他原因，为了防止崩溃，把这个方法Hook了，会一直返回0。于是把Hook的地方兼容起来就行了，感慨两点：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>当时是为了防止<code>isTaskRoot</code>返回false，但是没必要直接返回0，太粗暴了，处理小于0的情况就行了</p>
-</li>
-<li>
-<p>自己画了很长时间思考，方向一直错了，有时候应该头脑风暴一下，不应该惯性思维，同时多和别人沟通</p>
-</li>
+			<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/massage-pillow.jpeg" alt="massge-pillow"></p>
+<p>之前在用的一个按摩枕，最近感觉明显不好用了。具体表现为：充电一晚上，按摩十分钟。</p>
+<p>主观猜测，可能是电池老化。</p>
+<p>于是，我就想：能不能不用电池，直接连电源就能用！</p>
+<p>具体实施分以下几个步骤：</p>
+<ol>
+<li>拆外包装：虽然是拉链封住的，但是这个拉链无法拉开，试了几次无果后只能直接撬开了。</li>
+<li>分析结构：拆开壳子后，结构还是比较清晰的。外面有3根线：一根外接USB负责充电，一根外接开关，一根外接电源但没暴露在包装外。</li>
+<li>分析电源：电源和主板是通过可插拔的排线连接的，拔下来后，电源上写着生产于2018年。我查了下锂电池的使用寿命很少设计超过3年，而这个看起来如此简陋，应该更不耐用。接着分析电池的引脚，有3根线，检索一下容易知道：“红线是电池正极、黑线是电池负极、其他颜色的线是保护板的NTC（热敏电阻）,热敏电阻是给主板检测锂电池的温度或者是区分电池的类型的&hellip;..”</li>
+<li>分析USB充电线：之前这个线是通过主板给电池充电的，现在应该变成电池直接供电给主板。这个线也是有可插拔的卡口，但有6个引线，猜测有3个引线可能是用来做调试的？但如果设计规范，另外3根红/黑/黄的线应该和电池的线是能一一对应的。</li>
+<li>接线：把USB的3根线剪断，把电池的3根线剪断，只保留插口那一半，把线连起来，用绝缘胶布封好。重新插入电池的插口。</li>
+<li>通电测试，发现长按形状启动，但一松开就会停止。应该是换掉电池后主板无法正确获取电池状态（黄线），因而自动停止。</li>
+<li>直接拆掉电源，把其中两根线连通（相当于长按电源）。</li>
+<li>效果：<strong>后面使用只要一接通电源就会启动，而且试了用充电宝也可以带动</strong>。</li>
+<li>虽然拆外包装的时候撬了一个拉链，但还可以利用另一边重新拉好，完美复原。但下次再需要撬开就无法复原了。</li>
 </ol>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>// 源码：android.app.Activity.java
-/**
- * Return whether this activity is the root of a task.  The root is the
- * first activity in a task.
- *
- * @return True if this is the root activity, else false.
- */
-@Override
-public boolean isTaskRoot() {
-    try {
-        return ActivityTaskManager.getService().getTaskForActivity(mToken, true) &gt;= 0;
-    } catch (RemoteException e) {
-        return false;
-    }
-}</pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_android_p支持">Android P支持</h3>
-<div class="paragraph">
-<p>Android P的源码变了，所以需要适配，VirtualApp是直接没有兼容的，所以跑不起来了。于是只有自己硬撸代码了，最终发现了位置，其实<strong>源码</strong>也没那么可怕。</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre>// android.app.servertransaction.TransactionExecutor
-/** Cycle through all states requested by callbacks and execute them at proper times. */
-@VisibleForTesting
-public void executeCallbacks(ClientTransaction transaction) {
-    final List&lt;ClientTransactionItem&gt; callbacks = transaction.getCallbacks();
-    if (callbacks == null) {
-        // No callbacks to execute, return early.
-        return;
-    }
-    log(&#34;Resolving callbacks&#34;);
-
-    final IBinder token = transaction.getActivityToken();
-    ActivityClientRecord r = mTransactionHandler.getActivityClient(token);
-    .....
-}
-
-//
-public class ClientTransaction implements Parcelable, ObjectPoolItem {
-    ......
-    /** Target client activity. Might be null if the entire transaction is targeting an app. */
-    private IBinder mActivityToken;
-
-    ......
-
-    /** Get the target activity. */
-    @Nullable
-    public IBinder getActivityToken() {
-        return mActivityToken;
-    }
-    ......</pre>
-</div>
-</div>
-<div class="paragraph">
-<p>这就找到了。</p>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_效果">效果</h2>
-<div class="sectionbody">
-<div class="imageblock">
-<div class="content">
-<img src="https://github.com/vimerzhao/images/raw/master/2020-04/final-work.gif" alt="final work"/>
-</div>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_更多">更多</h2>
-<div class="sectionbody">
-<div class="ulist">
+<p>复盘：</p>
 <ul>
-<li>
-<p>Android的最近任务和Task管理规则其实宏大而复杂，坑也多，需要一个全局的认识</p>
-</li>
-<li>
-<p>要借着实践的机会加深对Framework层的理解</p>
-</li>
+<li>忘记测试下不接通黄线，电源能否正常启动。</li>
 </ul>
-</div>
-</div>
-</div>
 
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
@@ -286,15 +151,9 @@ public class ClientTransaction implements Parcelable, ObjectPoolItem {
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/articles/sports-and-diet/" rel="prev">
+		<a class="pager__link" href="/articles/is-the-era-of-mobile-clients-over/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">读书:《运动饮食1:9》</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/articles/presentation-zen/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">读书:《演说之禅》</p>
+			<p class="pager__title">移动客户端的时代过去了吗？</p>
 		</a>
 	</div>
 </nav>
