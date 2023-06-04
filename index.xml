@@ -6,7 +6,7 @@
     <description>Recent content on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sat, 29 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 03 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文章</title>
       <link>/article-archive/</link>
@@ -63,6 +63,15 @@
     </item>
     
     <item>
+      <title>五月空档期与一些思考</title>
+      <link>/articles/summarize-of-202305/</link>
+      <pubDate>Sat, 03 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/summarize-of-202305/</guid>
+      <description>五月没有写文章，一方面是五一假期后错峰去了趟重庆，游玩强度有点大。月中有一些输出，但感觉没有特别好的笔记/文章管理手段，写好了也没能高效地同步发表。下旬则因工作和一些思想的懈怠而停滞。 应该是这个月，又</description>
+    </item>
+    
+    <item>
       <title>修理一个电池老化的按摩枕</title>
       <link>/articles/repairing-a-massage-pillow-with-a-dead-battery/</link>
       <pubDate>Sat, 29 Apr 2023 00:00:00 +0000</pubDate>
@@ -96,15 +105,6 @@
       
       <guid>/articles/start-again-after-working-five-years/</guid>
       <description>赵裕的第 201 篇文章。 一、前情回顾 最近在整理之前的博客,粗略统计了下,之前写过的文章大概200篇左右。最近一年没怎么更新，故而本篇计作第201篇，算是一个新阶段的开始吧！ 1.1 写作初心 第一次写作是在2015年</description>
-    </item>
-    
-    <item>
-      <title>五月空档期与一些思考</title>
-      <link>/articles/summarize-of-202305/</link>
-      <pubDate>Sat, 01 Apr 2023 00:00:00 +0000</pubDate>
-      
-      <guid>/articles/summarize-of-202305/</guid>
-      <description>五月没有写文章，一方面是五一假期后错峰去了趟重庆，游玩强度有点大。月中有一些输出，但感觉没有特别好的笔记/文章管理手段，写好了也没能高效地同步发表。下旬则因工作和一些思想的懈怠而停滞。 应该是这个月，又</description>
     </item>
     
     <item>
