@@ -4,19 +4,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>VirtualBox下Debian增强功能的安装 - 赵裕的博客</title>
+	<title>关于一次课后反馈的思考 - 赵裕的博客</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="VirtualBox下Debian增强功能的安装" />
-<meta property="og:description" content="VirtualBox下Debian增强功能的安装 本文记录了如何为VirtualBox里面的Debian虚拟机安装增强功能。 问题记录 之前写过一篇博客记录了VirtualBox下安装增强功能的问题，是在U" />
+		<meta property="og:title" content="关于一次课后反馈的思考" />
+<meta property="og:description" content="最近，在公司内开讲了一门课程：《软件Bug的排查与解决》。看到课后的学员反馈，感觉是第一次收到如此矛盾的评价，所以觉得有必要思考一下。 以下是原文： 四、学员反馈 在整个培训过程中，什么地方您感到最满意，收" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/articles/virtualboxxia-debianzeng-qiang-gong-neng-de-an-zhuang/" /><meta property="article:section" content="articles" />
-<meta property="article:published_time" content="2017-06-14T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+<meta property="og:url" content="/articles/thoughts-on-feedback-after-a-class/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2023-06-01T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-06-11T22:54:42+08:00" />
 
 		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="VirtualBox下Debian增强功能的安装"/>
-<meta name="twitter:description" content="VirtualBox下Debian增强功能的安装 本文记录了如何为VirtualBox里面的Debian虚拟机安装增强功能。 问题记录 之前写过一篇博客记录了VirtualBox下安装增强功能的问题，是在U"/>
+<meta name="twitter:title" content="关于一次课后反馈的思考"/>
+<meta name="twitter:description" content="最近，在公司内开讲了一门课程：《软件Bug的排查与解决》。看到课后的学员反馈，感觉是第一次收到如此矛盾的评价，所以觉得有必要思考一下。 以下是原文： 四、学员反馈 在整个培训过程中，什么地方您感到最满意，收"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -108,61 +108,47 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">VirtualBox下Debian增强功能的安装</h1>
+			<h1 class="post__title">关于一次课后反馈的思考</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-06-14T00:00:00Z">2017-06-14</time>
-	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-01T00:00:00Z">2023-06-01</time>
+	<time class="meta__text" datetime="2023-06-11T22:54:42&#43;08:00">(最后修改: 2023-06-11)</time></div></div>
 		</header>
 		
-    <span style="color:grey; font-size: 0.9em">本文约 600 字，阅读需 2 分钟。</span>
+    <span style="color:grey; font-size: 0.9em">本文约 800 字，阅读需 2 分钟。</span>
     <p/><div class="content post__content clearfix">
-			<h1 id="virtualbox下debian增强功能的安装">VirtualBox下Debian增强功能的安装</h1>
-<p>本文记录了如何为VirtualBox里面的Debian虚拟机安装增强功能。</p>
-<h2 id="问题记录">问题记录</h2>
-<p>之前写过一篇博客记录了VirtualBox下安装增强功能的问题，是在Ubuntu上，当时主要是VirtualBox的问题，这次客户机是Debian，情况稍有不同，因为Ubuntu操作比较傻瓜式，基本自动安装，Debian就需要手动配置，还可能是因为我下载的安装版本比较精简（比Ubuntu少了几百兆），所以缺失了一些依赖。故此 ，花了些时间才得以解决。
-一开始尝试运行<code>autorun.sh</code>脚本，发现毫无效果，查阅一些资料发现并不是这个。这个脚本在Ubuntu这样的系统上应该可以运行成功，是比较通用的安装脚本(猜测)。
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogvirtualbox-debian01.png" alt="">
-接下来查阅了一些资料，发现需要安装编译依赖和内核头文件（虽然具体也不知道干嘛的）</p>
-<pre tabindex="0"><code>## 打开一个root终端：
-apt-get install build-essential
-apt-get install linux-headers-$(uname -r)
-sh /media/cdrom0/VBoxLinuxAdditions.run
-</code></pre><p>安装<code>build-essential</code>:
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogvirtualbox-debian02.png" alt=""></p>
-<p>直接执行脚本失败:
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogvirtualbox-debian03.png" alt=""></p>
-<p>根据错误信息安装内核头文件:
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogvirtualbox-debian04.png" alt=""></p>
-<p>再次执行成功:
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogvirtualbox-debian05.png" alt=""></p>
-<p>重启:
-<img src="http://ond7j4cnz.bkt.clouddn.com/blogvirtualbox-debian06.png" alt=""></p>
-<h2 id="总结">总结</h2>
-<p>关键是分析问题、分析报错信息，把错误信息贴出来检索。直接搜索<code>Debian VirtualBox 安装增强功能</code>效果也不错。</p>
-<h2 id="参考">参考</h2>
-<ul>
-<li><a href="https://forums.virtualbox.org/viewtopic.php?f=3&amp;t=46127">[Solved] Guest Additions&rsquo; autorun.sh does not work</a></li>
-<li><a href="http://blog.csdn.net/cqdjyy01234/article/details/53208505">VirtualBox在Debian系统上安装增强功能（记录）</a></li>
-<li><a href="http://blog.sina.com.cn/s/blog_4a0a8b5d0102v3u2.html">VirtualBox下Debian安装增强功能</a></li>
-</ul>
+			<p>最近，在公司内开讲了一门课程：《软件Bug的排查与解决》。看到课后的学员反馈，感觉是第一次收到如此矛盾的评价，所以觉得有必要思考一下。</p>
+<p>以下是原文：</p>
+<blockquote>
+<p>四、学员反馈
+在整个培训过程中，什么地方您感到最满意，收获最大？
+(1)、介绍的核心九法十分实用
+(2)、内容很有启发，例子很丰富也恰当
+(3)、对于日常bug的排查经验总结得相当到位
+您对本次培训有哪些意见或建议？
+(1)、听后价值不大，内容非常松散，建议1: 标题未免起得过大，讲的内容支撑不起来，建议收敛； 2 部分内容太多，get不到点，可以精简，可适当引入gdb或者其他debugger的有用用法落地，比一些花哨的概念要强
+(2)、无，案例和我距离较远，理解起来有些费劲，其他的都挺好的
+您在工作中还遇到哪些问题或希望公司提供哪些方面的培训？
+(1)、这种技术总结型的培训挺好的，可以多来些
+&hellip;</p>
+</blockquote>
+<p>其实，我课程开始就说过，为什么不展开讲Debugger的使用，因为这是“器”层面的东西，不同语言有不同的Debugger，讲这个价值并不大。</p>
+<p>我所讲的，更偏重于“道法术”的层面，因为我相信这些东西的价值是通用的，也引起了一些学员的共鸣。</p>
+<p>我之前看过一个观点，就是一个分享的逼格再高，如果大大超过了我当前的认知，那么这个分享对于当前的我就是没有价值的，我也不会去听。</p>
+<p>所以，我是能理解反馈中的“get不到点”的情况的。</p>
+<p>当然，这个事情对我还是有一些启发的。</p>
+<p>讲课，本身就是一个众口难调的事情，作为课程/分享的设计者与演绎者，应当注意以下几个事情：</p>
+<ol>
+<li>主题明确聚焦，并认真编写推广过程中的课程简介，避免听众产生错误的预期，2个小时不可能面面俱到</li>
+<li>课程开始前花1～2分钟再作一次说明，也是避免浪费别人的时间</li>
+<li>中心化的授课可能不是一种很好的方式，当然某些场合有其必要性。开放式的内容平台（B站/YouTube），让听从自己选择或许更符合趋势</li>
+</ol>
 
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
     <p></p>
-		<footer class="post__footer">
-			
-<div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
-	<ul class="tags__list">
-		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" rel="tag">工具</a>
-		</li>
-	</ul>
-</div>
-		</footer>
 	</article>
 </main>
 
@@ -171,15 +157,15 @@ sh /media/cdrom0/VBoxLinuxAdditions.run
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/articles/linuxxia-pei-zhi-jdkban-ben-jiao-cheng/" rel="prev">
+		<a class="pager__link" href="/articles/repairing-a-massage-pillow-with-a-dead-battery/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">Linux下配置JDK版本教程</p>
+			<p class="pager__title">修理一个电池老化的按摩枕</p>
 		</a>
 	</div>
 	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/articles/vimjian-pan-bu-ju-de-qi-yuan/" rel="next">
+		<a class="pager__link" href="/articles/summarize-of-202305/" rel="next">
 			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">Vim键盘布局的起源</p>
+			<p class="pager__title">五月空档期与一些思考</p>
 		</a>
 	</div>
 </nav>
