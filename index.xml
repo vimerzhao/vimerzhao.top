@@ -6,7 +6,7 @@
     <description>Recent content on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 18 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 24 Jun 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文章</title>
       <link>/article-archive/</link>
@@ -27,10 +27,10 @@
     
     <item>
       <title>课程</title>
-      <link>/courses/</link>
+      <link>/courses-archive/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>/courses/</guid>
+      <guid>/courses-archive/</guid>
       <description></description>
     </item>
     
@@ -63,6 +63,15 @@
     </item>
     
     <item>
+      <title>软件Bug的排查与解决</title>
+      <link>/courses/troubleshooting-and-resolution-of-software-bugs/</link>
+      <pubDate>Sat, 24 Jun 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/courses/troubleshooting-and-resolution-of-software-bugs/</guid>
+      <description>写在前面 本文是我在公司内部的课程的脱敏版本，主要讲述个人对于“排查与解决软件Bug”这一问题的经验总结和沉淀思考。 由于课件中的部分案例是来源于日常工作，我做了脱敏处理，后续我也会整理这些案例，如果适合</description>
+    </item>
+    
+    <item>
       <title>北京之行：技术与人生的思考</title>
       <link>/articles/trip-to-beijing-reflections-on-technology-and-life/</link>
       <pubDate>Sun, 18 Jun 2023 00:00:00 +0000</pubDate>
@@ -87,6 +96,15 @@
       
       <guid>/articles/summarize-of-202305/</guid>
       <description>五月没有写文章，一方面是五一假期后错峰去了趟重庆，游玩强度有点大。月中有一些输出，但感觉没有特别好的笔记/文章管理手段，写好了也没能高效地同步发表。下旬则因工作和一些思想的懈怠而停滞。 应该是这个月，又</description>
+    </item>
+    
+    <item>
+      <title>关于专栏“速记”的说明</title>
+      <link>/articles/about-quick-note/</link>
+      <pubDate>Tue, 16 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/about-quick-note/</guid>
+      <description>最近发现一个问题，自己经常会有一些探索性的实践（或者说踩坑），在此过程会沉淀出一些记录，这些记录如果作为文章发表，会有些随意和不成体系，甚至有些地方是错误的；但这些记录其实还是非常有价值的： 一方面，它</description>
     </item>
     
     <item>
