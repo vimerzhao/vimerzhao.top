@@ -6,7 +6,7 @@
     <description>Recent content on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 24 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文章</title>
       <link>/article-archive/</link>
@@ -60,6 +60,15 @@
       
       <guid>/about/</guid>
       <description>重要时刻 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2023年：重庆、北京 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-04-01</description>
+    </item>
+    
+    <item>
+      <title>配置一个Mac/iOS平台的Flutter源码调试环境</title>
+      <link>/articles/set-up-flutter-debug-env-for-mac-and-ios/</link>
+      <pubDate>Wed, 27 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/set-up-flutter-debug-env-for-mac-and-ios/</guid>
+      <description>背景 最近，由于工作需要，想系统理解下Flutter是如何在MacOS/iOS平台使用OpenGL的。因为Apple早早放弃了对OpenGL的支持，导致这块坑不少，故此希望看看Flutter是怎么处理的</description>
     </item>
     
     <item>

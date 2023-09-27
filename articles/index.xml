@@ -6,7 +6,16 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 24 Jul 2023 00:00:00 +0000</lastBuildDate><atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 27 Sep 2023 00:00:00 +0000</lastBuildDate><atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>配置一个Mac/iOS平台的Flutter源码调试环境</title>
+      <link>/articles/set-up-flutter-debug-env-for-mac-and-ios/</link>
+      <pubDate>Wed, 27 Sep 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/set-up-flutter-debug-env-for-mac-and-ios/</guid>
+      <description>背景 最近，由于工作需要，想系统理解下Flutter是如何在MacOS/iOS平台使用OpenGL的。因为Apple早早放弃了对OpenGL的支持，导致这块坑不少，故此希望看看Flutter是怎么处理的</description>
+    </item>
+    
     <item>
       <title>使用VSCode作为Chromium的调试前端</title>
       <link>/articles/use-vscode-as-debug-frontend-of-chromium-project/</link>
