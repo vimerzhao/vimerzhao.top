@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>在服务器上搭建Android开发调试环境的尝试 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="在服务器上搭建Android开发调试环境的尝试" />
+<meta property="og:description" content="1. 背景说明 当前的开发工作特点： 项目代码C&#43;&#43;为主，编译任务重，最大的工程全量编一次80min&#43;，小的改动增量10min&#43;，更新一下增量构建30min&#43;。而且编译期间CPU全部占用，无法进行其他工作 涉及" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/configure-android-dev-environment-on-a-remote-server/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2023-05-16T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-10-14T20:13:56+08:00" />
+
+		<meta name="twitter:card" content="summary"/>
+<meta name="twitter:title" content="在服务器上搭建Android开发调试环境的尝试"/>
+<meta name="twitter:description" content="1. 背景说明 当前的开发工作特点： 项目代码C&#43;&#43;为主，编译任务重，最大的工程全量编一次80min&#43;，小的改动增量10min&#43;，更新一下增量构建30min&#43;。而且编译期间CPU全部占用，无法进行其他工作 涉及"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses-archive/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">在服务器上搭建Android开发调试环境的尝试</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-16T00:00:00Z">2023-05-16</time>
+	<time class="meta__text" datetime="2023-10-14T20:13:56&#43;08:00">(最后修改: 2023-10-14)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text"><a class="meta__link" href="/categories/%E4%B8%93%E6%A0%8F%E9%80%9F%E8%AE%B0/" rel="category">专栏|速记</a>
+	</span>
+</div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3000 字，阅读需 6 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h2 id="1-背景说明">1. 背景说明</h2>
+<p>当前的开发工作特点：</p>
+<ul>
+<li>项目代码C++为主，编译任务重，最大的工程全量编一次80min+，小的改动增量10min+，更新一下增量构建30min+。而且编译期间CPU全部占用，无法进行其他工作</li>
+<li>涉及多个平台，本地开发机是iMac(10核32G内存1T固态硬盘)</li>
+</ul>
+<p>目标：把Android的构建放在DevCloud(云服务器，16核32G内存1T硬盘)上，可以有效避免Android构建对本地工作流的打断，释放本地硬盘空间，甚至可以同时进行2个平台的开发、构建、调试。</p>
+<p>挑战：DevCloud如何能像本机开发机那样和Android设备无缝交互？</p>
+<h2 id="2-方案思考">2. 方案思考</h2>
+<h3 id="方案1远程编译">方案1：远程编译</h3>
+<p>简单来说，就是在Local和Server(后面就这么称呼了)同时各有一份代码，本地修改，通过rsync同步给Server，Server构建，再把产物通过rsync同步到Local。这样做的问题：</p>
+<ul>
+<li>由于经常有调试需要，对于C++而言，此时要配置映射:调试符号表的文件路径-&gt;本地文件路径，比较繁琐。</li>
+<li>每个工程，需要定制ignore配置（中间产物一般不同步），如果工程多，工作量挺大(每个工程都要了解其构建细节)，而且如果只有自己用，ROI太低</li>
+</ul>
+<h3 id="方案2devcloud直连android">方案2：DevCloud直连Android</h3>
+<p>简单来说，就是让DevCloud能像Local那样直接操作Android设备。这样的好处是如果验证成功了，就可以快速复用到任意一个Android项目，ROI比较高。</p>
+<p>当然了，对应的难度也比较大。下面是踩坑记录。</p>
+<h2 id="3-实践记录">3. 实践记录</h2>
+<h3 id="31-可行性调研">3.1 可行性调研</h3>
+<p>简单了解了下ADB的原是，发现是C/S模式：ADB Client和ADB Server(默认占用5037端口)应该是通过Socket通信。这样就基本可行了:Server的ADB Client和Local的ADB Server通信，而Local的ADB Server和Android的adbd通信。整个链路是通的。</p>
+<p>这里有个问题，就是要实现这种通信，需要做端口转发，每次登陆DevCloud的时候，都会提示：<code>ssh -R/-L</code> 之类的行为是不安全的，所以接下来就是咨询安全的同学，看有没有可能实现。</p>
+<h3 id="32-安全咨询">3.2 安全咨询</h3>
+<p>具体记录就不贴了，得到的结论是“本地PC和Devcloud是可以互相通信的，但不能涉及外网”，自己这个Case应该不涉及，看来是自己之前理解有偏差(自己对于网络安全这块的理解有待加强)。</p>
+<!--TODO 这部分后面单独一篇笔记整理-->
+<h3 id="33-adb链路">3.3 ADB链路</h3>
+<p>这部分比较容易，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 登陆DevCloud</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ssh -R  5037:localhost:5037 devcloud</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 杀死Server的ADB Server，防止冲突</span>
+</span></span><span style="display:flex;"><span>adb kill-server
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 尝试连接本地的ADB Server，注意会有版本校验</span>
+</span></span><span style="display:flex;"><span>adb server version <span style="color:#f92672">(</span>40<span style="color:#f92672">)</span> doesn<span style="color:#960050;background-color:#1e0010">&#39;</span>t match this client <span style="color:#f92672">(</span>41<span style="color:#f92672">)</span>; killing...
+</span></span></code></pre></div><p>本地Android SDK如何更新：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Android Studio用最新的</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 注意用cmdline-tools目录下的，通过sdkmanager命令行更新</span>
+</span></span><span style="display:flex;"><span>$ find . -iname <span style="color:#e6db74">&#34;sdkmanager&#34;</span>
+</span></span><span style="display:flex;"><span>./tools/bin/sdkmanager
+</span></span><span style="display:flex;"><span>./cmdline-tools/latest/bin/sdkmanager
+</span></span></code></pre></div><p>在Server上执行<code>adb devices</code>能看到设备，这步就成功了。</p>
+<h3 id="34-lldb链路">3.4 LLDB链路</h3>
+<p>低估了这一个环节的难度！</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># Server上尝试，遇到一个错误</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>lldb<span style="color:#f92672">)</span> platform <span style="color:#66d9ef">select</span> remote-android
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>lldb<span style="color:#f92672">)</span> platform connect unix-abstract-connect:///com.xxx.yyy/debug.sock
+</span></span><span style="display:flex;"><span>error: Failed to connect port
+</span></span></code></pre></div><p>不是很理解，于是本地同样的命令试了下，发现可以：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#f92672">(</span>lldb<span style="color:#f92672">)</span> platform connect unix-abstract-connect:///com.xxx.yyy/debug.sock
+</span></span><span style="display:flex;"><span>  Platform: remote-android
+</span></span><span style="display:flex;"><span>    Triple: aarch64-unknown-linux-android
+</span></span><span style="display:flex;"><span>OS Version: <span style="color:#ae81ff">31</span> <span style="color:#f92672">(</span>5.4.86-qgki-g2ee5fc001494-dirty<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  Hostname: localhost
+</span></span><span style="display:flex;"><span> Connected: yes
+</span></span><span style="display:flex;"><span>    Kernel: <span style="color:#75715e">#1 SMP PREEMPT Fri Apr 14 11:19:58 CST 2023</span>
+</span></span></code></pre></div><p>按照经验，猜测可能是端口问题！于是查看本地使用lldb时，执行<code>platform connect/disconnect</code>时的端口变化，发现确实有新增端口！</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022%2F2023-05-14-22-37-19.png" alt="pic"></p>
+<p>(Via 活动监视器)</p>
+<p>比较棘手的是，每次使用的端口是随机的，胡乱尝试一圈后，发现原来文档都有写!</p>
+<blockquote>
+<p>From: <a href="https://lldb.llvm.org/use/remote.html#local-system">https://lldb.llvm.org/use/remote.html#local-system</a>
+When using the “remote-android” platform, the client LLDB forwards two ports, one for connecting to the platform, and another for connecting to the gdbserver. The client ports are configurable through the environment variables ANDROID_PLATFORM_LOCAL_PORT and ANDROID_PLATFORM_LOCAL_GDB_PORT, respectively.</p>
+</blockquote>
+<p>比较坑爹的是，这个参数是最近才添加的，但是<strong>lldb的文档完全没有版本概念</strong>。在我尝试了半天没有效果后，无奈clone了llvm的源码，编了个lldb准备加点日志看下，结果发现编出来的lldb竟然读到了环境变量！！</p>
+<p>中午吃饭时才反应过来，会不会是这个功能是最近才加的，于是赶紧翻了下提交记录，相关链接：</p>
+<ul>
+<li>Oct 26, 2022 : <a href="https://github.com/llvm/llvm-project/commit/1e210abf9925ad08fb7c79894b4ec5ef8f0ef173">Make remote-android local ports configurable · llvm/llvm-project@1e210ab</a></li>
+<li><a href="https://github.com/llvm/llvm-project/issues/58114">How to debug a truly remote android? · Issue #58114 · llvm/llvm-project</a></li>
+</ul>
+<p>目前通过软件源安装的llvm都是14(25 Mar 2022/14.0.0~24 Jun 2022/14.0.6)，这个特性要16才有，怪不得自己试了半天都没有效果，原来是被不严谨的文档坑了（没有版本概念-_-）！！！</p>
+<p>经过这一步，<code>platform connect xxxx</code>终于在Server上跑起来了。接下来就是<code>process attach -p xxx</code>，又遇到了<code>error: Failed to connect port</code>的问题，不过这一次轻车熟路，配置文档中提到的另一个宏就可以了。</p>
+<p>最终需要转发3个端口：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ssh -R  5037:localhost:5037  -R  50012:localhost:50012  -R  50013:localhost:50013  devcloud
+</span></span></code></pre></div><h3 id="35-vscode链路">3.5 VSCode链路</h3>
+<p>接下来就是用VSCode调试的链路了，按理lldb命令行跑通了，应该不存在技术阻碍的。但坑还是挺多的。</p>
+<p>第一，如何让VSCode（的codelldb插件）使用自定义的lldb？比较粗暴：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>mv /usr/bin/lldb /usr/bin/lldb-14
+</span></span><span style="display:flex;"><span>ln -s ~/.install/llvm16.0.0/bin/lldb /usr/bin/lldb
+</span></span></code></pre></div><p>第二个问题比较坑，就是codelldb在启动lldb的时候，无论如何都配置不了自定义的环境变量，比如：</p>
+<ul>
+<li>bashrc /bashprofile</li>
+<li>etc/environment</li>
+<li>.zshrc</li>
+<li>platform shell export ANDROID_PLATFORM_LOCAL_PORT</li>
+</ul>
+<p>最终，在VSCode的Setting里面发现了线索，终于配置成功，codelldb的文档也没有写，略坑（像个无头苍蝇试了一上午&hellip;）</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2022/2023-05-16-11-47-40.png" alt="pic"></p>
+<!--![pic](../../assets/2023-05-16-11-47-40.png)-->
+<p>后面有必要研究下这个配置的原理(<code>lldb.adapterEnv</code>)以及codelldb的源码。</p>
+<p>如此，就基本成功了。剩下一些细节，如<code>add-dsym</code>/<code>append target.exec-search-paths</code>之类的就不赘述了。</p>
+<!--[pic](../../assets/2023-05-16-12-33-58.png)-->
+<h2 id="4-番外">4. 番外</h2>
+<h3 id="41-关于lldb">4.1 关于lldb</h3>
+<p>从官网下载的lldb 16 的命令行补全有问题，但在VSCode的插件中使用又很丝滑。
+本地clone代码编的lldb是能正确补全的。</p>
+<p>Mac平台，lldb在 <code>根目录/.build</code> 一次构建成功:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cmake  -DLLVM_ENABLE_PROJECTS<span style="color:#f92672">=</span><span style="color:#e6db74">&#39;clang;lldb&#39;</span> .. -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Debug -DLLDB_INCLUDE_TESTS<span style="color:#f92672">=</span>OFF
+</span></span></code></pre></div><p>CentOS Server一直离奇失败&hellip;</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>clang-14: error: unable to execute command: Killed
+</span></span><span style="display:flex;"><span>clang-14: error: linker command failed due to signal <span style="color:#f92672">(</span>use -v to see invocation<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>单个目录基本可以成功，后来意识到，应该是<code>make -j20</code>导致clang占用太多内存，补系统Kill了，于是用<code>make</code>跑了一晚了，果然成功了。</p>
+<p>另外，本地要<code>libpython3.10.so</code>，不是很好安装，把相关名字全部软链到到3.8也可以：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>ln -s /usr/lib/libpython3.10.a /usr/local/lib/libpython3.10.a
+</span></span><span style="display:flex;"><span>ln -s /usr/lib64/libpython3.8.so.1.0  /usr/lib/libpython3.10.a
+</span></span><span style="display:flex;"><span>ln -s /usr/lib64/libpython3.8.so.1.0  /usr/lib/libpython3.10.so
+</span></span></code></pre></div><h3 id="42-platform-connect">4.2 platform connect</h3>
+<p><a href="https://stackoverflow.com/questions/53733781/how-do-i-use-lldb-to-debug-c-code-on-android-on-command-line">这个讨论</a>给我很大启发，后面有必要研究下各种通信方式的细节。</p>
+<p>关键是这里：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span><span style="color:#75715e"># 这个host很多教程写死成remote，是一种误导，有必要研究下其含义与依据</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># https://lldb.llvm.org/use/remote.html</span>
+</span></span><span style="display:flex;"><span>platform connect connect://39688bd9:10086
+</span></span></code></pre></div><h3 id="android杀进程">Android杀进程</h3>
+<p><code>adb shell ps</code>和<code>adb shell</code>之后<code>ps</code>，结果是不同的，为啥？</p>
+<h2 id="5-总结">5. 总结</h2>
+<ul>
+<li>虽然对这一领域不甚了解，但还是在有限时间内完成了MVP，不然这事一直挂在心上，挥之不去。但确实因为不熟悉这些工具，走了不少弯路</li>
+<li>继续复用业余时间<strong>打磨</strong>，不仅可以应用在工程中，也可以应用在其他开源项目的研究中</li>
+<li>深入研究没太弄懂的地方
+<ul>
+<li>lldb/adb的原理</li>
+<li>codelldb插件</li>
+<li>对于内网安全和端口转发的理解</li>
+</ul>
+</li>
+</ul>
+<h2 id="6-更新">6. 更新</h2>
+<h3 id="61">6.1</h3>
+<p>2023/06/05,遇到一次诡异现象，明明端口都配置对了，就是connect失败，最终通过杀死本地ssh,重新登录解决。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">(</span>lldb<span style="color:#f92672">)</span> platform <span style="color:#66d9ef">select</span> remote-android
+</span></span><span style="display:flex;"><span>  Platform: remote-android
+</span></span><span style="display:flex;"><span> Connected: no
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>lldb<span style="color:#f92672">)</span> platform connect connect://f6d56607:1234
+</span></span><span style="display:flex;"><span>error: Failed to connect port
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>lldb<span style="color:#f92672">)</span> platform connect connect://f6d56607:1234
+</span></span><span style="display:flex;"><span>  Platform: remote-android
+</span></span><span style="display:flex;"><span>    Triple: aarch64-unknown-linux-android
+</span></span><span style="display:flex;"><span>OS Version: <span style="color:#ae81ff">30</span> <span style="color:#f92672">(</span>4.14.180-perf-g11d81629da33<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>  Hostname: localhost
+</span></span><span style="display:flex;"><span> Connected: yes
+</span></span><span style="display:flex;"><span>WorkingDir: /data/user/0/com.tencent.tdf.core
+</span></span><span style="display:flex;"><span>    Kernel: <span style="color:#75715e">#1 SMP PREEMPT Fri May 20 11:46:47 CST 2022</span>
+</span></span></code></pre></div><p>有问题的时候，ssh的“打开文件和端口”信息里，是没有<code>localhost:60300-&gt;localhost:50012</code> 这样的信息的，说明即使使用了<code>ssh -R</code>，转发也有可能失败。</p>
+<h3 id="62">6.2</h3>
+<p>Server端使用 adb logcat有局限性，日志不是实时刷新的</p>
+
+		</div>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+    <p></p>
+	</article>
+</main>
+
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		🔥 爱折腾的程序员、《Flutter内核源码剖析》作者。 <br>  👈  微信公众号：<b>赵裕</b>（记录所学、所思、所行），欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/repairing-a-massage-pillow-with-a-dead-battery/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">修理一个电池老化的按摩枕</p>
+		</a>
+	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/about-quick-note/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">关于专栏“速记”的说明</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-vscode-as-debug-frontend-of-chromium-project/">使用VSCode作为Chromium的调试前端</a></li>
+			<li class="widget__item"><a class="widget__link" href="/courses/troubleshooting-and-resolution-of-software-bugs/">软件Bug的排查与解决</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/trip-to-beijing-reflections-on-technology-and-life/">北京之行：技术与人生的思考</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/thoughts-on-feedback-after-a-class/">关于一次课后反馈的思考</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%93%E6%A0%8F%E9%80%9F%E8%AE%B0/">专栏|速记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">2</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bug%E8%AE%B0%E5%BD%95/" title="BUG记录">BUG记录 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2023 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

@@ -59,7 +59,7 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>重要时刻 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2023年：重庆、北京 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-04-01</description>
+      <description>个人简介 TODO 重要时刻 2023年：年初升级T10成功，WOT优秀讲师 2022年：绩效双五星（没啥用，但必需得有这份经历&amp;hellip;），腾讯学院优秀讲师。 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2023年：重庆、北京、香港、江西（南昌、庐山、景德镇） 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-10-14</description>
     </item>
     
     <item>
@@ -123,6 +123,15 @@
       
       <guid>/articles/about-quick-note/</guid>
       <description>最近发现一个问题，自己经常会有一些探索性的实践（或者说踩坑），在此过程会沉淀出一些记录，这些记录如果作为文章发表，会有些随意和不成体系，甚至有些地方是错误的；但这些记录其实还是非常有价值的： 一方面，它</description>
+    </item>
+    
+    <item>
+      <title>在服务器上搭建Android开发调试环境的尝试</title>
+      <link>/articles/configure-android-dev-environment-on-a-remote-server/</link>
+      <pubDate>Tue, 16 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/configure-android-dev-environment-on-a-remote-server/</guid>
+      <description>1. 背景说明 当前的开发工作特点： 项目代码C++为主，编译任务重，最大的工程全量编一次80min+，小的改动增量10min+，更新一下增量构建30min+。而且编译期间CPU全部占用，无法进行其他工作 涉及</description>
     </item>
     
     <item>

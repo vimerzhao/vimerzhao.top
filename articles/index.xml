@@ -62,6 +62,15 @@
     </item>
     
     <item>
+      <title>在服务器上搭建Android开发调试环境的尝试</title>
+      <link>/articles/configure-android-dev-environment-on-a-remote-server/</link>
+      <pubDate>Tue, 16 May 2023 00:00:00 +0000</pubDate>
+      
+      <guid>/articles/configure-android-dev-environment-on-a-remote-server/</guid>
+      <description>1. 背景说明 当前的开发工作特点： 项目代码C++为主，编译任务重，最大的工程全量编一次80min+，小的改动增量10min+，更新一下增量构建30min+。而且编译期间CPU全部占用，无法进行其他工作 涉及</description>
+    </item>
+    
+    <item>
       <title>修理一个电池老化的按摩枕</title>
       <link>/articles/repairing-a-massage-pillow-with-a-dead-battery/</link>
       <pubDate>Sat, 29 Apr 2023 00:00:00 +0000</pubDate>
