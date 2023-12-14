@@ -6,33 +6,28 @@
     <description>Recent content in 开发思考 on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 19 Dec 2019 19:38:07 +0800</lastBuildDate><atom:link href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 19 Dec 2019 19:38:07 +0800</lastBuildDate>
+    <atom:link href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文档编写的术与道</title>
       <link>/articles/tao-and-art-of-writing-tech-docs/</link>
       <pubDate>Thu, 19 Dec 2019 19:38:07 +0800</pubDate>
-      
       <guid>/articles/tao-and-art-of-writing-tech-docs/</guid>
       <description>文档的范围很广，本文特指 开发人员撰写的包含基本产品背景和主要技术设计的文档 。 世界观 为什么要写技术文档 对于这个问题，我个人觉得很容易回答，写技术文档可以帮助团队完成 当前的信息共享和长期的知识传承 。对于个</description>
     </item>
-    
     <item>
       <title>修改遗留代码的艺术</title>
       <link>/articles/working-effectively-with-legacy-code/</link>
       <pubDate>Mon, 02 Dec 2019 19:35:55 +0800</pubDate>
-      
       <guid>/articles/working-effectively-with-legacy-code/</guid>
       <description>导语 之前内部的一次技术分享，为了防止PPT弄丢，特意整理成了文章，由于我的PPT风格比较简洁，所以额外加了一些批注。 + 注意这里图片缩小了，可以 新标签页打开图片 查看高清图。 正文 1. 2. 3. 4. 5. 6. 7 这页其实还内</description>
     </item>
-    
     <item>
       <title>你真的需要单元测试吗?</title>
       <link>/articles/ni-zhen-de-xu-yao-dan-yuan-ce-shi-ma/</link>
       <pubDate>Sat, 07 Apr 2018 00:00:00 +0000</pubDate>
-      
       <guid>/articles/ni-zhen-de-xu-yao-dan-yuan-ce-shi-ma/</guid>
       <description>你真的需要单元测试吗? 博主最近在接触一些Android单元测试方面的工作，发现自己并没有体会到大多数文章所宣传的“单元测试会带来工作效率的巨大提升”之类的诸多好处，于是本着批判与自我批判的精神对单元测</description>
     </item>
-    
   </channel>
 </rss>

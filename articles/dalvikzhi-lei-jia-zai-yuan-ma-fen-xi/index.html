@@ -14,8 +14,8 @@
 <meta property="article:published_time" content="2017-08-26T00:00:00+00:00" />
 <meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
 
-		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="Dalvik之类加载源码分析"/>
+
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Dalvik之类加载源码分析"/>
 <meta name="twitter:description" content="Dalvik之类加载源码分析 基于Kitkat源码粗线条地分析了Dalvik虚拟机类的加载过程。 Java类加载 在Java的世界里，所有类的加载，都由java.lang.ClassLoader来负责。Cl"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,14 +135,14 @@
 </blockquote>
 <h3 id="systemclassloader"><code>SystemClassLoader</code></h3>
 <p><code>SystemClassLoader</code>是<code>ClassLoader</code>的一个静态内部类:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SystemClassLoader</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ClassLoader loader <span style="color:#f92672">=</span> ClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">createSystemClassLoader</span><span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">SystemClassLoader</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ClassLoader loader <span style="color:#f92672">=</span> ClassLoader.<span style="color:#a6e22e">createSystemClassLoader</span>();
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>并且是一个单例对象，分析<code>ClassLoader.createSystemClassLoader()</code>可知，其<code>parent</code>为<code>BootClassLoader</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> ClassLoader <span style="color:#a6e22e">createSystemClassLoader</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    String classPath <span style="color:#f92672">=</span> System<span style="color:#f92672">.</span><span style="color:#a6e22e">getProperty</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;java.class.path&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;.&#34;</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> PathClassLoader<span style="color:#f92672">(</span>classPath<span style="color:#f92672">,</span> BootClassLoader<span style="color:#f92672">.</span><span style="color:#a6e22e">getInstance</span><span style="color:#f92672">());</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> ClassLoader <span style="color:#a6e22e">createSystemClassLoader</span>() {
+</span></span><span style="display:flex;"><span>    String classPath <span style="color:#f92672">=</span> System.<span style="color:#a6e22e">getProperty</span>(<span style="color:#e6db74">&#34;java.class.path&#34;</span>, <span style="color:#e6db74">&#34;.&#34;</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> PathClassLoader(classPath, BootClassLoader.<span style="color:#a6e22e">getInstance</span>());
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>其中，<code>PathClassLoader</code>的继承层次为:</p>
 <pre tabindex="0"><code>ClassLoader
     🡳
@@ -151,26 +151,26 @@ BaseDexClassloader
 PathClassLoader
 </code></pre><h3 id="bootclassloader"><code>BootClassLoader</code></h3>
 <p><code>BootClassLoader</code>定义在<code>ClassLoader.java</code>内，但不在<code>ClassLoader</code>内，对包外的类不可见:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BootClassLoader</span> <span style="color:#66d9ef">extends</span> ClassLoader <span style="color:#f92672">{</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">BootClassLoader</span> <span style="color:#66d9ef">extends</span> ClassLoader {
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> BootClassLoader instance<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> BootClassLoader instance;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@FindBugsSuppressWarnings</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED&#34;</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">synchronized</span> BootClassLoader <span style="color:#a6e22e">getInstance</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>instance <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            instance <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BootClassLoader<span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@FindBugsSuppressWarnings</span>(<span style="color:#e6db74">&#34;DP_CREATE_CLASSLOADER_INSIDE_DO_PRIVILEGED&#34;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">synchronized</span> BootClassLoader <span style="color:#a6e22e">getInstance</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (instance <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            instance <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> BootClassLoader();
+</span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> instance<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> instance;
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BootClassLoader</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BootClassLoader</span>() {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">super</span>(<span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">true</span>);
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.....</span>
+</span></span><span style="display:flex;"><span>    .....
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>BootClassLoader</code>是唯一一个没有<code>parent</code>的<code>ClassLoader</code>。</p>
 <h2 id="分析basedexclassloaderjava源码">分析<code>BaseDexClassloader.java</code>源码</h2>
 <p>路径:</p>
@@ -191,26 +191,26 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * {@code null}
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param parent the parent class loader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BaseDexClassLoader</span><span style="color:#f92672">(</span>String dexPath<span style="color:#f92672">,</span> File optimizedDirectory<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>        String libraryPath<span style="color:#f92672">,</span> ClassLoader parent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">super</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">pathList</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DexPathList<span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">,</span> dexPath<span style="color:#f92672">,</span> libraryPath<span style="color:#f92672">,</span> optimizedDirectory<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#a6e22e">BaseDexClassLoader</span>(String dexPath, File optimizedDirectory,
+</span></span><span style="display:flex;"><span>        String libraryPath, ClassLoader parent) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">super</span>(parent);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">this</span>.<span style="color:#a6e22e">pathList</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DexPathList(<span style="color:#66d9ef">this</span>, dexPath, libraryPath, optimizedDirectory);
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>每个参数的含义注释讲的很清楚。可以猜测，<code>BaseDexClassloader</code>的大部分工作其实由<code>DexPathList</code>完成。
 再分析一下<code>findClass</code>方法:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#a6e22e">@Override</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?&gt;</span> findClass<span style="color:#f92672">(</span>String name<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> ClassNotFoundException <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressedExceptions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;();</span>
-</span></span><span style="display:flex;"><span>    Class c <span style="color:#f92672">=</span> pathList<span style="color:#f92672">.</span><span style="color:#a6e22e">findClass</span><span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> suppressedExceptions<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        ClassNotFoundException cnfe <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassNotFoundException<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Didn&#39;t find class \&#34;&#34;</span> <span style="color:#f92672">+</span> name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;\&#34; on path: &#34;</span> <span style="color:#f92672">+</span> pathList<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Throwable t <span style="color:#f92672">:</span> suppressedExceptions<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            cnfe<span style="color:#f92672">.</span><span style="color:#a6e22e">addSuppressed</span><span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> cnfe<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> c<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">protected</span> Class<span style="color:#f92672">&lt;?&gt;</span> findClass(String name) <span style="color:#66d9ef">throws</span> ClassNotFoundException {
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressedExceptions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span>();
+</span></span><span style="display:flex;"><span>    Class c <span style="color:#f92672">=</span> pathList.<span style="color:#a6e22e">findClass</span>(name, suppressedExceptions);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (c <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>        ClassNotFoundException cnfe <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ClassNotFoundException(<span style="color:#e6db74">&#34;Didn&#39;t find class \&#34;&#34;</span> <span style="color:#f92672">+</span> name <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34;\&#34; on path: &#34;</span> <span style="color:#f92672">+</span> pathList);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (Throwable t : suppressedExceptions) {
+</span></span><span style="display:flex;"><span>            cnfe.<span style="color:#a6e22e">addSuppressed</span>(t);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">throw</span> cnfe;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> c;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>确实委托给了<code>DexPathList</code>这个类，下面就来分析一下这个类！</p>
 <h2 id="分析dexpathlistjava源码">分析<code>DexPathList.java</code>源码</h2>
 <p>路径:</p>
@@ -222,69 +222,69 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Makes an array of dex/resource path elements, one per element of
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * the given array.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Element<span style="color:#f92672">[]</span> <span style="color:#a6e22e">makeDexElements</span><span style="color:#f92672">(</span>ArrayList<span style="color:#f92672">&lt;</span>File<span style="color:#f92672">&gt;</span> files<span style="color:#f92672">,</span> File optimizedDirectory<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>        ArrayList<span style="color:#f92672">&lt;</span>IOException<span style="color:#f92672">&gt;</span> suppressedExceptions<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    ArrayList<span style="color:#f92672">&lt;</span>Element<span style="color:#f92672">&gt;</span> elements <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Element<span style="color:#f92672">&gt;();</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Element<span style="color:#f92672">[]</span> <span style="color:#a6e22e">makeDexElements</span>(ArrayList<span style="color:#f92672">&lt;</span>File<span style="color:#f92672">&gt;</span> files, File optimizedDirectory,
+</span></span><span style="display:flex;"><span>        ArrayList<span style="color:#f92672">&lt;</span>IOException<span style="color:#f92672">&gt;</span> suppressedExceptions) {
+</span></span><span style="display:flex;"><span>    ArrayList<span style="color:#f92672">&lt;</span>Element<span style="color:#f92672">&gt;</span> elements <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span>Element<span style="color:#f92672">&gt;</span>();
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Open all files and load the (direct or contained) dex files
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * up front.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>File file <span style="color:#f92672">:</span> files<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        File zip <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        DexFile dex <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        String name <span style="color:#f92672">=</span> file<span style="color:#f92672">.</span><span style="color:#a6e22e">getName</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (File file : files) {
+</span></span><span style="display:flex;"><span>        File zip <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>        DexFile dex <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>        String name <span style="color:#f92672">=</span> file.<span style="color:#a6e22e">getName</span>();
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">endsWith</span><span style="color:#f92672">(</span>DEX_SUFFIX<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Raw dex file (not inside a zip/jar).
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                dex <span style="color:#f92672">=</span> loadDexFile<span style="color:#f92672">(</span>file<span style="color:#f92672">,</span> optimizedDirectory<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException ex<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                System<span style="color:#f92672">.</span><span style="color:#a6e22e">logE</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Unable to load dex file: &#34;</span> <span style="color:#f92672">+</span> file<span style="color:#f92672">,</span> ex<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>name<span style="color:#f92672">.</span><span style="color:#a6e22e">endsWith</span><span style="color:#f92672">(</span>APK_SUFFIX<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> name<span style="color:#f92672">.</span><span style="color:#a6e22e">endsWith</span><span style="color:#f92672">(</span>JAR_SUFFIX<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">||</span> name<span style="color:#f92672">.</span><span style="color:#a6e22e">endsWith</span><span style="color:#f92672">(</span>ZIP_SUFFIX<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            zip <span style="color:#f92672">=</span> file<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (name.<span style="color:#a6e22e">endsWith</span>(DEX_SUFFIX)) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// Raw dex file (not inside a zip/jar).</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                dex <span style="color:#f92672">=</span> loadDexFile(file, optimizedDirectory);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (IOException ex) {
+</span></span><span style="display:flex;"><span>                System.<span style="color:#a6e22e">logE</span>(<span style="color:#e6db74">&#34;Unable to load dex file: &#34;</span> <span style="color:#f92672">+</span> file, ex);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (name.<span style="color:#a6e22e">endsWith</span>(APK_SUFFIX) <span style="color:#f92672">||</span> name.<span style="color:#a6e22e">endsWith</span>(JAR_SUFFIX)
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">||</span> name.<span style="color:#a6e22e">endsWith</span>(ZIP_SUFFIX)) {
+</span></span><span style="display:flex;"><span>            zip <span style="color:#f92672">=</span> file;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                dex <span style="color:#f92672">=</span> loadDexFile<span style="color:#f92672">(</span>file<span style="color:#f92672">,</span> optimizedDirectory<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>IOException suppressed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>                dex <span style="color:#f92672">=</span> loadDexFile(file, optimizedDirectory);
+</span></span><span style="display:flex;"><span>            } <span style="color:#66d9ef">catch</span> (IOException suppressed) {
 </span></span><span style="display:flex;"><span>                <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * IOException might get thrown &#34;legitimately&#34; by the DexFile constructor if the
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * zip file turns out to be resource-only (that is, no classes.dex file in it).
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * Let dex == null and hang on to the exception to add to the tea-leaves for
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * when findClass returns null.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 */</span>
-</span></span><span style="display:flex;"><span>                suppressedExceptions<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>suppressed<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">isDirectory</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// We support directories for looking up resources.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">// This is only useful for running libcore tests.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            elements<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Element<span style="color:#f92672">(</span>file<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">));</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            System<span style="color:#f92672">.</span><span style="color:#a6e22e">logW</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Unknown file type for: &#34;</span> <span style="color:#f92672">+</span> file<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                suppressedExceptions.<span style="color:#a6e22e">add</span>(suppressed);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> (file.<span style="color:#a6e22e">isDirectory</span>()) {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// We support directories for looking up resources.</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// This is only useful for running libcore tests.</span>
+</span></span><span style="display:flex;"><span>            elements.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Element(file, <span style="color:#66d9ef">true</span>, <span style="color:#66d9ef">null</span>, <span style="color:#66d9ef">null</span>));
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            System.<span style="color:#a6e22e">logW</span>(<span style="color:#e6db74">&#34;Unknown file type for: &#34;</span> <span style="color:#f92672">+</span> file);
+</span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>zip <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>dex <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            elements<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Element<span style="color:#f92672">(</span>file<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> zip<span style="color:#f92672">,</span> dex<span style="color:#f92672">));</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> ((zip <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) <span style="color:#f92672">||</span> (dex <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>)) {
+</span></span><span style="display:flex;"><span>            elements.<span style="color:#a6e22e">add</span>(<span style="color:#66d9ef">new</span> Element(file, <span style="color:#66d9ef">false</span>, zip, dex));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> elements<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Element<span style="color:#f92672">[</span>elements<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()]);</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> elements.<span style="color:#a6e22e">toArray</span>(<span style="color:#66d9ef">new</span> Element<span style="color:#f92672">[</span>elements.<span style="color:#a6e22e">size</span>()<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>这个方法是用来处理<code>dexPath</code>中的文件，对于dex文件，会调用<code>loadDexFile</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Constructs a {@code DexFile} instance, as appropriate depending
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * on whether {@code optimizedDirectory} is {@code null}.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> DexFile <span style="color:#a6e22e">loadDexFile</span><span style="color:#f92672">(</span>File file<span style="color:#f92672">,</span> File optimizedDirectory<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throws</span> IOException <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>optimizedDirectory <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DexFile<span style="color:#f92672">(</span>file<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            String optimizedPath <span style="color:#f92672">=</span> optimizedPathFor<span style="color:#f92672">(</span>file<span style="color:#f92672">,</span> optimizedDirectory<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> DexFile<span style="color:#f92672">.</span><span style="color:#a6e22e">loadDex</span><span style="color:#f92672">(</span>file<span style="color:#f92672">.</span><span style="color:#a6e22e">getPath</span><span style="color:#f92672">(),</span> optimizedPath<span style="color:#f92672">,</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> DexFile <span style="color:#a6e22e">loadDexFile</span>(File file, File optimizedDirectory)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">throws</span> IOException {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (optimizedDirectory <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> DexFile(file);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            String optimizedPath <span style="color:#f92672">=</span> optimizedPathFor(file, optimizedDirectory);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> DexFile.<span style="color:#a6e22e">loadDex</span>(file.<span style="color:#a6e22e">getPath</span>(), optimizedPath, 0);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>这样就得到一个<code>DexFile</code>对象，他们组成了字段<code>dexElements</code>，具体加载类的时候，就是遍历这个<code>DexFile</code>数组:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finds the named class in one of the dex files pointed at by
@@ -298,22 +298,22 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the named class or {@code null} if the class is not
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * found in any of the dex files
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Class <span style="color:#a6e22e">findClass</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Element element <span style="color:#f92672">:</span> dexElements<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        DexFile dex <span style="color:#f92672">=</span> element<span style="color:#f92672">.</span><span style="color:#a6e22e">dexFile</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Class <span style="color:#a6e22e">findClass</span>(String name, List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (Element element : dexElements) {
+</span></span><span style="display:flex;"><span>        DexFile dex <span style="color:#f92672">=</span> element.<span style="color:#a6e22e">dexFile</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dex <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            Class clazz <span style="color:#f92672">=</span> dex<span style="color:#f92672">.</span><span style="color:#a6e22e">loadClassBinaryName</span><span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> definingContext<span style="color:#f92672">,</span> suppressed<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>clazz <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> clazz<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dexElementsSuppressedExceptions <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        suppressed<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>dexElementsSuppressedExceptions<span style="color:#f92672">));</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (dex <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            Class clazz <span style="color:#f92672">=</span> dex.<span style="color:#a6e22e">loadClassBinaryName</span>(name, definingContext, suppressed);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (clazz <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> clazz;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (dexElementsSuppressedExceptions <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>        suppressed.<span style="color:#a6e22e">addAll</span>(Arrays.<span style="color:#a6e22e">asList</span>(dexElementsSuppressedExceptions));
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>除了dex文件，<code>DexPathList</code>还负责管理native库，由字段<code>nativeLibraryDirectories</code>持有。在此不做详细解释。</p>
 <h2 id="分析dexfilejava源码">分析<code>DexFile.java</code>源码</h2>
 <p>路径:</p>
@@ -321,26 +321,26 @@ PathClassLoader
 <p>./libcore/dalvik/src/main/java/dalvik/system/DexFile.java</p>
 </blockquote>
 <p>前面调用了<code>loadClassBinaryName</code>，在<code>DexFile</code>实现如下:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Class <span style="color:#a6e22e">loadClassBinaryName</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> ClassLoader loader<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> defineClass<span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> loader<span style="color:#f92672">,</span> mCookie<span style="color:#f92672">,</span> suppressed<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> Class <span style="color:#a6e22e">loadClassBinaryName</span>(String name, ClassLoader loader, List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> defineClass(name, loader, mCookie, suppressed);
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>跳转到<code>defineClass</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Class <span style="color:#a6e22e">defineClass</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> ClassLoader loader<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> cookie<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    Class result <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">=</span> defineClassNative<span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> loader<span style="color:#f92672">,</span> cookie<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>NoClassDefFoundError e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>suppressed <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            suppressed<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>ClassNotFoundException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>suppressed <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            suppressed<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> Class <span style="color:#a6e22e">defineClass</span>(String name, ClassLoader loader, <span style="color:#66d9ef">int</span> cookie,
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed) {
+</span></span><span style="display:flex;"><span>    Class result <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
+</span></span><span style="display:flex;"><span>        result <span style="color:#f92672">=</span> defineClassNative(name, loader, cookie);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span> (NoClassDefFoundError e) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (suppressed <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            suppressed.<span style="color:#a6e22e">add</span>(e);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span> (ClassNotFoundException e) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (suppressed <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            suppressed.<span style="color:#a6e22e">add</span>(e);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> result;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>核心是<code>defineClassNative</code>，这是一个native方法，下面进入native层分析。</p>
 <h2 id="分析dalvik_system_dexfilecpp源码">分析<code>dalvik_system_DexFile.cpp</code>源码</h2>
 <p>路径:</p>
@@ -362,70 +362,70 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Returns a null pointer with no exception if the class was not found.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Throws an exception on other failures.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Dalvik_dalvik_system_DexFile_defineClassNative</span><span style="color:#f92672">(</span><span style="color:#66d9ef">const</span> u4<span style="color:#f92672">*</span> args<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>    JValue<span style="color:#f92672">*</span> pResult<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    StringObject<span style="color:#f92672">*</span> nameObj <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>StringObject<span style="color:#f92672">*)</span> args<span style="color:#f92672">[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">];</span>
-</span></span><span style="display:flex;"><span>    Object<span style="color:#f92672">*</span> loader <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Object<span style="color:#f92672">*)</span> args<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">];</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> cookie <span style="color:#f92672">=</span> args<span style="color:#f92672">[</span><span style="color:#ae81ff">2</span><span style="color:#f92672">];</span>
-</span></span><span style="display:flex;"><span>    ClassObject<span style="color:#f92672">*</span> clazz <span style="color:#f92672">=</span> NULL<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    DexOrJar<span style="color:#f92672">*</span> pDexOrJar <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>DexOrJar<span style="color:#f92672">*)</span> cookie<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    DvmDex<span style="color:#f92672">*</span> pDvmDex<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> name<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">Dalvik_dalvik_system_DexFile_defineClassNative</span>(<span style="color:#66d9ef">const</span> u4<span style="color:#f92672">*</span> args,
+</span></span><span style="display:flex;"><span>    JValue<span style="color:#f92672">*</span> pResult)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    StringObject<span style="color:#f92672">*</span> nameObj <span style="color:#f92672">=</span> (StringObject<span style="color:#f92672">*</span>) args<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    Object<span style="color:#f92672">*</span> loader <span style="color:#f92672">=</span> (Object<span style="color:#f92672">*</span>) args<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> cookie <span style="color:#f92672">=</span> args<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span>;
+</span></span><span style="display:flex;"><span>    ClassObject<span style="color:#f92672">*</span> clazz <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    DexOrJar<span style="color:#f92672">*</span> pDexOrJar <span style="color:#f92672">=</span> (DexOrJar<span style="color:#f92672">*</span>) cookie;
+</span></span><span style="display:flex;"><span>    DvmDex<span style="color:#f92672">*</span> pDvmDex;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> name;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    name <span style="color:#f92672">=</span> dvmCreateCstrFromString<span style="color:#f92672">(</span>nameObj<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    descriptor <span style="color:#f92672">=</span> dvmDotToDescriptor<span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    ALOGV<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;--- Explicit class load &#39;%s&#39; l=%p c=0x%08x&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>        descriptor<span style="color:#f92672">,</span> loader<span style="color:#f92672">,</span> cookie<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    free<span style="color:#f92672">(</span>name<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    name <span style="color:#f92672">=</span> dvmCreateCstrFromString(nameObj);
+</span></span><span style="display:flex;"><span>    descriptor <span style="color:#f92672">=</span> dvmDotToDescriptor(name);
+</span></span><span style="display:flex;"><span>    ALOGV(<span style="color:#e6db74">&#34;--- Explicit class load &#39;%s&#39; l=%p c=0x%08x&#34;</span>,
+</span></span><span style="display:flex;"><span>        descriptor, loader, cookie);
+</span></span><span style="display:flex;"><span>    free(name);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>validateCookie<span style="color:#f92672">(</span>cookie<span style="color:#f92672">))</span>
-</span></span><span style="display:flex;"><span>        RETURN_VOID<span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>validateCookie(cookie))
+</span></span><span style="display:flex;"><span>        RETURN_VOID();
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pDexOrJar<span style="color:#f92672">-&gt;</span>isDex<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>        pDvmDex <span style="color:#f92672">=</span> dvmGetRawDexFileDex<span style="color:#f92672">(</span>pDexOrJar<span style="color:#f92672">-&gt;</span>pRawDexFile<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (pDexOrJar<span style="color:#f92672">-&gt;</span>isDex)
+</span></span><span style="display:flex;"><span>        pDvmDex <span style="color:#f92672">=</span> dvmGetRawDexFileDex(pDexOrJar<span style="color:#f92672">-&gt;</span>pRawDexFile);
 </span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">else</span>
-</span></span><span style="display:flex;"><span>        pDvmDex <span style="color:#f92672">=</span> dvmGetJarFileDex<span style="color:#f92672">(</span>pDexOrJar<span style="color:#f92672">-&gt;</span>pJarFile<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        pDvmDex <span style="color:#f92672">=</span> dvmGetJarFileDex(pDexOrJar<span style="color:#f92672">-&gt;</span>pJarFile);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* once we load something, we can&#39;t unmap the storage */</span>
-</span></span><span style="display:flex;"><span>    pDexOrJar<span style="color:#f92672">-&gt;</span>okayToFree <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    pDexOrJar<span style="color:#f92672">-&gt;</span>okayToFree <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    clazz <span style="color:#f92672">=</span> dvmDefineClass<span style="color:#f92672">(</span>pDvmDex<span style="color:#f92672">,</span> descriptor<span style="color:#f92672">,</span> loader<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    Thread<span style="color:#f92672">*</span> self <span style="color:#f92672">=</span> dvmThreadSelf<span style="color:#f92672">();</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dvmCheckException<span style="color:#f92672">(</span>self<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    clazz <span style="color:#f92672">=</span> dvmDefineClass(pDvmDex, descriptor, loader);
+</span></span><span style="display:flex;"><span>    Thread<span style="color:#f92672">*</span> self <span style="color:#f92672">=</span> dvmThreadSelf();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (dvmCheckException(self)) {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If we threw a &#34;class not found&#34; exception, stifle it, since the
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * contract in the higher method says we simply return null if
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * the class is not found.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         */</span>
-</span></span><span style="display:flex;"><span>        Object<span style="color:#f92672">*</span> excep <span style="color:#f92672">=</span> dvmGetException<span style="color:#f92672">(</span>self<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>strcmp<span style="color:#f92672">(</span>excep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">&#34;Ljava/lang/ClassNotFoundException;&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span> <span style="color:#f92672">||</span>
-</span></span><span style="display:flex;"><span>            strcmp<span style="color:#f92672">(</span>excep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">&#34;Ljava/lang/NoClassDefFoundError;&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            dvmClearException<span style="color:#f92672">(</span>self<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        clazz <span style="color:#f92672">=</span> NULL<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        Object<span style="color:#f92672">*</span> excep <span style="color:#f92672">=</span> dvmGetException(self);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (strcmp(excep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor,
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">&#34;Ljava/lang/ClassNotFoundException;&#34;</span>) <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>            strcmp(excep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor,
+</span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">&#34;Ljava/lang/NoClassDefFoundError;&#34;</span>) <span style="color:#f92672">==</span> 0)
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            dvmClearException(self);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        clazz <span style="color:#f92672">=</span> NULL;
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    free<span style="color:#f92672">(</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    RETURN_PTR<span style="color:#f92672">(</span>clazz<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    free(descriptor);
+</span></span><span style="display:flex;"><span>    RETURN_PTR(clazz);
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>分析可知关键在于<code>dvmDefineClass</code>这个函数:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Load the named class (by descriptor) from the specified DEX file.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Used by class loaders to instantiate a class object from a
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * VM-managed DEX.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span>ClassObject<span style="color:#f92672">*</span> dvmDefineClass<span style="color:#f92672">(</span>DvmDex<span style="color:#f92672">*</span> pDvmDex<span style="color:#f92672">,</span> <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>    Object<span style="color:#f92672">*</span> classLoader<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span><span style="color:#f92672">(</span>pDvmDex <span style="color:#f92672">!=</span> NULL<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>ClassObject<span style="color:#f92672">*</span> dvmDefineClass(DvmDex<span style="color:#f92672">*</span> pDvmDex, <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor,
+</span></span><span style="display:flex;"><span>    Object<span style="color:#f92672">*</span> classLoader)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">assert</span>(pDvmDex <span style="color:#f92672">!=</span> NULL);
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> findClassNoInit<span style="color:#f92672">(</span>descriptor<span style="color:#f92672">,</span> classLoader<span style="color:#f92672">,</span> pDvmDex<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> findClassNoInit(descriptor, classLoader, pDvmDex);
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>下面分析<code>findClassNoInit</code>。目前流程:</p>
 <blockquote>
 <p>load🡲find</p>
@@ -450,10 +450,10 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * class twice in the same class loader, they should get a LinkageError,
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * but inadvertent simultaneous class references should &#34;just work&#34;.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> ClassObject<span style="color:#f92672">*</span> findClassNoInit<span style="color:#f92672">(</span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor<span style="color:#f92672">,</span> Object<span style="color:#f92672">*</span> loader<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>    DvmDex<span style="color:#f92672">*</span> pDvmDex<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">......</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> ClassObject<span style="color:#f92672">*</span> findClassNoInit(<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor, Object<span style="color:#f92672">*</span> loader,
+</span></span><span style="display:flex;"><span>    DvmDex<span style="color:#f92672">*</span> pDvmDex)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    ......
 </span></span></code></pre></div><h3 id="检查是否加载">检查是否加载</h3>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>    ......
 </span></span><span style="display:flex;"><span>    clazz <span style="color:#f92672">=</span> dvmLookupClass(descriptor, loader, true);
@@ -496,40 +496,40 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * &#34;descriptor&#34; should look like &#34;Landroid/debug/Stuff;&#34;.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> DexClassDef<span style="color:#f92672">*</span> dexFindClass<span style="color:#f92672">(</span><span style="color:#66d9ef">const</span> DexFile<span style="color:#f92672">*</span> pDexFile<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> DexClassLookup<span style="color:#f92672">*</span> pLookup <span style="color:#f92672">=</span> pDexFile<span style="color:#f92672">-&gt;</span>pClassLookup<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    u4 hash<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> idx<span style="color:#f92672">,</span> mask<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">const</span> DexClassDef<span style="color:#f92672">*</span> dexFindClass(<span style="color:#66d9ef">const</span> DexFile<span style="color:#f92672">*</span> pDexFile,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> descriptor)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> DexClassLookup<span style="color:#f92672">*</span> pLookup <span style="color:#f92672">=</span> pDexFile<span style="color:#f92672">-&gt;</span>pClassLookup;
+</span></span><span style="display:flex;"><span>    u4 hash;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> idx, mask;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    hash <span style="color:#f92672">=</span> classDescriptorHash<span style="color:#f92672">(</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    mask <span style="color:#f92672">=</span> pLookup<span style="color:#f92672">-&gt;</span>numEntries <span style="color:#f92672">-</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    idx <span style="color:#f92672">=</span> hash <span style="color:#f92672">&amp;</span> mask<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    hash <span style="color:#f92672">=</span> classDescriptorHash(descriptor);
+</span></span><span style="display:flex;"><span>    mask <span style="color:#f92672">=</span> pLookup<span style="color:#f92672">-&gt;</span>numEntries <span style="color:#f92672">-</span> 1;
+</span></span><span style="display:flex;"><span>    idx <span style="color:#f92672">=</span> hash <span style="color:#f92672">&amp;</span> mask;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Search until we find a matching entry or an empty slot.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> offset<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (<span style="color:#66d9ef">true</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> offset;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        offset <span style="color:#f92672">=</span> pLookup<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">[</span>idx<span style="color:#f92672">].</span><span style="color:#a6e22e">classDescriptorOffset</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>offset <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> NULL<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        offset <span style="color:#f92672">=</span> pLookup<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">[</span>idx<span style="color:#f92672">]</span>.<span style="color:#a6e22e">classDescriptorOffset</span>;
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (offset <span style="color:#f92672">==</span> 0)
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> NULL;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pLookup<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">[</span>idx<span style="color:#f92672">].</span><span style="color:#a6e22e">classDescriptorHash</span> <span style="color:#f92672">==</span> hash<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> str<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (pLookup<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">[</span>idx<span style="color:#f92672">]</span>.<span style="color:#a6e22e">classDescriptorHash</span> <span style="color:#f92672">==</span> hash) {
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> str;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            str <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*)</span> <span style="color:#f92672">(</span>pDexFile<span style="color:#f92672">-&gt;</span>baseAddr <span style="color:#f92672">+</span> offset<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>strcmp<span style="color:#f92672">(</span>str<span style="color:#f92672">,</span> descriptor<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">const</span> DexClassDef<span style="color:#f92672">*)</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">(</span>pDexFile<span style="color:#f92672">-&gt;</span>baseAddr <span style="color:#f92672">+</span> pLookup<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">[</span>idx<span style="color:#f92672">].</span><span style="color:#a6e22e">classDefOffset</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            str <span style="color:#f92672">=</span> (<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span>) (pDexFile<span style="color:#f92672">-&gt;</span>baseAddr <span style="color:#f92672">+</span> offset);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (strcmp(str, descriptor) <span style="color:#f92672">==</span> 0) {
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> (<span style="color:#66d9ef">const</span> DexClassDef<span style="color:#f92672">*</span>)
+</span></span><span style="display:flex;"><span>                    (pDexFile<span style="color:#f92672">-&gt;</span>baseAddr <span style="color:#f92672">+</span> pLookup<span style="color:#f92672">-&gt;</span>table<span style="color:#f92672">[</span>idx<span style="color:#f92672">]</span>.<span style="color:#a6e22e">classDefOffset</span>);
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        idx <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>idx <span style="color:#f92672">+</span> <span style="color:#ae81ff">1</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span> mask<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        idx <span style="color:#f92672">=</span> (idx <span style="color:#f92672">+</span> 1) <span style="color:#f92672">&amp;</span> mask;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>即从dex文件中寻找一个类。流程目前:</p>
 <blockquote>
 <p>find🡲define</p>
@@ -784,11 +784,11 @@ PathClassLoader
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/use-vscode-as-debug-frontend-of-chromium-project/">使用VSCode作为Chromium的调试前端</a></li>
 			<li class="widget__item"><a class="widget__link" href="/courses/troubleshooting-and-resolution-of-software-bugs/">软件Bug的排查与解决</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/trip-to-beijing-reflections-on-technology-and-life/">北京之行：技术与人生的思考</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/thoughts-on-feedback-after-a-class/">关于一次课后反馈的思考</a></li>
 		</ul>
 	</div>
 </div>

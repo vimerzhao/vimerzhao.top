@@ -6,15 +6,14 @@
     <description>Recent content in BUG记录 on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Apr 2023 00:00:00 +0000</lastBuildDate><atom:link href="/tags/bug%E8%AE%B0%E5%BD%95/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 07 Apr 2023 00:00:00 +0000</lastBuildDate>
+    <atom:link href="/tags/bug%E8%AE%B0%E5%BD%95/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>色彩空间与取色器错误</title>
       <link>/articles/color-picker-bug-on-imac/</link>
       <pubDate>Fri, 07 Apr 2023 00:00:00 +0000</pubDate>
-      
       <guid>/articles/color-picker-bug-on-imac/</guid>
       <description>背景 同事反馈，用我们的框架绘制了一个纯红色（RGB为#FF0000）的区域，使用取色器却无法取到正确的值，其他颜色也基本都会有一定程度的误差。 我尝试了一下，确实会出现这个情况，这里的取色器可以是： ph</description>
     </item>
-    
   </channel>
 </rss>

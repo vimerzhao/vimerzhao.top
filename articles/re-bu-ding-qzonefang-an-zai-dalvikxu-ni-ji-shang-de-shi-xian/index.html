@@ -14,8 +14,8 @@
 <meta property="article:published_time" content="2017-08-21T00:00:00+00:00" />
 <meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
 
-		<meta name="twitter:card" content="summary"/>
-<meta name="twitter:title" content="热补丁：Qzone方案在Dalvik虚拟机上的实现"/>
+
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="热补丁：Qzone方案在Dalvik虚拟机上的实现"/>
 <meta name="twitter:description" content="热补丁：Qzone方案在Dalvik虚拟机上的实现 详细分析了Qzone热修复方案在Dalvik平台的实现，包括插桩的由来及其实现。 Qzone热修复原理分析 Qzone热修复方案基于的是android de"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -126,22 +126,22 @@
 <h2 id="qzone热修复原理分析">Qzone热修复原理分析</h2>
 <p>Qzone热修复方案基于的是android dex分包方案的，关于dex分包方案，网上有几篇解释了，所以这里就不再赘述。简单的概括一下，就是把多个dex文件塞入到app的classloader之中，但是android dex拆包方案中的类是没有重复的，如果classes.dex和classes1.dex中有重复的类，当用到这个重复的类的时候，系统会选择哪个类进行加载呢？
 首先，分析一下类加载的代码(<code>./libcore/dalvik/src/main/java/dalvik/system/DexPathList.java</code>):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Class <span style="color:#a6e22e">findClass</span><span style="color:#f92672">(</span>String name<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Element element <span style="color:#f92672">:</span> dexElements<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            DexFile dex <span style="color:#f92672">=</span> element<span style="color:#f92672">.</span><span style="color:#a6e22e">dexFile</span><span style="color:#f92672">;</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> Class <span style="color:#a6e22e">findClass</span>(String name, List<span style="color:#f92672">&lt;</span>Throwable<span style="color:#f92672">&gt;</span> suppressed) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> (Element element : dexElements) {
+</span></span><span style="display:flex;"><span>            DexFile dex <span style="color:#f92672">=</span> element.<span style="color:#a6e22e">dexFile</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dex <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                Class clazz <span style="color:#f92672">=</span> dex<span style="color:#f92672">.</span><span style="color:#a6e22e">loadClassBinaryName</span><span style="color:#f92672">(</span>name<span style="color:#f92672">,</span> definingContext<span style="color:#f92672">,</span> suppressed<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>clazz <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> clazz<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dexElementsSuppressedExceptions <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            suppressed<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>dexElementsSuppressedExceptions<span style="color:#f92672">));</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (dex <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                Class clazz <span style="color:#f92672">=</span> dex.<span style="color:#a6e22e">loadClassBinaryName</span>(name, definingContext, suppressed);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> (clazz <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">return</span> clazz;
+</span></span><span style="display:flex;"><span>                }
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (dexElementsSuppressedExceptions <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span>) {
+</span></span><span style="display:flex;"><span>            suppressed.<span style="color:#a6e22e">addAll</span>(Arrays.<span style="color:#a6e22e">asList</span>(dexElementsSuppressedExceptions));
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span>;
+</span></span><span style="display:flex;"><span>    }
 </span></span></code></pre></div><p>一个ClassLoader可以包含多个dex文件，每个dex文件是一个Element，多个dex文件排列成一个有序的数组dexElements，当找类的时候，会按顺序遍历dex文件，然后从当前遍历的dex文件中找类，如果找类则返回，如果找不到从下一个dex文件继续查找。理论上，如果在不同的dex中有相同的类存在，那么会优先选择排在前面的dex文件的类。在此基础上，Qzone团队构想了热补丁的方案，把有问题的类打包到一个dex（patch.dex）中去，然后把这个dex插入到Elements的最前面，如下图:
 pic1</p>
 <p>这就是Qzone的热补丁方案。</p>
@@ -177,23 +177,23 @@ pic2</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Returns NULL with an exception raised on failure.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span>ClassObject<span style="color:#f92672">*</span> dvmResolveClass<span style="color:#f92672">(</span><span style="color:#66d9ef">const</span> ClassObject<span style="color:#f92672">*</span> referrer<span style="color:#f92672">,</span> u4 classIdx<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>    bool fromUnverifiedConstant<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    DvmDex<span style="color:#f92672">*</span> pDvmDex <span style="color:#f92672">=</span> referrer<span style="color:#f92672">-&gt;</span>pDvmDex<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    ClassObject<span style="color:#f92672">*</span> resClass<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> className<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>ClassObject<span style="color:#f92672">*</span> dvmResolveClass(<span style="color:#66d9ef">const</span> ClassObject<span style="color:#f92672">*</span> referrer, u4 classIdx,
+</span></span><span style="display:flex;"><span>    bool fromUnverifiedConstant)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    DvmDex<span style="color:#f92672">*</span> pDvmDex <span style="color:#f92672">=</span> referrer<span style="color:#f92672">-&gt;</span>pDvmDex;
+</span></span><span style="display:flex;"><span>    ClassObject<span style="color:#f92672">*</span> resClass;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> className;
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Check the table first -- this gets called from the other &#34;resolve&#34;
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * methods.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    resClass <span style="color:#f92672">=</span> dvmDexGetResolvedClass<span style="color:#f92672">(</span>pDvmDex<span style="color:#f92672">,</span> classIdx<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resClass <span style="color:#f92672">!=</span> NULL<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> resClass<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    resClass <span style="color:#f92672">=</span> dvmDexGetResolvedClass(pDvmDex, classIdx);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (resClass <span style="color:#f92672">!=</span> NULL)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> resClass;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    LOGVV<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;--- resolving class %u (referrer=%s cl=%p)&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>        classIdx<span style="color:#f92672">,</span> referrer<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span> referrer<span style="color:#f92672">-&gt;</span>classLoader<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    LOGVV(<span style="color:#e6db74">&#34;--- resolving class %u (referrer=%s cl=%p)&#34;</span>,
+</span></span><span style="display:flex;"><span>        classIdx, referrer<span style="color:#f92672">-&gt;</span>descriptor, referrer<span style="color:#f92672">-&gt;</span>classLoader);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Class hasn&#39;t been loaded yet, or is in the process of being loaded
@@ -204,15 +204,15 @@ pic2</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If this is an array class, we&#39;ll generate it here.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    className <span style="color:#f92672">=</span> dexStringByTypeIdx<span style="color:#f92672">(</span>pDvmDex<span style="color:#f92672">-&gt;</span>pDexFile<span style="color:#f92672">,</span> classIdx<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>className<span style="color:#f92672">[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\0&#39;</span> <span style="color:#f92672">&amp;&amp;</span> className<span style="color:#f92672">[</span><span style="color:#ae81ff">1</span><span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    className <span style="color:#f92672">=</span> dexStringByTypeIdx(pDvmDex<span style="color:#f92672">-&gt;</span>pDexFile, classIdx);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (className<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;\0&#39;</span> <span style="color:#f92672">&amp;&amp;</span> className<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;\0&#39;</span>) {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* primitive type */</span>
-</span></span><span style="display:flex;"><span>        resClass <span style="color:#f92672">=</span> dvmFindPrimitiveClass<span style="color:#f92672">(</span>className<span style="color:#f92672">[</span><span style="color:#ae81ff">0</span><span style="color:#f92672">]);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        resClass <span style="color:#f92672">=</span> dvmFindClassNoInit<span style="color:#f92672">(</span>className<span style="color:#f92672">,</span> referrer<span style="color:#f92672">-&gt;</span>classLoader<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        resClass <span style="color:#f92672">=</span> dvmFindPrimitiveClass(className<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span>);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>        resClass <span style="color:#f92672">=</span> dvmFindClassNoInit(className, referrer<span style="color:#f92672">-&gt;</span>classLoader);
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>resClass <span style="color:#f92672">!=</span> NULL<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (resClass <span style="color:#f92672">!=</span> NULL) {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If the referrer was pre-verified, the resolved class must come
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * from the same DEX or from a bootstrap class.  The pre-verifier
@@ -232,34 +232,34 @@ pic2</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Ditto for class references from annotations and exception
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * handler lists.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         */</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>fromUnverifiedConstant <span style="color:#f92672">&amp;&amp;</span>
-</span></span><span style="display:flex;"><span>            IS_CLASS_FLAG_SET<span style="color:#f92672">(</span>referrer<span style="color:#f92672">,</span> CLASS_ISPREVERIFIED<span style="color:#f92672">))</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            ClassObject<span style="color:#f92672">*</span> resClassCheck <span style="color:#f92672">=</span> resClass<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dvmIsArrayClass<span style="color:#f92672">(</span>resClassCheck<span style="color:#f92672">))</span>
-</span></span><span style="display:flex;"><span>                resClassCheck <span style="color:#f92672">=</span> resClassCheck<span style="color:#f92672">-&gt;</span>elementClass<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>fromUnverifiedConstant <span style="color:#f92672">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>            IS_CLASS_FLAG_SET(referrer, CLASS_ISPREVERIFIED))
+</span></span><span style="display:flex;"><span>        {
+</span></span><span style="display:flex;"><span>            ClassObject<span style="color:#f92672">*</span> resClassCheck <span style="color:#f92672">=</span> resClass;
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (dvmIsArrayClass(resClassCheck))
+</span></span><span style="display:flex;"><span>                resClassCheck <span style="color:#f92672">=</span> resClassCheck<span style="color:#f92672">-&gt;</span>elementClass;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>referrer<span style="color:#f92672">-&gt;</span>pDvmDex <span style="color:#f92672">!=</span> resClassCheck<span style="color:#f92672">-&gt;</span>pDvmDex <span style="color:#f92672">&amp;&amp;</span>
-</span></span><span style="display:flex;"><span>                resClassCheck<span style="color:#f92672">-&gt;</span>classLoader <span style="color:#f92672">!=</span> NULL<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>                ALOGW<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Class resolved by unexpected DEX:&#34;</span>
-</span></span><span style="display:flex;"><span>                     <span style="color:#e6db74">&#34; %s(%p):%p ref [%s] %s(%p):%p&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                    referrer<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span> referrer<span style="color:#f92672">-&gt;</span>classLoader<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                    referrer<span style="color:#f92672">-&gt;</span>pDvmDex<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                    resClass<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span> resClassCheck<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                    resClassCheck<span style="color:#f92672">-&gt;</span>classLoader<span style="color:#f92672">,</span> resClassCheck<span style="color:#f92672">-&gt;</span>pDvmDex<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>                ALOGW<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;(%s had used a different %s during pre-verification)&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                    referrer<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span> resClass<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>                dvmThrowIllegalAccessError<span style="color:#f92672">(</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (referrer<span style="color:#f92672">-&gt;</span>pDvmDex <span style="color:#f92672">!=</span> resClassCheck<span style="color:#f92672">-&gt;</span>pDvmDex <span style="color:#f92672">&amp;&amp;</span>
+</span></span><span style="display:flex;"><span>                resClassCheck<span style="color:#f92672">-&gt;</span>classLoader <span style="color:#f92672">!=</span> NULL)
+</span></span><span style="display:flex;"><span>            {
+</span></span><span style="display:flex;"><span>                ALOGW(<span style="color:#e6db74">&#34;Class resolved by unexpected DEX:&#34;</span>
+</span></span><span style="display:flex;"><span>                     <span style="color:#e6db74">&#34; %s(%p):%p ref [%s] %s(%p):%p&#34;</span>,
+</span></span><span style="display:flex;"><span>                    referrer<span style="color:#f92672">-&gt;</span>descriptor, referrer<span style="color:#f92672">-&gt;</span>classLoader,
+</span></span><span style="display:flex;"><span>                    referrer<span style="color:#f92672">-&gt;</span>pDvmDex,
+</span></span><span style="display:flex;"><span>                    resClass<span style="color:#f92672">-&gt;</span>descriptor, resClassCheck<span style="color:#f92672">-&gt;</span>descriptor,
+</span></span><span style="display:flex;"><span>                    resClassCheck<span style="color:#f92672">-&gt;</span>classLoader, resClassCheck<span style="color:#f92672">-&gt;</span>pDvmDex);
+</span></span><span style="display:flex;"><span>                ALOGW(<span style="color:#e6db74">&#34;(%s had used a different %s during pre-verification)&#34;</span>,
+</span></span><span style="display:flex;"><span>                    referrer<span style="color:#f92672">-&gt;</span>descriptor, resClass<span style="color:#f92672">-&gt;</span>descriptor);
+</span></span><span style="display:flex;"><span>                dvmThrowIllegalAccessError(
 </span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;Class ref in pre-verified class resolved to unexpected &#34;</span>
-</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;implementation&#34;</span><span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> NULL<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;implementation&#34;</span>);
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> NULL;
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>        LOGVV<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;###### +ResolveClass(%s): referrer=%s dex=%p ldr=%p ref=%d&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>            resClass<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span> referrer<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">,</span> referrer<span style="color:#f92672">-&gt;</span>pDvmDex<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>            referrer<span style="color:#f92672">-&gt;</span>classLoader<span style="color:#f92672">,</span> classIdx<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        LOGVV(<span style="color:#e6db74">&#34;###### +ResolveClass(%s): referrer=%s dex=%p ldr=%p ref=%d&#34;</span>,
+</span></span><span style="display:flex;"><span>            resClass<span style="color:#f92672">-&gt;</span>descriptor, referrer<span style="color:#f92672">-&gt;</span>descriptor, referrer<span style="color:#f92672">-&gt;</span>pDvmDex,
+</span></span><span style="display:flex;"><span>            referrer<span style="color:#f92672">-&gt;</span>classLoader, classIdx);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Add what we found to the list so we can skip the class search
@@ -268,27 +268,27 @@ pic2</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * TODO: should we be doing this when fromUnverifiedConstant==true?
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * (see comments at top of oo/Class.c)
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         */</span>
-</span></span><span style="display:flex;"><span>        dvmDexSetResolvedClass<span style="color:#f92672">(</span>pDvmDex<span style="color:#f92672">,</span> classIdx<span style="color:#f92672">,</span> resClass<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        dvmDexSetResolvedClass(pDvmDex, classIdx, resClass);
+</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">else</span> {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* not found, exception should be raised */</span>
-</span></span><span style="display:flex;"><span>        LOGVV<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Class not found: %s&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>            dexStringByTypeIdx<span style="color:#f92672">(</span>pDvmDex<span style="color:#f92672">-&gt;</span>pDexFile<span style="color:#f92672">,</span> classIdx<span style="color:#f92672">));</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span><span style="color:#f92672">(</span>dvmCheckException<span style="color:#f92672">(</span>dvmThreadSelf<span style="color:#f92672">()));</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        LOGVV(<span style="color:#e6db74">&#34;Class not found: %s&#34;</span>,
+</span></span><span style="display:flex;"><span>            dexStringByTypeIdx(pDvmDex<span style="color:#f92672">-&gt;</span>pDexFile, classIdx));
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">assert</span>(dvmCheckException(dvmThreadSelf()));
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> resClass<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> resClass;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p><code>./dalvik/vm/analysis/DexPrepare.cpp</code></p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Verify and/or optimize a specific class.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">verifyAndOptimizeClass</span><span style="color:#f92672">(</span>DexFile<span style="color:#f92672">*</span> pDexFile<span style="color:#f92672">,</span> ClassObject<span style="color:#f92672">*</span> clazz<span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> DexClassDef<span style="color:#f92672">*</span> pClassDef<span style="color:#f92672">,</span> bool doVerify<span style="color:#f92672">,</span> bool doOpt<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> classDescriptor<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    bool verified <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">verifyAndOptimizeClass</span>(DexFile<span style="color:#f92672">*</span> pDexFile, ClassObject<span style="color:#f92672">*</span> clazz,
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> DexClassDef<span style="color:#f92672">*</span> pClassDef, bool doVerify, bool doOpt)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">*</span> classDescriptor;
+</span></span><span style="display:flex;"><span>    bool verified <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span>;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>clazz<span style="color:#f92672">-&gt;</span>pDvmDex<span style="color:#f92672">-&gt;</span>pDexFile <span style="color:#f92672">!=</span> pDexFile<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (clazz<span style="color:#f92672">-&gt;</span>pDvmDex<span style="color:#f92672">-&gt;</span>pDexFile <span style="color:#f92672">!=</span> pDexFile) {
 </span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * The current DEX file defined a class that is also present in the
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * bootstrap class path.  The class loader favored the bootstrap
@@ -296,47 +296,47 @@ pic2</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * (a) not the one we want to examine, and (b) mapped read-only,
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * so we will seg fault if we try to rewrite instructions inside it.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         */</span>
-</span></span><span style="display:flex;"><span>        ALOGD<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DexOpt: not verifying/optimizing &#39;%s&#39;: multiple definitions&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>            clazz<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        ALOGD(<span style="color:#e6db74">&#34;DexOpt: not verifying/optimizing &#39;%s&#39;: multiple definitions&#34;</span>,
+</span></span><span style="display:flex;"><span>            clazz<span style="color:#f92672">-&gt;</span>descriptor);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span>;
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    classDescriptor <span style="color:#f92672">=</span> dexStringByTypeIdx<span style="color:#f92672">(</span>pDexFile<span style="color:#f92672">,</span> pClassDef<span style="color:#f92672">-&gt;</span>classIdx<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    classDescriptor <span style="color:#f92672">=</span> dexStringByTypeIdx(pDexFile, pClassDef<span style="color:#f92672">-&gt;</span>classIdx);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * First, try to verify it.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>doVerify<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dvmVerifyClass<span style="color:#f92672">(</span>clazz<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (doVerify) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (dvmVerifyClass(clazz)) {
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">/*
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * Set the &#34;is preverified&#34; flag in the DexClassDef.  We
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * do it here, rather than in the ClassObject structure,
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * because the DexClassDef is part of the odex file.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">             */</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">assert</span><span style="color:#f92672">((</span>clazz<span style="color:#f92672">-&gt;</span>accessFlags <span style="color:#f92672">&amp;</span> JAVA_FLAGS_MASK<span style="color:#f92672">)</span> <span style="color:#f92672">==</span>
-</span></span><span style="display:flex;"><span>                pClassDef<span style="color:#f92672">-&gt;</span>accessFlags<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">((</span>DexClassDef<span style="color:#f92672">*)</span>pClassDef<span style="color:#f92672">)-&gt;</span>accessFlags <span style="color:#f92672">|=</span> CLASS_ISPREVERIFIED<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>            verified <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// TODO: log when in verbose mode
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            ALOGV<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DexOpt: &#39;%s&#39; failed verification&#34;</span><span style="color:#f92672">,</span> classDescriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">assert</span>((clazz<span style="color:#f92672">-&gt;</span>accessFlags <span style="color:#f92672">&amp;</span> JAVA_FLAGS_MASK) <span style="color:#f92672">==</span>
+</span></span><span style="display:flex;"><span>                pClassDef<span style="color:#f92672">-&gt;</span>accessFlags);
+</span></span><span style="display:flex;"><span>            ((DexClassDef<span style="color:#f92672">*</span>)pClassDef)<span style="color:#f92672">-&gt;</span>accessFlags <span style="color:#f92672">|=</span> CLASS_ISPREVERIFIED;
+</span></span><span style="display:flex;"><span>            verified <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">// TODO: log when in verbose mode</span>
+</span></span><span style="display:flex;"><span>            ALOGV(<span style="color:#e6db74">&#34;DexOpt: &#39;%s&#39; failed verification&#34;</span>, classDescriptor);
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>doOpt<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        bool needVerify <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>gDvm<span style="color:#f92672">.</span><span style="color:#a6e22e">dexOptMode</span> <span style="color:#f92672">==</span> OPTIMIZE_MODE_VERIFIED <span style="color:#f92672">||</span>
-</span></span><span style="display:flex;"><span>                           gDvm<span style="color:#f92672">.</span><span style="color:#a6e22e">dexOptMode</span> <span style="color:#f92672">==</span> OPTIMIZE_MODE_FULL<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>verified <span style="color:#f92672">&amp;&amp;</span> needVerify<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            ALOGV<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;DexOpt: not optimizing &#39;%s&#39;: not verified&#34;</span><span style="color:#f92672">,</span>
-</span></span><span style="display:flex;"><span>                classDescriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            dvmOptimizeClass<span style="color:#f92672">(</span>clazz<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (doOpt) {
+</span></span><span style="display:flex;"><span>        bool needVerify <span style="color:#f92672">=</span> (gDvm.<span style="color:#a6e22e">dexOptMode</span> <span style="color:#f92672">==</span> OPTIMIZE_MODE_VERIFIED <span style="color:#f92672">||</span>
+</span></span><span style="display:flex;"><span>                           gDvm.<span style="color:#a6e22e">dexOptMode</span> <span style="color:#f92672">==</span> OPTIMIZE_MODE_FULL);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>verified <span style="color:#f92672">&amp;&amp;</span> needVerify) {
+</span></span><span style="display:flex;"><span>            ALOGV(<span style="color:#e6db74">&#34;DexOpt: not optimizing &#39;%s&#39;: not verified&#34;</span>,
+</span></span><span style="display:flex;"><span>                classDescriptor);
+</span></span><span style="display:flex;"><span>        } <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>            dvmOptimizeClass(clazz, <span style="color:#66d9ef">false</span>);
 </span></span><span style="display:flex;"><span>
 </span></span><span style="display:flex;"><span>            <span style="color:#75715e">/* set the flag whether or not we actually changed anything */</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#f92672">((</span>DexClassDef<span style="color:#f92672">*)</span>pClassDef<span style="color:#f92672">)-&gt;</span>accessFlags <span style="color:#f92672">|=</span> CLASS_ISOPTIMIZED<span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            ((DexClassDef<span style="color:#f92672">*</span>)pClassDef)<span style="color:#f92672">-&gt;</span>accessFlags <span style="color:#f92672">|=</span> CLASS_ISOPTIMIZED;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><p>这段代码是dex转化成odex(dexopt)的代码中的一段，我们知道当一个apk在安装的时候，apk中的classes.dex会被虚拟机(dexopt)优化成odex文件，然后才会拿去执行。
 虚拟机在启动的时候，会有许多的启动参数，其中一项就是verify选项，当verify选项被打开的时候，上面doVerify变量为true，那么就会执行dvmVerifyClass进行类的校验，如果dvmVerifyClass校验类成功，那么这个类会被打上CLASS_ISPREVERIFIED的标志，那么具体的校验过程是什么样子的呢？
 此代码在<code>./dalvik/vm/analysis/DexVerify.cpp</code>中，如下：</p>
@@ -349,30 +349,30 @@ pic2</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Returns &#34;true&#34; on success.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
-</span></span><span style="display:flex;"><span>bool <span style="color:#a6e22e">dvmVerifyClass</span><span style="color:#f92672">(</span>ClassObject<span style="color:#f92672">*</span> clazz<span style="color:#f92672">)</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>bool <span style="color:#a6e22e">dvmVerifyClass</span>(ClassObject<span style="color:#f92672">*</span> clazz)
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dvmIsClassVerified<span style="color:#f92672">(</span>clazz<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        ALOGD<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Ignoring duplicate verify attempt on %s&#34;</span><span style="color:#f92672">,</span> clazz<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (dvmIsClassVerified(clazz)) {
+</span></span><span style="display:flex;"><span>        ALOGD(<span style="color:#e6db74">&#34;Ignoring duplicate verify attempt on %s&#34;</span>, clazz<span style="color:#f92672">-&gt;</span>descriptor);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> clazz<span style="color:#f92672">-&gt;</span>directMethodCount<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>verifyMethod<span style="color:#f92672">(&amp;</span>clazz<span style="color:#f92672">-&gt;</span>directMethods<span style="color:#f92672">[</span>i<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            LOG_VFY<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Verifier rejected class %s&#34;</span><span style="color:#f92672">,</span> clazz<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> clazz<span style="color:#f92672">-&gt;</span>virtualMethodCount<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>verifyMethod<span style="color:#f92672">(&amp;</span>clazz<span style="color:#f92672">-&gt;</span>virtualMethods<span style="color:#f92672">[</span>i<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
-</span></span><span style="display:flex;"><span>            LOG_VFY<span style="color:#f92672">(</span><span style="color:#e6db74">&#34;Verifier rejected class %s&#34;</span><span style="color:#f92672">,</span> clazz<span style="color:#f92672">-&gt;</span>descriptor<span style="color:#f92672">);</span>
-</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
-</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> clazz<span style="color:#f92672">-&gt;</span>directMethodCount; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>verifyMethod(<span style="color:#f92672">&amp;</span>clazz<span style="color:#f92672">-&gt;</span>directMethods<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>)) {
+</span></span><span style="display:flex;"><span>            LOG_VFY(<span style="color:#e6db74">&#34;Verifier rejected class %s&#34;</span>, clazz<span style="color:#f92672">-&gt;</span>descriptor);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> 0; i <span style="color:#f92672">&lt;</span> clazz<span style="color:#f92672">-&gt;</span>virtualMethodCount; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>verifyMethod(<span style="color:#f92672">&amp;</span>clazz<span style="color:#f92672">-&gt;</span>virtualMethods<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span>)) {
+</span></span><span style="display:flex;"><span>            LOG_VFY(<span style="color:#e6db74">&#34;Verifier rejected class %s&#34;</span>, clazz<span style="color:#f92672">-&gt;</span>descriptor);
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span>;
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
 </span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span>;
+</span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><ol>
 <li>验证clazz-&gt;directMethods方法，directMethods包含了以下方法：</li>
 <li>static方法</li>
@@ -465,11 +465,11 @@ System.out.println(AntilazyLoad.class);
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/use-vscode-as-debug-frontend-of-chromium-project/">使用VSCode作为Chromium的调试前端</a></li>
 			<li class="widget__item"><a class="widget__link" href="/courses/troubleshooting-and-resolution-of-software-bugs/">软件Bug的排查与解决</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/trip-to-beijing-reflections-on-technology-and-life/">北京之行：技术与人生的思考</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/thoughts-on-feedback-after-a-class/">关于一次课后反馈的思考</a></li>
 		</ul>
 	</div>
 </div>

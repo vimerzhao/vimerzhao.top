@@ -4,19 +4,19 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>&#39;android:excludeFromRecents踩坑指南&#39; - 赵裕的博客</title>
+	<title>Android Gradle使用自定义的CMake - 赵裕的博客</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="&#39;android:excludeFromRecents踩坑指南&#39;" />
-<meta property="og:description" content="&lsquo;android:excludeFromRecents踩坑指南&rsquo; 工作中遇到的一个小问题，记录一下。 现象 从Activity A跳转到B，B的launchMode设置为singleI" />
+		<meta property="og:title" content="Android Gradle使用自定义的CMake" />
+<meta property="og:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/articles/android-excludefromrecentscai-keng-zhi-nan/" /><meta property="article:section" content="articles" />
-<meta property="article:published_time" content="2018-12-30T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+<meta property="og:url" content="/articles/custom-cmake-in-android-gradle/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2023-12-14T00:00:00+00:00" />
+<meta property="article:modified_time" content="2023-12-14T16:46:50+08:00" />
 
 
-		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="&#39;android:excludeFromRecents踩坑指南&#39;"/>
-<meta name="twitter:description" content="&lsquo;android:excludeFromRecents踩坑指南&rsquo; 工作中遇到的一个小问题，记录一下。 现象 从Activity A跳转到B，B的launchMode设置为singleI"/>
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Android Gradle使用自定义的CMake"/>
+<meta name="twitter:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -108,151 +108,88 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">&#39;android:excludeFromRecents踩坑指南&#39;</h1>
+			<h1 class="post__title">Android Gradle使用自定义的CMake</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2018-12-30T00:00:00Z">2018-12-30</time>
-	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-14T00:00:00Z">2023-12-14</time>
+	<time class="meta__text" datetime="2023-12-14T16:46:50&#43;08:00">(最后修改: 2023-12-14)</time></div></div>
 		</header>
 		
-    <span style="color:grey; font-size: 0.9em">本文约 1400 字，阅读需 3 分钟。</span>
+    <span style="color:grey; font-size: 0.9em">本文约 900 字，阅读需 2 分钟。</span>
     <p/><div class="content post__content clearfix">
-			<h1 id="androidexcludefromrecents踩坑指南">&lsquo;android:excludeFromRecents踩坑指南&rsquo;</h1>
-<p>工作中遇到的一个小问题，记录一下。</p>
-<h2 id="现象">现象</h2>
-<p>从Activity <code>A</code>跳转到<code>B</code>，<code>B</code>的<code>launchMode</code>设置为<code>singleInstance</code>，并通过<code>excludeFromRecents</code>属性保证<code>B</code>不出现在最近任务列表中。<code>MainActivity</code>：</p>
-<pre tabindex="0"><code>public class MainActivity extends AppCompatActivity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        TextView textView = findViewById(R.id.text);
-        textView.setText(MainActivity.class.getSimpleName());
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SecondActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
-                startActivity(intent);
-            }
-        });
-    }
-</code></pre><p><code>SecondActivity</code>：</p>
-<pre tabindex="0"><code>public class SecondActivity extends Activity {
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        TextView textView = findViewById(R.id.text);
-        textView.setText(SecondActivity.class.getSimpleName());
-    }
-}
-</code></pre><p><code>AndroidManifest.xml</code>：</p>
-<pre tabindex="0"><code>&lt;?xml version=&#34;1.0&#34; encoding=&#34;utf-8&#34;?&gt;
-&lt;manifest xmlns:android=&#34;http://schemas.android.com/apk/res/android&#34;
-    package=&#34;top.vimerzhao.recenttasks&#34;&gt;
-
-    &lt;application
-        android:allowBackup=&#34;true&#34;
-        android:icon=&#34;@mipmap/ic_launcher&#34;
-        android:label=&#34;@string/app_name&#34;
-        android:roundIcon=&#34;@mipmap/ic_launcher_round&#34;
-        android:supportsRtl=&#34;true&#34;
-        android:theme=&#34;@style/AppTheme&#34;&gt;
-        &lt;activity android:name=&#34;.MainActivity&#34;&gt;
-            &lt;intent-filter&gt;
-                &lt;action android:name=&#34;android.intent.action.MAIN&#34; /&gt;
-
-                &lt;category android:name=&#34;android.intent.category.LAUNCHER&#34; /&gt;
-            &lt;/intent-filter&gt;
-        &lt;/activity&gt;
-        &lt;activity android:name=&#34;.SecondActivity&#34;
-            android:taskAffinity=&#34;.SecondActivity&#34;
-            android:excludeFromRecents=&#34;true&#34;
-            android:launchMode=&#34;singleInstance&#34;/&gt;
-    &lt;/application&gt;
-
-&lt;/manifest&gt;
-</code></pre><p>结果如下：
-<img src="https://github.com/vimerzhao/images/raw/master/2018-12/recents-task-demo.gif" alt=""></p>
-<p>可以看到：</p>
-<ol>
-<li>跳转到<code>B</code>后，Call起多任务显示两个Task，不符合预期</li>
-<li>返回主界面后，Call起多任务显示一个Task，符合预期</li>
-</ol>
-<h2 id="分析">分析</h2>
-<p>查阅官方文档，属性解释如下：</p>
-<blockquote>
-<p>android:excludeFromRecents
-Whether or not the task initiated by this activity should be excluded from the list of recently used applications, the overview screen. That is, when this activity is the root activity of a new task, this attribute determines whether the task should not appear in the list of recent apps. Set &ldquo;true&rdquo; if the task should be excluded from the list; set &ldquo;false&rdquo; if it should be included. The default value is &ldquo;false&rdquo;.</p>
-</blockquote>
-<p>中文版本如下：</p>
-<blockquote>
-<p>android:excludeFromRecents
-是否应将该 Activity 启动的任务排除在最近使用的应用列表（即概览屏幕）之外。 也就是说，当该 Activity 是新任务的根 Activity 时，此属性确定任务是否应出现在最近使用的应用列表中。 如果应将任务排除在列表之外，请设置“true”；如果应将其包括在内，则设置“false”。 默认值为“false”。</p>
-</blockquote>
-<p>按照这个解释，<code>现象1</code>还是说不通。继续检索，发现StackOverflow上有一个类似问题<a href="https://stackoverflow.com/questions/20516832/exclude-current-activity-from-recent-tasks">Exclude current activity from Recent Tasks</a>，其中<code>Ricardo Lage</code>解释如下：</p>
-<blockquote>
-<p>I just tested on my app and the same thing happens. If I press the &ldquo;recent tasks&rdquo; button while having my activity in the foreground, it appears listed there. The moment I move out of it to another activity or to my phone&rsquo;s main screen, the activity is not listed anymore.
-I also tested this on the built-in DeskClock app that comes with recent Android versions and the same behavior is present there when a new alarm is triggered. Note that the AlarmAlertFullscreen activity of that app has the same parameters you mentioned in your question.</p>
-</blockquote>
-<p>也就是说，即使设置了<code>excludeFromRecents</code>属性，如果该Task在前台还是会显示在最近任务中，想想这样设计也是合理的，如果某个设置了该属性的<code>Activity</code>正在前台，此时Call多任务如果不显示该<code>Activity</code>那么用户怎么返回，所以说这个设计还是很合理的。<strong>如果确实如此，只能说明官方文档在此处表述存在纰漏了。</strong>
-接下来从源码层面证实这个猜测。一开始我是从<code>RecentsActivity</code>入手，逐步分析，但是Android源码过于复杂，一直没找到重点，后面转变思路，直接搜索<code>FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS</code>属性，虽然总共有36个结果，但是通过命名很快定位到<code>./frameworks/base/packages/SystemUI/src/com/android/systemui/recents/</code>目录下的可疑类，最终定位到<code>SystemServicesProxy.java</code>的218行：</p>
-<pre tabindex="0"><code>...
-/** Returns a list of the recents tasks */
-public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTasks, int userId,
-        boolean isTopTaskHome) {
-    if (mAm == null) return null;
-
-    ...
-
-    Iterator&lt;ActivityManager.RecentTaskInfo&gt; iter = tasks.iterator();
-    while (iter.hasNext()) {
-        ActivityManager.RecentTaskInfo t = iter.next();
-
-        // NOTE: The order of these checks happens in the expected order of the traversal of the
-        // tasks
-
-        // Check the first non-recents task, include this task even if it is marked as excluded
-        // from recents if we are currently in the app.  In other words, only remove excluded
-        // tasks if it is not the first active task.
-        boolean isExcluded = (t.baseIntent.getFlags() &amp; Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS)
-                == Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS;
-        if (isExcluded &amp;&amp; (isTopTaskHome || !isFirstValidTask)) {
-            iter.remove();
-            continue;
-        }
-        isFirstValidTask = false;
-    }
-
-    return tasks.subList(0, Math.min(tasks.size(), numLatestTasks));
-}
-...
-</code></pre><p>结合注释和代码可知前面的猜测是正确的的。</p>
-<h2 id="参考">参考</h2>
+			<h2 id="背景">背景</h2>
+<p>最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。</p>
+<h2 id="cmake版本过低">Cmake版本过低</h2>
+<p>重构后的CMake使用了一些高版本的特性，比如：</p>
 <ul>
-<li><a href="https://stackoverflow.com/questions/20516832/exclude-current-activity-from-recent-tasks">Exclude current activity from Recent Tasks</a></li>
-<li><a href="https://developer.android.com/guide/components/activities/recents#java">Recents Screen  |  Android Developers</a></li>
+<li><code>CMP0135</code>: New in version 3.24. -&gt; <a href="https://cmake.org/cmake/help/latest/policy/CMP0135.html">https://cmake.org/cmake/help/latest/policy/CMP0135.html</a></li>
+<li><code>FILE_SET &lt;set-name&gt;</code>: New in version 3.23 -&gt; <a href="https://cmake.org/cmake/help/latest/command/install.html">https://cmake.org/cmake/help/latest/command/install.html</a></li>
 </ul>
+<p>但Android内置的CMake只支持到3.22.1：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>./cmdline-tools/latest/bin/sdkmanager --list | grep CMake
+</span></span><span style="display:flex;"><span>  .....
+</span></span><span style="display:flex;"><span>  cmake;3.10.2.4988404    | 3.10.2        | CMake 3.10.2.4988404
+</span></span><span style="display:flex;"><span>  cmake;3.18.1            | 3.18.1        | CMake 3.18.1
+</span></span><span style="display:flex;"><span>  cmake;3.22.1            | 3.22.1        | CMake 3.22.1
+</span></span><span style="display:flex;"><span>  cmake;3.6.4111459       | 3.6.4111459   | CMake 3.6.4111459
+</span></span></code></pre></div><p>但是想想，Android用的CMake应该没啥特殊的魔改，官方文档也提到可以自定义：<a href="https://developer.android.com/studio/projects/install-ndk#vanilla_cmake">Configure a specific version of CMake</a>。</p>
+<p>这里提到有两种：</p>
+<ul>
+<li>通过PATH查找目标Version，这个比较好，因为Host本身也是编译Target之一，正好复用了。</li>
+<li>通过<code>local.properties</code>的<code>cmake.dir</code>来配置路径，细节比较多，比如路径不能带引号，是bin/cmake所在目录</li>
+</ul>
+<p>此外，<code>build.gradle</code>的<code>cmake/version</code>是一定要配置的，保证版本的一致性。</p>
+<h2 id="gradle报错">Gradle报错</h2>
+<p>接下来，进入不太好理解的一个错误，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>* What went wrong:
+</span></span><span style="display:flex;"><span>Execution failed for task &#39;:app:generateJsonModelDebug&#39;.
+</span></span><span style="display:flex;"><span>&gt; java.lang.NullPointerException (no error message)
+</span></span></code></pre></div><p>看下堆栈也没有灵感：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:124)
+</span></span><span style="display:flex;"><span>        at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+</span></span><span style="display:flex;"><span>        at org.gradle.internal.concurrent.ManagedExecutorImpl$1.run(ManagedExecutorImpl.java:48)
+</span></span><span style="display:flex;"><span>        at org.gradle.internal.concurrent.ThreadFactoryImpl$ManagedThreadRunnable.run(ThreadFactoryImpl.java:56)
+</span></span><span style="display:flex;"><span>Caused by: java.lang.NullPointerException
+</span></span><span style="display:flex;"><span>        at com.android.build.gradle.external.cmake.server.ServerProtocolV1.readExpected(ServerProtocolV1.java:519)
+</span></span><span style="display:flex;"><span>        at com.android.build.gradle.external.cmake.server.ServerProtocolV1.readMessage(ServerProtocolV1.java:547)
+</span></span><span style="display:flex;"><span>        at com.android.build.gradle.external.cmake.server.ServerProtocolV1.decodeResponse(ServerProtocolV1.java:404)
+</span></span><span style="display:flex;"><span>        at com.android.build.gradle.external.cmake.server.ServerProtocolV1.decodeResponse(ServerProtocolV1.java:398)
+</span></span><span style="display:flex;"><span>        at com.android.build.gradle.external.cmake.server.ServerProtocolV1.connect(ServerProtocolV1.java:113)
+</span></span></code></pre></div><p>GPT提出一个建议：CMake 服务器协议问题。</p>
+<p>那就看下：<code>.cxx/cmake/debug/arm64-v8a/cmake_server_log.txt</code>文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>CMAKE SERVER: null
+</span></span></code></pre></div><p>于是以<code>cmake server</code>为关键词进行了检索，发现新版本确实不支持：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>$cmake -E server --experimental
+</span></span><span style="display:flex;"><span>CMake Error: CMake server mode has been removed in favor of the file-api.
+</span></span></code></pre></div><p>找到文档：</p>
+<blockquote>
+<p>The cmake(1) server mode has been removed since CMake 3.20. Clients should use the cmake-file-api(7) instead.
+From: <a href="https://cmake.org/cmake/help/latest/manual/cmake-server.7.html">https://cmake.org/cmake/help/latest/manual/cmake-server.7.html</a></p>
+</blockquote>
+<p>目前来看，我们一定要用CMake3.24+，但此时3.20后又没有Server了。既然Gradle支持了3.22.1，说明cmake-file-api肯定是支持了的。</p>
+<p>看下当前的版本：</p>
+<ul>
+<li>Gradle: 6.5</li>
+<li>GradlePlugin: 4.1.0</li>
+</ul>
+<p>按照GPT说的：&ldquo;CMake File API 的支持从 Android Gradle 插件 4.1.0 开始&rdquo;。应该不会出现问题，但报错显然是当前Gradle还在尝试CMake Server通信。</p>
+<p>GPT比较适合启发思考，这种精确性问题还是自己研究。</p>
+<p>于是升级：</p>
+<ul>
+<li>Gradle: 7.0.2</li>
+<li>GradlePlugin: 7.0.4</li>
+</ul>
+<p>果然可以了！</p>
+<p>老工程和新工程的<code>.cxx</code>目录对比：</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2023/2023-12-14-16-32-48.png" alt="pic"></p>
+<h2 id="总结">总结</h2>
+<p>虽然报错从未见过，但原因就那么些&hellip;..</p>
 
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
     <p></p>
-		<footer class="post__footer">
-			
-<div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
-	<ul class="tags__list">
-		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/bugfix/" rel="tag">BugFix</a>
-		</li>
-	</ul>
-</div>
-		</footer>
 	</article>
 </main>
 
@@ -271,15 +208,9 @@ public List&lt;ActivityManager.RecentTaskInfo&gt; getRecentTasks(int numLatestTa
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/articles/zi-ji-dong-shou-xie-shi-jian-zong-xian-eventbus/" rel="prev">
+		<a class="pager__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">自己动手写事件总线(EventBus)</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/articles/cheng-xu-yuan-jian-shen-zhi-nan/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">程序员健身指南</p>
+			<p class="pager__title">配置一个Mac/iOS平台的Flutter源码调试环境</p>
 		</a>
 	</div>
 </nav>
