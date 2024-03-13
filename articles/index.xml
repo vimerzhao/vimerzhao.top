@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 14 Dec 2023 16:46:50 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 13 Mar 2024 14:32:06 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Skia升级小记m104-&gt;m122</title>
+      <link>/articles/review-skia-upgrade-m104-to-m122/</link>
+      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/review-skia-upgrade-m104-to-m122/</guid>
+      <description>最近需要把Skia进行一次升级，首先查看下接口变动，See： RELEASE_NOTES.md 大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动: SkFontMgr::RefDefault() has been deleted. Clients should instantiate and manage their own SkFontMgrs and use them to explicitly create SkTypefaces 找到这个改动的原因： Remove default SkFontMgr [305780908] - Skia 是</description>
+    </item>
     <item>
       <title>Android Gradle使用自定义的CMake</title>
       <link>/articles/custom-cmake-in-android-gradle/</link>

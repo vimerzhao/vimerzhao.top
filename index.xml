@@ -6,7 +6,7 @@
     <description>Recent content on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 04 Mar 2024 15:17:35 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 13 Mar 2024 14:32:06 +0800</lastBuildDate>
     <atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>文章</title>
@@ -49,6 +49,13 @@
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>/about/</guid>
       <description>个人简介 TODO 重要时刻 2023年：年初升级T10成功，WOT优秀讲师 2022年：绩效双五星（没啥用，但必需得有这份经历&amp;hellip;），腾讯学院优秀讲师。 2021年：写完《Flutter内核源码剖析》并出版，年中晋升到T9。 2018年：大学毕业，入职腾讯（T4）。 2017年：在腾讯实习3个月，并转正（第一次来深圳）。 2015年：开始接触编程，并于年中转入“计算机科学与技术”专业。 2014年：考入大连理工大学“过程装备与控制工程”专业。 技术经历 平台框架: Android、iOS、Web、Flutter 编程语言: C、C++、Java、Dart 读过的书(部分) 2022年：《&amp;hellip;》 走过的路(部分) 2023年：重庆、北京、香港、江西（南昌、庐山、景德镇） 2021年：广西（桂林、阳朔）、贵州（黔东南） 2020年：川藏线（四川-拉萨）、湖南（长沙） 2018年：山东（烟台、蓬莱、济南、泰山、曲阜） 最后编辑于 2023-10-14</description>
+    </item>
+    <item>
+      <title>Skia升级小记m104-&gt;m122</title>
+      <link>/articles/review-skia-upgrade-m104-to-m122/</link>
+      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/review-skia-upgrade-m104-to-m122/</guid>
+      <description>最近需要把Skia进行一次升级，首先查看下接口变动，See： RELEASE_NOTES.md 大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动: SkFontMgr::RefDefault() has been deleted. Clients should instantiate and manage their own SkFontMgrs and use them to explicitly create SkTypefaces 找到这个改动的原因： Remove default SkFontMgr [305780908] - Skia 是</description>
     </item>
     <item>
       <title>Android Gradle使用自定义的CMake</title>

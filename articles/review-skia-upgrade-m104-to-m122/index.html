@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>Skia升级小记m104-&gt;m122 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="Skia升级小记m104-&gt;m122" />
+<meta property="og:description" content="最近需要把Skia进行一次升级，首先查看下接口变动，See： RELEASE_NOTES.md 大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动: SkFontMgr::RefDefault() has been deleted. Clients should instantiate and manage their own SkFontMgrs and use them to explicitly create SkTypefaces 找到这个改动的原因： Remove default SkFontMgr [305780908] - Skia 是" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/review-skia-upgrade-m104-to-m122/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2024-03-12T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-03-13T14:32:06+08:00" />
+
+
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Skia升级小记m104-&gt;m122"/>
+<meta name="twitter:description" content="最近需要把Skia进行一次升级，首先查看下接口变动，See： RELEASE_NOTES.md 大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动: SkFontMgr::RefDefault() has been deleted. Clients should instantiate and manage their own SkFontMgrs and use them to explicitly create SkTypefaces 找到这个改动的原因： Remove default SkFontMgr [305780908] - Skia 是"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses-archive/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">Skia升级小记m104-&gt;m122</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-12T00:00:00Z">2024-03-12</time>
+	<time class="meta__text" datetime="2024-03-13T14:32:06&#43;08:00">(最后修改: 2024-03-13)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 1100 字，阅读需 3 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<p>最近需要把Skia进行一次升级，首先查看下接口变动，See：</p>
+<ul>
+<li><a href="https://skia.googlesource.com/skia/+/refs/heads/main/RELEASE_NOTES.md">RELEASE_NOTES.md</a></li>
+</ul>
+<p>大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动:</p>
+<blockquote>
+<p><code>SkFontMgr::RefDefault()</code> has been deleted. Clients should instantiate and manage their own <code>SkFontMgrs</code> and use them to explicitly create <code>SkTypefaces</code></p>
+</blockquote>
+<p>找到这个改动的原因：</p>
+<ul>
+<li><a href="https://issues.skia.org/issues/305780908">Remove default SkFontMgr [305780908] - Skia</a></li>
+</ul>
+<p>是因为一个隐晦的编译问题，从这个链接来看，适配这个修改还是比较麻烦的，总结来说就是：没有统一的平台无关的static接口了，你们自己去实例化(instantiate)吧。</p>
+<p>可以看看其他类似框架的处理</p>
+<p>Flutter：<a href="https://github.com/flutter/engine/pull/48179/files">Replace calls to SkFontMgr::RefDefault by kjlubick · Pull Request #48179 · flutter/engine</a>，感觉之前就已经有所准备了，改成了另一个调用</p>
+<p>Chrome：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// skia/ext/font_utils.cc
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">static</span> sk_sp<span style="color:#f92672">&lt;</span>SkFontMgr<span style="color:#f92672">&gt;</span> fontmgr_factory() {
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">if</span> (g_fontmgr_override) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">sk_ref_sp</span>(g_fontmgr_override);
+</span></span><span style="display:flex;"><span>  }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if BUILDFLAG(IS_ANDROID)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SkFontMgr_New_Android</span>(<span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif BUILDFLAG(IS_APPLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SkFontMgr_New_CoreText</span>(<span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif BUILDFLAG(IS_CHROMEOS) || BUILDFLAG(IS_LINUX)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  sk_sp<span style="color:#f92672">&lt;</span>SkFontConfigInterface<span style="color:#f92672">&gt;</span> fci(SkFontConfigInterface<span style="color:#f92672">::</span>RefGlobal());
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> fci <span style="color:#f92672">?</span> SkFontMgr_New_FCI(std<span style="color:#f92672">::</span>move(fci)) <span style="color:#f92672">:</span> <span style="color:#66d9ef">nullptr</span>;
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif BUILDFLAG(IS_FUCHSIA)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  fuchsia<span style="color:#f92672">::</span>fonts<span style="color:#f92672">::</span>ProviderSyncPtr provider;
+</span></span><span style="display:flex;"><span>  base<span style="color:#f92672">::</span>ComponentContextForProcess()<span style="color:#f92672">-&gt;</span>svc()<span style="color:#f92672">-&gt;</span>Connect(provider.NewRequest());
+</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SkFontMgr_New_Fuchsia</span>(std<span style="color:#f92672">::</span>move(provider));
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif BUILDFLAG(IS_WIN)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SkFontMgr_New_DirectWrite</span>();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(SK_FONTMGR_FREETYPE_EMPTY_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> <span style="color:#a6e22e">SkFontMgr_New_Custom_Empty</span>();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>  <span style="color:#66d9ef">return</span> SkFontMgr<span style="color:#f92672">::</span>RefEmpty();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span></code></pre></div><p>这个比较有启发性！其实可以看下Skia的m122的代码是如何适配的。其实可以找到类似的修改：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">// skia/tools/fonts/FontToolUtils.cpp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>sk_sp<span style="color:#f92672">&lt;</span>SkFontMgr<span style="color:#f92672">&gt;</span> TestFontMgr() {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// ...... skip
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#75715e">#if defined(SK_BUILD_FOR_WIN) &amp;&amp; defined(SK_FONTMGR_GDI_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> <span style="color:#a6e22e">if</span> (FLAGS_gdi) {
+</span></span><span style="display:flex;"><span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_GDI();
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#if defined(SK_BUILD_FOR_ANDROID) &amp;&amp; defined(SK_FONTMGR_ANDROID_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_Android(<span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(SK_BUILD_FOR_WIN) &amp;&amp; defined(SK_FONTMGR_DIRECTWRITE_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_DirectWrite();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(SK_FONTMGR_CORETEXT_AVAILABLE) &amp;&amp; (defined(SK_BUILD_FOR_IOS) || \
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                                                defined(SK_BUILD_FOR_MAC))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_CoreText(<span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(SK_FONTMGR_FONTCONFIG_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_FontConfig(<span style="color:#66d9ef">nullptr</span>);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(SK_FONTMGR_FREETYPE_DIRECTORY_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">// In particular, this is used on ChromeOS, which is Linux-like but doesn&#39;t have
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#75715e">// FontConfig.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_Custom_Directory(SK_FONT_FILE_PREFIX);
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#elif defined(SK_FONTMGR_FREETYPE_EMPTY_AVAILABLE)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr_New_Custom_Empty();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#else
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            mgr <span style="color:#f92672">=</span> SkFontMgr<span style="color:#f92672">::</span>RefEmpty();
+</span></span><span style="display:flex;"><span><span style="color:#75715e">#endif
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        }
+</span></span><span style="display:flex;"><span>        SkASSERT_RELEASE(mgr);
+</span></span><span style="display:flex;"><span>    });
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> mgr;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>和Chrome的还是比较类似的，另外还可以看下m104的时候，<code>SkFontMgr::RefDefault</code>是如何实现的？其实是调用了<code>SkFontMgr::Factory()</code>，这个方法是分平台实现的：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ grep -rI <span style="color:#e6db74">&#34;SkFontMgr::Factory()&#34;</span> <span style="color:#75715e"># grep in m104</span>
+</span></span><span style="display:flex;"><span>./gn/skia.gni:  <span style="color:#75715e"># skia_fontmgr_factory should define SkFontMgr::Factory()</span>
+</span></span><span style="display:flex;"><span>./src/core/SkFontMgr.cpp:                                                        : SkFontMgr::Factory<span style="color:#f92672">()</span>;
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_android_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_FontConfigInterface_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_custom_empty_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_mac_ct_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_custom_directory_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_empty_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_fontconfig_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_custom_embedded_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./src/ports/SkFontMgr_win_dw_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr::Factory<span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span></code></pre></div><p>以Android为例，是通过<code>skia_enable_fontmgr_android</code>控制的。那么，修改的思路就比较明确了，其实就是自己去分平台调用接口。</p>
+<p>需要注意的是，include是不区分平台的，所以如果某个接口你调用了但Skia构建时没有开启，就可能出现Symbol Undefined错误。</p>
+<p>另外遇到一个比较离谱的问题，就是Web平台适配时，发现<code>SkFontMgr_New_Custom_Embedded</code>接口没有对外暴露，之前还通过Factory接口暴露了：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ grep -rI <span style="color:#e6db74">&#34;SkFontMgr_New_Custom_Embedded&#34;</span>
+</span></span><span style="display:flex;"><span>./skia-m122/src/ports/SkFontMgr_custom_embedded.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr_New_Custom_Embedded<span style="color:#f92672">(</span>const SkEmbeddedResourceHeader* header<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./skia-m104/src/ports/SkFontMgr_custom_embedded.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr_New_Custom_Embedded<span style="color:#f92672">(</span>const SkEmbeddedResourceHeader* header<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>./skia-m104/src/ports/SkFontMgr_custom_embedded_factory.cpp:sk_sp&lt;SkFontMgr&gt; SkFontMgr_New_Custom_Embedded<span style="color:#f92672">(</span>const SkEmbeddedResourceHeader* header<span style="color:#f92672">)</span>;
+</span></span><span style="display:flex;"><span>./skia-m104/src/ports/SkFontMgr_custom_embedded_factory.cpp:    <span style="color:#66d9ef">return</span> SkFontMgr_New_Custom_Embedded<span style="color:#f92672">(</span>&amp;SK_EMBEDDED_FONTS<span style="color:#f92672">)</span>;
+</span></span></code></pre></div><p>不过这个接口的参数本身不复杂，可以自己实现一个方法声明如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">SkEmbeddedResource</span> { <span style="color:#66d9ef">const</span> <span style="color:#66d9ef">uint8_t</span><span style="color:#f92672">*</span> data; size_t size; };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">struct</span> <span style="color:#a6e22e">SkEmbeddedResourceHeader</span> { <span style="color:#66d9ef">const</span> SkEmbeddedResource<span style="color:#f92672">*</span> entries; <span style="color:#66d9ef">int</span> count; };
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">extern</span> <span style="color:#e6db74">&#34;C&#34;</span> <span style="color:#66d9ef">const</span> SkEmbeddedResourceHeader SK_EMBEDDED_FONTS;
+</span></span><span style="display:flex;"><span>sk_sp<span style="color:#f92672">&lt;</span>SkFontMgr<span style="color:#f92672">&gt;</span> SkFontMgr_New_Custom_Embedded(<span style="color:#66d9ef">const</span> SkEmbeddedResourceHeader<span style="color:#f92672">*</span> header);
+</span></span></code></pre></div><p>再去调用，就能编译并链接过了。实际执行的是SkFontMgr_custom_embedded.cpp内部的实现，这样<code>SkEmbeddedResourceHeader</code>实际就被定义了三次，第3处就是生成的字体文件本身：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ tail NotoSansSC-Regular.otf.cc
+</span></span><span style="display:flex;"><span>0x54,0xa1,0x61,0x19,0xbf,0xb,0xa7,0x8c,0xa9,0x1b,0xf7,0xc0,0x6,0x87,0xb,0xec,0x95,0xf7,0x6,0x96,0xef,0x93,0x8a,0xb,0xf7,0x7,0x9f,0x8a,0xd8,0x18,0xfb,0xc,
+</span></span><span style="display:flex;"><span>0xb,0x0,0x0,0x0,<span style="color:#f92672">}</span>;
+</span></span><span style="display:flex;"><span>static const size_t resource0_size <span style="color:#f92672">=</span> 8482020;
+</span></span><span style="display:flex;"><span>struct SkEmbeddedResource <span style="color:#f92672">{</span> const uint8_t* d; const size_t s; <span style="color:#f92672">}</span>;
+</span></span><span style="display:flex;"><span>static const SkEmbeddedResource header<span style="color:#f92672">[]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#f92672">{</span> resource0, resource0_size <span style="color:#f92672">}</span>,
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>;
+</span></span><span style="display:flex;"><span>static const int header_count <span style="color:#f92672">=</span> 1;
+</span></span><span style="display:flex;"><span>struct SkEmbeddedHeader <span style="color:#f92672">{</span>const SkEmbeddedResource* e; const int c;<span style="color:#f92672">}</span>;
+</span></span><span style="display:flex;"><span>extern <span style="color:#e6db74">&#34;C&#34;</span> const SkEmbeddedHeader SK_EMBEDDED_FONTS <span style="color:#f92672">=</span> <span style="color:#f92672">{</span> header, header_count <span style="color:#f92672">}</span>;
+</span></span></code></pre></div><p>还是要提个Isssue，让Skia赶紧把这个问题修复了。</p>
+
+		</div>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+    <p></p>
+	</article>
+</main>
+
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		🔥 爱折腾的程序员、《Flutter内核源码剖析》作者。 <br>  👈  微信公众号：<b>赵裕</b>（记录所学、所思、所行），欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/custom-cmake-in-android-gradle/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">Android Gradle使用自定义的CMake</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/review-skia-upgrade-m104-to-m122/">Skia升级小记m104-&gt;m122</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/use-vscode-as-debug-frontend-of-chromium-project/">使用VSCode作为Chromium的调试前端</a></li>
+			<li class="widget__item"><a class="widget__link" href="/courses/troubleshooting-and-resolution-of-software-bugs/">软件Bug的排查与解决</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%93%E6%A0%8F%E9%80%9F%E8%AE%B0/">专栏|速记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">2</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bug%E8%AE%B0%E5%BD%95/" title="BUG记录">BUG记录 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>
