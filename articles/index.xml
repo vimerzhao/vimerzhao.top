@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 13 Mar 2024 14:32:06 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 21 Mar 2024 10:29:34 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>无妄之灾：记录一个奇怪的codelldb问题</title>
+      <link>/articles/record-a-strange-issue-about-codelldb/</link>
+      <pubDate>Wed, 20 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/record-a-strange-issue-about-codelldb/</guid>
+      <description>背景：最近打算为项目增加一些测试，重构后的项目比较适合用VSCode + codelldb调试，因为编译适合放在命令行(有一些环境变量依赖)，VSCode直接启动产物并调试就行了，launch.json也</description>
+    </item>
     <item>
       <title>Skia升级小记m104-&gt;m122</title>
       <link>/articles/review-skia-upgrade-m104-to-m122/</link>

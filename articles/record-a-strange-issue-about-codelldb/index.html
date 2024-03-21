@@ -4,18 +4,18 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>笔试总结：LINE2018实习生（软件工程师） - 赵裕的博客</title>
+	<title>无妄之灾：记录一个奇怪的codelldb问题 - 赵裕的博客</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="笔试总结：LINE2018实习生（软件工程师）" />
-<meta property="og:description" content="笔试总结：LINE2018实习生（软件工程师） 2018LINE实习生笔试题总结。 今晚LINE和头条的笔试时间冲突，还是选了LINE，因为打算体验一次笔试答题。 简答题 第一题问的是中断是什么，为什么要有中" />
+		<meta property="og:title" content="无妄之灾：记录一个奇怪的codelldb问题" />
+<meta property="og:description" content="背景：最近打算为项目增加一些测试，重构后的项目比较适合用VSCode &#43; codelldb调试，因为编译适合放在命令行(有一些环境变量依赖)，VSCode直接启动产物并调试就行了，launch.json也" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/articles/bi-shi-zong-jie-line2018shi-xi-sheng-ruan-jian-gong-cheng-shi/" /><meta property="article:section" content="articles" />
-<meta property="article:published_time" content="2017-04-18T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+<meta property="og:url" content="/articles/record-a-strange-issue-about-codelldb/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2024-03-20T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-03-21T10:29:34+08:00" />
 
-		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="笔试总结：LINE2018实习生（软件工程师）"/>
-<meta name="twitter:description" content="笔试总结：LINE2018实习生（软件工程师） 2018LINE实习生笔试题总结。 今晚LINE和头条的笔试时间冲突，还是选了LINE，因为打算体验一次笔试答题。 简答题 第一题问的是中断是什么，为什么要有中"/>
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="无妄之灾：记录一个奇怪的codelldb问题"/>
+<meta name="twitter:description" content="背景：最近打算为项目增加一些测试，重构后的项目比较适合用VSCode &#43; codelldb调试，因为编译适合放在命令行(有一些环境变量依赖)，VSCode直接启动产物并调试就行了，launch.json也"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -107,45 +107,76 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">笔试总结：LINE2018实习生（软件工程师）</h1>
+			<h1 class="post__title">无妄之灾：记录一个奇怪的codelldb问题</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2017-04-18T00:00:00Z">2017-04-18</time>
-	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-20T00:00:00Z">2024-03-20</time>
+	<time class="meta__text" datetime="2024-03-21T10:29:34&#43;08:00">(最后修改: 2024-03-21)</time></div></div>
 		</header>
 		
     <span style="color:grey; font-size: 0.9em">本文约 1000 字，阅读需 2 分钟。</span>
     <p/><div class="content post__content clearfix">
-			<h1 id="笔试总结line2018实习生软件工程师">笔试总结：LINE2018实习生（软件工程师）</h1>
-<p>2018LINE实习生笔试题总结。
-今晚LINE和头条的笔试时间冲突，还是选了LINE，因为打算体验一次<strong>笔试</strong>答题。</p>
-<h2 id="简答题">简答题</h2>
-<p>第一题问的是<strong>中断</strong>是什么，为什么要有中断。第二题问的是表中什么样的数据列应该建立<strong>索引</strong>，什么样的数据列不应该建立索引。
-虽然计原忘的差不多，数据库还在学，但是感觉正好都还有点印象。所以这两题还算不太刁钻。
-想起之前他们说招人不限专业，但这两题估计能把非计算机专业但会编程的都干掉了。</p>
-<h2 id="编程题">编程题</h2>
-<p>第一题是《算法竞赛入门经典》上的题，数组蛇形填数：</p>
-<pre tabindex="0"><code>1   2   3   4
-12  13  14  5
-11  16  15  6
-10  9   8   7
-</code></pre><p>记的还算清楚，但是代码写的像卡帧动画，虽然思路肯定是正确的。
-第二题是求<strong>組合数</strong>，前两天刚写完排列数，写組合数一脸蒙逼、直接卡壳，时间也不多了，只好简单分析一下，说用递归。其实这个问题之前遇到过一次，当时没有及时解决，结果真是因果报应啊！</p>
+			<p>背景：最近打算为项目增加一些测试，重构后的项目比较适合用VSCode + codelldb调试，因为编译适合放在命令行(有一些环境变量依赖)，VSCode直接启动产物并调试就行了，launch.json也非常简单。</p>
+<p>但非常诡异的是，lldb一直启动失败，如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>Console is in &#39;evaluation&#39; mode, prefix commands with &#39;/cmd &#39; or &#39;`&#39;.
+</span></span><span style="display:flex;"><span>Executing script: preRunCommands
+</span></span><span style="display:flex;"><span>Launching: ****************//脱敏
+</span></span><span style="display:flex;"><span>Launched process 60681
+</span></span><span style="display:flex;"><span>Process exited with code -1.
+</span></span></code></pre></div><p>直接结束了，也没有什么有价值的信息！</p>
+<p>Reload Windows之后再次尝试，发现一闪而过的报错，截图如下图P1部分。是一个比较好理解的node错误。但问题是我最近从来没动过node。</p>
+<p>每次遇到此类问题都比较头大，只能根据Google尝试。其间又出现了一些其他错误（在卸载旧版本之后）如下图P2。</p>
 <blockquote>
-<p>2017.4.23补充：
-发现《剑指Offer》156页的拓展就提到了这个问题，也是当时懒，没系统刷一遍&hellip;&hellip;</p>
+<p>Note: <strong>看来要找个时间1系统学习下node/nvm/npm了</strong></p>
 </blockquote>
-<p>第三题，设计<strong>哈希表</strong>，感觉自己思路也还是比较清晰，无非存、取、删、查，如何解决<strong>冲突</strong>，我直接拿数组链表法实现了一个，不知道是不是他们的意思。
-总结一下，都是平时能遇到的基础题，但当时理解不深刻，没注意及时总结，才造成不必要丢分！</p>
-<h2 id="设计题">设计题</h2>
-<p>设计题大意是有一个系统10万人使用，每人1-100条记录，进行交易，盈利或亏损超过一定数额就要及时终止（比如盈利超过10000或者亏损超过5000），还有每1-10秒就会有新的操作，题目太长，大概这个意思。
-对于毫无此方面经验并且时间已经不够的我来说，只好瞎扯了，类比了操作系统的调度，应该把那些接近边界额度的交易优先处理，避免阻塞之类。随便扯了几句</p>
-<h2 id="总结">总结</h2>
-<p>除了最后一题，前面的都应该很快做出来的，但是还卡了一题，其他题目也都涂改严重，都是自己不够熟练，思路不够清晰啊！还是继续有针对性（找一些类似的题精做、细做）地补基础吧，因为发现<strong>太多似曾相识却又不能很快解决的题目</strong>了。
-能不能过就看大家发挥了。
-考完还剩半个钟头，赶紧进了头条的在线考试平台，结果选择题已经关闭，编程题，第一题AC，第二题过了80%，第三题不难，但是时间不够了。第四题好像很难的-.-。</p>
+<p>接在搞了半天node环境之后，问题依然没有解决。接下来又花了1个多小时：</p>
+<ul>
+<li>安装其他版本的codelldb</li>
+<li>重新安装VSCode</li>
+<li>升级zsh</li>
+<li>重装node</li>
+<li>brew update</li>
+<li>重启电脑(真是下了血本)</li>
+</ul>
+<p>均无效果。但升级之后，重编ut时发现：</p>
+<ol>
+<li>报错： /usr/local/Cellar/cmake/3.28.1/bin/cmake找不到</li>
+<li>用where查看cmake，发现
+<ol>
+<li>cmaker的位置:/usr/local/bin/cmake</li>
+<li>其链接: /usr/local/bin/cmake -&gt; ../Cellar/cmake/3.28.3/bin/cmake</li>
+<li>原来是cmake升级了&hellip;.</li>
+</ol>
+</li>
+</ol>
+<p>同时发现用codelldb自带的lldb启动ut程序，是无法run成功的，原来是lldb的锅。用系统自带的lldb就可以，如下图P3。</p>
+<p>codelldb自定义的地方是比较好找的，文档也有说明，在：lldb.library。</p>
+<p>但codelldb要求设置的是lldb的动态库，但系统的lldb是一个很小的可执行文件：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>~ lldb --version
+</span></span><span style="display:flex;"><span>lldb-1500.0.22.8
+</span></span><span style="display:flex;"><span>Apple Swift version 5.9 <span style="color:#f92672">(</span>swiftlang-5.9.0.128.108 clang-1500.0.40.1<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span> ~ where lldb
+</span></span><span style="display:flex;"><span>/usr/bin/lldb
+</span></span><span style="display:flex;"><span> ~ otool  -L /usr/bin/lldb
+</span></span><span style="display:flex;"><span>/usr/bin/lldb:
+</span></span><span style="display:flex;"><span>        /usr/lib/libxcselect.dylib <span style="color:#f92672">(</span>compatibility version 1.0.0, current version 1.0.0<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        /usr/lib/libSystem.B.dylib <span style="color:#f92672">(</span>compatibility version 1.0.0, current version 1336.0.0<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>这下不知道去哪找了。但想起前面的Cellar，加上之前就发现Cellar下有不少软件是通过PATH找不到的，于是手动寻找，结果如下:</p>
+<pre tabindex="0"><code>~  ls /usr/local/Cellar/llvm # tap
+llvm/     llvm@15/  llvm@16/
+/usr/local/Cellar/llvm  find . -iname &#34;*lldb*lib&#34;
+./17.0.6_1/lib/liblldb.dylib
+./17.0.6_1/lib/liblldb.17.0.6.dylib
+ /usr/local/Cellar/llvm@15  find . -iname &#34;*lldb*lib&#34;
+ /usr/local/Cellar/llvm@16  find . -iname &#34;*lldb*lib&#34;
+./16.0.6/lib/liblldb.dylib
+./16.0.6/lib/liblldb.16.0.6.dylib
+</code></pre><p>注意到llvm（其实是17）和llvm16下面都是有这个lib的，尝试之后发现,llvm16的依然失败，但llvm(17)的就可以了。即设置成</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#e6db74">&#34;lldb.library&#34;</span>: <span style="color:#e6db74">&#34;/usr/local/Cellar/llvm/17.0.6_1/lib/liblldb.dylib&#34;</span>
+</span></span></code></pre></div><p><strong>一下午的时间就这么没了，真是无妄之灾&hellip;&hellip;</strong></p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20240321102258.png" alt="20240321102258"></p>
 
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
@@ -168,15 +199,9 @@
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/articles/vimde-zhe-xue/" rel="prev">
+		<a class="pager__link" href="/articles/review-skia-upgrade-m104-to-m122/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">Vim的哲学</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/articles/cyu-yan-shi-xian-ipv6zhua-bao-cheng-xu/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">C语言实现IPv6抓包程序</p>
+			<p class="pager__title">Skia升级小记m104-&gt;m122</p>
 		</a>
 	</div>
 </nav>
