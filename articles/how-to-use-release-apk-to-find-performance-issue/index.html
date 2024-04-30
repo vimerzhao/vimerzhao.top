@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>如何利用ReleaseApk辅助排查性能问题 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="如何利用ReleaseApk辅助排查性能问题" />
+<meta property="og:description" content="背景 最近收到反馈，同样的场景，Android打开明显比iOS卡顿，实际打开也确实如此。故此要进一步排查这个问题。 我们的业务工程非常庞大，之前全量编一次竟然花了快2h。 此外，我负责的是底层渲染模块，此类" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/how-to-use-release-apk-to-find-performance-issue/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2024-04-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-04-30T23:07:04+08:00" />
+
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="如何利用ReleaseApk辅助排查性能问题"/>
+<meta name="twitter:description" content="背景 最近收到反馈，同样的场景，Android打开明显比iOS卡顿，实际打开也确实如此。故此要进一步排查这个问题。 我们的业务工程非常庞大，之前全量编一次竟然花了快2h。 此外，我负责的是底层渲染模块，此类"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses-archive/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">如何利用ReleaseApk辅助排查性能问题</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-04-30T00:00:00Z">2024-04-30</time>
+	<time class="meta__text" datetime="2024-04-30T23:07:04&#43;08:00">(最后修改: 2024-04-30)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 1700 字，阅读需 4 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h2 id="背景">背景</h2>
+<p>最近收到反馈，同样的场景，Android打开明显比iOS卡顿，实际打开也确实如此。故此要进一步排查这个问题。</p>
+<p>我们的业务工程非常庞大，之前全量编一次竟然花了快2h。</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20240430164344.png" alt="20240430164344"></p>
+<p>此外，我负责的是底层渲染模块，此类问题虽然一般先找到我，但耗时的根源可能是底层框架的问题，也可能是上层业务的问题。底层框架虽然使用<a href="https://github.com/wolfpld/tracy">wolfpld/tracy: Frame profiler</a>做了打点，但也有两个问题：</p>
+<ul>
+<li>是手动打点，不一定覆盖到了耗时点。以Build为例，只能看到Build耗时，但具体是哪个业务组件的Build耗时不得而知</li>
+<li>易用性不高，无论是导出trace文件还是用Server连接，由于平时很少用（而且一般只有Mac平台用），很难在业务工程中用起来</li>
+</ul>
+<p>此外，框架自带PerfOverlay，能指出Raster/UI的总耗时，但无法准确定位。</p>
+<p>如果用业务的Debug-Apk排查，则Debug相关的代码噪音会比较大。而业务工程只支持Debug/Release，并无Profile构建(使用场景少？没人维护？)。</p>
+<p>总的来说，第一个挑战就是如何在<strong>业务开发环境限制比较大</strong>的情况下有一套高效的定位此类问题的方法：</p>
+<ul>
+<li>要和线上包一样(即Release)，避开Debug的噪音</li>
+<li>因为不知道哪些耗时，手动埋点再重编显然效率不行</li>
+</ul>
+<h2 id="尝试">尝试</h2>
+<p>我的想法是直接利用流水线的Relase包，先改成Debuggable，这样就可以用AS进行Profile了:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span> sh ./apktool.sh d -f *********.apk -o tda
+</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 修改AndroidManifest.xml，再重新打包</span>
+</span></span><span style="display:flex;"><span> sh ./apktool.sh b -f tda -o tda.apk
+</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 生成一个临时签名，重新签名</span>
+</span></span><span style="display:flex;"><span> keytool -genkey -v -keystore keystore.jks -alias my_alias -keyalg RSA -keysize <span style="color:#ae81ff">2048</span> -validity <span style="color:#ae81ff">10000</span>
+</span></span><span style="display:flex;"><span> ~/Library/Android/sdk/build-tools/30.0.2/apksigner sign --ks keystore.jks --out signed_debuggable_release.apk tda.apk
+</span></span></code></pre></div><p>接下来，就可以用Android Stduio Profiler的CPU-Profiler进行<code>Callstack Sample Recording</code>，便可以拿到火焰图。</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20240430171547.png" alt="20240430171547"></p>
+<p>发现耗时点，由于是Release包，需要结合符号表进行还原，便可以拿到对应的耗时点：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>~/Library/Android/sdk/ndk/25.2.9519653/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-addr2line -f -e  ~/Downloads/symbols/libbinding_arm64-v8a.so 0x4495ea0 --verbose -C
+</span></span></code></pre></div><p>这样的好处是接到问题就能立即开始排查，无需编译和埋点。但目前最大的问题是火焰图只能显示方法的偏移地址，需要用addr2line翻译，<strong>一是麻烦，二是不直观</strong>。</p>
+<h2 id="探索">探索</h2>
+<p>基于还有些不便之处，尝试彻底解决。但网上相关资料比较少，只能自己探索。主要的参考资料</p>
+<ul>
+<li><code>~/Library/Android/sdk/ndk/25.1.8937393/simpleperf</code>目录下的脚本和文档 -</li>
+<li><a href="https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md">Simpleperf</a></li>
+</ul>
+<p>AS的Profiler的这个采样其实就是封装了simpleperf，如果自己从命令行也可以使用，但比较麻烦。</p>
+<p>AS的Profiler导出的是一个<code>.trace</code>结尾的文件，用<code>chome://tracing</code>和perfetto都无法打开，也查不到这个<code>.trace</code>文件的格式。</p>
+<p>后面查看了simpleperf的脚本和源码，才知道是一个基于ProtoBuf的二进制文件，自己解析处理目前看比较麻烦。</p>
+<p>发现一个<code>annotate.py</code>的脚本，感觉可以用:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>python3 <span style="color:#f92672">../</span>extras<span style="color:#f92672">-</span>refs_heads_main<span style="color:#f92672">-</span>simpleperf<span style="color:#f92672">/</span>scripts<span style="color:#f92672">/</span>annotate<span style="color:#f92672">.</span>py <span style="color:#f92672">-</span>i cpu<span style="color:#f92672">-</span>simpleperf<span style="color:#f92672">-</span><span style="color:#ae81ff">20240429</span>T182407<span style="color:#f92672">.</span>trace <span style="color:#f92672">-</span>s <span style="color:#f92672">../</span>symbols<span style="color:#f92672">/</span> <span style="color:#f92672">--</span>ndk_path <span style="color:#f92672">~/</span>Library<span style="color:#f92672">/</span>Android<span style="color:#f92672">/</span>sdk<span style="color:#f92672">/</span>ndk<span style="color:#f92672">/</span><span style="color:#ae81ff">25.1.8937393</span> <span style="color:#f92672">--</span>dso <span style="color:#f92672">/</span>data<span style="color:#f92672">/</span>app<span style="color:#f92672">/~~</span>lFdDs3aoPJ7LrNU_vCU51g<span style="color:#f92672">==/</span>com<span style="color:#f92672">.*******.****</span>s<span style="color:#f92672">-</span>dXOmKCUGifMhUrBehyo7bA<span style="color:#f92672">==/</span>lib<span style="color:#f92672">/</span>arm64<span style="color:#f92672">/</span>libbinding<span style="color:#f92672">.</span>so <span style="color:#f92672">--</span>log debug
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">14</span>:<span style="color:#ae81ff">35</span>:<span style="color:#ae81ff">49</span>,<span style="color:#ae81ff">884</span> [DEBUG] (simpleperf_utils<span style="color:#f92672">.</span>py:<span style="color:#ae81ff">567</span>) Can<span style="color:#e6db74">&#39;t find dso /data/app/~~lFdDs3aoPJ7LrNU_vCU51g==/com.*******.****s-dXOmKCUGifMhUrBehyo7bA==/lib/arm64/libbinding.so</span>
+</span></span><span style="display:flex;"><span><span style="color:#ae81ff">14</span>:<span style="color:#ae81ff">35</span>:<span style="color:#ae81ff">54</span>,<span style="color:#ae81ff">421</span> [INFO] (annotate<span style="color:#f92672">.</span>py:<span style="color:#ae81ff">485</span>) annotate finish successfully, please check result <span style="color:#f92672">in</span> annotated_files<span style="color:#f92672">/.</span>
+</span></span></code></pre></div><p>从日志这就不行，感觉是这个脚本设计的问题，不支持指定符号表，看样子要自己写一个了:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">import</span> logging
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> simpleperf_report_lib <span style="color:#f92672">import</span> GetReportLib
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">def</span> <span style="color:#a6e22e">main</span>():
+</span></span><span style="display:flex;"><span>    print(<span style="color:#e6db74">&#39;start process&#39;</span>)
+</span></span><span style="display:flex;"><span>    lib <span style="color:#f92672">=</span> GetReportLib(<span style="color:#e6db74">&#39;cpu-simpleperf-20240429T182407.trace&#39;</span>)
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#66d9ef">True</span>:
+</span></span><span style="display:flex;"><span>        sample <span style="color:#f92672">=</span> lib<span style="color:#f92672">.</span>GetNextSample()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> sample <span style="color:#f92672">is</span> <span style="color:#66d9ef">None</span>:
+</span></span><span style="display:flex;"><span>            lib<span style="color:#f92672">.</span>Close()
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">break</span>
+</span></span><span style="display:flex;"><span>        symbols <span style="color:#f92672">=</span> []
+</span></span><span style="display:flex;"><span>        addr_list <span style="color:#f92672">=</span> set()
+</span></span><span style="display:flex;"><span>        symbols<span style="color:#f92672">.</span>append(lib<span style="color:#f92672">.</span>GetSymbolOfCurrentSample())
+</span></span><span style="display:flex;"><span>        callchain <span style="color:#f92672">=</span> lib<span style="color:#f92672">.</span>GetCallChainOfCurrentSample()
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> i <span style="color:#f92672">in</span> range(callchain<span style="color:#f92672">.</span>nr):
+</span></span><span style="display:flex;"><span>            symbols<span style="color:#f92672">.</span>append(callchain<span style="color:#f92672">.</span>entries[i]<span style="color:#f92672">.</span>symbol)
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> symbol <span style="color:#f92672">in</span> symbols:
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> (symbol<span style="color:#f92672">.</span>dso_name<span style="color:#f92672">.</span>endswith(<span style="color:#e6db74">&#34;libbinding.so&#34;</span>)):
+</span></span><span style="display:flex;"><span>                addr_list<span style="color:#f92672">.</span>add(symbol<span style="color:#f92672">.</span>vaddr_in_file)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> addr <span style="color:#f92672">in</span> addr_list:
+</span></span><span style="display:flex;"><span>            print(hex(addr))
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> __name__ <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;__main__&#39;</span>:
+</span></span><span style="display:flex;"><span>    main()
+</span></span></code></pre></div><p>输出的是这个<code>.trace</code>文件包含的所有函数地址，再用一个脚本处理下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cat addr.txt | <span style="color:#66d9ef">while</span> read line
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">do</span>
+</span></span><span style="display:flex;"><span>   ~/Library/Android/sdk/ndk/25.2.9519653/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-addr2line -f -e  ~/Downloads/symbols/libbinding_arm64-v8a.so -C $line
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>结果发现速度巨慢（因为我们的工程非常大，又打包成了一个so），每一个查找要3s，导出的有28w个地址。</p>
+<p>看来目前，只能发现有问题的指针，再按需还原了&hellip;.</p>
+<p>需要注意的是，simpleperf的<code>anotate.py</code>之前只支持解析<code>.data</code>的数据格式，<code>.trace</code>的格式看起来只有AS Profiler支持，NDK的simpleperf还没有这个能力，但看最新的源码，是去年底提交的。</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20240430163006.png" alt="20240430163006"></p>
+<p>节前时间比较松，有点精力研究下，先用起来，至于更深度的使用，节后继续尝试。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li><a href="https://developer.android.com/topic/performance/overview">App performance guide  |  App quality  |  Android Developers</a></li>
+<li><a href="https://developer.android.com/studio/profile">Profile your app performance  |  Android Studio  |  Android Developers</a></li>
+<li><a href="http://www.luzexi.com/2020/11/13/%E5%AE%89%E5%8D%93%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96%E5%B7%A5%E5%85%B7Simpleperf%E8%AF%A6%E8%A7%A3">安卓性能分析工具Simpleperf详解与应用 - 技术人生 - 编程技术 - JESSE人生</a></li>
+<li><a href="https://medium.com/ww-tech-blog/practical-android-profiling-58ece24934f7">Practical Android Profiling. Intro | by Derek Gelormini | WW Tech Blog | Medium</a></li>
+<li><a href="https://apktool.org/docs/install">Install Guide | Apktool</a></li>
+<li><a href="https://github.com/google/perfetto">google/perfetto: Performance instrumentation and tracing for Android, Linux and Chrome (read-only mirror of https://android.googlesource.com/platform/external/perfetto/)</a></li>
+<li><a href="https://developer.android.com/ndk/guides/debug">Debug your project  |  Android NDK  |  Android Developers</a></li>
+<li><a href="https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md">Simpleperf</a></li>
+</ul>
+
+		</div>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+    <p></p>
+	</article>
+</main>
+
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		🔥 爱折腾的程序员、《Flutter内核源码剖析》作者。 <br>  👈  微信公众号：<b>赵裕</b>（记录所学、所思、所行），欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/record-a-strange-issue-about-codelldb/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">无妄之灾：记录一个奇怪的codelldb问题</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-a-strange-issue-about-codelldb/">无妄之灾：记录一个奇怪的codelldb问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/review-skia-upgrade-m104-to-m122/">Skia升级小记m104-&gt;m122</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%93%E6%A0%8F%E9%80%9F%E8%AE%B0/">专栏|速记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">2</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bug%E8%AE%B0%E5%BD%95/" title="BUG记录">BUG记录 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

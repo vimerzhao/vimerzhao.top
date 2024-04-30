@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 21 Mar 2024 10:29:34 +0800</lastBuildDate>
+    <lastBuildDate>Tue, 30 Apr 2024 23:07:04 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>如何利用ReleaseApk辅助排查性能问题</title>
+      <link>/articles/how-to-use-release-apk-to-find-performance-issue/</link>
+      <pubDate>Tue, 30 Apr 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/how-to-use-release-apk-to-find-performance-issue/</guid>
+      <description>背景 最近收到反馈，同样的场景，Android打开明显比iOS卡顿，实际打开也确实如此。故此要进一步排查这个问题。 我们的业务工程非常庞大，之前全量编一次竟然花了快2h。 此外，我负责的是底层渲染模块，此类</description>
+    </item>
     <item>
       <title>无妄之灾：记录一个奇怪的codelldb问题</title>
       <link>/articles/record-a-strange-issue-about-codelldb/</link>
