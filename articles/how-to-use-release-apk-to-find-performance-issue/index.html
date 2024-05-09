@@ -12,7 +12,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/articles/how-to-use-release-apk-to-find-performance-issue/" /><meta property="article:section" content="articles" />
 <meta property="article:published_time" content="2024-04-30T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-04-30T23:07:04+08:00" />
+<meta property="article:modified_time" content="2024-05-09T18:45:29+08:00" />
 
 		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="如何利用ReleaseApk辅助排查性能问题"/>
 <meta name="twitter:description" content="背景 最近收到反馈，同样的场景，Android打开明显比iOS卡顿，实际打开也确实如此。故此要进一步排查这个问题。 我们的业务工程非常庞大，之前全量编一次竟然花了快2h。 此外，我负责的是底层渲染模块，此类"/>
@@ -113,10 +113,10 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-04-30T00:00:00Z">2024-04-30</time>
-	<time class="meta__text" datetime="2024-04-30T23:07:04&#43;08:00">(最后修改: 2024-04-30)</time></div></div>
+	<time class="meta__text" datetime="2024-05-09T18:45:29&#43;08:00">(最后修改: 2024-05-09)</time></div></div>
 		</header>
 		
-    <span style="color:grey; font-size: 0.9em">本文约 1700 字，阅读需 4 分钟。</span>
+    <span style="color:grey; font-size: 0.9em">本文约 2100 字，阅读需 4 分钟。</span>
     <p/><div class="content post__content clearfix">
 			<h2 id="背景">背景</h2>
 <p>最近收到反馈，同样的场景，Android打开明显比iOS卡顿，实际打开也确实如此。故此要进一步排查这个问题。</p>
@@ -137,7 +137,7 @@
 <h2 id="尝试">尝试</h2>
 <p>我的想法是直接利用流水线的Relase包，先改成Debuggable，这样就可以用AS进行Profile了:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span> sh ./apktool.sh d -f *********.apk -o tda
-</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 修改AndroidManifest.xml，再重新打包</span>
+</span></span><span style="display:flex;"><span> <span style="color:#75715e"># 修改AndroidManifest.xml: android:debuggable=&#34;true&#34;，再重新打包</span>
 </span></span><span style="display:flex;"><span> sh ./apktool.sh b -f tda -o tda.apk
 </span></span><span style="display:flex;"><span> <span style="color:#75715e"># 生成一个临时签名，重新签名</span>
 </span></span><span style="display:flex;"><span> keytool -genkey -v -keystore keystore.jks -alias my_alias -keyalg RSA -keysize <span style="color:#ae81ff">2048</span> -validity <span style="color:#ae81ff">10000</span>
@@ -209,7 +209,16 @@
 <li><a href="https://developer.android.com/ndk/guides/debug">Debug your project  |  Android NDK  |  Android Developers</a></li>
 <li><a href="https://android.googlesource.com/platform/system/extras/+/master/simpleperf/doc/README.md">Simpleperf</a></li>
 </ul>
-
+<hr>
+<h2 id="20240509更新">2024/05/09更新</h2>
+<ul>
+<li>由于逐个地址还原还是太麻烦了，于是想着能不能编一个Profile的版本（应该就是CMake的RelWithDebInfo）</li>
+<li>研究了我们的项目之后，发现，当前的流程是用<code>-g -O2</code>编了一个带调试信息的release的so(3.2G)，然后直接归档，并将strip过后的so上传maven(60M)，给主流水线用</li>
+<li>这个3.2G的so其实就是我需要的，于是我直接在修改AndroidManifest.xml那一步直接把so也替换了，再重新打包</li>
+<li>用AS Profiler抓取调用栈，就都是有符号的了</li>
+<li>这个问题就阶段性解决了，这样会不会对运行耗时产生影响？有待研究</li>
+</ul>
+<!--加载一个带符号的so会多耗时多少，会对运行时性能影响多少？-->
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
     <p></p>
