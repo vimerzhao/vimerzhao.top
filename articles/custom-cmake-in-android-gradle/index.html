@@ -12,7 +12,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/articles/custom-cmake-in-android-gradle/" /><meta property="article:section" content="articles" />
 <meta property="article:published_time" content="2023-12-14T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-12-14T16:46:50+08:00" />
+<meta property="article:modified_time" content="2024-06-07T15:27:44+08:00" />
 
 		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Android Gradle使用自定义的CMake"/>
 <meta name="twitter:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内"/>
@@ -113,14 +113,14 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-14T00:00:00Z">2023-12-14</time>
-	<time class="meta__text" datetime="2023-12-14T16:46:50&#43;08:00">(最后修改: 2023-12-14)</time></div></div>
+	<time class="meta__text" datetime="2024-06-07T15:27:44&#43;08:00">(最后修改: 2024-06-07)</time></div></div>
 		</header>
 		
-    <span style="color:grey; font-size: 0.9em">本文约 900 字，阅读需 2 分钟。</span>
+    <span style="color:grey; font-size: 0.9em">本文约 1100 字，阅读需 3 分钟。</span>
     <p/><div class="content post__content clearfix">
 			<h2 id="背景">背景</h2>
 <p>最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。</p>
-<h2 id="cmake版本过低">Cmake版本过低</h2>
+<h2 id="cmake版本过低-upgrade-cmake">Cmake版本过低 <a href="#upgrade-cmake"></a></h2>
 <p>重构后的CMake使用了一些高版本的特性，比如：</p>
 <ul>
 <li><code>CMP0135</code>: New in version 3.24. -&gt; <a href="https://cmake.org/cmake/help/latest/policy/CMP0135.html">https://cmake.org/cmake/help/latest/policy/CMP0135.html</a></li>
@@ -134,12 +134,25 @@
 </span></span><span style="display:flex;"><span>  cmake;3.22.1            | 3.22.1        | CMake 3.22.1
 </span></span><span style="display:flex;"><span>  cmake;3.6.4111459       | 3.6.4111459   | CMake 3.6.4111459
 </span></span></code></pre></div><p>但是想想，Android用的CMake应该没啥特殊的魔改，官方文档也提到可以自定义：<a href="https://developer.android.com/studio/projects/install-ndk#vanilla_cmake">Configure a specific version of CMake</a>。</p>
-<p>这里提到有两种：</p>
+<p>首先要准备好符合目标的CMake：</p>
 <ul>
-<li>通过PATH查找目标Version，这个比较好，因为Host本身也是编译Target之一，正好复用了。</li>
-<li>通过<code>local.properties</code>的<code>cmake.dir</code>来配置路径，细节比较多，比如路径不能带引号，是bin/cmake所在目录</li>
+<li>通过brew update升级cmake，通过<code>cmake --version</code>查看版本</li>
+<li>直接从官方下载：<a href="https://cmake.org/download/">Download CMake</a>，然后加入<code>PATH</code>环境变量</li>
 </ul>
-<p>此外，<code>build.gradle</code>的<code>cmake/version</code>是一定要配置的，保证版本的一致性。</p>
+<p>有了高版本的CMake之后，具体如何让gradle工程使用自定义的CMake版本，分两种情况</p>
+<ul>
+<li>如果是通过命令行触发构建，即<code>sh ./gradlew assembleDebug</code>：
+<ul>
+<li>此时，Gradle会通过PATH查找目标Version，只要保证命令行的版本（<code>cmake --version</code>）符合要求即可</li>
+</ul>
+</li>
+<li>如果是Android Studio的<code>Run</code>按钮触发构建：
+<ul>
+<li>通过<code>local.properties</code>的<code>cmake.dir</code>来配置路径。细节比较多，比如路径不能带引号，是bin/cmake所在目录</li>
+</ul>
+</li>
+</ul>
+<p><strong>此外，<code>build.gradle</code>的<code>cmake/version</code>是一定要配置的，保证版本的一致性</strong>。</p>
 <h2 id="gradle报错">Gradle报错</h2>
 <p>接下来，进入不太好理解的一个错误，如下：</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-txt" data-lang="txt"><span style="display:flex;"><span>* What went wrong:
