@@ -8,14 +8,14 @@
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
 		<meta property="og:title" content="Android Gradle使用自定义的CMake" />
-<meta property="og:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内" />
+<meta property="og:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 test 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android" />
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/articles/custom-cmake-in-android-gradle/" /><meta property="article:section" content="articles" />
 <meta property="article:published_time" content="2023-12-14T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-06-07T15:27:44+08:00" />
+<meta property="article:modified_time" content="2024-06-13T19:11:25+08:00" />
 
 		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Android Gradle使用自定义的CMake"/>
-<meta name="twitter:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内"/>
+<meta name="twitter:description" content="背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 test 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -113,14 +113,15 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-14T00:00:00Z">2023-12-14</time>
-	<time class="meta__text" datetime="2024-06-07T15:27:44&#43;08:00">(最后修改: 2024-06-07)</time></div></div>
+	<time class="meta__text" datetime="2024-06-13T19:11:25&#43;08:00">(最后修改: 2024-06-13)</time></div></div>
 		</header>
 		
     <span style="color:grey; font-size: 0.9em">本文约 1100 字，阅读需 3 分钟。</span>
     <p/><div class="content post__content clearfix">
 			<h2 id="背景">背景</h2>
 <p>最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。</p>
-<h2 id="cmake版本过低-upgrade-cmake">Cmake版本过低 <a href="#upgrade-cmake"></a></h2>
+<h2 id="cmake版本过低">Cmake版本过低</h2>
+<p><a href="#upgrade-cmake">test</a></p>
 <p>重构后的CMake使用了一些高版本的特性，比如：</p>
 <ul>
 <li><code>CMP0135</code>: New in version 3.24. -&gt; <a href="https://cmake.org/cmake/help/latest/policy/CMP0135.html">https://cmake.org/cmake/help/latest/policy/CMP0135.html</a></li>
@@ -226,9 +227,9 @@ From: <a href="https://cmake.org/cmake/help/latest/manual/cmake-server.7.html">h
 		</a>
 	</div>
 	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/articles/review-skia-upgrade-m104-to-m122/" rel="next">
+		<a class="pager__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/" rel="next">
 			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">Skia升级小记m104-&gt;m122</p>
+			<p class="pager__title">通过vcpkg构建icu-for-android问题一则</p>
 		</a>
 	</div>
 </nav>
@@ -259,8 +260,8 @@ From: <a href="https://cmake.org/cmake/help/latest/manual/cmake-server.7.html">h
 			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/record-a-strange-issue-about-codelldb/">无妄之灾：记录一个奇怪的codelldb问题</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/review-skia-upgrade-m104-to-m122/">Skia升级小记m104-&gt;m122</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
 		</ul>
 	</div>
 </div>

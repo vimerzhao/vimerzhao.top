@@ -173,6 +173,27 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/articles/an-error-about-building-icu-for-android-via-vcpkg/" rel="bookmark">
+			通过vcpkg构建icu-for-android问题一则
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-12T00:00:00Z">2024-03-12</time>
+	<time class="meta__text" datetime="2024-06-13T19:11:25&#43;08:00">(最后修改: 2024-06-13)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		我们的项目通过vcpkg依赖了icu，但在构建Android平台的icu制品时，却失败了。 Installing 15/45 icu:arm-neon-android@73.1#1... Building icu:arm-neon-android@73.1#1... /root/.cache/vcpkg/registries/git-trees/eaccfc7689fb55d4badf3d2321a8be62ae5be84e: info: installing overlay port from here -- Downloading https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz -&gt; icu4c-73_1-src.tgz... -- Extracting source /data/landun/workspace/tdf_build_env/.vcpkg/downloads/icu4c-73_1-src.tgz -- Applying patch disable-escapestr-tool.patch -- Applying patch remove-MD-from-configure.patch -- Applying patch fix_parallel_build_on_windows.patch -- Applying patch fix-extra.patch -- Applying patch mingw-dll-install.patch -- Applying patch disable-static-prefix.patch -- Applying patch fix-win-build.patch -- Using source at /data/landun/workspace/tdf_build_env/.vcpkg/buildtrees/icu/src/c-73_1-src-72ff750ba0.clean --
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/articles/custom-cmake-in-android-gradle/" rel="bookmark">
 			Android Gradle使用自定义的CMake
 			</a>
@@ -182,10 +203,10 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-14T00:00:00Z">2023-12-14</time>
-	<time class="meta__text" datetime="2024-06-07T15:27:44&#43;08:00">(最后修改: 2024-06-07)</time></div></div>
+	<time class="meta__text" datetime="2024-06-13T19:11:25&#43;08:00">(最后修改: 2024-06-13)</time></div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
-		背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内
+		背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 test 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android
 	</div>
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/articles/custom-cmake-in-android-gradle/">阅读全文…</a>
@@ -295,29 +316,6 @@
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/articles/summarize-of-202305/">阅读全文…</a>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/articles/about-quick-note/" rel="bookmark">
-			关于专栏“速记”的说明
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-05-16T00:00:00Z">2023-05-16</time>
-	<time class="meta__text" datetime="2023-06-24T13:00:40&#43;08:00">(最后修改: 2023-06-24)</time></div><div class="meta__item-categories meta__item"><svg class="meta__icon icon icon-category" width="16" height="16" viewBox="0 0 16 16"><path d="m7 2l1 2h8v11h-16v-13z"/></svg><span class="meta__text">
-	</span>
-</div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		最近发现一个问题，自己经常会有一些探索性的实践（或者说踩坑），在此过程会沉淀出一些记录，这些记录如果作为文章发表，会有些随意和不成体系，甚至有些地方是错误的；但这些记录其实还是非常有价值的： 一方面，它
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/articles/about-quick-note/">阅读全文…</a>
-	</div>
 </article>
 </main>
 
@@ -344,8 +342,8 @@
 			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/record-a-strange-issue-about-codelldb/">无妄之灾：记录一个奇怪的codelldb问题</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/review-skia-upgrade-m104-to-m122/">Skia升级小记m104-&gt;m122</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">配置一个Mac/iOS平台的Flutter源码调试环境</a></li>
 		</ul>
 	</div>
 </div>

@@ -6,7 +6,7 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 07 Jun 2024 15:27:44 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 13 Jun 2024 19:11:25 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>如何利用ReleaseApk辅助排查性能问题</title>
@@ -30,11 +30,18 @@
       <description>最近需要把Skia进行一次升级，首先查看下接口变动，See： RELEASE_NOTES.md 大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动: SkFontMgr::RefDefault() has been deleted. Clients should instantiate and manage their own SkFontMgrs and use them to explicitly create SkTypefaces 找到这个改动的原因： Remove default SkFontMgr [305780908] - Skia 是</description>
     </item>
     <item>
+      <title>通过vcpkg构建icu-for-android问题一则</title>
+      <link>/articles/an-error-about-building-icu-for-android-via-vcpkg/</link>
+      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/an-error-about-building-icu-for-android-via-vcpkg/</guid>
+      <description>我们的项目通过vcpkg依赖了icu，但在构建Android平台的icu制品时，却失败了。 Installing 15/45 icu:arm-neon-android@73.1#1... Building icu:arm-neon-android@73.1#1... /root/.cache/vcpkg/registries/git-trees/eaccfc7689fb55d4badf3d2321a8be62ae5be84e: info: installing overlay port from here -- Downloading https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz -&amp;gt; icu4c-73_1-src.tgz... -- Extracting source /data/landun/workspace/tdf_build_env/.vcpkg/downloads/icu4c-73_1-src.tgz -- Applying patch disable-escapestr-tool.patch -- Applying patch remove-MD-from-configure.patch -- Applying patch fix_parallel_build_on_windows.patch -- Applying patch fix-extra.patch -- Applying patch mingw-dll-install.patch -- Applying patch disable-static-prefix.patch -- Applying patch fix-win-build.patch -- Using source at /data/landun/workspace/tdf_build_env/.vcpkg/buildtrees/icu/src/c-73_1-src-72ff750ba0.clean --</description>
+    </item>
+    <item>
       <title>Android Gradle使用自定义的CMake</title>
       <link>/articles/custom-cmake-in-android-gradle/</link>
       <pubDate>Thu, 14 Dec 2023 00:00:00 +0000</pubDate>
       <guid>/articles/custom-cmake-in-android-gradle/</guid>
-      <description>背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&amp;gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &amp;lt;set-name&amp;gt;: New in version 3.23 -&amp;gt; https://cmake.org/cmake/help/latest/command/install.html 但Android内</description>
+      <description>背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 test 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&amp;gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &amp;lt;set-name&amp;gt;: New in version 3.23 -&amp;gt; https://cmake.org/cmake/help/latest/command/install.html 但Android</description>
     </item>
     <item>
       <title>配置一个Mac/iOS平台的Flutter源码调试环境</title>
