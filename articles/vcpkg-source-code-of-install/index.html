@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>vcpkg源码之install流程 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="vcpkg源码之install流程" />
+<meta property="og:description" content="简介 vcpck install的主要工作是&quot;构建(如果需要)和安装依赖包&quot;，是vcpkg中最关键、也是使用者感知最明显的环节，有必要对其流程有一个更底层的理解，这样对一些问题的理解也将更加深" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/vcpkg-source-code-of-install/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2024-06-17T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-06-17T10:27:21+08:00" />
+
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="vcpkg源码之install流程"/>
+<meta name="twitter:description" content="简介 vcpck install的主要工作是&quot;构建(如果需要)和安装依赖包&quot;，是vcpkg中最关键、也是使用者感知最明显的环节，有必要对其流程有一个更底层的理解，这样对一些问题的理解也将更加深"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses-archive/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">vcpkg源码之install流程</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-06-17T00:00:00Z">2024-06-17</time>
+	<time class="meta__text" datetime="2024-06-17T10:27:21&#43;08:00">(最后修改: 2024-06-17)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 3000 字，阅读需 6 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h2 id="简介">简介</h2>
+<p><code>vcpck install</code>的主要工作是&quot;构建(如果需要)和安装依赖包&quot;，是vcpkg中最关键、也是使用者感知最明显的环节，有必要对其流程有一个更底层的理解，这样对一些问题的理解也将更加深刻。</p>
+<p>我们首次执行Cmake时，都会有如下信息输出：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>-- Running vcpkg install
+</span></span><span style="display:flex;"><span>Fetching registry information from https:/github.com/microsoft/vcpkg.git <span style="color:#f92672">(</span>HEAD<span style="color:#f92672">)</span>...
+</span></span><span style="display:flex;"><span>The following packages will be built and installed:
+</span></span><span style="display:flex;"><span>  * abseil<span style="color:#f92672">[</span>core,cxx17<span style="color:#f92672">]</span>:arm-neon-android@20230125.3 -- /root/.cache/vcpkg/registries/git-trees/6a337fa251c0ac4489d9c0ea1e2f1c9a7d019eb5
+</span></span><span style="display:flex;"><span>  * brotli:arm-neon-android@1.1.0#1 -- /root/.cache/vcpkg/registries/git-trees/4e5b5ae1ad26c80535c893cc0307121f0398549e
+</span></span><span style="display:flex;"><span>  * bzip2<span style="color:#f92672">[</span>core,tool<span style="color:#f92672">]</span>:arm-neon-android@1.0.8#5 -- /root/.cache/vcpkg/registries/git-trees/92e9a8bbf1abbd89872b48ad82fcf75852de1006
+</span></span><span style="display:flex;"><span>....... <span style="color:#75715e">#省略</span>
+</span></span><span style="display:flex;"><span>Installing 44/45 curl<span style="color:#f92672">[</span>brotli,c-ares,core,http2,non-http,openssl,ssl,zstd<span style="color:#f92672">]</span>:arm-neon-android@8.8.0...
+</span></span><span style="display:flex;"><span>Elapsed time to handle curl:arm-neon-android: 2.8 ms
+</span></span><span style="display:flex;"><span>curl:arm-neon-android package ABI: 3adff4b03e8cc179c90168489827352fdd288e42ba831a4a495629d62cb19339
+</span></span><span style="display:flex;"><span>Installing 45/45 tdf:arm-neon-android@2.0...
+</span></span><span style="display:flex;"><span>Building tdf:arm-neon-android@2.0...
+</span></span><span style="display:flex;"><span>/path/to/./ports/tdf: info: installing overlay port from here
+</span></span><span style="display:flex;"><span>-- Using cached /path/to/.vcpkg/downloads/tdf-ca375a42c30097decb1e697c5976d8adaa226003.tar.gz
+</span></span><span style="display:flex;"><span>-- Cleaning sources at /path/to/.vcpkg/buildtrees/tdf/src/adaa226003-e7137e7c2f.clean. Use --editable to skip cleaning <span style="color:#66d9ef">for</span> the packages you specify.
+</span></span><span style="display:flex;"><span>-- Extracting source /path/to/.vcpkg/downloads/tdf-ca375a42c30097decb1e697c5976d8adaa226003.tar.gz
+</span></span><span style="display:flex;"><span>-- Using source at /path/to/.vcpkg/buildtrees/tdf/src/adaa226003-e7137e7c2f.clean
+</span></span><span style="display:flex;"><span>-- Configuring arm-neon-android
+</span></span><span style="display:flex;"><span>-- Building arm-neon-android-dbg
+</span></span><span style="display:flex;"><span>-- Building arm-neon-android-rel
+</span></span><span style="display:flex;"><span>-- Performing post-build validation
+</span></span><span style="display:flex;"><span>warning: The software license must be available at <span style="color:#e6db74">${</span>CURRENT_PACKAGES_DIR<span style="color:#e6db74">}</span>/share/tdf/copyright
+</span></span><span style="display:flex;"><span>error: Found <span style="color:#ae81ff">1</span> post-build check problem<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>. To submit these ports to curated catalogs, please first correct the portfile: /path/to/./ports/tdf/portfile.cmake
+</span></span><span style="display:flex;"><span>Stored binaries in <span style="color:#ae81ff">1</span> destinations in <span style="color:#ae81ff">31</span> s.
+</span></span><span style="display:flex;"><span>Elapsed time to handle tdf:arm-neon-android: <span style="color:#ae81ff">3</span> min
+</span></span><span style="display:flex;"><span>tdf:arm-neon-android package ABI: 1f4f175b2979f99255cbaa5e4c4e2f09f4e0e954bbee81d5e73cbd834c018d85
+</span></span><span style="display:flex;"><span>Total install time: <span style="color:#ae81ff">3</span> min
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>....... <span style="color:#75715e">#省略</span>
+</span></span><span style="display:flex;"><span>-- Running vcpkg install - <span style="color:#66d9ef">done</span>
+</span></span></code></pre></div><p>以上，就是vcpkg通过解析<code>vcpkg.json</code>/<code>vcpkg-configuration.json</code>等文件，安装指定版本依赖的过程。</p>
+<p>安装的过程涉及的细节比较多，比如:Abi的计算、云缓存的拉取/上传，没有缓存时触发本地构建等。</p>
+<p>其中，最值得了解的是：<strong>没有命中缓存时，vcpkg如何触发这个port(即三方库)的构建</strong>。这是最容易出问题的地方，比如，我们在项目CMake中定义了一个变量，为什么在自定义的portfile.cmake无法访问（最典型的就是明明指定了CMAKE_BUILD_TYPE=Debug，但vcpkg仍会同时构建Debug/Release制品）。</p>
+<p>接下来，我们拆解这个过程。</p>
+<h2 id="step1-主工程cmake阶段">Step1: 主工程CMake阶段</h2>
+<p>结合官方文档：<a href="https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-cmd">Install and use packages with CMake | Microsoft Learn</a>，可以发现，CMake使用vcpkg最关键的环节就是指定<code>CMAKE_TOOLCHAIN_FILE</code>为<code>&quot;$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake&quot;</code>。那么，这个cmake其实就是关键的入口。</p>
+<p>vcpkg.cmake有近1000行，其核心逻辑之一（即vcpkg install，另一个是find_package的实现）如下(VNote是我加注释)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-CMake" data-lang="CMake"><span style="display:flex;"><span><span style="color:#75715e"># VNote: 前面省略，前置条件检查
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>if(<span style="color:#e6db74">VCPKG_MANIFEST_MODE</span> <span style="color:#e6db74">AND</span> <span style="color:#e6db74">VCPKG_MANIFEST_INSTALL</span> <span style="color:#e6db74">AND</span> <span style="color:#e6db74">NOT</span> <span style="color:#e6db74">Z_VCPKG_CMAKE_IN_TRY_COMPILE</span> <span style="color:#e6db74">AND</span> <span style="color:#e6db74">NOT</span> <span style="color:#e6db74">Z_VCPKG_HAS_FATAL_ERROR</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    if(<span style="color:#e6db74">NOT</span> <span style="color:#e6db74">EXISTS</span> <span style="color:#e6db74">&#34;${Z_VCPKG_EXECUTABLE}&#34;</span> <span style="color:#e6db74">AND</span> <span style="color:#e6db74">NOT</span> <span style="color:#e6db74">Z_VCPKG_HAS_FATAL_ERROR</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>      <span style="color:#75715e"># VNote: 下载vcpkg-tool，省略
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    if(<span style="color:#e6db74">NOT</span> <span style="color:#e6db74">Z_VCPKG_HAS_FATAL_ERROR</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        <span style="color:#75715e"># VNote: 对应上面的日志输出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        message(<span style="color:#e6db74">STATUS</span> <span style="color:#e6db74">&#34;Running vcpkg install&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        <span style="color:#75715e"># VNote: 开始组装各种参数
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        set(<span style="color:#e6db74">Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        if(<span style="color:#e6db74">DEFINED</span> <span style="color:#e6db74">VCPKG_HOST_TRIPLET</span> <span style="color:#e6db74">AND</span> <span style="color:#e6db74">NOT</span> <span style="color:#e6db74">VCPKG_HOST_TRIPLET</span> <span style="color:#e6db74">STREQUAL</span> <span style="color:#e6db74">&#34;&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            list(<span style="color:#e6db74">APPEND</span> <span style="color:#e6db74">Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS</span> <span style="color:#e6db74">&#34;--host-triplet=${VCPKG_HOST_TRIPLET}&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        if(<span style="color:#e6db74">VCPKG_OVERLAY_PORTS</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            foreach(<span style="color:#e6db74">Z_VCPKG_OVERLAY_PORT</span> <span style="color:#e6db74">IN</span> <span style="color:#e6db74">LISTS</span> <span style="color:#e6db74">VCPKG_OVERLAY_PORTS</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>                list(<span style="color:#e6db74">APPEND</span> <span style="color:#e6db74">Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS</span> <span style="color:#e6db74">&#34;--overlay-ports=${Z_VCPKG_OVERLAY_PORT}&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            endforeach()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        if(<span style="color:#e6db74">VCPKG_OVERLAY_TRIPLETS</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        <span style="color:#75715e"># VNote: 省略一些....
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        <span style="color:#75715e"># VNote: 开始执行vcpkg install这个命令
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        execute_process(
+</span></span><span style="display:flex;"><span>            <span style="color:#e6db74">COMMAND</span> <span style="color:#e6db74">&#34;${Z_VCPKG_EXECUTABLE}&#34;</span> <span style="color:#e6db74">install</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">--triplet</span> <span style="color:#e6db74">&#34;${VCPKG_TARGET_TRIPLET}&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">--vcpkg-root</span> <span style="color:#e6db74">&#34;${Z_VCPKG_ROOT_DIR}&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;--x-wait-for-lock&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;--x-manifest-root=${VCPKG_MANIFEST_DIR}&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;--x-install-root=${_VCPKG_INSTALLED_DIR}&#34;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">${</span>Z_VCPKG_FEATURE_FLAGS<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">${</span>Z_VCPKG_ADDITIONAL_MANIFEST_PARAMS<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">${</span>VCPKG_INSTALL_OPTIONS<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e"># VNote: 省略一些不关键的代码....
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#e6db74">if(Z_VCPKG_MANIFEST_INSTALL_RESULT</span> <span style="color:#e6db74">EQUAL</span> <span style="color:#e6db74">&#34;0&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            <span style="color:#75715e"># VNote: 对应上面的日志输出
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            message(<span style="color:#e6db74">STATUS</span> <span style="color:#e6db74">&#34;Running vcpkg install - done&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            set_property(<span style="color:#e6db74">DIRECTORY</span> <span style="color:#e6db74">APPEND</span> <span style="color:#e6db74">PROPERTY</span> <span style="color:#e6db74">CMAKE_CONFIGURE_DEPENDS</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#e6db74">&#34;${VCPKG_MANIFEST_DIR}/vcpkg.json&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            if(<span style="color:#e6db74">EXISTS</span> <span style="color:#e6db74">&#34;${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>                set_property(<span style="color:#e6db74">DIRECTORY</span> <span style="color:#e6db74">APPEND</span> <span style="color:#e6db74">PROPERTY</span> <span style="color:#e6db74">CMAKE_CONFIGURE_DEPENDS</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#e6db74">&#34;${VCPKG_MANIFEST_DIR}/vcpkg-configuration.json&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        else()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            message(<span style="color:#e6db74">STATUS</span> <span style="color:#e6db74">&#34;Running vcpkg install - failed&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            z_vcpkg_add_fatal_error(<span style="color:#e6db74">&#34;vcpkg install failed. See logs for more information: ${Z_NATIVE_VCPKG_MANIFEST_INSTALL_LOGFILE}&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>关键逻辑已经在CMake脚本中注明，其实CMake的作用主要是<strong>作为vcpkg-tool的Launcher，组装其需要的参数</strong>，接下来，我们就分析下vcpkg-tool的逻辑。</p>
+<h2 id="step2-vcpkg-tool阶段">Step2: vcpkg-tool阶段</h2>
+<p><a href="https://github.com/microsoft/vcpkg">microsoft/vcpkg</a>中主要是各种CMake脚本，其作用有二：</p>
+<ol>
+<li>组装参数并调用<a href="https://github.com/microsoft/vcpkg-tool">microsoft/vcpkg-tool</a>(即step1)</li>
+<li>配合CMake进行构建（即step3）</li>
+</ol>
+<p>vcpkg-tool主要是C++代码实现，负责执行往逻辑比较重的工作，比如：</p>
+<ol>
+<li>分析某个依赖的各种间接依赖和版本</li>
+<li>网络请求与下载（Binary Cache）</li>
+<li>ABI的计算</li>
+<li>等等&hellip;.</li>
+</ol>
+<p>这些逻辑并不适合用Cmake处理，其细节也比较多，这里我会通过<code>--debug</code>参数额外获取一些日志，帮助我们更直观地理解vcpkg-tool的工作过程。</p>
+<h3 id="step21-核心调用栈">Step2.1 核心调用栈</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 构建没有缓存的port</span>
+</span></span><span style="display:flex;"><span>vcpkg::do_build_package<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg<span style="color:#ae81ff">\c</span>ommands.build.cpp:994<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>vcpkg::do_build_package_and_clean_buildtrees<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg<span style="color:#ae81ff">\c</span>ommands.build.cpp:1083<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>vcpkg::build_package<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg<span style="color:#ae81ff">\c</span>ommands.build.cpp:1426<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># install首先会尝试缓存，没有缓存则进行构建</span>
+</span></span><span style="display:flex;"><span>vcpkg::perform_install_plan_action<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg<span style="color:#ae81ff">\c</span>ommands.install.cpp:361<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>vcpkg::install_execute_plan<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg<span style="color:#ae81ff">\c</span>ommands.install.cpp:604<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>vcpkg::command_install_and_exit<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg<span style="color:#ae81ff">\c</span>ommands.install.cpp:1365<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">(</span>anonymous namespace<span style="color:#f92672">)</span>::inner<span style="color:#f92672">(</span>...<span style="color:#f92672">)</span> <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg.cpp:147<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># vcpkg-tool的入口</span>
+</span></span><span style="display:flex;"><span>main <span style="color:#f92672">(</span>vcpkg-tool<span style="color:#ae81ff">\s</span>rc<span style="color:#ae81ff">\v</span>cpkg.cpp:400<span style="color:#f92672">)</span>
+</span></span></code></pre></div><h3 id="step22-触发构建">Step2.2 触发构建</h3>
+<p>C++的流程不用展开分析，因为细节太多，其本质还是组装出一个<strong>构建port制品的命令</strong>，以<code>vcpkg install tracy</code>为例，如果没有缓存，则会触发其构建，vcpkg-tool本身没有构建能力，如果要构建一个port，还要<strong>重新调回vcpkg中的CMake脚本</strong>，对应日志如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#f92672">[</span>DEBUG<span style="color:#f92672">]</span> 1011: execute_process<span style="color:#f92672">(</span>GIT_CEILING_DIRECTORIES<span style="color:#f92672">=</span>/data/research/vcpkg/buildtrees  /data/research/vcpkg/downloads/tools/cmake-3.27.
+</span></span><span style="display:flex;"><span>1-linux/cmake-3.27.1-linux-x86_64/bin/cmake <span style="color:#e6db74">&#34;-DALL_FEATURES=cli-tools;crash-handler;gui-tools;on-demand;&#34;</span> -DCURRENT_PORT_DIR<span style="color:#f92672">=</span>/data/rese
+</span></span><span style="display:flex;"><span>arch/vcpkg/ports/tracy -D_HOST_TRIPLET<span style="color:#f92672">=</span>x64-linux <span style="color:#e6db74">&#34;-DFEATURES=core;crash-handler&#34;</span> -DPORT<span style="color:#f92672">=</span>tracy -DVERSION<span style="color:#f92672">=</span>0.10.0 -DVCPKG_USE_HEAD_VERSION
+</span></span><span style="display:flex;"><span><span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -D_VCPKG_DOWNLOAD_TOOL<span style="color:#f92672">=</span>BUILT_IN -D_VCPKG_EDITABLE<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -D_VCPKG_NO_DOWNLOADS<span style="color:#f92672">=</span><span style="color:#ae81ff">0</span> -DZ_VCPKG_CHAINLOAD_TOOLCHAIN_FILE<span style="color:#f92672">=</span>/data/research/vcpkg/
+</span></span><span style="display:flex;"><span>scripts/toolchains/linux.cmake -DCMD<span style="color:#f92672">=</span>BUILD -DDOWNLOADS<span style="color:#f92672">=</span>/data/research/vcpkg/downloads -DTARGET_TRIPLET<span style="color:#f92672">=</span>x64-linux -DTARGET_TRIPLET_FILE<span style="color:#f92672">=</span>
+</span></span><span style="display:flex;"><span>/data/research/vcpkg/triplets/x64-linux.cmake -DVCPKG_BASE_VERSION<span style="color:#f92672">=</span>2999-12-31 -DVCPKG_CONCURRENCY<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span> -DVCPKG_PLATFORM_TOOLSET<span style="color:#f92672">=</span>external
+</span></span><span style="display:flex;"><span>-DGIT<span style="color:#f92672">=</span>/usr/bin/git <span style="color:#e6db74">&#34;-DVCPKG_PORT_CONFIGS=/data/research/vcpkg/installed/x64-linux/share/vcpkg-cmake/vcpkg-port-config.cmake;/data/resea
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">rch/vcpkg/installed/x64-linux/share/vcpkg-cmake-config/vcpkg-port-config.cmake&#34;</span> -DVCPKG_ROOT_DIR<span style="color:#f92672">=</span>/data/research/vcpkg -DPACKAGES_DIR<span style="color:#f92672">=</span>/d
+</span></span><span style="display:flex;"><span>ata/research/vcpkg/packages -DBUILDTREES_DIR<span style="color:#f92672">=</span>/data/research/vcpkg/buildtrees -D_VCPKG_INSTALLED_DIR<span style="color:#f92672">=</span>/data/research/vcpkg/installed -DDO
+</span></span><span style="display:flex;"><span>WNLOADS<span style="color:#f92672">=</span>/data/research/vcpkg/downloads -DVCPKG_MANIFEST_INSTALL<span style="color:#f92672">=</span>OFF -P /data/research/vcpkg/scripts/ports.cmake<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>-- TEst
+</span></span><span style="display:flex;"><span>-- Using cached wolfpld-tracy-v0.10.tar.gz.
+</span></span><span style="display:flex;"><span>-- Cleaning sources at /data/research/vcpkg/buildtrees/tracy/src/v0.10-b0e1fd57f2.clean. Use --editable to skip cleaning <span style="color:#66d9ef">for</span> the packag
+</span></span><span style="display:flex;"><span>es you specify.
+</span></span><span style="display:flex;"><span>-- Extracting source /data/research/vcpkg/downloads/wolfpld-tracy-v0.10.tar.gz
+</span></span><span style="display:flex;"><span>-- Applying patch 001-fix-vcxproj-vcpkg.patch
+</span></span><span style="display:flex;"><span>-- Applying patch 002-use-internal-imgui.patch
+</span></span><span style="display:flex;"><span>-- Using source at /data/research/vcpkg/buildtrees/tracy/src/v0.10-b0e1fd57f2.clean
+</span></span><span style="display:flex;"><span>-- Configuring x64-linux
+</span></span><span style="display:flex;"><span>-- Installing: /data/research/vcpkg/packages/tracy_x64-linux/share/tracy/copyright
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>DEBUG<span style="color:#f92672">]</span> 1011: cmd_execute_and_stream_data<span style="color:#f92672">()</span> returned <span style="color:#ae81ff">0</span> after   <span style="color:#ae81ff">153689</span> us
+</span></span><span style="display:flex;"><span>-- Performing post-build validation
+</span></span></code></pre></div><p>可以看到，其关键是<strong>用内置的CMake</strong>调用了vcpkg的<code>ports.cmake</code>脚本，并传入了相关参数，如：</p>
+<ul>
+<li>ALL_FEATURES / TARGET_TRIPLET / TARGET_TRIPLET_FILE</li>
+<li>CURRENT_PORT_DIR</li>
+<li>Z_VCPKG_CHAINLOAD_TOOLCHAIN_FILE</li>
+<li>&hellip;.</li>
+</ul>
+<p>至此，我们可以发现<strong>即使是自定义的portfile.cmake，其环境也和主CMake工程是隔离的，无法直接传入全局CMake变量</strong>。</p>
+<h2 id="step3-porfilecmake阶段">Step3: porfile.cmake阶段</h2>
+<p>接下来，分析portfile的逻辑，脚本不长，主要是两部分：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span><span style="color:#75715e"># 清理变量，并include各种脚本依赖
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#960050;background-color:#1e0010">.....
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">SCRIPTS</span> <span style="color:#e6db74">&#34;${CMAKE_CURRENT_LIST_DIR}&#34;</span> <span style="color:#e6db74">CACHE</span> <span style="color:#e6db74">PATH</span> <span style="color:#e6db74">&#34;Location to stored scripts&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>list(<span style="color:#e6db74">APPEND</span> <span style="color:#e6db74">CMAKE_MODULE_PATH</span> <span style="color:#e6db74">&#34;${SCRIPTS}/cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/execute_process.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/vcpkg_acquire_msys.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/vcpkg_add_to_path.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/vcpkg_apply_patches.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/vcpkg_backup_restore_env_vars.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/vcpkg_build_cmake.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/vcpkg_build_make.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">.....
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># 进行port的构建
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>if(<span style="color:#e6db74">CMD</span> <span style="color:#e6db74">STREQUAL</span> <span style="color:#e6db74">&#34;BUILD&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    <span style="color:#75715e"># VNote: 检查必要的参数，省略
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    include(<span style="color:#e6db74">&#34;${CURRENT_PORT_DIR}/portfile.cmake&#34;</span>) <span style="color:#75715e"># VNote: 触发port的构建
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    if(<span style="color:#e6db74">DEFINED</span> <span style="color:#e6db74">PORT</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        if(<span style="color:#e6db74">VCPKG_FIXUP_ELF_RPATH</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>            include(<span style="color:#e6db74">&#34;${SCRIPTS}/cmake/z_vcpkg_fixup_rpath.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        include(<span style="color:#e6db74">&#34;${SCRIPTS}/build_info.cmake&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">....
+</span></span></span></code></pre></div><p>接下来，就是我们最熟悉的portfile.cmake的执行了，以tracy为例，其portfile.cmake如下(注：相关的api已经在上面的ports.cmake中include):</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>vcpkg_check_linkage(<span style="color:#e6db74">ONLY_STATIC_LIBRARY</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># VNote: 从github下载vcpkg的源码
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vcpkg_from_github(  <span style="color:#e6db74">.....</span> )<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>vcpkg_check_features(<span style="color:#e6db74">OUT_FEATURE_OPTIONS</span> <span style="color:#e6db74">FEATURE_OPTIONS</span> <span style="color:#e6db74">....</span> )<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># VNote: tracy本身是cmake构建的，则进行配置
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vcpkg_cmake_configure(
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">SOURCE_PATH</span> <span style="color:#f92672">${</span>SOURCE_PATH<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#e6db74">OPTIONS</span> <span style="color:#f92672">${</span>FEATURE_OPTIONS<span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># VNote: 构建并安装tracy
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vcpkg_cmake_install()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># VNote: 省略一些特定平台的处理，下面是Windows平台的构建
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>function(<span style="color:#e6db74">tracy_tool_install</span> <span style="color:#e6db74">tracy_TOOL</span> <span style="color:#e6db74">tracy_TOOL_NAME</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    if(<span style="color:#e6db74">VCPKG_TARGET_IS_WINDOWS</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        tracy_tool_install_win32(<span style="color:#e6db74">&#34;${tracy_TOOL}&#34;</span> <span style="color:#e6db74">&#34;${tracy_TOOL_NAME}&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    else()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>        tracy_tool_install_unix(<span style="color:#e6db74">&#34;${tracy_TOOL}&#34;</span> <span style="color:#e6db74">&#34;${tracy_TOOL_NAME}&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>    endif()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>endfunction()<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e">#VNote: 省略....
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>vcpkg_install_copyright(<span style="color:#e6db74">FILE_LIST</span> <span style="color:#e6db74">&#34;${SOURCE_PATH}/LICENSE&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>file(<span style="color:#e6db74">REMOVE_RECURSE</span> <span style="color:#e6db74">&#34;${CURRENT_PACKAGES_DIR}/debug/share&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>file(<span style="color:#e6db74">REMOVE_RECURSE</span> <span style="color:#e6db74">&#34;${CURRENT_PACKAGES_DIR}/debug/include&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span></code></pre></div><p>以上逻辑中，最关键的是:</p>
+<ul>
+<li><code>vcpkg_cmake_configure</code>: 位于ports/vcpkg-cmake/vcpkg_cmake_configure.cmake，组装cmake命令</li>
+<li><code>vcpkg_cmake_install</code>: 位于ports/vcpkg-cmake/vcpkg_cmake_install.cmake，调用vcpkg_cmake_build</li>
+<li><code>vcpkg_cmake_build</code>: 位于ports/vcpkg-cmake/vcpkg_cmake_build.cmake，进行最终的构建和cmake install(项目的CMake脚本实现)</li>
+</ul>
+<p>以<code>vcpkg install tarcy:arm-neon-android</code>为例(linux的<code>vcpkg install tarcy</code>过于简单，选取个复杂的)，其<code>vcpkg_cmake_configure</code>最终组装的cmake命令如下(可以想象，如果要我们手动构建并正确配置参数，还是比较复杂的)：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 为了便于理解，进行换行处理</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>1/2<span style="color:#f92672">]</span> <span style="color:#e6db74">&#34;/path/to/.vcpkg/downloads/tools/cmake-3.29.2-linux/cmake-3.29.2-linux-x86_64/bin/cmake&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -E chdir <span style="color:#e6db74">&#34;..&#34;</span> <span style="color:#e6db74">&#34;/path/to/.vcpkg/downloads/tools/cmake-3.29.2-linux/cmake-3.29.2-linux-x86_64/bin/cmake&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;/path/to/.vcpkg/buildtrees/tracy/src/v0.10-b0e1fd57f2.clean&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-G&#34;</span> <span style="color:#e6db74">&#34;Ninja&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_BUILD_TYPE=Release&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_INSTALL_PREFIX=/path/to/.vcpkg/packages/tracy_arm-neon-android&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DFETCHCONTENT_FULLY_DISCONNECTED=ON&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DTRACY_ON_DEMAND=OFF&#34;</span> <span style="color:#e6db74">&#34;-DTRACY_FIBERS=OFF&#34;</span> <span style="color:#e6db74">&#34;-DTRACY_NO_CRASH_HANDLER=OFF&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_MAKE_PROGRAM=/path/to/.vcpkg/downloads/tools/ninja/1.10.2-linux/ninja&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_SYSTEM_NAME=Android&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_SYSTEM_VERSION=21&#34;</span> <span style="color:#e6db74">&#34;-DBUILD_SHARED_LIBS=OFF&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_CHAINLOAD_TOOLCHAIN_FILE=/path/to/.vcpkg/scripts/toolchains/android.cmake&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_TARGET_TRIPLET=arm-neon-android&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_SET_CHARSET_FLAG=ON&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_PLATFORM_TOOLSET=external&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_EXPORT_NO_PACKAGE_REGISTRY=ON&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_FIND_PACKAGE_NO_PACKAGE_REGISTRY=ON&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_FIND_PACKAGE_NO_SYSTEM_PACKAGE_REGISTRY=ON&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_INSTALL_SYSTEM_RUNTIME_LIBS_SKIP=TRUE&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_VERBOSE_MAKEFILE=ON&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_APPLOCAL_DEPS=OFF&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_TOOLCHAIN_FILE=/path/to/.vcpkg/scripts/buildsystems/vcpkg.cmake&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DCMAKE_ERROR_ON_ABSOLUTE_INSTALL_DESTINATION=ON&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_CXX_FLAGS=&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_CXX_FLAGS_RELEASE=&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_CXX_FLAGS_DEBUG=&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_C_FLAGS=&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_C_FLAGS_RELEASE=&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_C_FLAGS_DEBUG=&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_CRT_LINKAGE=static&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_LINKER_FLAGS=&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_LINKER_FLAGS_RELEASE=&#34;</span> <span style="color:#e6db74">&#34;-DVCPKG_LINKER_FLAGS_DEBUG=&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_TARGET_ARCHITECTURE=arm&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_INSTALL_LIBDIR:STRING=lib&#34;</span> <span style="color:#e6db74">&#34;-DCMAKE_INSTALL_BINDIR:STRING=bin&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-D_VCPKG_ROOT_DIR=/path/to/.vcpkg&#34;</span> <span style="color:#e6db74">&#34;-D_VCPKG_INSTALLED_DIR=/path/to/android-build/Release/vcpkg_installed&#34;</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  <span style="color:#e6db74">&#34;-DVCPKG_MANIFEST_INSTALL=OFF&#34;</span> <span style="color:#e6db74">&#34;-DANDROID_ABI=armeabi-v7a&#34;</span> <span style="color:#e6db74">&#34;-DANDROID_ARM_NEON=ON&#34;</span>
+</span></span></code></pre></div><p>其vcpkg_cmake_build将进行最终构建:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># 为了便于理解，进行换行处理</span>
+</span></span><span style="display:flex;"><span>Run Build Command<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span>: /path/to/.vcpkg/downloads/tools/ninja/1.10.2-linux/ninja -v -v -j17 install
+</span></span><span style="display:flex;"><span><span style="color:#f92672">[</span>1/3<span style="color:#f92672">]</span> /root/.install/android-sdk-linux/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/bin/clang++ <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --target<span style="color:#f92672">=</span>armv7-none-linux-androideabi21 <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  --sysroot<span style="color:#f92672">=</span>/root/.install/android-sdk-linux/ndk/26.1.10909125/toolchains/llvm/prebuilt/linux-x86_64/sysroot <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DTRACY_ENABLE -isystem /path/to/.vcpkg/buildtrees/tracy/src/v0.10-b0e1fd57f2.clean/public <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE<span style="color:#f92672">=</span><span style="color:#ae81ff">2</span> <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -march<span style="color:#f92672">=</span>armv7-a -mthumb -Wformat -Werror<span style="color:#f92672">=</span>format-security -frtti -fexceptions  -fPIC   -fno-limit-debug-info    -fPIC -pthread -MD -MT <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  CMakeFiles/TracyClient.dir/public/TracyClient.cpp.o <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -MF CMakeFiles/TracyClient.dir/public/TracyClient.cpp.o.d <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -o CMakeFiles/TracyClient.dir/public/TracyClient.cpp.o <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -c /path/to/.vcpkg/buildtrees/tracy/src/v0.10-b0e1fd57f2.clean/public/TracyClient.cpp
+</span></span></code></pre></div><h2 id="总结">总结</h2>
+<ul>
+<li>至此，我们理清了主CMake工程与其依赖的port（三方库）的<code>portfile.cmake</code>脚本的关系，<strong>有时其虽然在同一个项目中，但其实彼此是完全隔离的</strong>，这个不看源码，是很容易误解的。(cmake -&gt; vcpkg-tool -&gt; portfile.cmake的转发，对调试是一种挑战，所以<code>porfile.cmake</code>的问题尽可能通过日志排查)</li>
+<li>另外，也可以直接感受到，<strong>vcpkg把一个三方库的各种构建细节（依赖、交叉编译、参数选择等）进行了封装，让使用者尽可能不关注依赖的构建细节</strong>（如果这个依赖的构建脚本维护良好的话）。</li>
+</ul>
+
+		</div>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+    <p></p>
+	</article>
+</main>
+
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		🔥 爱折腾的程序员、《Flutter内核源码剖析》作者。 <br>  👈  微信公众号：<b>赵裕</b>（记录所学、所思、所行），欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/vcpkg-introduction/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">vcpkg简介</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-source-code-of-install/">vcpkg源码之install流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-introduction/">vcpkg简介</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/record-a-strange-issue-about-codelldb/">无妄之灾：记录一个奇怪的codelldb问题</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%93%E6%A0%8F%E9%80%9F%E8%AE%B0/">专栏|速记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">2</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bug%E8%AE%B0%E5%BD%95/" title="BUG记录">BUG记录 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2024 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

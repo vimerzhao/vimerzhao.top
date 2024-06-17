@@ -109,6 +109,69 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/articles/vcpkg-source-code-of-install/" rel="bookmark">
+			vcpkg源码之install流程
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-06-17T00:00:00Z">2024-06-17</time>
+	<time class="meta__text" datetime="2024-06-17T10:27:21&#43;08:00">(最后修改: 2024-06-17)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		简介 vcpck install的主要工作是&quot;构建(如果需要)和安装依赖包&quot;，是vcpkg中最关键、也是使用者感知最明显的环节，有必要对其流程有一个更底层的理解，这样对一些问题的理解也将更加深
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/articles/vcpkg-source-code-of-install/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/articles/vcpkg-introduction/" rel="bookmark">
+			vcpkg简介
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-06-13T00:00:00Z">2024-06-13</time>
+	<time class="meta__text" datetime="2024-06-17T10:27:21&#43;08:00">(最后修改: 2024-06-17)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		vcpkg要解决什么问题 C++语言的历史非常悠久，导致其在某些方面的使用体验非常差，比如三方库的依赖。 比如要引入一个skia库，我们大概有以下办法： 源码集成，会有几个问题 但Skia的构建是GN组织的，
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/articles/vcpkg-introduction/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
+			<a href="/articles/an-error-about-building-icu-for-android-via-vcpkg/" rel="bookmark">
+			通过vcpkg构建icu-for-android问题一则
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-06-13T00:00:00Z">2024-06-13</time>
+	<time class="meta__text" datetime="2024-06-17T10:27:21&#43;08:00">(最后修改: 2024-06-17)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		我们的项目通过vcpkg依赖了icu，但在构建Android平台的icu制品时，却失败了。 Installing 15/45 icu:arm-neon-android@73.1#1... Building icu:arm-neon-android@73.1#1... /root/.cache/vcpkg/registries/git-trees/eaccfc7689fb55d4badf3d2321a8be62ae5be84e: info: installing overlay port from here -- Downloading https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz -&gt; icu4c-73_1-src.tgz... -- Extracting source /data/landun/workspace/tdf_build_env/.vcpkg/downloads/icu4c-73_1-src.tgz -- Applying patch disable-escapestr-tool.patch -- Applying patch remove-MD-from-configure.patch -- Applying patch fix_parallel_build_on_windows.patch -- Applying patch fix-extra.patch -- Applying patch mingw-dll-install.patch -- Applying patch disable-static-prefix.patch -- Applying patch fix-win-build.patch -- Using source at /data/landun/workspace/tdf_build_env/.vcpkg/buildtrees/icu/src/c-73_1-src-72ff750ba0.clean --
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/articles/how-to-use-release-apk-to-find-performance-issue/" rel="bookmark">
 			如何利用ReleaseApk辅助排查性能问题
 			</a>
@@ -167,27 +230,6 @@
 	</div>
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/articles/review-skia-upgrade-m104-to-m122/">阅读全文…</a>
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/articles/an-error-about-building-icu-for-android-via-vcpkg/" rel="bookmark">
-			通过vcpkg构建icu-for-android问题一则
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-03-12T00:00:00Z">2024-03-12</time>
-	<time class="meta__text" datetime="2024-06-13T19:11:25&#43;08:00">(最后修改: 2024-06-13)</time></div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		我们的项目通过vcpkg依赖了icu，但在构建Android平台的icu制品时，却失败了。 Installing 15/45 icu:arm-neon-android@73.1#1... Building icu:arm-neon-android@73.1#1... /root/.cache/vcpkg/registries/git-trees/eaccfc7689fb55d4badf3d2321a8be62ae5be84e: info: installing overlay port from here -- Downloading https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz -&gt; icu4c-73_1-src.tgz... -- Extracting source /data/landun/workspace/tdf_build_env/.vcpkg/downloads/icu4c-73_1-src.tgz -- Applying patch disable-escapestr-tool.patch -- Applying patch remove-MD-from-configure.patch -- Applying patch fix_parallel_build_on_windows.patch -- Applying patch fix-extra.patch -- Applying patch mingw-dll-install.patch -- Applying patch disable-static-prefix.patch -- Applying patch fix-win-build.patch -- Using source at /data/landun/workspace/tdf_build_env/.vcpkg/buildtrees/icu/src/c-73_1-src-72ff750ba0.clean --
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">阅读全文…</a>
 	</div>
 </article><article class="list__item post">
 	
@@ -273,53 +315,11 @@
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/courses/troubleshooting-and-resolution-of-software-bugs/">阅读全文…</a>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/articles/trip-to-beijing-reflections-on-technology-and-life/" rel="bookmark">
-			北京之行：技术与人生的思考
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-18T00:00:00Z">2023-06-18</time>
-	<time class="meta__text" datetime="2023-06-18T17:17:33&#43;08:00">(最后修改: 2023-06-18)</time></div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		桃李春风一杯酒，江湖夜雨十年灯。 就着参加WOT技术大会的机会，和一些朋友约了饭，也是第一次来北京，感想颇多，记录一下。 饭局1 周五下午到北京，晚上约了几个高中同学一起吃饭，总体感想： 高中班上，县城的同学
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/articles/trip-to-beijing-reflections-on-technology-and-life/">阅读全文…</a>
-	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/articles/thoughts-on-feedback-after-a-class/" rel="bookmark">
-			关于一次课后反馈的思考
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-06-11T00:00:00Z">2023-06-11</time>
-	<time class="meta__text" datetime="2023-06-11T22:56:48&#43;08:00">(最后修改: 2023-06-11)</time></div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		最近，在公司内开讲了一门课程：《软件Bug的排查与解决》。看到课后的学员反馈，感觉是第一次收到如此矛盾的评价，所以觉得有必要思考一下。 以下是原文： 四、学员反馈 在整个培训过程中，什么地方您感到最满意，收
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/articles/thoughts-on-feedback-after-a-class/">阅读全文…</a>
-	</div>
 </article>
 </main>
 
 <div class="pagination">
-	<span class="pagination__item pagination__item--current">1/19</span>
+	<span class="pagination__item pagination__item--current">1/20</span>
 	<a class="pagination__item pagination__item--next btn" href="/page/2/">»</a>
 </div>
 
@@ -337,11 +337,11 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-source-code-of-install/">vcpkg源码之install流程</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-introduction/">vcpkg简介</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/record-a-strange-issue-about-codelldb/">无妄之灾：记录一个奇怪的codelldb问题</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/review-skia-upgrade-m104-to-m122/">Skia升级小记m104-&gt;m122</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/custom-cmake-in-android-gradle/">Android Gradle使用自定义的CMake</a></li>
 		</ul>
 	</div>
 </div>

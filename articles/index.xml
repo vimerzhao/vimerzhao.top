@@ -6,8 +6,29 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 13 Jun 2024 19:11:25 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 17 Jun 2024 10:27:21 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>vcpkg源码之install流程</title>
+      <link>/articles/vcpkg-source-code-of-install/</link>
+      <pubDate>Mon, 17 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/vcpkg-source-code-of-install/</guid>
+      <description>简介 vcpck install的主要工作是&amp;quot;构建(如果需要)和安装依赖包&amp;quot;，是vcpkg中最关键、也是使用者感知最明显的环节，有必要对其流程有一个更底层的理解，这样对一些问题的理解也将更加深</description>
+    </item>
+    <item>
+      <title>vcpkg简介</title>
+      <link>/articles/vcpkg-introduction/</link>
+      <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/vcpkg-introduction/</guid>
+      <description>vcpkg要解决什么问题 C++语言的历史非常悠久，导致其在某些方面的使用体验非常差，比如三方库的依赖。 比如要引入一个skia库，我们大概有以下办法： 源码集成，会有几个问题 但Skia的构建是GN组织的，</description>
+    </item>
+    <item>
+      <title>通过vcpkg构建icu-for-android问题一则</title>
+      <link>/articles/an-error-about-building-icu-for-android-via-vcpkg/</link>
+      <pubDate>Thu, 13 Jun 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/an-error-about-building-icu-for-android-via-vcpkg/</guid>
+      <description>我们的项目通过vcpkg依赖了icu，但在构建Android平台的icu制品时，却失败了。 Installing 15/45 icu:arm-neon-android@73.1#1... Building icu:arm-neon-android@73.1#1... /root/.cache/vcpkg/registries/git-trees/eaccfc7689fb55d4badf3d2321a8be62ae5be84e: info: installing overlay port from here -- Downloading https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz -&amp;gt; icu4c-73_1-src.tgz... -- Extracting source /data/landun/workspace/tdf_build_env/.vcpkg/downloads/icu4c-73_1-src.tgz -- Applying patch disable-escapestr-tool.patch -- Applying patch remove-MD-from-configure.patch -- Applying patch fix_parallel_build_on_windows.patch -- Applying patch fix-extra.patch -- Applying patch mingw-dll-install.patch -- Applying patch disable-static-prefix.patch -- Applying patch fix-win-build.patch -- Using source at /data/landun/workspace/tdf_build_env/.vcpkg/buildtrees/icu/src/c-73_1-src-72ff750ba0.clean --</description>
+    </item>
     <item>
       <title>如何利用ReleaseApk辅助排查性能问题</title>
       <link>/articles/how-to-use-release-apk-to-find-performance-issue/</link>
@@ -28,13 +49,6 @@
       <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
       <guid>/articles/review-skia-upgrade-m104-to-m122/</guid>
       <description>最近需要把Skia进行一次升级，首先查看下接口变动，See： RELEASE_NOTES.md 大部分都是接口的小调整，基本没什么难度，但注意m122的一个改动: SkFontMgr::RefDefault() has been deleted. Clients should instantiate and manage their own SkFontMgrs and use them to explicitly create SkTypefaces 找到这个改动的原因： Remove default SkFontMgr [305780908] - Skia 是</description>
-    </item>
-    <item>
-      <title>通过vcpkg构建icu-for-android问题一则</title>
-      <link>/articles/an-error-about-building-icu-for-android-via-vcpkg/</link>
-      <pubDate>Tue, 12 Mar 2024 00:00:00 +0000</pubDate>
-      <guid>/articles/an-error-about-building-icu-for-android-via-vcpkg/</guid>
-      <description>我们的项目通过vcpkg依赖了icu，但在构建Android平台的icu制品时，却失败了。 Installing 15/45 icu:arm-neon-android@73.1#1... Building icu:arm-neon-android@73.1#1... /root/.cache/vcpkg/registries/git-trees/eaccfc7689fb55d4badf3d2321a8be62ae5be84e: info: installing overlay port from here -- Downloading https://github.com/unicode-org/icu/releases/download/release-73-1/icu4c-73_1-src.tgz -&amp;gt; icu4c-73_1-src.tgz... -- Extracting source /data/landun/workspace/tdf_build_env/.vcpkg/downloads/icu4c-73_1-src.tgz -- Applying patch disable-escapestr-tool.patch -- Applying patch remove-MD-from-configure.patch -- Applying patch fix_parallel_build_on_windows.patch -- Applying patch fix-extra.patch -- Applying patch mingw-dll-install.patch -- Applying patch disable-static-prefix.patch -- Applying patch fix-win-build.patch -- Using source at /data/landun/workspace/tdf_build_env/.vcpkg/buildtrees/icu/src/c-73_1-src-72ff750ba0.clean --</description>
     </item>
     <item>
       <title>Android Gradle使用自定义的CMake</title>

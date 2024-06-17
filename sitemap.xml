@@ -21,22 +21,28 @@
     <lastmod>2023-10-14T20:15:57+08:00</lastmod>
   </url><url>
     <loc>/articles/</loc>
-    <lastmod>2024-06-13T19:11:25+08:00</lastmod>
+    <lastmod>2024-06-17T10:27:21+08:00</lastmod>
+  </url><url>
+    <loc>/articles/vcpkg-source-code-of-install/</loc>
+    <lastmod>2024-06-17T10:27:21+08:00</lastmod>
+  </url><url>
+    <loc>/</loc>
+    <lastmod>2024-06-17T10:27:21+08:00</lastmod>
+  </url><url>
+    <loc>/articles/vcpkg-introduction/</loc>
+    <lastmod>2024-06-17T10:27:21+08:00</lastmod>
+  </url><url>
+    <loc>/articles/an-error-about-building-icu-for-android-via-vcpkg/</loc>
+    <lastmod>2024-06-17T10:27:21+08:00</lastmod>
   </url><url>
     <loc>/articles/how-to-use-release-apk-to-find-performance-issue/</loc>
     <lastmod>2024-05-09T18:45:29+08:00</lastmod>
-  </url><url>
-    <loc>/</loc>
-    <lastmod>2024-06-13T19:11:25+08:00</lastmod>
   </url><url>
     <loc>/articles/record-a-strange-issue-about-codelldb/</loc>
     <lastmod>2024-03-21T10:29:34+08:00</lastmod>
   </url><url>
     <loc>/articles/review-skia-upgrade-m104-to-m122/</loc>
     <lastmod>2024-03-13T14:32:06+08:00</lastmod>
-  </url><url>
-    <loc>/articles/an-error-about-building-icu-for-android-via-vcpkg/</loc>
-    <lastmod>2024-06-13T19:11:25+08:00</lastmod>
   </url><url>
     <loc>/articles/custom-cmake-in-android-gradle/</loc>
     <lastmod>2024-06-13T19:11:25+08:00</lastmod>
