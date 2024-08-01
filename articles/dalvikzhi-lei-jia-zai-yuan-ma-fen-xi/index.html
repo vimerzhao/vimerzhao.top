@@ -399,7 +399,7 @@ PathClassLoader
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * the class is not found.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">         */</span>
 </span></span><span style="display:flex;"><span>        Object<span style="color:#f92672">*</span> excep <span style="color:#f92672">=</span> dvmGetException(self);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (strcmp(<span style="color:#960050;background-color:#1e0010">e</span>xcep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor,
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> (strcmp(excep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor,
 </span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">&#34;Ljava/lang/ClassNotFoundException;&#34;</span>) <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span>
 </span></span><span style="display:flex;"><span>            strcmp(excep<span style="color:#f92672">-&gt;</span>clazz<span style="color:#f92672">-&gt;</span>descriptor,
 </span></span><span style="display:flex;"><span>                   <span style="color:#e6db74">&#34;Ljava/lang/NoClassDefFoundError;&#34;</span>) <span style="color:#f92672">==</span> 0)
