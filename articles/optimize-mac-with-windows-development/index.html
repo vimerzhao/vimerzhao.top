@@ -12,7 +12,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/articles/optimize-mac-with-windows-development/" /><meta property="article:section" content="articles" />
 <meta property="article:published_time" content="2024-08-06T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-08-07T10:56:31+08:00" />
+<meta property="article:modified_time" content="2024-08-07T11:03:02+08:00" />
 
 		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Mac与Windows混合开发体验优化"/>
 <meta name="twitter:description" content="后面的工作中，可能要经常使用Windows开发，而过去一段时间，主要使用iMac开发，个人还是更习惯用iMac作为主力开发设备： 屏幕大且清晰 键盘组合更科学，Windows的Win键比较影响，Mac的C"/>
@@ -113,7 +113,7 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-08-06T00:00:00Z">2024-08-06</time>
-	<time class="meta__text" datetime="2024-08-07T10:56:31&#43;08:00">(最后修改: 2024-08-07)</time></div></div>
+	<time class="meta__text" datetime="2024-08-07T11:03:02&#43;08:00">(最后修改: 2024-08-07)</time></div></div>
 		</header>
 		
     <span style="color:grey; font-size: 0.9em">本文约 1300 字，阅读需 3 分钟。</span>
@@ -139,7 +139,7 @@
 <li>另外就是在Windows开启sshd服务，网上教程比较多，就不赘述了</li>
 <li>ssh能登录成功，VSCode远程开发就比较好解决了，至此，第一个想法算是落地了</li>
 </ol>
-<p><img src="assets/2024-08-06-18-39-44.png" alt=""></p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20240807110237.png" alt="20240807110237"></p>
 <p>对于第2个想法，简单做法是买一个<a href="https://zh.wikipedia.org/wiki/KVM%E5%88%87%E6%8D%A2%E5%99%A8">KVM切换器</a>，研究后发现有些软件也能实现类似的能力，满足我的基本诉求。</p>
 <p>最终选用了<a href="https://github.com/debauchee/barrier">debauchee/barrier: Open-source KVM software</a> ,GUI比较简单，找到Settings页面和日志显示对于排查问题非常重要。</p>
 <p>主要有两个问题，一是从日志看，有如下错误：</p>
