@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 17 Jun 2024 10:27:21 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 07 Aug 2024 10:56:31 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Mac与Windows混合开发体验优化</title>
+      <link>/articles/optimize-mac-with-windows-development/</link>
+      <pubDate>Tue, 06 Aug 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/optimize-mac-with-windows-development/</guid>
+      <description>后面的工作中，可能要经常使用Windows开发，而过去一段时间，主要使用iMac开发，个人还是更习惯用iMac作为主力开发设备： 屏幕大且清晰 键盘组合更科学，Windows的Win键比较影响，Mac的C</description>
+    </item>
     <item>
       <title>vcpkg源码之install流程</title>
       <link>/articles/vcpkg-source-code-of-install/</link>
