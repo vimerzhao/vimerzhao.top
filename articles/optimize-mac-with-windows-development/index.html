@@ -12,7 +12,7 @@
 <meta property="og:type" content="article" />
 <meta property="og:url" content="/articles/optimize-mac-with-windows-development/" /><meta property="article:section" content="articles" />
 <meta property="article:published_time" content="2024-08-06T00:00:00+00:00" />
-<meta property="article:modified_time" content="2024-08-07T11:03:02+08:00" />
+<meta property="article:modified_time" content="2024-09-19T13:07:58+08:00" />
 
 		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="Mac与Windows混合开发体验优化"/>
 <meta name="twitter:description" content="后面的工作中，可能要经常使用Windows开发，而过去一段时间，主要使用iMac开发，个人还是更习惯用iMac作为主力开发设备： 屏幕大且清晰 键盘组合更科学，Windows的Win键比较影响，Mac的C"/>
@@ -113,10 +113,10 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-08-06T00:00:00Z">2024-08-06</time>
-	<time class="meta__text" datetime="2024-08-07T11:03:02&#43;08:00">(最后修改: 2024-08-07)</time></div></div>
+	<time class="meta__text" datetime="2024-09-19T13:07:58&#43;08:00">(最后修改: 2024-09-19)</time></div></div>
 		</header>
 		
-    <span style="color:grey; font-size: 0.9em">本文约 1300 字，阅读需 3 分钟。</span>
+    <span style="color:grey; font-size: 0.9em">本文约 1400 字，阅读需 3 分钟。</span>
     <p/><div class="content post__content clearfix">
 			<p>后面的工作中，可能要经常使用Windows开发，而过去一段时间，主要使用iMac开发，个人还是更习惯用iMac作为主力开发设备：</p>
 <ul>
@@ -165,6 +165,10 @@ openssl req -new -x509 -sha256 -days 999 -nodes -out Barrier.pem -keyout Barrier
 <li>不用按物理按键切换（之前看别人的需要），能直接用屏幕边缘衔接（这样丝滑很多，其实非常重要）</li>
 <li>不需要额外花钱，更有技术成就感</li>
 </ol>
+<p>使用记录：</p>
+<ul>
+<li>Mac-Server + Windows-Client时，Windows的滚动失效，需在Mac的<code>鼠标-&gt;滚动速度</code>调低阈值，在Client滚动就好了，再把滚动速度调回来也不影响&hellip;..参考<a href="https://github.com/debauchee/barrier/issues/502">macOS scrolling on client · Issue #502 · debauchee/barrier</a></li>
+</ul>
 
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
@@ -192,6 +196,12 @@ openssl req -new -x509 -sha256 -days 999 -nodes -out Barrier.pem -keyout Barrier
 			<p class="pager__title">vcpkg源码之install流程</p>
 		</a>
 	</div>
+	<div class="pager__item pager__item--next">
+		<a class="pager__link" href="/articles/skia-debug-inline-pitfall/" rel="next">
+			<span class="pager__subtitle">下一篇&thinsp;»</span>
+			<p class="pager__title">Skia下SK_DEBUG内联的坑</p>
+		</a>
+	</div>
 </nav>
 
 <script src="https://utteranc.es/client.js"
@@ -217,11 +227,11 @@ openssl req -new -x509 -sha256 -days 999 -nodes -out Barrier.pem -keyout Barrier
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/skia-debug-inline-pitfall/">Skia下SK_DEBUG内联的坑</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/optimize-mac-with-windows-development/">Mac与Windows混合开发体验优化</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-source-code-of-install/">vcpkg源码之install流程</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-introduction/">vcpkg简介</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
 		</ul>
 	</div>
 </div>

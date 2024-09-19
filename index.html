@@ -109,6 +109,27 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/articles/skia-debug-inline-pitfall/" rel="bookmark">
+			Skia下SK_DEBUG内联的坑
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-09-19T00:00:00Z">2024-09-19</time>
+	<time class="meta__text" datetime="2024-09-19T13:07:58&#43;08:00">(最后修改: 2024-09-19)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		以下代码可能出现看起来诡异的错误 { auto data = image-&gt;encodeToData(); std::stringstream ss; ss &lt;&lt; count++ &lt;&lt; &#34;_output.png&#34;; if (data) { SkFILEWStream out(ss.str().c_str()); out.write(data-&gt;writable_data(), data-&gt;size()); } } 错误如下： * thread #3, name = &#39;RasterThread&#39;, stop reason = signal SIGILL: illegal operand * frame #0: 0x000000000c02edd4 Sxxxx`sk_abort_no_print() at SkMemory_malloc.cpp:51:5 frame #1: 0x000000000bbbee39 Sxxxx`SkNVRefCnt&lt;SkData&gt;::~SkNVRefCnt(this=0x00007fffafdff530)::&#39;lambda&#39;()::operator()() const at SkRefCnt.h:165:9 frame #2: 0x000000000bbbec35 Sxxxx`SkNVRefCnt&lt;SkData&gt;::~SkNVRefCnt(this=0x00007fffa8006090) at SkRefCnt.h:165:9 frame #3: 0x000000000bbbd8ba Sxxxx`SkData::~SkData(this=0x00007fffa8006090) at SkData.cpp:37:1 具体是因为这个ASSERT: ~SkNVRefCnt() { #ifdef SK_DEBUG int
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/articles/skia-debug-inline-pitfall/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/articles/optimize-mac-with-windows-development/" rel="bookmark">
 			Mac与Windows混合开发体验优化
 			</a>
@@ -118,7 +139,7 @@
 </div>
 <div class="meta__item-datetime meta__item">
 	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-08-06T00:00:00Z">2024-08-06</time>
-	<time class="meta__text" datetime="2024-08-07T11:03:02&#43;08:00">(最后修改: 2024-08-07)</time></div></div>
+	<time class="meta__text" datetime="2024-09-19T13:07:58&#43;08:00">(最后修改: 2024-09-19)</time></div></div>
 	</header>
 	<div class="content list__excerpt post__content clearfix">
 		后面的工作中，可能要经常使用Windows开发，而过去一段时间，主要使用iMac开发，个人还是更习惯用iMac作为主力开发设备： 屏幕大且清晰 键盘组合更科学，Windows的Win键比较影响，Mac的C
@@ -294,27 +315,6 @@
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/articles/set-up-flutter-debug-env-for-mac-and-ios/">阅读全文…</a>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/articles/use-vscode-as-debug-frontend-of-chromium-project/" rel="bookmark">
-			使用VSCode作为Chromium的调试前端
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-07-24T00:00:00Z">2023-07-24</time>
-	<time class="meta__text" datetime="2023-07-24T12:34:55&#43;08:00">(最后修改: 2023-07-24)</time></div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		之前试过VSCode作为C++工程的开发工具，但如果工程过于庞大，每次打开都会卡死在索引阶段。 总的来说，NeoVim+Clangd是我认为通用性、性能、开发体验综合最好的选择。 但有一个问题，怎么调试？
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/articles/use-vscode-as-debug-frontend-of-chromium-project/">阅读全文…</a>
-	</div>
 </article>
 </main>
 
@@ -337,11 +337,11 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/skia-debug-inline-pitfall/">Skia下SK_DEBUG内联的坑</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/optimize-mac-with-windows-development/">Mac与Windows混合开发体验优化</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-source-code-of-install/">vcpkg源码之install流程</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-introduction/">vcpkg简介</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/an-error-about-building-icu-for-android-via-vcpkg/">通过vcpkg构建icu-for-android问题一则</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/how-to-use-release-apk-to-find-performance-issue/">如何利用ReleaseApk辅助排查性能问题</a></li>
 		</ul>
 	</div>
 </div>

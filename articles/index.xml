@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 28 Aug 2024 11:10:23 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 19 Sep 2024 13:07:58 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Skia下SK_DEBUG内联的坑</title>
+      <link>/articles/skia-debug-inline-pitfall/</link>
+      <pubDate>Thu, 19 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/skia-debug-inline-pitfall/</guid>
+      <description>以下代码可能出现看起来诡异的错误 { auto data = image-&amp;gt;encodeToData(); std::stringstream ss; ss &amp;lt;&amp;lt; count++ &amp;lt;&amp;lt; &amp;#34;_output.png&amp;#34;; if (data) { SkFILEWStream out(ss.str().c_str()); out.write(data-&amp;gt;writable_data(), data-&amp;gt;size()); } } 错误如下： * thread #3, name = &amp;#39;RasterThread&amp;#39;, stop reason = signal SIGILL: illegal operand * frame #0: 0x000000000c02edd4 Sxxxx`sk_abort_no_print() at SkMemory_malloc.cpp:51:5 frame #1: 0x000000000bbbee39 Sxxxx`SkNVRefCnt&amp;lt;SkData&amp;gt;::~SkNVRefCnt(this=0x00007fffafdff530)::&amp;#39;lambda&amp;#39;()::operator()() const at SkRefCnt.h:165:9 frame #2: 0x000000000bbbec35 Sxxxx`SkNVRefCnt&amp;lt;SkData&amp;gt;::~SkNVRefCnt(this=0x00007fffa8006090) at SkRefCnt.h:165:9 frame #3: 0x000000000bbbd8ba Sxxxx`SkData::~SkData(this=0x00007fffa8006090) at SkData.cpp:37:1 具体是因为这个ASSERT: ~SkNVRefCnt() { #ifdef SK_DEBUG int</description>
+    </item>
     <item>
       <title>Mac与Windows混合开发体验优化</title>
       <link>/articles/optimize-mac-with-windows-development/</link>
