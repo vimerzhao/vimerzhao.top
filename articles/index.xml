@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 19 Sep 2024 13:07:58 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 30 Sep 2024 18:09:23 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>小记WebKit的构建</title>
+      <link>/articles/review-webkit-build-process/</link>
+      <pubDate>Mon, 30 Sep 2024 00:00:00 +0000</pubDate>
+      <guid>/articles/review-webkit-build-process/</guid>
+      <description>由于工作需要，计划研究下WebKit的Skia渲染后端，分析cmake容易发现，只有GTK/WPE这两个PORT会开启Skia的渲染后端。 之前从https://github.com/WebKit/We</description>
+    </item>
     <item>
       <title>Skia下SK_DEBUG内联的坑</title>
       <link>/articles/skia-debug-inline-pitfall/</link>

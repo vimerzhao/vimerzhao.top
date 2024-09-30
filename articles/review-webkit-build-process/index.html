@@ -4,18 +4,18 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>C&#43;&#43;函数调用栈回溯初探 - 赵裕的博客</title>
+	<title>小记WebKit的构建 - 赵裕的博客</title>
 	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
 	<meta name="description" content="">
-		<meta property="og:title" content="C&#43;&#43;函数调用栈回溯初探" />
-<meta property="og:description" content="背景 之前在解决一个Flutter Engine的C&#43;&#43; Crash问题时，就曾受困于一个问题：如何回溯C&#43;&#43;的 函数调用栈？最近频繁使用C&#43;&#43;的过程中，这个诉求日益突出。 遂下定决心彻底解决之。 过程 在stac" />
+		<meta property="og:title" content="小记WebKit的构建" />
+<meta property="og:description" content="由于工作需要，计划研究下WebKit的Skia渲染后端，分析cmake容易发现，只有GTK/WPE这两个PORT会开启Skia的渲染后端。 之前从https://github.com/WebKit/We" />
 <meta property="og:type" content="article" />
-<meta property="og:url" content="/articles/cpp-function-callstack-backtrace-1/" /><meta property="article:section" content="articles" />
-<meta property="article:published_time" content="2022-04-10T00:00:00+00:00" />
-<meta property="article:modified_time" content="2023-04-01T16:49:27+08:00" />
+<meta property="og:url" content="/articles/review-webkit-build-process/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2024-09-30T00:00:00+00:00" />
+<meta property="article:modified_time" content="2024-09-30T18:09:23+08:00" />
 
-		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="C&#43;&#43;函数调用栈回溯初探"/>
-<meta name="twitter:description" content="背景 之前在解决一个Flutter Engine的C&#43;&#43; Crash问题时，就曾受困于一个问题：如何回溯C&#43;&#43;的 函数调用栈？最近频繁使用C&#43;&#43;的过程中，这个诉求日益突出。 遂下定决心彻底解决之。 过程 在stac"/>
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="小记WebKit的构建"/>
+<meta name="twitter:description" content="由于工作需要，计划研究下WebKit的Skia渲染后端，分析cmake容易发现，只有GTK/WPE这两个PORT会开启Skia的渲染后端。 之前从https://github.com/WebKit/We"/>
 
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link rel="dns-prefetch" href="//fonts.googleapis.com">
@@ -107,97 +107,70 @@
 <main class="main" role="main">
 	<article class="post">
 		<header class="post__header">
-			<h1 class="post__title">C&#43;&#43;函数调用栈回溯初探</h1>
+			<h1 class="post__title">小记WebKit的构建</h1>
 			<div class="post__meta meta"><div class="meta__item-author meta__item">
 	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
 </div>
 <div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2022-04-10T00:00:00Z">2022-04-10</time>
-	<time class="meta__text" datetime="2023-04-01T16:49:27&#43;08:00">(最后修改: 2023-04-01)</time></div></div>
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2024-09-30T00:00:00Z">2024-09-30</time>
+	<time class="meta__text" datetime="2024-09-30T18:09:23&#43;08:00">(最后修改: 2024-09-30)</time></div></div>
 		</header>
 		
-    <span style="color:grey; font-size: 0.9em">本文约 800 字，阅读需 2 分钟。</span>
+    <span style="color:grey; font-size: 0.9em">本文约 1900 字，阅读需 4 分钟。</span>
     <p/><div class="content post__content clearfix">
-			
-<div id="outline-container-headline-1" class="outline-2">
-<h2 id="headline-1">
-背景
-</h2>
-<div id="outline-text-headline-1" class="outline-text-2">
-<p>之前在解决一个Flutter Engine的C++ Crash问题时，就曾受困于一个问题：如何回溯C++的
-函数调用栈？最近频繁使用C++的过程中，这个诉求日益突出。
-遂下定决心彻底解决之。</p>
-</div>
-</div>
-<div id="outline-container-headline-2" class="outline-2">
-<h2 id="headline-2">
-过程
-</h2>
-<div id="outline-text-headline-2" class="outline-text-2">
-<p>在stackoverflow上，有两个比较有参考价值的问题：</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/8115192/android-ndk-getting-the-backtrace">c++ - Android NDK: getting the backtrace - Stack Overflow</a></li>
-<li><a href="https://stackoverflow.com/questions/3899870/print-call-stack-in-c-or-c">print call stack in C or C++ - Stack Overflow</a></li>
-</ul>
-<p>具体来说，问题是Android平台、ARM64架构下的C++回溯。</p>
-<p>
-其中， <a href="https://stackoverflow.com/questions/8115192/android-ndk-getting-the-backtrace/28858941#28858941">Eugene Shapovalov的回答</a>试了下，效果比较接近，但是无法通过addr2line还原。</p>
-<p>
-一番查找后，发现 <code>-funwind-tables</code> 和 <code>-fno-omit-frame-pointer</code> 在构建时必需加上：</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/53102185/what-exactly-happens-when-compiling-with-funwind-tables">c++ - What exactly happens when compiling with -funwind-tables? - Stack Overflow</a></li>
-</ul>
-<p>此时，仍无法还原，addr2line无法解析。经过一番探索之后，发现是因为unwind直接得到的是实际的运行地址，而 addr2line 的
-输入应该是so内部的偏移值，具体的做法下面的文章有提及：</p>
-<ul>
-<li><a href="https://blog.csdn.net/taohongtaohuyiwei/article/details/105147933">深入浅出Android NDK之打印调用堆栈_taohongtaohuyiwei的博客-CSDN博客_android ndk 打印堆栈</a></li>
-<li><a href="https://www.jianshu.com/p/4a5eeeee6d29">Android 各类环境下打印调用堆栈的方法（jni，lua，java） - 简书</a></li>
-</ul>
-<p>此时，得到的堆栈就可以正常回溯了。</p>
-<p>
-以上方法是直接在代码中获取so基址，然后进行处理。其实也可以通过adb手动获取：</p>
+			<p>由于工作需要，计划研究下WebKit的Skia渲染后端，分析cmake容易发现，只有GTK/WPE这两个PORT会开启Skia的渲染后端。</p>
+<p>之前从<code>https://github.com/WebKit/WebKit</code>下载，然后在Mac构建，无论是命令行还是XCode打开，都是非常顺利的。(其实命令行构建有坑，就是要指定库的加载路径，但XCode构建真的是点一下就行&hellip;)</p>
+<p>一开始，想在Mac上开启Skia就好，但发现互相之间依赖太重了，几乎不可能&hellip;.</p>
+<p>于是开启了虐心的构建之旅&hellip;.</p>
+<h2 id="1-胡乱构建">1. 胡乱构建</h2>
+<p>官方也没有构建说明，猜测应该是这样</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>./Tools/Scripts/build-webkit --debug --gtk
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 其实最后就是调用一个Cmake</span>
+</span></span></code></pre></div><p>有个参考：<a href="https://trac.webkit.org/wiki/BuildingGtk">BuildingGtk – WebKit</a></p>
+<p>但是问题一大堆&hellip;.构建脚本对不熟悉项目的人非常不友好..</p>
+<h2 id="2-头铁要在centos-server上构建">2. 头铁要在CentOS Server上构建</h2>
+<p>我的构建机是一台Server，其是“内核TK4-5.4, 用户态基于centOS8”的TencentOS Server 3.2 (Final)，导致GTK相关的很多依赖根本找不到&hellip;.(本身就不是Desktop，而且很老的版本了)</p>
+<p>后面又研究了下，发现构建WPEWebkit似乎更符合我的需要，于是把PORT改成WPE，最终构建参数大致如下:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-bash" data-lang="bash"><span style="display:flex;"><span>cmake .. -DPORT<span style="color:#f92672">=</span>WPE -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>RelWithDebInfo -GNinja <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DENABLE_MINIBROWSER<span style="color:#f92672">=</span>ON -DENABLE_DOCUMENTATION<span style="color:#f92672">=</span>OFF -DENABLE_JOURNALD_LOG<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DUSE_LIBBACKTRACE<span style="color:#f92672">=</span>OFF -DENABLE_BUBBLEWRAP_SANDBOX<span style="color:#f92672">=</span>OFF -DDEVELOPER_MODE<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DUSE_SYSTEM_SYSPROF_CAPTURE<span style="color:#f92672">=</span>OFF -DUSE_GSTREAMER_FULL<span style="color:#f92672">=</span>ON -DENABLE_WPE_QT_API<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DDEVELOPER_MODE_FATAL_WARNINGS<span style="color:#f92672">=</span>OFF -DUSE_GLIB<span style="color:#f92672">=</span>OFF -DENABLE_LAYOUT_TESTS<span style="color:#f92672">=</span>OFF
+</span></span></code></pre></div><p>各种开关是屏蔽一些不关心的功能，减少构建阻力。</p>
+<h2 id="3-解决各种依赖">3. 解决各种依赖</h2>
+<p>但还是遇到一些库，版本不满足要求，比如glib,gstream这些，原因是：centos8本身还是太老了,2019-09发布的，而Webkit却是最新&hellip;.但自己还是头铁，把gstream这些从源码构建了一遍&hellip;..（这个过程也是花了不少精力时间，就当增加体验了&hellip;.）</p>
+<p>最终还是编起来了，感觉还是比较有成就感的。</p>
+<h2 id="4-和virtualbox较劲">4. 和VirtualBox较劲</h2>
+<p>自己没有Linux真机，之前都是在VirtualBox里面测试，没遇到过什么问题，一开始自己装的是基于X11的LinuxLite，各种依赖库直接从Server拷贝了一份(通过ldd导出)。</p>
+<p>结果运行失败在了wayland的初始化，猜测可能是X11的原因，于是装了个Ubuntu24的虚拟机(有wayland的桌面)。还是不行。</p>
+<p>发现一个问题，就是Mac上的Virutalbox无法开启<code>3D加速</code>，也不知道是什么原因，Windows上也不行，于是只能放弃VirtualBox上测试，返璞归真，直接真机吧。不然不确定的因素太多&hellip;.</p>
+<h2 id="5-在真机上装linux系统">5. 在真机上装Linux系统</h2>
+<p>考虑网络问题，从8000上下了公司的Ubuntu20.04.iso，结果各种坑：</p>
 <ol>
-<li>首先获取目标应用的进程id</li>
-<li>通过 <code>run as</code> 的方式获取maps文件内容： <code>adb shell &#34;run-as com.tencent.**** sh -c &#39;cat /proc/18454/maps&#39;&#34;</code></li>
-<li>找到对应so的加载基址，即可计算出偏移值，用addr2line还原</li>
+<li>ioa入域后公司WiFi一直连不上，8000也解决不了，最后自己通过有线连接绕过了这个问题</li>
+<li>apt的配置写入了过期的代理，其实KM上能搜到这个问题&hellip;.，要自己手动删除，不然安装一直失败</li>
+<li>有一次发现域外解析失败，是有线连接ioa会注册多个，但只有不带数字后缀的那个是能用的，不然网页会有ssl错误</li>
 </ol>
-<p>参考文章：</p>
+<p>总结就是Linux下的ioa体验很差，但折腾半天后也勉强能用。</p>
+<p>接下来，网上找了一个程序(<a href="https://gist.github.com/propella/949261f89d83a6e184fb745a48de27c3">A simple Wayland EGL program to show a triangle</a>)，发现本地编起来能运行，但Server上编了就不能运行，对比发现是libwayland-client.so这个库的影响，由于版本不同。
+但Server的wayland版本和Ubuntu20.04不一样，如果直接用本地的，就会有符号找不到。于是又开始去升级Ubuntu到22&hellip;.</p>
+<p>另外一个要升级的原因是，wpewebkit在Ubuntu20.04上是编不起来的，很多依赖都是过时的。</p>
+<p>升级22后，只需要apt install各种依赖就OK，不需要像之前那样自己编，加上之前踩了那么多坑，还算顺利，有个坑就是用cc/clang-12都会失败，不是代码层面的失败，要升级到clang-15来编才行。</p>
+<p><a href="https://wpewebkit.org/about/get-wpe.html">https://wpewebkit.org/about/get-wpe.html</a> 提供了wpe webkit构建的最小代码，解压出来只有500M，和从Webkit构建是一样的，但更方便。</p>
+<h2 id="6-最后">6. 最后</h2>
+<p>再Ubuntu上安装依赖比较顺利，运行后出现找不到WPENetworkProcess的错误，自己<code>ln -s /usr/local/libexec/wpe.... $(pwd)/bin</code>就可以，运行成功：</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20240930155644.png" alt="20240930155644"></p>
+<p>终于赶在假期前解决这个问题了&hellip;</p>
+<p>用Ubuntu22真是省了不少事情&hellip;.</p>
+<p>本来想装个Centos8的Desktop，跑下Server的产物，验证下猜想，但一直没法启用Wayland桌面，遂不折腾了&hellip;</p>
+<h2 id="参考">参考:</h2>
 <ul>
-<li>Android逆向分析——得到SO基址的方法: <a href="https://blog.csdn.net/m0_38076341/article/details/118711005">https://blog.csdn.net/m0_38076341/article/details/118711005</a></li>
+<li><a href="https://webkit.org/building-webkit/">https://webkit.org/building-webkit/</a></li>
 </ul>
-<p>其他参考文章：</p>
-<ul>
-<li>探索Android平台ARM unwind技术: <a href="https://zhuanlan.zhihu.com/p/336916116">https://zhuanlan.zhihu.com/p/336916116</a></li>
-<li>探索Android平台ARM unwind技术-2: <a href="https://zhuanlan.zhihu.com/p/345878125">https://zhuanlan.zhihu.com/p/345878125</a></li>
-<li><a href="https://github.com/iqiyi/xCrash">https://github.com/iqiyi/xCrash</a></li>
-<li><a href="https://www.digitalpeer.com/blog/find-where-a-cpp-exception-is-thrown">https://www.digitalpeer.com/blog/find-where-a-cpp-exception-is-thrown</a></li>
-<li><a href="https://stackoverflow.com/questions/8115192/android-ndk-getting-the-backtrace">https://stackoverflow.com/questions/8115192/android-ndk-getting-the-backtrace</a></li>
-<li>Android Native 内存泄漏系统化解决方案: <a href="https://www.cnblogs.com/amap_tech/p/11199813.html">https://www.cnblogs.com/amap_tech/p/11199813.html</a></li>
-<li>/proc/&lt;pid&gt;/maps简要分析: <a href="https://www.cnblogs.com/arnoldlu/p/10272466.html">https://www.cnblogs.com/arnoldlu/p/10272466.html</a></li>
-<li><a href="https://github.com/frida">https://github.com/frida</a></li>
-</ul>
-<p>
-这个问题，说难也不难，只是需要一些背景知识的积累，这也算是使用C++这门语言进行开发的典型特征了。</p>
-</div>
-</div>
 
 		</div>
     <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
     <p></p>
-		<footer class="post__footer">
-			
-<div class="post__tags tags clearfix">
-	<svg class="tags__badge icon icon-tag" width="16" height="16" viewBox="0 0 32 32"><path d="M32 19c0 1-1 2-1 2L21 31s-1 1-2 1-2-1-2-1L2 16c-1-1-1.4-2-1.4-2S0 12.5 0 11V3C0 1.5.8.8.8.8S1.5 0 3 0h8c1.5 0 3 .6 3 .6S15 1 16 2l15 15s1 1 1 2zM7 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/></svg>
-	<ul class="tags__list">
-		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/c&#43;&#43;/" rel="tag">C&#43;&#43;</a>
-		</li>
-		<li class="tags__item">
-			<a class="tags__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" rel="tag">编程语言</a>
-		</li>
-	</ul>
-</div>
-		</footer>
 	</article>
 </main>
 
@@ -216,15 +189,9 @@
 
 <nav class="pager flex">
 	<div class="pager__item pager__item--prev">
-		<a class="pager__link" href="/articles/from-reactnative-to-flutter/" rel="prev">
+		<a class="pager__link" href="/articles/skia-debug-inline-pitfall/" rel="prev">
 			<span class="pager__subtitle">«&thinsp;上一篇</span>
-			<p class="pager__title">从ReactNative到Flutter：跨平台技术的黄金时代与七年之痒</p>
-		</a>
-	</div>
-	<div class="pager__item pager__item--next">
-		<a class="pager__link" href="/articles/under-epidemic-and-layoffs/" rel="next">
-			<span class="pager__subtitle">下一篇&thinsp;»</span>
-			<p class="pager__title">在疫情与裁员的阴影下继续生长</p>
+			<p class="pager__title">Skia下SK_DEBUG内联的坑</p>
 		</a>
 	</div>
 </nav>
