@@ -110,6 +110,27 @@
 	
 	<header class="list__header">
 		<h2 class="list__title post__title">
+			<a href="/articles/setup-webkit-debug-environment/" rel="bookmark">
+			WebKit调试环境配置
+			</a>
+		</h2>
+		<div class="list__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2025-01-04T00:00:00Z">2025-01-04</time>
+	<time class="meta__text" datetime="2025-01-05T15:38:56&#43;08:00">(最后修改: 2025-01-05)</time></div></div>
+	</header>
+	<div class="content list__excerpt post__content clearfix">
+		Overview 之前构建过一次WebKit，详见小记WebKit的构建，当时刚刚接触WebKit，很多做法不对，这次重新进行了构建，并搭建了一个调试环境，因此再次简单记录一下。 依赖 之前是在自己的远程开发机（Cent
+	</div>
+	<div class="list__footer clearfix">
+		<a class="list__footer-readmore btn" href="/articles/setup-webkit-debug-environment/">阅读全文…</a>
+	</div>
+</article><article class="list__item post">
+	
+	<header class="list__header">
+		<h2 class="list__title post__title">
 			<a href="/articles/review-webkit-build-process/" rel="bookmark">
 			小记WebKit的构建
 			</a>
@@ -295,27 +316,6 @@
 	<div class="list__footer clearfix">
 		<a class="list__footer-readmore btn" href="/articles/review-skia-upgrade-m104-to-m122/">阅读全文…</a>
 	</div>
-</article><article class="list__item post">
-	
-	<header class="list__header">
-		<h2 class="list__title post__title">
-			<a href="/articles/custom-cmake-in-android-gradle/" rel="bookmark">
-			Android Gradle使用自定义的CMake
-			</a>
-		</h2>
-		<div class="list__meta meta"><div class="meta__item-author meta__item">
-	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
-</div>
-<div class="meta__item-datetime meta__item">
-	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2023-12-14T00:00:00Z">2023-12-14</time>
-	<time class="meta__text" datetime="2024-06-13T19:11:25&#43;08:00">(最后修改: 2024-06-13)</time></div></div>
-	</header>
-	<div class="content list__excerpt post__content clearfix">
-		背景 最近重构项目的CMake后，开始了Android平台的适配，踩了些坑，简单记录下。 Cmake版本过低 test 重构后的CMake使用了一些高版本的特性，比如： CMP0135: New in version 3.24. -&gt; https://cmake.org/cmake/help/latest/policy/CMP0135.html FILE_SET &lt;set-name&gt;: New in version 3.23 -&gt; https://cmake.org/cmake/help/latest/command/install.html 但Android
-	</div>
-	<div class="list__footer clearfix">
-		<a class="list__footer-readmore btn" href="/articles/custom-cmake-in-android-gradle/">阅读全文…</a>
-	</div>
 </article>
 </main>
 
@@ -339,11 +339,11 @@
 	<h4 class="widget__title">近期文章</h4>
 	<div class="widget__content">
 		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/setup-webkit-debug-environment/">WebKit调试环境配置</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/review-webkit-build-process/">小记WebKit的构建</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/skia-debug-inline-pitfall/">Skia下SK_DEBUG内联的坑</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/optimize-mac-with-windows-development/">Mac与Windows混合开发体验优化</a></li>
 			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-source-code-of-install/">vcpkg源码之install流程</a></li>
-			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-introduction/">vcpkg简介</a></li>
 		</ul>
 	</div>
 </div>
@@ -406,7 +406,7 @@
 	<div class="container footer__container flex">
 		
 		<div class="footer__copyright">
-			&copy; 2024 赵裕的博客.
+			&copy; 2025 赵裕的博客.
 			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
 		</div>
     <span>

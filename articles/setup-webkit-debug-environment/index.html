@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html class="no-js" lang="zh-cn">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>WebKit调试环境配置 - 赵裕的博客</title>
+	<script>(function(d,e){d[e]=d[e].replace("no-js","js");})(document.documentElement,"className");</script>
+	<meta name="description" content="">
+		<meta property="og:title" content="WebKit调试环境配置" />
+<meta property="og:description" content="Overview 之前构建过一次WebKit，详见小记WebKit的构建，当时刚刚接触WebKit，很多做法不对，这次重新进行了构建，并搭建了一个调试环境，因此再次简单记录一下。 依赖 之前是在自己的远程开发机（Cent" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="/articles/setup-webkit-debug-environment/" /><meta property="article:section" content="articles" />
+<meta property="article:published_time" content="2025-01-04T00:00:00+00:00" />
+<meta property="article:modified_time" content="2025-01-05T15:38:56+08:00" />
+
+		<meta name="twitter:card" content="summary"/><meta name="twitter:title" content="WebKit调试环境配置"/>
+<meta name="twitter:description" content="Overview 之前构建过一次WebKit，详见小记WebKit的构建，当时刚刚接触WebKit，很多做法不对，这次重新进行了构建，并搭建了一个调试环境，因此再次简单记录一下。 依赖 之前是在自己的远程开发机（Cent"/>
+
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700">
+
+	<link rel="stylesheet" href="/css/style.css">
+	
+
+	<link rel="shortcut icon" href="/favicon.ico">
+		
+</head>
+<body class="body">
+	<div class="container container--outer">
+		<header class="header">
+	<div class="container header__container">
+		
+	<div class="logo">
+		<a class="logo__link" href="/" title="赵裕的博客" rel="home">
+			<div class="logo__item logo__text">
+					<div class="logo__title">赵裕的博客</div>
+					<div class="logo__tagline">恒无欲也，以观其妙；恒有欲也，以观其徼。</div>
+				</div>
+		</a>
+	</div>
+		
+<nav class="menu">
+	<button class="menu__btn" aria-haspopup="true" aria-expanded="false" tabindex="0">
+		<span class="menu__btn-title" tabindex="-1">菜单</span>
+	</button>
+	<ul class="menu__list">
+		<li class="menu__item">
+			<a class="menu__link" href="/">
+				
+				<span class="menu__text">首页</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/article-archive/">
+				
+				<span class="menu__text">文章</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/talk-archive/">
+				
+				<span class="menu__text">演讲</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/courses-archive/">
+				
+				<span class="menu__text">课程</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/works/">
+				
+				<span class="menu__text">作品</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/resource/">
+				
+				<span class="menu__text">资源</span>
+				
+			</a>
+		</li>
+		<li class="menu__item">
+			<a class="menu__link" href="/about/">
+				
+				<span class="menu__text">关于</span>
+				
+			</a>
+		</li>
+	</ul>
+</nav>
+
+	</div>
+</header>
+		<div class="wrapper flex">
+			<div class="primary">
+			
+<main class="main" role="main">
+	<article class="post">
+		<header class="post__header">
+			<h1 class="post__title">WebKit调试环境配置</h1>
+			<div class="post__meta meta"><div class="meta__item-author meta__item">
+	<svg class="meta__icon icon icon-author" width="16" height="16" viewBox="0 0 12 16"><path d="M6 1c2.2 0 3.5 2 3.5 4.5C9.5 7 8.9 8.2 8 9c2.9.8 4 2.5 4 5v1H0v-1c0-2.5 1.1-4.2 4-5-.9-.8-1.5-2-1.5-3.5C2.5 3 3.8 1 6 1z"/></svg><span class="meta__text">赵裕(vimerzhao)</span>
+</div>
+<div class="meta__item-datetime meta__item">
+	<svg class="meta__icon icon icon-time" width="16" height="14" viewBox="0 0 30 28"><path d="M15 0C7 0 1 6 1 14s6 14 14 14 14-6 14-14S23 0 15 0zm0 25C9 25 4 20 4 14S9 3 15 3s11 5 11 11-5 11-11 11zm1-18h-2v8.4l6.8 4.4L22 18l-6-3.8V7z"/></svg><time class="meta__text" datetime="2025-01-04T00:00:00Z">2025-01-04</time>
+	<time class="meta__text" datetime="2025-01-05T15:38:56&#43;08:00">(最后修改: 2025-01-05)</time></div></div>
+		</header>
+		
+    <span style="color:grey; font-size: 0.9em">本文约 1600 字，阅读需 4 分钟。</span>
+    <p/><div class="content post__content clearfix">
+			<h2 id="overview">Overview</h2>
+<p>之前构建过一次WebKit，详见<a href="https://vimerzhao.top/articles/review-webkit-build-process/">小记WebKit的构建</a>，当时刚刚接触WebKit，很多做法不对，这次重新进行了构建，并搭建了一个调试环境，因此再次简单记录一下。</p>
+<h2 id="依赖">依赖</h2>
+<p>之前是在自己的远程开发机（CentOS8）上安装各种依赖，经常失败而且还容易冲突。这次学聪明了，用Docker的Ubuntu22镜像进行构建，而且依赖也可以从Webkit的脚本直接安装：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>Tools/wpe/install-dependencies
+</span></span></code></pre></div><p>如此，就解决了依赖问题.</p>
+<p>如果要交叉编译，我可以安装一个arm架构的docker镜像，如</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>docker pull arm32v7/debian:12
+</span></span></code></pre></div><p>再在这个docker中执行依赖安装脚本，安装好后把/usr/include 和 /usr/lib 导出。再写一个交叉编译的cmake脚本：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cmake" data-lang="cmake"><span style="display:flex;"><span>set(<span style="color:#e6db74">CMAKE_SYSTEM_NAME</span> <span style="color:#e6db74">Linux</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_SYSTEM_PROCESSOR</span> <span style="color:#e6db74">armv7l</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_CROSSCOMPILING</span> <span style="color:#e6db74">ON</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_SYSROOT</span> <span style="color:#f92672">$ENV{</span>CUSTOM_CMAKE_SYSROOT<span style="color:#f92672">}</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># very important...
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># adjust the default behavior of the FIND_XXX() commands:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># search programs in the host environment
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># search headers and libraries in the target environment
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set(<span style="color:#e6db74">CMAKE_FIND_ROOT_PATH_MODE_PROGRAM</span> <span style="color:#e6db74">NEVER</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_FIND_ROOT_PATH_MODE_LIBRARY</span> <span style="color:#e6db74">ONLY</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_FIND_ROOT_PATH_MODE_INCLUDE</span> <span style="color:#e6db74">ONLY</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">CMAKE_FIND_ROOT_PATH_MODE_PACKAGE</span> <span style="color:#e6db74">ONLY</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>SET(<span style="color:#e6db74">ENV{PKG_CONFIG_PATH}</span> <span style="color:#e6db74">&#34;${CMAKE_SYSROOT}/usr/lib/arm-linux-gnueabihf/pkgconfig&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>SET(<span style="color:#e6db74">ENV{PKG_CONFIG_LIBDIR}</span> <span style="color:#e6db74">&#34;${CMAKE_SYSROOT}/usr/lib/pkgconfig:${CMAKE_SYSROOT}/usr/share/pkgconfig&#34;</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span>set(<span style="color:#e6db74">ENV{PKG_CONFIG_SYSROOT_DIR}</span> <span style="color:#f92672">${</span>CMAKE_SYSROOT<span style="color:#f92672">}</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># ONLY doesn&#39;t do anything when CMAKE_FIND_ROOT_PATH is empty. Without this,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># CMake will wrongly search host sysroots for headers/libraries. The actual path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># used here is fairly meaningless since CMake doesn&#39;t handle the NDK sysroot
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># layout (per-arch and per-verion subdirectories for libraries), so find_library
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># is handled separately by CMAKE_SYSTEM_LIBRARY_PATH.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set(<span style="color:#e6db74">CMAKE_FIND_ROOT_PATH</span> <span style="color:#f92672">${</span>CMAKE_SYSROOT<span style="color:#f92672">}</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># Clang target triple
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>set(<span style="color:#e6db74">triple</span> <span style="color:#e6db74">armv7a-linux-gnueabihf</span>)<span style="color:#960050;background-color:#1e0010">
+</span></span></span><span style="display:flex;"><span><span style="color:#960050;background-color:#1e0010"></span><span style="color:#75715e"># for release
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"># add_compile_options(&#34;-mcpu=cortex-a7&#34; &#34;-mfpu=neon-vfpv4&#34; &#34;-mfloat-abi=hard&#34; &#34;-O3&#34; &#34;-DNDEBUG&#34;)
+</span></span></span></code></pre></div><p>就可以回到x86构建arm的产物了。</p>
+<p>总之，docker在辅助构建上确实非常好用。</p>
+<h2 id="构建命令">构建命令</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake -DPORT<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;WPE&#34;</span> -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Debug -B build <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -G Ninja <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DDEVELOPER_MODE<span style="color:#f92672">=</span>ON -DENABLE_EXPERIMENTAL_FEATURES<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DENABLE_WPE_1_1_API<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DUSE_JPEGXL<span style="color:#f92672">=</span>OFF -DUSE_LIBDRM<span style="color:#f92672">=</span>ON <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DENABLE_WPE_PLATFORM_WAYLAND<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DENABLE_BUBBLEWRAP_SANDBOX<span style="color:#f92672">=</span>OFF <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -DENABLE_ASSERTS<span style="color:#f92672">=</span>OFF
+</span></span></code></pre></div><p>解释下后面几个： <code>WPE_PLATFORM_WAYLAND</code>是因为我后面要基于headless调试，而且我的远程开发机也没wayland环境。bubblewrap同样是因为远程开发机上运行有报错而先关闭。<code>ENABLE_ASSERT</code>也是同样有报错而关闭。这些都相对不重要。</p>
+<p>记录一些遇到的问题</p>
+<h2 id="部分目标文件没生成">部分目标文件没生成</h2>
+<p>错误信息:</p>
+<pre tabindex="0"><code>clang++: error: no such file or directory: &#39;/workspace/WPEWebKit/build/WebCore/DerivedSources/JSWebXRInputSource+Gamepad.cpp&#39;
+clang++: error: no input files
+ninja: build stopped: interrupted by user.
+</code></pre><p>之前没遇到过类似问题，但注意到有以下错误信息:</p>
+<pre tabindex="0"><code>[2804/7034] Generate bindings (WebCoreBindings)
+/usr/bin/ccache: invalid option -- &#39;E&#39;
+/usr/bin/ccache: invalid option -- &#39;E&#39;
+/usr/bin/ccache: invalid option -- &#39;E&#39;
+</code></pre><p>猜测是ccache的原因，如下：</p>
+<pre tabindex="0"><code>export CC=&#34;ccache clang&#34; &amp;&amp; export CXX=&#34;ccache clang++&#34;
+</code></pre><p>改成：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>export CC<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;clang&#34;</span> <span style="color:#f92672">&amp;&amp;</span> export CXX<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;clang++&#34;</span>
+</span></span></code></pre></div><p>就正常了</p>
+<h2 id="docker下调试webkit">Docker下调试WebKit</h2>
+<p>因为是在Docker下编译的，想着直接就在Docker下调试算了，但遇到很多错误，docker毕竟不是虚拟机，应该是限制太多，于是改成docker构建，远程开发机运行调试。通过<code>-v</code>映射本地目录，这样<code>clangd</code>索引和调试符号的路径都能保持一致：</p>
+<pre tabindex="0"><code>docker run --name ubuntu22_for_research -v /data/research:/data/research -it ubuntu-for-webkit:22.04
+</code></pre><p>接下来是一系列错误解决:</p>
+<pre tabindex="0"><code>bwrap: Creating new namespace failed: Operation not permitted
+ERROR: Failed to connect to RealtimeKit: Could not connect: No such file or directory
+/workspace/WPEWebKit/Source/WTF/wtf/linux/RealTimeThreads.cpp(192) : void WTF::RealTimeThreads::realTimeKitMakeThreadRealTime(uint64_t, uint64_t, uint32_t)
+
+** (MiniBrowser:657639): ERROR **: 19:21:57.349: readPIDFromPeer: Unexpected short read from PID socket
+</code></pre><p>和</p>
+<pre tabindex="0"><code>** (MiniBrowser:121698): ERROR **: 22:04:53.583: Failed to start dbus proxy: Failed to spawn child process ?/usr/bin/bwrap? (No such file or directory)
+</code></pre><p>于是安装</p>
+<pre tabindex="0"><code>yum install -y bubblewrap.x86_64      
+</code></pre><p>又遇到错误：</p>
+<pre tabindex="0"><code>bwrap: Can&#39;t find source path /usr/bin/xdg-dbus-proxy: No such file or directory
+
+** (MiniBrowser:125726): ERROR **: 22:07:46.158: Failed to fully launch dbus-proxy: Child process exited with code 1
+[1]    125726 trace trap (core dumped)  bin/MiniBrowser --headless
+</code></pre><p>再安装<code>xdg-dbus-proxy.x86_64</code>，最终还是直接关了这个，因为后面发现开了沙箱，调试不便Attach WebProcess。</p>
+<p>继续解决:</p>
+<pre tabindex="0"><code>ERROR: Failed to get RTTimeUSecMax from RealtimeKit: GDBus.Error:org.freedesktop.DBus.Error.ServiceUnknown: The name is not activatable
+</code></pre><p>应该是一个服务:</p>
+<pre tabindex="0"><code>$ busctl list # 查看服务
+$ yum search realtime   # 
+$ yum install rtkit.x86_64 # 这个比较像
+$ systemctl start rtkit-daemon.service 
+$ systemctl enable rtkit-daemon.service
+</code></pre><p>发现调试不便，于是加上：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>-DENABLE_WPE_PLATFORM_WAYLAND<span style="color:#f92672">=</span>OFF
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># 影响Attach，后面再研究</span>
+</span></span><span style="display:flex;"><span>-DENABLE_BUBBLEWRAP_SANDBOX<span style="color:#f92672">=</span>OFF
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># ASSERT可能也要关了，WebKit内部还有些Crash...</span>
+</span></span></code></pre></div><p>运行过程中又遇到2个问题：</p>
+<pre tabindex="0"><code>Memory pressure relief: pid = 462251, Total: res = 23199744/23199744/0, res+swap = 210894848/211156992/262144
+No provider of glViewport found.  Requires one of:
+    Desktop OpenGL 1.0
+    OpenGL ES 1.0
+    OpenGL ES 2.0
+</code></pre><p>对于OpenGL的问题，应该是依赖没安装对，补一波：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>yum install mesa-libGL.x86_64 mesa-libEGL.x86_64 libglvnd-gles.x86_64 
+</span></span></code></pre></div><h2 id="生成代码索引">生成代码索引</h2>
+<p>如下：</p>
+<pre tabindex="0"><code>#usage: rewrite-compile-commands [-h] input_file output_file source_dir build_dir
+python3 Tools/Scripts/rewrite-compile-commands /data/research/WPEWebKit/build/compile_commands.json /data/research/WPEWebKit/.vscode/compile_commands.json /data/research/WPEWebKit /data/research/WPEWebKit/build/
+ python3 Tools/clangd/update-clangd-config /data/research/WPEWebKit/Tools/clangd/clangd-config.yaml.tpl ./.clangd
+</code></pre><h2 id="最离谱的问题">最离谱的问题</h2>
+<p>这个错误给我看的一脸懵，运行时发现这个日志：</p>
+<pre tabindex="0"><code>Memory pressure relief: pid = 607784, Total: res = 62668800/62668800/0, res+swap = 263852032/263852032/0
+</code></pre><p>看了代码感觉应该是内存不够了，于是用htop看了一下</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20250101231028.png" alt="20250101231028"></p>
+<p>竟然有50G内存一直在被占用&hellip;..</p>
+<p>半天没Kill掉，于是重启了下远程开发机：</p>
+<p><img src="https://vimerzhao-blog-1252560110.cos.ap-guangzhou.myqcloud.com/2024/20250102210845.png" alt="20250102210845"></p>
+<p>猜测：我有多台设备通过VSCode连接了远程开发机或者其上运行的Docker，有时调试一半离开了，就会断开，导致vscode-lldb进程常驻后台一直占用内存。</p>
+<p>上周我就发现，另外一个项目，改一个文件编译加链接竟然要5分钟，还经常被Kill，而之前1分钟都不到，其实也是这个原因，重启后这个项目的增量构建耗时又回到了1分钟内，离谱。</p>
+
+		</div>
+    <span id="wc" style="color:grey; font-size: 0.9em">总阅读量<span id="busuanzi_value_page_pv"></span>次。</span>
+    <p></p>
+	</article>
+</main>
+
+
+<div class="authorbox clearfix">
+	<figure class="authorbox__avatar">
+		<img alt="赵裕(vimerzhao) avatar" src="/img/wechat_public.jpeg" class="avatar" height="90" width="90">
+	</figure>
+	<div class="authorbox__header">
+		<span class="authorbox__name">关于 赵裕(vimerzhao)</span>
+	</div>
+	<div class="authorbox__description">
+		🔥 爱折腾的程序员、《Flutter内核源码剖析》作者。 <br>  👈  微信公众号：<b>赵裕</b>（记录所学、所思、所行），欢迎扫码关注。
+	</div>
+</div>
+
+<nav class="pager flex">
+	<div class="pager__item pager__item--prev">
+		<a class="pager__link" href="/articles/review-webkit-build-process/" rel="prev">
+			<span class="pager__subtitle">«&thinsp;上一篇</span>
+			<p class="pager__title">小记WebKit的构建</p>
+		</a>
+	</div>
+</nav>
+
+<script src="https://utteranc.es/client.js"
+  repo="vimerzhao/vimerzhao.github.io"
+        issue-term="pathname"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script>
+
+
+			</div>
+			<aside class="sidebar"><div class="widget-search widget">
+	<form class="widget-search__form" role="search" method="get" action="https://google.com/search">
+		<label>
+			<input class="widget-search__field" type="search" placeholder="搜索…" value="" name="q" aria-label="搜索…">
+		</label>
+		<input class="widget-search__submit" type="submit" value="Search">
+		<input type="hidden" name="sitesearch" value="/">
+	</form>
+</div>
+<div class="widget-recent widget">
+	<h4 class="widget__title">近期文章</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item"><a class="widget__link" href="/articles/setup-webkit-debug-environment/">WebKit调试环境配置</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/review-webkit-build-process/">小记WebKit的构建</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/skia-debug-inline-pitfall/">Skia下SK_DEBUG内联的坑</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/optimize-mac-with-windows-development/">Mac与Windows混合开发体验优化</a></li>
+			<li class="widget__item"><a class="widget__link" href="/articles/vcpkg-source-code-of-install/">vcpkg源码之install流程</a></li>
+		</ul>
+	</div>
+</div>
+<div class="widget-categories widget">
+	<h4 class="widget__title">分类</h4>
+	<div class="widget__content">
+		<ul class="widget__list">
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/android/">Android</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">8</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/flutter/">Flutter</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">1</span>
+				</li>
+			<li class="widget__item">
+				<a class="widget__link" href="/categories/%E4%B8%93%E6%A0%8F%E9%80%9F%E8%AE%B0/">专栏|速记</a>&nbsp;
+				<span class="widget__counter widget__counter--bubble">2</span>
+				</li>
+		</ul>
+	</div>
+</div>
+<div class="widget-taglist widget">
+	<h4 class="widget__title">标签</h4>
+	<div class="widget__content">
+		<a class="widget-taglist__link widget__link btn" href="/tags/android%E5%BC%80%E5%8F%91/" title="Android开发">Android开发 (2)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bugfix/" title="BugFix">BugFix (14)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/bug%E8%AE%B0%E5%BD%95/" title="BUG记录">BUG记录 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/c&#43;&#43;/" title="C&#43;&#43;">C&#43;&#43; (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/cmake/" title="CMAKE">CMAKE (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E5%85%B7/" title="工具">工具 (28)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%B7%A5%E7%A8%8B%E5%AE%9E%E8%B7%B5/" title="工程实践">工程实践 (6)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E5%BC%80%E5%8F%91%E6%80%9D%E8%80%83/" title="开发思考">开发思考 (3)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%80%BB%E7%BB%93/" title="总结">总结 (7)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%8A%80%E6%9C%AF%E7%B2%BE%E9%80%89/" title="技术精选">技术精选 (10)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E6%BA%90%E7%A0%81%E5%89%96%E6%9E%90/" title="源码剖析">源码剖析 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%AC%94%E8%AE%B0/" title="笔记">笔记 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/" title="编程语言">编程语言 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/" title="读书笔记">读书笔记 (12)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E8%BD%AF%E6%8A%80%E8%83%BD/" title="软技能">软技能 (1)</a>
+		<a class="widget-taglist__link widget__link btn" href="/tags/%E9%9A%8F%E7%AC%94/" title="随笔">随笔 (20)</a>
+	</div>
+</div>
+<div class="widget-social widget">
+	<h4 class="widget-social__title widget__title">社交</h4>
+	<div class="widget-social__content widget__content">
+		<div class="widget-social__item widget__item">
+			<a class="widget-social__link widget__link btn" title="GitHub" rel="noopener noreferrer" href="https://github.com/vimerzhao" target="_blank">
+				<svg class="widget-social__link-icon icon icon-github" width="24" height="24" viewBox="0 0 384 374"><path d="m192 0c-106.1 0-192 85.8-192 191.7 0 84.7 55 156.6 131.3 181.9 9.6 1.8 13.1-4.2 13.1-9.2 0-4.6-.2-16.6-.3-32.6-53.4 11.6-64.7-25.7-64.7-25.7-8.7-22.1-21.3-28-21.3-28-17.4-11.9 1.3-11.6 1.3-11.6 19.3 1.4 29.4 19.8 29.4 19.8 17.1 29.3 44.9 20.8 55.9 15.9 1.7-12.4 6.7-20.8 12.2-25.6-42.6-4.8-87.5-21.3-87.5-94.8 0-20.9 7.5-38 19.8-51.4-2-4.9-8.6-24.3 1.9-50.7 0 0 16.1-5.2 52.8 19.7 15.3-4.2 31.7-6.4 48.1-6.5 16.3.1 32.7 2.2 48.1 6.5 36.7-24.8 52.8-19.7 52.8-19.7 10.5 26.4 3.9 45.9 1.9 50.7 12.3 13.4 19.7 30.5 19.7 51.4 0 73.7-44.9 89.9-87.7 94.6 6.9 5.9 13 17.6 13 35.5 0 25.6-.2 46.3-.2 52.6 0 5.1 3.5 11.1 13.2 9.2 76.2-25.5 131.2-97.3 131.2-182 0-105.9-86-191.7-192-191.7z"/></svg>
+				<span>GitHub</span>
+			</a>
+		</div>
+
+		
+	</div>
+</div>
+</aside>
+		</div>
+		<footer class="footer">
+	<div class="container footer__container flex">
+		
+		<div class="footer__copyright">
+			&copy; 2025 赵裕的博客.
+			<span class="footer__copyright-credits">基于 <a href="https://gohugo.io/" rel="nofollow noopener" target="_blank">Hugo</a> 引擎和 <a href="https://github.com/Vimux/Mainroad/" rel="nofollow noopener" target="_blank">Mainroad</a> 主题</span>
+		</div>
+    <span>
+      <span id="busuanzi_container_site_pv">
+        本站访问量：<span id="busuanzi_value_site_pv"></span>次，
+      </span>
+      <span id="busuanzi_container_site_uv">
+        您是本站第 <span id="busuanzi_value_site_uv"></span> 位访问者
+      </span>
+    </span>
+  </div>
+  
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  
+  <script>
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?5f402244ea199b9952086dd1313a204d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+</footer>
+
+	</div>
+<script async defer src="/js/menu.js"></script>
+</body>
+</html>

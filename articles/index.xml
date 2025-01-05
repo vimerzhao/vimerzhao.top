@@ -6,8 +6,15 @@
     <description>Recent content in Articles on 赵裕的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Mon, 30 Sep 2024 18:09:23 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 05 Jan 2025 15:38:56 +0800</lastBuildDate>
     <atom:link href="/articles/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>WebKit调试环境配置</title>
+      <link>/articles/setup-webkit-debug-environment/</link>
+      <pubDate>Sat, 04 Jan 2025 00:00:00 +0000</pubDate>
+      <guid>/articles/setup-webkit-debug-environment/</guid>
+      <description>Overview 之前构建过一次WebKit，详见小记WebKit的构建，当时刚刚接触WebKit，很多做法不对，这次重新进行了构建，并搭建了一个调试环境，因此再次简单记录一下。 依赖 之前是在自己的远程开发机（Cent</description>
+    </item>
     <item>
       <title>小记WebKit的构建</title>
       <link>/articles/review-webkit-build-process/</link>
